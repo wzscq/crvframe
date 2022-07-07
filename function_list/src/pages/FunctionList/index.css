@@ -1,0 +1,44 @@
+.function-main {
+    
+}
+
+.function-main .ant-card-head-title {
+    text-align: left;
+}
+
+.function-main .ant-card-body {
+    text-align: left;
+    word-break: break-all;
+}
+
+.function-main .ant-card-small > .ant-card-head > .ant-card-head-wrapper > .ant-card-extra {
+    padding: 0px;
+    padding-bottom: 3px;
+}
+
+.function-main .ant-card-head-title .anticon {
+    font-size: 30px;
+    color: #40a9ff;
+    margin-right: 8px;
+    vertical-align: middle;
+    line-height: 30px;
+} 
+
+.function-main .ant-col {
+    padding-bottom: 12px;
+}
+
+.function-main .ant-collapse {
+    width: calc(100% - 50px);
+    margin: auto;
+} 
+
+.function-main .search-bar {
+    background-color: inherit;
+    margin: auto;
+    margin-top: 8px;
+}
+
+.function-main .search-input {
+    width:400px;
+}

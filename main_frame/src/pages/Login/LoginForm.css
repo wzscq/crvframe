@@ -1,0 +1,15 @@
+.login-form {
+    width: 400px;
+    height: auto;
+    margin-left: 600px;
+}
+
+.login-form .ant-card {
+    width: 100%;
+    height:100% 
+}
+
+.login-form .login-confirm-button {
+    width: 140px;
+    margin-top: 20px;
+}

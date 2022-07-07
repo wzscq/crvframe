@@ -1,0 +1,10 @@
+.list-table {
+    width: 100%;
+    height: calc(100vh - 87px);
+    position: relative;
+    overflow: hidden;
+}
+
+.ant-table-cell-fix-left, .ant-table-cell-fix-right {
+    background-color: inherit;
+}

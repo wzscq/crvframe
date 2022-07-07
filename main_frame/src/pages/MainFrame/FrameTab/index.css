@@ -1,0 +1,22 @@
+.frame-tab-main {
+    width:100vw;
+    border-top: 1px solid gainsboro;
+    height: calc(100vh - 47px);
+}
+
+.frame-tab-main .ant-tabs-top .ant-tabs-nav {
+    margin: 1px;
+    padding-left: 5px;
+}
+
+.frame-tab-main iframe {
+    width: 100%;
+    height: calc(100vh - 88px);
+    display: flex;
+}
+
+.frame-tab-main .log-tab {
+    width: 100%;
+    height: calc(100vh - 88px);
+    overflow: scroll;
+}

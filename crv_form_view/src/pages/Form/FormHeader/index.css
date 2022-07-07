@@ -1,0 +1,13 @@
+.form-header-label {
+    float: left;
+    line-height: 30px;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.form-header-operationbar {
+    float: right;
+    padding: 5px;
+}
+

@@ -1,0 +1,7 @@
+.listtable-column-control {
+    display: inline-block;
+	max-width: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
