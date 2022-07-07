@@ -19,7 +19,7 @@ export default function useI18n(){
         }
         return title;
          
-    },[locale]);
+    },[locale,resources]);
         
     return {getLocaleLabel,locale};
 }

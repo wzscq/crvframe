@@ -58,7 +58,7 @@ export default function EditTable({dataPath,control,field,sendMessageToParent}){
         dispatch(deleteRow({
             dataPath:[...dataPath,field.field,'list'],
             rowKey:rowKey}));
-    },[dispatch]);
+    },[dispatch,dataPath,field]);
 
     const label=control.label?control.label:(field?field.name:"");
     return (

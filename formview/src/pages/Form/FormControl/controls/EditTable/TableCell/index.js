@@ -1,6 +1,6 @@
 //import { getControl } from "./controls";
 
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import {getControl} from '../../index';
 
 export default function TableCell(props){

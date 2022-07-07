@@ -1,3 +1,4 @@
+/* eslint-disable no-new-func */
 import { Table } from "antd";
 import { useEffect, useMemo,useCallback } from "react";
 import { useDispatch, useSelector, } from "react-redux";

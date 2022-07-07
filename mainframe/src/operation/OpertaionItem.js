@@ -1,5 +1,4 @@
 import {LoadingOutlined,CheckCircleOutlined} from '@ant-design/icons';
-import useI18n from '../hook/useI18n';
 import {
     OP_RESULT
 } from "./constant";

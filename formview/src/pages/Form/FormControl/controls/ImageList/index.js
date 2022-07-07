@@ -90,7 +90,7 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
             if(type===FRAME_MESSAGE_TYPE.QUERY_RESPONSE&&
                 dataKey===field.field&&
                 data.list&&data.list.length>0){
-                const file=data.list[0];
+                //const file=data.list[0];
                 const newFileList=fileList.map(item=>{
                     const file=data.list.find(element=>element.id===item.id);
                     if(file){

@@ -22,7 +22,7 @@ const initialState = {
 //对原始数据中的每个行做转换，将数组转换为以ID为key的map，方便后续访问
 const convertListToMap=(row,controls)=>{
     for (let controlIdx in controls){
-        let {controls:subControls,field,modelID,fieldType,associationModelID}=controls[controlIdx];
+        let {controls:subControls,field /*,modelID,fieldType,associationModelID*/}=controls[controlIdx];
         if(subControls&&field&&row[field]&&row[field].list){
             const list=row[field].list;
             row[field]={

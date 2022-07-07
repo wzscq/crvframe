@@ -1,3 +1,4 @@
+/* eslint-disable no-new-func */
 import {Input,Space} from 'antd';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
