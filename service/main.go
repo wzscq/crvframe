@@ -73,6 +73,7 @@ func main() {
     flowInstanceRepository.Init(conf.Redis.Server,2,0)
     flowController:=&flow.FlowController{
         InstanceRepository:flowInstanceRepository,
+        DataRepository:dataRepo,
     }
     flowController.Bind(router)
 

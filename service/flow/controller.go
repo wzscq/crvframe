@@ -4,6 +4,7 @@ import (
 	"log"
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
+	"crv/frame/data"
 	"net/http"
 )
 
@@ -27,12 +28,13 @@ type flowRepRsp struct {
 
 type FlowController struct {
 	InstanceRepository FlowInstanceRepository
+	DataRepository data.DataRepository
 }
 
 func (controller *FlowController)start(c *gin.Context){
 	log.Println("start FlowController start")
 	//获取相关参数
-	//userRoles:= c.MustGet("userRoles").(string)
+	userRoles:= c.MustGet("userRoles").(string)
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
 
@@ -63,7 +65,7 @@ func (controller *FlowController)start(c *gin.Context){
 		return
 	}
 	//执行流
-	result,errorCode=flowInstance.push(&rep,userID)
+	result,errorCode=flowInstance.push(controller.DataRepository,&rep,userID,userRoles)
 
 	//如果流中存在待执行的节点，则保存流实例到缓存
 	if !flowInstance.Completed {
@@ -90,6 +92,7 @@ func (controller *FlowController)push(c *gin.Context){
 	//继续一个流的执行，这种情况一般时流的执行需要人为干预，填写一些数据
 	//也可以时流执行导某个步骤失败后，人工维护了数据后继续执行
 	//要推动一个流，需要至少提供一个流实例的ID，对于某些节点还需要提供stage
+	userRoles:= c.MustGet("userRoles").(string)
 	userID:= c.MustGet("userID").(string)
 	//appDB:= c.MustGet("appDB").(string)
 
@@ -121,7 +124,7 @@ func (controller *FlowController)push(c *gin.Context){
 	}
 
 	//执行流
-	result,errorCode:=flowInstance.push(&rep,userID)
+	result,errorCode:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles)
 
 	//如果流中存在待执行的节点，则保存流实例到缓存
 	if !flowInstance.Completed {

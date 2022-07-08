@@ -1,7 +1,6 @@
+import './App.css';
 import {HashRouter,Routes,Route} from "react-router-dom";
 import View from './pages/View';
-
-import './App.css';
 
 function App() {
   return (

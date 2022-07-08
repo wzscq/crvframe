@@ -1,5 +1,9 @@
 package flow
 
+import (
+	"crv/frame/data"
+)
+
 const (
 	NODE_START = "start"
 	NODE_FORM = "form"
@@ -8,16 +12,18 @@ const (
 )
 
 type nodeExecutor interface {
-	run(instance *flowInstance,node *instanceNode,req *flowRepRsp,userID string)(*flowRepRsp,int)
+	run(instance *flowInstance,node *instanceNode,req *flowRepRsp,userID,userRoles string)(*flowRepRsp,int)
 }
 
-func getExecutor(node *node)(nodeExecutor){
+func getExecutor(node *node,dataRepo data.DataRepository)(nodeExecutor){
 	if node.Type ==NODE_START {
 		return &nodeExecutorStart{}
 	} else if node.Type == NODE_FORM {
 		return &nodeExecutorForm{}
 	} else if node.Type == NODE_SAVE {
-		return &nodeExecutorSave{}
+		return &nodeExecutorSave{
+			DataRepository:dataRepo,
+		}
 	} else if node.Type == NODE_END {
 		return &nodeExecutorEnd{}
 	}

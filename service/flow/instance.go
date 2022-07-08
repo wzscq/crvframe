@@ -3,6 +3,7 @@ package flow
 import (
 	"log"
 	"crv/frame/common"
+	"crv/frame/data"
 )
 
 type flowInstance struct {
@@ -61,22 +62,22 @@ func (flow *flowInstance)getNodeConfig(id string)(node *node){
 	return nil
 }
 
-func (flow *flowInstance)runNode(node *instanceNode,req *flowRepRsp,userID string)(*flowRepRsp,int){
+func (flow *flowInstance)runNode(dataRepo data.DataRepository,node *instanceNode,req *flowRepRsp,userID,userRoles string)(*flowRepRsp,int){
 	//根据节点类型，找到对应的节点，然后执行节点
 	nodeCfg:=flow.getNodeConfig(node.ID)
 	if nodeCfg==nil {
 		log.Println("can not find the node config with id: ",node.ID)		
 		return nil,common.ResultNoNodeOfGivenID
 	}
-	executor:=getExecutor(nodeCfg)
+	executor:=getExecutor(nodeCfg,dataRepo)
 	if executor==nil {
 		log.Println("can not find the node executor with type: ",nodeCfg.Type)
 		return nil,common.ResultNoExecutorForNodeType
 	}
-	return executor.run(flow,node,req,userID)
+	return executor.run(flow,node,req,userID,userRoles)
 }
 
-func (flow *flowInstance)push(flowRep* flowRepRsp,userID string)(*flowRepRsp,int){
+func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowRepRsp,userID,userRoles string)(*flowRepRsp,int){
 	log.Println("start flowInstance push")
 	//每个节点的执行都包含两个步骤，启动和结束，
 	//先判断当前正在执行的节点（ExecutedNodes中最后一个节点）是否存在，如果存在则加载这个节点并运行
@@ -90,7 +91,7 @@ func (flow *flowInstance)push(flowRep* flowRepRsp,userID string)(*flowRepRsp,int
 
 	//循环执行所有同步的node
 	for currentNode!=nil {
-		result,errorCode:=flow.runNode(currentNode,flowRep,userID)
+		result,errorCode:=flow.runNode(dataRepo,currentNode,flowRep,userID,userRoles)
 		if errorCode!= common.ResultSuccess {
 			return nil,errorCode
 		}
@@ -99,9 +100,11 @@ func (flow *flowInstance)push(flowRep* flowRepRsp,userID string)(*flowRepRsp,int
 		//如果执行完，就拿下一个节点继续执行
 		if currentNode.Completed {
 			currentNode=flow.getNextNode(currentNode)
-			flow.addInstanceNode(currentNode)
-			//直接将结果参数转换为下一个节点的请求参数
-			flowRep=result
+			if currentNode !=nil {
+				flow.addInstanceNode(currentNode)
+				//直接将结果参数转换为下一个节点的请求参数
+				flowRep=result
+			}
 		} else {
 			//如果没有执行完，说明这个节点是异步节点，直接将结果返回，待后续触发
 			return result,common.ResultSuccess

@@ -25,7 +25,7 @@ func (nodeExecutor *nodeExecutorForm)runStage0(
         }, 
         "type":"open",
         "params":map[string]interface{}{
-                    "url":"/crv_form_view/#/lms_student/addStudentFlowForm/create",
+                    "url":"/formview/#/lms_student/addStudentFlowForm/create",
                     "location":"modal",
                     "title":"增加学生",
                     "key":"/model/lms_student/addStudentFlowForm/create",
@@ -84,7 +84,7 @@ func (nodeExecutor *nodeExecutorForm)run(
 	instance *flowInstance,
 	node *instanceNode,
 	req *flowRepRsp,
-	userID string)(*flowRepRsp,int){
+	userID,userRoles string)(*flowRepRsp,int){
 
 	if req.Stage==nil || *(req.Stage) == 0 {
 		return nodeExecutor.runStage0(instance,node,req,userID)
