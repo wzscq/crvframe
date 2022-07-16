@@ -3,6 +3,7 @@ package data
 import (
     "log"
     "crv/frame/common"
+    "strconv"
 )
 
 /**
@@ -181,16 +182,41 @@ func convertFieldValueStringArray(op string,field string,sliceVal []string)(stri
     return field+op+"("+values+")",common.ResultSuccess        
 }
 
+func convertFieldValueArray(op string,field string,sliceVal []interface{})(string,int){
+    values:=""
+    for _,val:=range sliceVal {
+        log.Printf("convertFieldValueArray val type %T \n",val)
+        
+        switch val.(type) {
+        case string: 
+            sVal, _ := val.(string)           
+            values=values+"'"+sVal+"',"    
+        case float64:
+            f64Val,_:=val.(float64)
+            sVal:= strconv.FormatFloat(f64Val, 'f', -1, 64)
+            values=values+sVal+","
+        }    
+    }
+
+    if len(values)>1 {
+        values=values[0:len(values)-1]
+    }
+    return field+op+"("+values+")",common.ResultSuccess        
+}
+
 func convertFieldOpNormal(op string,field string,value interface{})(string,int){
-    switch v := value.(type) {
+    switch value.(type) {
 	case string:
         sVal, _ := value.(string)
 		return convertFieldValueString(op,field,sVal)
     case []string:
         sliceVal:=value.([]string)
-        return convertFieldValueStringArray(op,field,sliceVal)    
+        return convertFieldValueStringArray(op,field,sliceVal)
+    case []interface{}:
+        sliceVal:=value.([]interface{})
+        return convertFieldValueArray(op,field,sliceVal)    
     default:
-        log.Println("convertFieldOpNormal not supported operator %v with value type %v \n",op,v)
+        log.Print("convertFieldOpNormal not supported operator %v with value type %T \n",op,value)
 		return "",common.ResultNotSupported
 	}
 }

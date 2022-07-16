@@ -113,7 +113,7 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
                 if(formType===FORM_TYPE.UPDATE){
                     input={...item.input,...input}
                 } else {
-                    //以下处理时为了配合流的执行
+                    //以下处理是为了配合流的执行
                     if(item.input.flowInstanceID){
                         input.flowInstanceID=item.input.flowInstanceID;
                     }

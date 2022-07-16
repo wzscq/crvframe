@@ -128,11 +128,22 @@ export default function ListTable({sendMessageToParent}){
 
     useEffect(()=>{
         if(item&&origin&&searchFields.length>0){
+            //合并视图本身的过滤条件
+            let queryFilter=filter;
+            if(viewConf.filter&&Object.keys(viewConf.filter).length>0){
+                if(Object.keys(filter).length>0){
+                    queryFilter={
+                        'Op.and':[filter,viewConf.filter]
+                    };
+                } else {
+                    queryFilter=viewConf.filter;
+                }
+            }
             const frameParams={frameType:item.frameType,frameID:item.params.key,origin:origin};
-            const queryParams={modelID,viewID:currentView,filter,pagination,sorter,fields:searchFields};
+            const queryParams={modelID,viewID:currentView,filter:queryFilter,pagination,sorter,fields:searchFields};
             sendMessageToParent(createQueryDataMessage(frameParams,queryParams));
         }
-    },[searchFields,filter,pagination,sorter,sendMessageToParent,origin,item,currentView,modelID]);
+    },[viewConf,searchFields,filter,pagination,sorter,sendMessageToParent,origin,item,currentView,modelID]);
 
     //处理行的选中
     const onSelectChange=selectedRowKeys => {
