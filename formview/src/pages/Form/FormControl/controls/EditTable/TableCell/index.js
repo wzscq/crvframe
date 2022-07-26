@@ -4,11 +4,11 @@ import { useMemo } from 'react';
 import {getControl} from '../../index';
 
 export default function TableCell(props){
-    const {colNo,dataPath,field,sendMessageToParent}=props;
+    const {colNo,dataPath,field,disabled,sendMessageToParent}=props;
 
     const component=useMemo(()=>{
-        return getControl({...field,inline:true},field,sendMessageToParent,dataPath);
-    },[field,dataPath,sendMessageToParent]);
+        return getControl({...field,inline:true,disabled:disabled},field,sendMessageToParent,dataPath);
+    },[field,dataPath,sendMessageToParent,disabled]);
 
     const wrapperStyle=useMemo(()=>{
         return {

@@ -32,7 +32,7 @@ const makeSelector=()=>{
     return createSelector(
         selectUpdatedValue,
         (updatedValue)=>{
-            const rowKeys=updatedValue.list?Object.keys(updatedValue.list):[];
+            const rowKeys=updatedValue?.list?Object.keys(updatedValue.list):[];
             return {rowKeys};
         },
         {
