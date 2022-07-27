@@ -44,10 +44,10 @@ const convertListToMap=(row,controls)=>{
 const getUpdateNodes=(state,dataPath)=>{
     let updateNode=state.update;
     let updatedNode=state.updated;
+    console.log('getUpdateNodes',dataPath);
     for(let i=0;i<dataPath.length;++i){
         const key=dataPath[i];
         if(!updateNode[key]){
-            
             if(i%3===0){
                 //当前节点是一个rowKey，向修改缓存中放入一个新的数据修改行
                 updateNode[key]={
@@ -64,6 +64,26 @@ const getUpdateNodes=(state,dataPath)=>{
                 state.update=updateNode;
             }
         }
+
+        if(!updatedNode[key]){
+            if(i%3===0){
+                //当前节点是一个rowKey，向已修改数据中放入一个新的数据修改行
+                updatedNode[key]={
+                    [CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.UPDATE,
+                    [CC_COLUMNS.CC_ID]:updatedNode[key][CC_COLUMNS.CC_ID],
+                    [CC_COLUMNS.CC_VERSION]:updatedNode[key][CC_COLUMNS.CC_VERSION]
+                };
+            } else {
+                //当前节点是一个field，或list节点时，向已修改数据中放入一个空字段对象
+                updatedNode[key]={};
+            }
+
+            if(i===0){
+                state.update=updatedNode;
+            }
+        }
+
+        console.log('getUpdateNodes',updateNode,updatedNode);
 
         updateNode=updateNode[key];
         updatedNode=updatedNode[key];
