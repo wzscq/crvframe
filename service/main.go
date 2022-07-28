@@ -16,6 +16,11 @@ import (
 func main() {
     //设置log打印文件名和行号
     log.SetFlags(log.Lshortfile | log.LstdFlags)
+
+    //初始化时区
+    var cstZone = time.FixedZone("CST", 8*3600) // 东八
+	time.Local = cstZone
+
     //初始化配置
     conf:=common.InitConfig()
 
