@@ -15,11 +15,14 @@ export default function FrameDialog({item}){
 
     const onFrameLoad=useCallback(()=>{
         if(refFrame.current){
-            const url=parseUrl(item.params.url);
-            refFrame.current.contentWindow.postMessage({
-                type:FRAME_MESSAGE_TYPE.INIT,
-                i18n:{locale,resources},
-                data:{...item,frameType:frameType}},url.origin);
+            setTimeout(()=>{
+                const url=parseUrl(item.params.url);
+                refFrame.current.contentWindow.postMessage({
+                    type:FRAME_MESSAGE_TYPE.INIT,
+                    i18n:{locale,resources},
+                    data:{...item,frameType:frameType}},url.origin);
+                console.log('post init message to frame ',url.origin);
+            },200);
         }
     },[refFrame,item,locale,resources]);
 

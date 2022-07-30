@@ -16,6 +16,8 @@ export default function useFrame(){
     const {origin}=useSelector(state=>state.frame);
     const {forms} = useSelector(state=>state.definition);
 
+    console.log("formview useframe",origin);
+
     const sendMessageToParent=useCallback((message)=>{
         if(origin){
             window.parent.postMessage(message,origin);
