@@ -12,8 +12,8 @@ type nodeExecutorForm struct {
 func (nodeExecutor *nodeExecutorForm)runStage0(
 	instance *flowInstance,
 	node *instanceNode,
-	req *flowRepRsp,
-	userID string)(*flowRepRsp,int){
+	req *flowReqRsp,
+	userID string)(*flowReqRsp,int){
 	
 	stage:=1
 	operation:=map[string]interface{}{
@@ -39,7 +39,7 @@ func (nodeExecutor *nodeExecutorForm)runStage0(
         "description":"打开增加学生对话框",
 	}
 	
-	result:=&flowRepRsp{
+	result:=&flowReqRsp{
 		Operation:&operation,
 	}
 
@@ -59,8 +59,8 @@ func (nodeExecutor *nodeExecutorForm)runStage0(
 func (nodeExecutor *nodeExecutorForm)runStage1(
 	instance *flowInstance,
 	node *instanceNode,
-	req *flowRepRsp,
-	userID string)(*flowRepRsp,int){
+	req *flowReqRsp,
+	userID string)(*flowReqRsp,int){
 	
 	endTime:=time.Now().Format("2006-01-02 15:04:05")
 	node.Completed=true
@@ -83,8 +83,8 @@ func (nodeExecutor *nodeExecutorForm)runStage1(
 func (nodeExecutor *nodeExecutorForm)run(
 	instance *flowInstance,
 	node *instanceNode,
-	req *flowRepRsp,
-	userID,userRoles string)(*flowRepRsp,int){
+	req *flowReqRsp,
+	userID,userRoles string)(*flowReqRsp,int){
 
 	if req.Stage==nil || *(req.Stage) == 0 {
 		return nodeExecutor.runStage0(instance,node,req,userID)

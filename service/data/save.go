@@ -139,8 +139,8 @@ func (save *Save)getRowUpdateColumnValues(row map[string]interface{},permissionF
 			return "","",version,common.ResultNotSupportedValueType
 		}
 	}
-	log.Println("version")
-	log.Println(version)
+	//log.Println("version")
+	//log.Println(version)
 	return values,strID,version,common.ResultSuccess
 }
 
@@ -327,6 +327,7 @@ func (save *Save) updateRow(
 		return nil,common.ResultNoIDWhenUpdate
 	} 
 
+	//修改逻辑，如果没有提供version则认为不做版本控制，直接更新
 	if len(version)<=0 {
 		return nil,common.ResultNoVersionWhenUpdate
 	}
@@ -342,7 +343,11 @@ func (save *Save) updateRow(
 	}
 
 	values=values+save.getUpdateCommonFieldsValues()
-	sql:="update "+save.AppDB+"."+modelID+" set "+values+" where id='"+strID+"' and version="+version+permissionWhere
+	sql:="update "+save.AppDB+"."+modelID+" set "+values+" where id='"+strID+"' "
+	if len(version)>0 {
+		sql=sql+" and version="+version
+	}
+	sql=sql+version+permissionWhere
 	
 	//执行sql
 	_,rowCount,err:=dataRepository.execWithTx(sql,tx)

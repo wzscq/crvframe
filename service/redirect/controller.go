@@ -17,6 +17,10 @@ type commonRep struct {
 	To *string `json:"to"`
 	Filter *map[string]interface{} `json:"filter"`
 	List *[]map[string]interface{} `json:"list"`
+	UserID string `json:"userID"`
+	AppDB string `json:"appDB"`
+	UserRoles string `json:"userRoles"`
+	FlowID string `json:"flowID"`
 	//Fields *[]field `json:"fields"`
 	//Sorter *[]sorter `json:"sorter"`
 	SelectedRowKeys *[]string `json:"selectedRowKeys"`
@@ -59,6 +63,10 @@ func (controller *RedirectController)getApiUrl(appDB,apiId string)(string,int){
 
 func (controller *RedirectController)redirect(c *gin.Context){
 	log.Println("start redirect ")
+
+	userID:= c.MustGet("userID").(string)
+	userRoles:= c.MustGet("userRoles").(string)
+	appDB:= c.MustGet("appDB").(string)
 			
 	var rep commonRep
 	if err := c.BindJSON(&rep); err != nil {
@@ -76,7 +84,6 @@ func (controller *RedirectController)redirect(c *gin.Context){
 		return
 	}
 
-	appDB:= c.MustGet("appDB").(string)
 	//get url
 	postUrl,errorCode:=controller.getApiUrl(appDB,*rep.To)
 	if errorCode != common.ResultSuccess {
@@ -85,10 +92,13 @@ func (controller *RedirectController)redirect(c *gin.Context){
 		return 
 	}
 
+	rep.UserID=userID
+	rep.AppDB=appDB
+	rep.UserRoles=userRoles
 	rep.To=nil
 	postJson,_:=json.Marshal(rep)
 	postBody:=bytes.NewBuffer(postJson)
-	log.Println("http.Post ",postUrl,postJson)
+	log.Println("http.Post ",postUrl,string(postJson))
 	resp,err:=http.Post(postUrl,"application/json",postBody)
 
 	if err != nil || resp==nil || resp.StatusCode != 200 { 

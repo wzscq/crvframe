@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type commonRep struct {
+type commonReq struct {
 	ModelID string `json:"modelID"`
 	ViewID *string `json:"viewID"`
 	Filter *map[string]interface{} `json:"filter"`
@@ -27,7 +27,7 @@ func (controller *DataController) query(c *gin.Context) {
 	//获取用户账号
 	userRoles:= c.MustGet("userRoles").(string)
 	appDB:= c.MustGet("appDB").(string)
-	var rep commonRep
+	var rep commonReq
 	var errorCode int
 	var result *queryResult
 	if err := c.BindJSON(&rep); err != nil {
@@ -57,7 +57,7 @@ func (controller *DataController) save(c *gin.Context) {
 	userRoles:= c.MustGet("userRoles").(string)
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
-	var rep commonRep
+	var rep commonReq
 	var errorCode int
 	var result *saveResult
 	if err := c.BindJSON(&rep); err != nil {
@@ -96,7 +96,7 @@ func (controller *DataController) delete(c *gin.Context) {
 	userID:= c.MustGet("userID").(string)
 	userRoles:= c.MustGet("userRoles").(string)
 	appDB:= c.MustGet("appDB").(string)
-	var rep commonRep
+	var rep commonReq
 	var errorCode int
 	var result *map[string]interface {} = nil
 	if err := c.BindJSON(&rep); err != nil {
@@ -135,7 +135,7 @@ func (controller *DataController) update(c *gin.Context) {
 	userID:= c.MustGet("userID").(string)
 	userRoles:= c.MustGet("userRoles").(string)
 	appDB:= c.MustGet("appDB").(string)
-	var rep commonRep
+	var rep commonReq
 	var errorCode int
 	var result *map[string]interface {} = nil
 	if err := c.BindJSON(&rep); err != nil {
@@ -168,7 +168,7 @@ func (controller *DataController)download(c *gin.Context) {
 	//获取用户账号
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
-	var rep commonRep
+	var rep commonReq
 	var errorCode int
 	var result *map[string]interface {} = nil
 	if err := c.BindJSON(&rep); err != nil {
@@ -212,7 +212,7 @@ func (controller *DataController)getImage(c *gin.Context) {
 	//获取用户账号
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
-	var rep commonRep
+	var rep commonReq
 	var errorCode int
 	
 	if err := c.BindJSON(&rep); err != nil {

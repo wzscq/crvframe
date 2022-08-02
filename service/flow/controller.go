@@ -9,7 +9,7 @@ import (
 )
 
 //流中的请求和应答采用相同的结构，便于不同节点间传递数据
-type flowRepRsp struct {
+type flowReqRsp struct {
 	ModelID *string `json:"modelID,omitempty"`
 	ViewID *string `json:"viewID,omitempty"`
 	Filter *map[string]interface{} `json:"filter,omitempty"`
@@ -38,8 +38,8 @@ func (controller *FlowController)start(c *gin.Context){
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
 
-	var rep flowRepRsp
-	var result *flowRepRsp
+	var rep flowReqRsp
+	var result *flowReqRsp
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 		rsp:=common.CreateResponse(common.ResultWrongRequest,result)
@@ -96,8 +96,8 @@ func (controller *FlowController)push(c *gin.Context){
 	userID:= c.MustGet("userID").(string)
 	//appDB:= c.MustGet("appDB").(string)
 
-	var rep flowRepRsp
-	var result *flowRepRsp
+	var rep flowReqRsp
+	var result *flowReqRsp
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 		rsp:=common.CreateResponse(common.ResultWrongRequest,result)

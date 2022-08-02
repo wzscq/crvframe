@@ -12,8 +12,8 @@ type nodeExecutorStart struct {
 func (nodeExecutor *nodeExecutorStart)run(
 	instance *flowInstance,
 	node *instanceNode,
-	req *flowRepRsp,
-	userID,userRoles string)(*flowRepRsp,int){
+	req *flowReqRsp,
+	userID,userRoles string)(*flowReqRsp,int){
 	
 	endTime:=time.Now().Format("2006-01-02 15:04:05")
 	node.Completed=true

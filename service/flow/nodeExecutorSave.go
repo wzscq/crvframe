@@ -13,8 +13,8 @@ type nodeExecutorSave struct {
 func (nodeExecutor *nodeExecutorSave)run(
 	instance *flowInstance,
 	node *instanceNode,
-	req *flowRepRsp,
-	userID,userRoles string)(*flowRepRsp,int){
+	req *flowReqRsp,
+	userID,userRoles string)(*flowReqRsp,int){
 
 	save:=&data.Save{
 		ModelID:*req.ModelID,
@@ -25,7 +25,7 @@ func (nodeExecutor *nodeExecutorSave)run(
 	}
 	result,errorCode:=save.Execute(nodeExecutor.DataRepository)
 	
-	flowResult:=&flowRepRsp{
+	flowResult:=&flowReqRsp{
 		ModelID:&result.ModelID,
 		Total:&result.Total,
 		List:&result.List,

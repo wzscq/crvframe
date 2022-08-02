@@ -62,7 +62,7 @@ func (flow *flowInstance)getNodeConfig(id string)(node *node){
 	return nil
 }
 
-func (flow *flowInstance)runNode(dataRepo data.DataRepository,node *instanceNode,req *flowRepRsp,userID,userRoles string)(*flowRepRsp,int){
+func (flow *flowInstance)runNode(dataRepo data.DataRepository,node *instanceNode,req *flowReqRsp,userID,userRoles string)(*flowReqRsp,int){
 	//根据节点类型，找到对应的节点，然后执行节点
 	nodeCfg:=flow.getNodeConfig(node.ID)
 	if nodeCfg==nil {
@@ -77,7 +77,7 @@ func (flow *flowInstance)runNode(dataRepo data.DataRepository,node *instanceNode
 	return executor.run(flow,node,req,userID,userRoles)
 }
 
-func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowRepRsp,userID,userRoles string)(*flowRepRsp,int){
+func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowReqRsp,userID,userRoles string)(*flowReqRsp,int){
 	log.Println("start flowInstance push")
 	//每个节点的执行都包含两个步骤，启动和结束，
 	//先判断当前正在执行的节点（ExecutedNodes中最后一个节点）是否存在，如果存在则加载这个节点并运行
