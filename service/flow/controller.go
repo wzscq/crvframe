@@ -42,16 +42,16 @@ func (controller *FlowController)start(c *gin.Context){
 	var result *flowReqRsp
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
-		rsp:=common.CreateResponse(common.ResultWrongRequest,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end FlowController start")
 		return
 	} 
 
 	//启动流必须指定流的ID
 	if rep.FlowID == nil || len(*(rep.FlowID))==0 {
-		rsp:=common.CreateResponse(common.ResultStartFlowWithoutID,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultStartFlowWithoutID,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end FlowController start")
 		return
 	}
@@ -59,27 +59,27 @@ func (controller *FlowController)start(c *gin.Context){
 	//创建流
 	flowInstance,errorCode:=createInstance(appDB,*(rep.FlowID),userID)
 	if errorCode!=common.ResultSuccess {
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end FlowController start")
 		return
 	}
 	//执行流
-	result,errorCode=flowInstance.push(controller.DataRepository,&rep,userID,userRoles)
+	result,err:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles)
 
 	//如果流中存在待执行的节点，则保存流实例到缓存
 	if !flowInstance.Completed {
 		err:=controller.InstanceRepository.saveInstance(flowInstance)
 		if err!=nil {
-			rsp:=common.CreateResponse(common.ResultCacheFlowInstanceError,result)
-			c.IndentedJSON(http.StatusOK, rsp.Rsp)
+			rsp:=common.CreateResponse(common.CreateError(common.ResultCacheFlowInstanceError,nil),result)
+			c.IndentedJSON(http.StatusOK, rsp)
 			log.Println("end FlowController start")
 			return
 		}
 	}
 	
-	rsp:=common.CreateResponse(errorCode,result)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(err,result)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end FlowController start")
 }
 
@@ -100,16 +100,16 @@ func (controller *FlowController)push(c *gin.Context){
 	var result *flowReqRsp
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
-		rsp:=common.CreateResponse(common.ResultWrongRequest,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end FlowController push")
 		return
 	} 
 
 	//PUSH流必须指定流的instanceID
 	if rep.FlowInstanceID == nil || len(*(rep.FlowInstanceID))==0 {
-		rsp:=common.CreateResponse(common.ResultPushFlowWithoutID,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultPushFlowWithoutID,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end FlowController push")
 		return
 	}	
@@ -117,28 +117,28 @@ func (controller *FlowController)push(c *gin.Context){
 	//加载流实例
 	flowInstance,err:=controller.InstanceRepository.getInstance(*(rep.FlowInstanceID))
 	if err!=nil {
-		rsp:=common.CreateResponse(common.ResultLoadFlowInstanceError,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultLoadFlowInstanceError,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end FlowController push")
 		return
 	}
 
 	//执行流
-	result,errorCode:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles)
+	result,commonErr:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles)
 
 	//如果流中存在待执行的节点，则保存流实例到缓存
 	if !flowInstance.Completed {
 		err:=controller.InstanceRepository.saveInstance(flowInstance)
 		if err!=nil {
-			rsp:=common.CreateResponse(common.ResultCacheFlowInstanceError,result)
-			c.IndentedJSON(http.StatusOK, rsp.Rsp)
+			rsp:=common.CreateResponse(common.CreateError(common.ResultCacheFlowInstanceError,nil),result)
+			c.IndentedJSON(http.StatusOK, rsp)
 			log.Println("end FlowController push")
 			return
 		}
 	}
 	
-	rsp:=common.CreateResponse(errorCode,result)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(commonErr,result)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end FlowController push")
 }
 

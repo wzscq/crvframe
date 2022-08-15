@@ -96,8 +96,8 @@ func (controller *UserController)login(c *gin.Context) {
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 
-		rsp:=common.CreateResponse(common.ResultWrongRequest,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end user login with error")
 		return 
     }
@@ -106,8 +106,8 @@ func (controller *UserController)login(c *gin.Context) {
 	var appDB string
 	appDB,errorCode=controller.getAppDB(rep.AppID)
 	if(errorCode != common.ResultSuccess){
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end user login with error")
 		return
 	}
@@ -115,16 +115,16 @@ func (controller *UserController)login(c *gin.Context) {
 	var user *User
 	user,errorCode=controller.checkUserPassword(rep.UserID,rep.Password,appDB)
 	if(errorCode != common.ResultSuccess){
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end user login with error")
 		return
 	}
 
 	userRoles,errorCode:=controller.getUserRoles(rep.UserID,appDB)
 	if(errorCode != common.ResultSuccess){
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end user login with error")
 		return
 	}
@@ -140,8 +140,8 @@ func (controller *UserController)login(c *gin.Context) {
 		}
 	}
 		
-	rsp:=common.CreateResponse(errorCode,result)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end user login")
 }
 
@@ -150,8 +150,8 @@ func (controller *UserController) logout(c *gin.Context) {
 	userID:= c.MustGet("userID").(string)
 	controller.LoginCache.RemoveUser(userID)
 	errorCode:=common.ResultSuccess
-	rsp:=common.CreateResponse(errorCode,nil)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end user logout")
 }
 
@@ -175,8 +175,8 @@ func (controller *UserController) changePassword(c *gin.Context) {
 			}
 		}
 	}
-	rsp:=common.CreateResponse(errorCode,nil)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end user changePassword")
 }
 

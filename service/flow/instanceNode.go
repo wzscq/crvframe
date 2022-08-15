@@ -9,7 +9,7 @@ type instanceNode struct {
 	Completed bool `json:"completed"`
 	StartTime string `json:"startTime"`
 	EndTime *string `json:"endTime,omitempty"`
-	Data []interface{} `json:"data,omitempty"`
+	Data map[string]interface{} `json:"data,omitempty"`
 	UserID string `json:"userID,omitempty"`
 }
 

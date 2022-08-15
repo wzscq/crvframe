@@ -14,7 +14,7 @@ func (nodeExecutor *nodeExecutorSave)run(
 	instance *flowInstance,
 	node *instanceNode,
 	req *flowReqRsp,
-	userID,userRoles string)(*flowReqRsp,int){
+	userID,userRoles string)(*flowReqRsp,*common.CommonError){
 
 	save:=&data.Save{
 		ModelID:*req.ModelID,
@@ -32,18 +32,15 @@ func (nodeExecutor *nodeExecutorSave)run(
 	}
 
 	if errorCode!=common.ResultSuccess {
-		return flowResult,errorCode
+		return flowResult,common.CreateError(errorCode,nil)
 	}
 
 	endTime:=time.Now().Format("2006-01-02 15:04:05")
 	node.Completed=true
 	node.EndTime=&endTime
-	node.Data=[]interface{}{
-		map[string]interface{}{
-			"input":req,
+	node.Data=map[string]interface{}{
 			"output":flowResult,
-		},
-	}
+		}
 	node.UserID=userID
-	return flowResult,common.ResultSuccess
+	return flowResult,nil
 }

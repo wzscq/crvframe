@@ -34,8 +34,8 @@ func (controller *DefinitionController)getUserFunction(c *gin.Context){
 
 	functions,errorCode:=f.getUserFunction(userRoles)
 	
-	rsp:=common.CreateResponse(errorCode,functions)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),functions)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end definition getUserFunction")
 }
 
@@ -49,8 +49,8 @@ func (controller *DefinitionController)getModelViewConf(c *gin.Context){
 	var rep getModelViewRep	
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
-		rsp:=common.CreateResponse(common.ResultWrongRequest,mvConf)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),mvConf)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end definition getModelViewConf with error")
 		return
 	} 
@@ -62,8 +62,8 @@ func (controller *DefinitionController)getModelViewConf(c *gin.Context){
 	var errorCode int
 	mvConf,errorCode=m.getModelViewConf(rep.ModelID,userRoles)
 
-	rsp:=common.CreateResponse(errorCode,mvConf)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),mvConf)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end definition getModelViewConf")
 }
 
@@ -77,8 +77,8 @@ func (controller *DefinitionController)getModelFormConf(c *gin.Context){
 	var rep getModelFormRep	
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
-		rsp:=common.CreateResponse(common.ResultWrongRequest,mvConf)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),mvConf)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end definition getModelFormConf with error")	
 	}
 
@@ -89,8 +89,8 @@ func (controller *DefinitionController)getModelFormConf(c *gin.Context){
 	var errorCode int
 	mvConf,errorCode=m.getModelFormConf(rep.ModelID,rep.FormID,userRoles)
 
-	rsp:=common.CreateResponse(errorCode,mvConf)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),mvConf)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end definition getModelViewConf")
 }
 
@@ -125,8 +125,8 @@ func (controller *DefinitionController)getAppI18n(c *gin.Context){
 		Locale:locale,
 	}	
 	appI18n,errorCode:=i18n.getAppI18n()
-	rsp:=common.CreateResponse(errorCode,appI18n)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),appI18n)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end definition getAppI18n")
 }
 

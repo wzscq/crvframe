@@ -71,15 +71,15 @@ func (controller *RedirectController)redirect(c *gin.Context){
 	var rep commonRep
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
-		rsp:=common.CreateResponse(common.ResultWrongRequest,nil)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end redirect with error")
 		return
     }
 		
 	if rep.To==nil{
-		rsp:=common.CreateResponse(common.ResultNoExternalApiId,nil)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultNoExternalApiId,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end redirect with error")
 		return
 	}
@@ -87,8 +87,8 @@ func (controller *RedirectController)redirect(c *gin.Context){
 	//get url
 	postUrl,errorCode:=controller.getApiUrl(appDB,*rep.To)
 	if errorCode != common.ResultSuccess {
-		rsp:=common.CreateResponse(errorCode,nil)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
 		return 
 	}
 
@@ -103,15 +103,15 @@ func (controller *RedirectController)redirect(c *gin.Context){
 
 	if err != nil || resp==nil || resp.StatusCode != 200 { 
 		log.Println(resp)
-		rsp:=common.CreateResponse(common.ResultPostExternalApiError,nil)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultPostExternalApiError,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
 		return 
 	}
 
 	log.Println("resp",resp)
 	defer resp.Body.Close()
-	rsp:=common.CreateResponse(common.ResultSuccess,nil)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(nil,nil)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end redirect success")
 }
 

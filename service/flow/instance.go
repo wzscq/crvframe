@@ -62,22 +62,22 @@ func (flow *flowInstance)getNodeConfig(id string)(node *node){
 	return nil
 }
 
-func (flow *flowInstance)runNode(dataRepo data.DataRepository,node *instanceNode,req *flowReqRsp,userID,userRoles string)(*flowReqRsp,int){
+func (flow *flowInstance)runNode(dataRepo data.DataRepository,node *instanceNode,req *flowReqRsp,userID,userRoles string)(*flowReqRsp,*common.CommonError){
 	//根据节点类型，找到对应的节点，然后执行节点
 	nodeCfg:=flow.getNodeConfig(node.ID)
 	if nodeCfg==nil {
 		log.Println("can not find the node config with id: ",node.ID)		
-		return nil,common.ResultNoNodeOfGivenID
+		return nil,common.CreateError(common.ResultNoNodeOfGivenID,nil)
 	}
 	executor:=getExecutor(nodeCfg,dataRepo)
 	if executor==nil {
 		log.Println("can not find the node executor with type: ",nodeCfg.Type)
-		return nil,common.ResultNoExecutorForNodeType
+		return nil,common.CreateError(common.ResultNoExecutorForNodeType,nil)
 	}
 	return executor.run(flow,node,req,userID,userRoles)
 }
 
-func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowReqRsp,userID,userRoles string)(*flowReqRsp,int){
+func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowReqRsp,userID,userRoles string)(*flowReqRsp,*common.CommonError){
 	log.Println("start flowInstance push")
 	//每个节点的执行都包含两个步骤，启动和结束，
 	//先判断当前正在执行的节点（ExecutedNodes中最后一个节点）是否存在，如果存在则加载这个节点并运行
@@ -91,9 +91,9 @@ func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowReqRsp,u
 
 	//循环执行所有同步的node
 	for currentNode!=nil {
-		result,errorCode:=flow.runNode(dataRepo,currentNode,flowRep,userID,userRoles)
-		if errorCode!= common.ResultSuccess {
-			return nil,errorCode
+		result,err:=flow.runNode(dataRepo,currentNode,flowRep,userID,userRoles)
+		if err!= nil {
+			return nil,err
 		}
 		//更新节点状态
 		flow.updateCurrentNode(currentNode)
@@ -107,10 +107,10 @@ func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowReqRsp,u
 			}
 		} else {
 			//如果没有执行完，说明这个节点是异步节点，直接将结果返回，待后续触发
-			return result,common.ResultSuccess
+			return result,nil
 		}
 	}
 	
 	log.Println("end flowInstance push")
-	return nil,common.ResultSuccess
+	return nil,nil
 }

@@ -46,8 +46,8 @@ func (controller *DataController) query(c *gin.Context) {
 		}
 		result,errorCode=query.Execute(controller.DataRepository,true)
 	}
-	rsp:=common.CreateResponse(errorCode,result)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end data query")
 }
 
@@ -63,16 +63,16 @@ func (controller *DataController) save(c *gin.Context) {
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end data save with error")
 		return
     }
 		
 	if rep.List==nil{
 		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end data save with error")
 		return
 	}
@@ -85,8 +85,8 @@ func (controller *DataController) save(c *gin.Context) {
 		UserRoles:userRoles,
 	}
 	result,errorCode=save.Execute(controller.DataRepository)
-	rsp:=common.CreateResponse(errorCode,result)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end data save success")
 }
 
@@ -102,16 +102,16 @@ func (controller *DataController) delete(c *gin.Context) {
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end data delete with error")
 		return
     }
 
 	if rep.SelectedRowKeys == nil {
 		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end data delete with error")
 		return
 	}
@@ -124,8 +124,8 @@ func (controller *DataController) delete(c *gin.Context) {
 		UserRoles:userRoles,
 	}
 	result,errorCode=delete.Execute(controller.DataRepository)
-	rsp:=common.CreateResponse(errorCode,result)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end data delete")
 }
 
@@ -141,8 +141,8 @@ func (controller *DataController) update(c *gin.Context) {
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end data update with error")
 		return
     }
@@ -158,8 +158,8 @@ func (controller *DataController) update(c *gin.Context) {
 		Filter:rep.Filter,
 	}
 	result,errorCode=update.Execute(controller.DataRepository)
-	rsp:=common.CreateResponse(errorCode,result)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end data update")
 }
 
@@ -174,16 +174,16 @@ func (controller *DataController)download(c *gin.Context) {
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusInternalServerError, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusInternalServerError, rsp)
 		log.Println("end data download with error")
 		return
     }
 
 	if rep.List == nil || len(*(rep.List))<=0 {
 		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusInternalServerError, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusInternalServerError, rsp)
 		log.Println("end data download with error")
 		return
 	}
@@ -201,8 +201,8 @@ func (controller *DataController)download(c *gin.Context) {
 
 	errorCode=download.Execute(c.Writer)
 	if errorCode!=common.ResultSuccess {
-		rsp:=common.CreateResponse(errorCode,result)
-		c.IndentedJSON(http.StatusInternalServerError, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusInternalServerError, rsp)
 	}
 	log.Println("end data download")
 }
@@ -218,16 +218,16 @@ func (controller *DataController)getImage(c *gin.Context) {
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(errorCode,nil)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end data getImage with error")
 		return
     }
 
 	if rep.List == nil || len(*(rep.List))<=0 {
 		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(errorCode,nil)
-		c.IndentedJSON(http.StatusOK, rsp.Rsp)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end data getImage with error")
 		return
 	}
@@ -240,8 +240,8 @@ func (controller *DataController)getImage(c *gin.Context) {
 	}
 
 	result,errorCode:=imageFile.getImages()
-	rsp:=common.CreateResponse(errorCode,result)
-	c.IndentedJSON(http.StatusOK, rsp.Rsp)
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+	c.IndentedJSON(http.StatusOK, rsp)
 	
 	log.Println("end getImage download")
 }

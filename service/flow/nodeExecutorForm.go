@@ -3,88 +3,102 @@ package flow
 import (
     "time"
 	"crv/frame/common"
+	"log"
+	"encoding/json"
 )
 
-type nodeExecutorForm struct {
+type formParams struct {
+	Url string `json:"url,omitempty"` 
+	Location string `json:"location,omitempty"`
+	Title string  `json:"title,omitempty"`
+	Key string  `json:"key,omitempty"`
+	Width int `json:"width,omitempty"`
+	Height int  `json:"height,omitempty"`
+}
 
+type nodeExecutorForm struct {
+	NodeConf *node
+}
+
+func (nodeExecutor *nodeExecutorForm)getNodeConf()(*formParams){
+	mapData,_:=nodeExecutor.NodeConf.Data.(map[string]interface{})
+	jsonStr, err := json.Marshal(mapData)
+    if err != nil {
+        log.Println(err)
+		return nil
+    }
+	log.Println(string(jsonStr))
+	conf:=&formParams{}
+    if err := json.Unmarshal(jsonStr, conf); err != nil {
+        log.Println(err)
+		return nil
+    }
+
+	return conf
 }
 
 func (nodeExecutor *nodeExecutorForm)runStage0(
 	instance *flowInstance,
 	node *instanceNode,
 	req *flowReqRsp,
-	userID string)(*flowReqRsp,int){
+	userID string)(*flowReqRsp,*common.CommonError){
 	
+	formParams:=nodeExecutor.getNodeConf()
+	if formParams==nil {
+		return nil,common.CreateError(common.ResultLoadNodeConfError,nil)
+	}
 	stage:=1
 	operation:=map[string]interface{}{
-		"id":"create", 
-        "name":map[string]interface{}{
-                "default":"创建",
-                "zh_CN":"创建",
-                "en_US":"Create",
-        }, 
+		"id":"", 
         "type":"open",
         "params":map[string]interface{}{
-                    "url":"/formview/#/lms_student/addStudentFlowForm/create",
-                    "location":"modal",
-                    "title":"增加学生",
-                    "key":"/model/lms_student/addStudentFlowForm/create",
-                    "width":800,
-                    "height":600,
+                    "url":formParams.Url,
+                    "location":formParams.Location,
+                    "title":formParams.Title,
+                    "key":formParams.Key,
+                    "width":formParams.Width,
+                    "height":formParams.Height,
         },
         "input":map[string]interface{}{
 			"flowInstanceID":&(instance.InstanceID),
 			"stage":&stage,
 		},
-        "description":"打开增加学生对话框",
+        "description":"",
 	}
 	
 	result:=&flowReqRsp{
 		Operation:&operation,
 	}
 
-	node.Data=[]interface{}{
-		map[string]interface{}{
+	node.Data=map[string]interface{}{
 			"stage0":map[string]interface{}{
-				"input":req,
 				"output":result,
 				"userID":userID,
 			},
-		},
-	}
+		}
 	node.UserID=userID
-	return result,common.ResultSuccess
+	return result,nil
 }
 
 func (nodeExecutor *nodeExecutorForm)runStage1(
 	instance *flowInstance,
 	node *instanceNode,
 	req *flowReqRsp,
-	userID string)(*flowReqRsp,int){
+	userID string)(*flowReqRsp,*common.CommonError){
 	
 	endTime:=time.Now().Format("2006-01-02 15:04:05")
 	node.Completed=true
 	node.EndTime=&endTime
-	node.UserID=userID
-	
-	stage1Data:=map[string]interface{}{
-		"stage1":map[string]interface{}{
-			"input":req,
-			"output":req,
-			"userID":userID,
-		},
-	}
-	
-	node.Data=append(node.Data,stage1Data)
-	node.UserID=userID
-	return req,common.ResultSuccess
+	node.UserID=userID	
+	node.Data["output"]=req
+	return req,nil
 }
 
 func (nodeExecutor *nodeExecutorForm)run(
 	instance *flowInstance,
 	node *instanceNode,
 	req *flowReqRsp,
-	userID,userRoles string)(*flowReqRsp,int){
+	userID,userRoles string)(*flowReqRsp,*common.CommonError){
 
 	if req.Stage==nil || *(req.Stage) == 0 {
 		return nodeExecutor.runStage0(instance,node,req,userID)

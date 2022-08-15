@@ -64,8 +64,8 @@ func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 			c.Next()
 		} else {
 			c.Abort()
-			rsp:=CreateResponse(errorCode,nil)
-			c.IndentedJSON(http.StatusOK, rsp.Rsp)
+			rsp:=CreateResponse(CreateError(errorCode,nil),nil)
+			c.IndentedJSON(http.StatusOK, rsp)
 		}
 		// after request
 		latency := time.Since(t)
