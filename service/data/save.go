@@ -319,6 +319,7 @@ func (save *Save) updateRow(
 	permissionDS *definition.Dataset)(map[string]interface{},int) {
 
 	values,strID,version,errCode:=save.getRowUpdateColumnValues(row,permissionDS.Fields)
+	//log.Printf("Save updateRow strID:%s,version:%s",strID,version)
 	if errCode!=common.ResultSuccess{
 		return nil,errCode
 	}
@@ -328,9 +329,9 @@ func (save *Save) updateRow(
 	} 
 
 	//修改逻辑，如果没有提供version则认为不做版本控制，直接更新
-	if len(version)<=0 {
+	/*if len(version)<=0 {
 		return nil,common.ResultNoVersionWhenUpdate
-	}
+	}*/
 
 	//更新用户有权限的数据
 	permissionWhere:=""
@@ -347,7 +348,7 @@ func (save *Save) updateRow(
 	if len(version)>0 {
 		sql=sql+" and version="+version
 	}
-	sql=sql+version+permissionWhere
+	sql=sql+permissionWhere
 	
 	//执行sql
 	_,rowCount,err:=dataRepository.execWithTx(sql,tx)
