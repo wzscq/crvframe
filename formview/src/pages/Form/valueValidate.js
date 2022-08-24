@@ -47,7 +47,7 @@ const valueValidate=(controls,values,errorField)=>{
             for(const rowKey in values){
                 const row=values[rowKey];
                 if(control.controls){
-                    subValueValidate(rowKey+'.list',control.controls,row[control.field].list,errorField);
+                    subValueValidate(rowKey+'.list',control.controls,row[control.field]?.list,errorField);
                 } else {
                     validateField(rowKey,control,row,errorField);
                 }
