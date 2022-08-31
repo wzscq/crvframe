@@ -174,12 +174,17 @@ export default function TransferControl({dataPath,control,field,sendMessageToPar
         } else {
             filter={'Op.and':filter};
         }
+
+        let pageSize=500;
+        if(control.pageSize){
+            pageSize=control.pageSize;
+        }
         
         return {
             modelID:field.relatedModelID,
             fields:control.fields,
             filter:filter,
-            pagination:{current:1,pageSize:500}
+            pagination:{current:1,pageSize:pageSize}
         }
     },[cascadeParentValue]);
 
