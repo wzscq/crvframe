@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { message} from 'antd';
 
-import {loginApi,logoutApi} from '../api';
+import {loginApi,logoutApi,oauthBackApi} from '../api';
 import {userInfoStorage} from '../utils/sessionStorage';
 import {getLocaleErrorMessage} from '../utils/localeResources';
 
@@ -48,6 +48,31 @@ export const loginSlice = createSlice({
         message.error(action.error.message);
       }
     });
+
+    //oauth登录后的操作，和本地login的前端操作逻辑一致
+    builder.addCase(oauthBackApi.pending, (state, action) => {
+      state.pending=true;
+    });
+    builder.addCase(oauthBackApi.fulfilled, (state, action) => {
+      state.pending=false;
+      if(action.payload.error&&action.payload.message){
+        //message.error(action.payload.message);
+        message.error(getLocaleErrorMessage(action.payload));
+      } else {
+        const loginApiResponse=action.payload.result;
+        state.userName=loginApiResponse.userName;
+        state.token=loginApiResponse.token;
+        state.appID=loginApiResponse.appID;
+        userInfoStorage.set(loginApiResponse);
+      }
+    });
+    builder.addCase(oauthBackApi.rejected , (state, action) => {
+      state.pending=false;
+      if(action.error&&action.error.message){
+        message.error(action.error.message);
+      }
+    });
+
     builder.addCase(logoutApi.pending, (state, action) => {
       state.pending=true;
       logout(state);

@@ -29,7 +29,7 @@ type changePasswordRep struct {
 	NewPassword  string  `json:"newPassword"`
 }
 
-type loginResult struct {
+type LoginResult struct {
     UserID     string  `json:"userID"`
     UserName  *string  `json:"userName"`
 	Token     string  `json:"token"`
@@ -37,7 +37,7 @@ type loginResult struct {
 }
 
 func (controller *UserController)checkUserPassword(userID string,password string,dbName string)(*User,int){
-	user,err:=controller.UserRepository.getUser(userID,dbName)
+	user,err:=controller.UserRepository.GetUser(userID,dbName)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return user,common.ResultWrongUserPassword
@@ -53,7 +53,7 @@ func (controller *UserController)checkUserPassword(userID string,password string
 }
 
 func (controller *UserController)getUserRoles(userID string,dbName string)(string,int){
-	roles,err:=controller.UserRepository.getUserRoles(userID,dbName)
+	roles,err:=controller.UserRepository.GetUserRoles(userID,dbName)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return "",common.ResultNoUserRole
@@ -92,11 +92,10 @@ func (controller *UserController)login(c *gin.Context) {
 	log.Println("start user login")
 	var rep loginRep
 	var errorCode int
-	var result *loginResult
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 
-		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end user login with error")
 		return 
@@ -106,7 +105,7 @@ func (controller *UserController)login(c *gin.Context) {
 	var appDB string
 	appDB,errorCode=controller.getAppDB(rep.AppID)
 	if(errorCode != common.ResultSuccess){
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end user login with error")
 		return
@@ -115,7 +114,7 @@ func (controller *UserController)login(c *gin.Context) {
 	var user *User
 	user,errorCode=controller.checkUserPassword(rep.UserID,rep.Password,appDB)
 	if(errorCode != common.ResultSuccess){
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end user login with error")
 		return
@@ -123,7 +122,7 @@ func (controller *UserController)login(c *gin.Context) {
 
 	userRoles,errorCode:=controller.getUserRoles(rep.UserID,appDB)
 	if(errorCode != common.ResultSuccess){
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end user login with error")
 		return
@@ -131,8 +130,9 @@ func (controller *UserController)login(c *gin.Context) {
 	
 	token:=GetLoginToken()
 	errorCode=controller.cacheLoginToken(rep.UserID,token,appDB,userRoles)
+	var result *LoginResult
 	if errorCode == common.ResultSuccess {
-		result=&loginResult{
+		result=&LoginResult{
 			UserID:user.UserID,
 			UserName:user.UserNameZh,
 			Token:token,

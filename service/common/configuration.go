@@ -9,6 +9,11 @@ import (
 type redisConf struct {
 	Server string `json:"server"`
 	TokenExpired string `json:"tokenExpired"`
+	TokenDB int `json:"tokenDB"`
+	OauthTokenExpired string `json:"oauthTokenExpired"`
+	OauthTokenDB int `json:"oauthTokenDB"`
+	FlowInstanceDB int `json:"flowInstanceDB"`
+	FlowInstanceExpired string `json:"flowInstanceExpired"`
 }
 
 type mysqlConf struct {

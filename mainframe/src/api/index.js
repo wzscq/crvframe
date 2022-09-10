@@ -31,6 +31,16 @@ export const getLogoImage=()=>{
   return host+"/appimages/"+appID+"/logo.png";
 }
 
+//redire to oauth login page
+export const getOAuthLoginPage = createAsyncThunk(
+  'getOAuthLoginPage',
+  async (param, _) => {
+    const reponse= await axios({url:host+"/oauth/getLoginPage",method:"post",data:param});
+    console.log('login reponse',reponse);
+    return reponse.data;
+  }
+);
+
 //login api
 export const loginApi = createAsyncThunk(
     'login',
@@ -39,6 +49,26 @@ export const loginApi = createAsyncThunk(
       console.log('login reponse',reponse);
       return reponse.data;
     }
+);
+
+//oauthLoginApi
+export const oauthLoginApi = createAsyncThunk(
+  'oauthLogin',
+  async (param, _) => {
+    const reponse= await axios({url:host+"/oauth/login",method:"post",data:param});
+    console.log('login reponse',reponse);
+    return reponse.data;
+  }
+);
+
+//oauthLoginApi
+export const oauthBackApi = createAsyncThunk(
+  'oauthBack',
+  async (param, _) => {
+    const reponse= await axios({url:host+"/oauth/back",method:"post",data:param});
+    console.log('login reponse',reponse);
+    return reponse.data;
+  }
 );
 
 //logout api

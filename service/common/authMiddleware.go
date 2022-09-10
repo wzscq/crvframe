@@ -27,7 +27,8 @@ func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 				appDB,_:=appCache.GetAppDB(appID)
 				c.Set("appDB",appDB)
 			}
-		} else if strings.Compare(c.Request.URL.Path,"/user/login") !=0 {
+		} else if strings.Compare(c.Request.URL.Path,"/user/login") !=0 &&
+				  strings.HasPrefix(c.Request.URL.Path,"/oauth/") == false {
 			var header repHeader
 			if err := c.ShouldBindHeader(&header); err != nil {
 				log.Println(err)

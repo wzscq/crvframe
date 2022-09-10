@@ -19,16 +19,16 @@ type User struct {
 }
 
 type UserRepository interface {
-	getUser(userID string,dbName string)(*User,error)
+	GetUser(userID string,dbName string)(*User,error)
 	updatePassword(userID string,password string,dbName string)(error)
-	getUserRoles(userID string,dbName string)(string,error)
+	GetUserRoles(userID string,dbName string)(string,error)
 }
 
 type DefatultUserRepository struct {
 	DB *sql.DB
 }
 
-func (repo *DefatultUserRepository)getUser(userID string,dbName string)(*User,error){
+func (repo *DefatultUserRepository)GetUser(userID string,dbName string)(*User,error){
 	var user User
 	row := repo.DB.QueryRow("select id as user_id,user_name_en,user_name_zh,password from "+dbName+".core_user WHERE id = ?", userID)
     if err := row.Scan(&user.UserID, &user.UserNameEn, &user.UserNameZh, &user.Password); err != nil {
@@ -44,7 +44,7 @@ func (repo *DefatultUserRepository)updatePassword(userID string,password string,
 	return err
 }
 
-func (repo *DefatultUserRepository)getUserRoles(userID string,dbName string)(string,error){
+func (repo *DefatultUserRepository)GetUserRoles(userID string,dbName string)(string,error){
 	row := repo.DB.QueryRow("select GROUP_CONCAT(core_role_id) as roles from  "+dbName+".core_role_core_user where core_user_id = ? group by core_user_id", userID)
 	var roles string
 	if err := row.Scan(&roles); err != nil {

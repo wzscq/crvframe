@@ -7,6 +7,7 @@ import (
     "crv/frame/definition"
     "crv/frame/data"
     "crv/frame/common"
+    "crv/frame/oauth"
     "crv/frame/redirect"
     "crv/frame/flow"
     "time"
@@ -39,7 +40,7 @@ func main() {
 
     duration, _ := time.ParseDuration(conf.Redis.TokenExpired)
     loginCache:=&user.DefatultLoginCache{}
-    loginCache.Init(conf.Redis.Server,0,duration)
+    loginCache.Init(conf.Redis.Server,conf.Redis.TokenDB,duration)
     
     router.Use(common.AuthMiddleware(loginCache,appCache))
     
@@ -74,13 +75,26 @@ func main() {
     redirectController:=&redirect.RedirectController{}
     redirectController.Bind(router)
 
+    flowExpired,_:=time.ParseDuration(conf.Redis.FlowInstanceExpired)
     flowInstanceRepository:=&flow.DefaultFlowInstanceRepository{}
-    flowInstanceRepository.Init(conf.Redis.Server,2,0)
+    flowInstanceRepository.Init(conf.Redis.Server,conf.Redis.FlowInstanceDB,flowExpired)
     flowController:=&flow.FlowController{
         InstanceRepository:flowInstanceRepository,
         DataRepository:dataRepo,
     }
     flowController.Bind(router)
+
+    //oauth
+    oauthTokenExpired,_:=time.ParseDuration(conf.Redis.OauthTokenExpired)
+    oauthCache:=&oauth.OAuthCache{}
+    oauthCache.Init(conf.Redis.Server,conf.Redis.OauthTokenDB,oauthTokenExpired)
+    oauthController:=&oauth.OAuthController{
+        AppCache:appCache,
+        UserRepository:userRepo,
+        OAuthCache:oauthCache,
+        LoginCache:loginCache,
+    }
+    oauthController.Bind(router)
 
     router.Run(conf.Service.Port)
 }

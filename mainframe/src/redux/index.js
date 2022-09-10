@@ -7,6 +7,7 @@ import dialogReducer from './dialogSlice';
 import requestReducer from './requestSlice';
 import logReducer from './logSlice';
 import i18nReducer from './i18nSlice';
+import oauthReducer from './oauthSlice';
 
 const store = configureStore({
   reducer: {
@@ -16,7 +17,8 @@ const store = configureStore({
     request:requestReducer,
     log:logReducer,
     i18n:i18nReducer,
-    operation:operationReducer
+    operation:operationReducer,
+    oauth:oauthReducer
   }
 });
 

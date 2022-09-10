@@ -1,10 +1,10 @@
 package redirect
 
 import (
-	"os"
 	"log"
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
+	"crv/frame/definition"
 	"net/http"
 	"encoding/json"
 	"bytes"
@@ -27,38 +27,8 @@ type commonRep struct {
 	//Pagination *pagination `json:"pagination"`
 }
 
-type apiItem struct {
-	Url string `json:"url"`
-}
-
 type RedirectController struct {
 	 
-}
-
-func (controller *RedirectController)getApiUrl(appDB,apiId string)(string,int){
-	log.Println("start getApiUrl ")
-	apiConfigFile := "apps/"+appDB+"/external_api.json"
-	filePtr, err := os.Open(apiConfigFile)
-	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
-		return "",common.ResultOpenFileError
-	}
-	defer filePtr.Close()
-	// 创建json解码器
-	decoder := json.NewDecoder(filePtr)
-	apiConf:=map[string]apiItem{}
-	err = decoder.Decode(&apiConf)
-	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
-		return "",common.ResultJsonDecodeError
-	}
-
-	api,ok:=apiConf[apiId]
-	if !ok {
-		return "",common.ResultNoExternalApiUrl
-	}
-	log.Println("end getApiUrl ",api.Url)
-	return api.Url,common.ResultSuccess
 }
 
 func (controller *RedirectController)redirect(c *gin.Context){
@@ -85,7 +55,7 @@ func (controller *RedirectController)redirect(c *gin.Context){
 	}
 
 	//get url
-	postUrl,errorCode:=controller.getApiUrl(appDB,*rep.To)
+	postUrl,errorCode:=definition.GetApiUrl(appDB,*rep.To)
 	if errorCode != common.ResultSuccess {
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
