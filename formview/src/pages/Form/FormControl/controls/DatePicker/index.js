@@ -79,6 +79,7 @@ export default function DatePickerControl({dataPath,control,field}){
             disabled={control.disabled} 
             onChange={onChange}
             ref={inputRef}
+            showTime={control.showTime}
             status={valueError?'error':null}
             />
     );
