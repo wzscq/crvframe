@@ -90,7 +90,7 @@ func (delete *Delete) delete(dataRepository DataRepository,tx *sql.Tx,modelID st
 
 	sql:="delete from "+delete.AppDB+"."+modelID+" where id in ("+strIDs+")"
 
-	_,rowCount,err:=dataRepository.execWithTx(sql,tx)
+	_,rowCount,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		return nil,common.ResultSQLError
 	}
@@ -112,7 +112,7 @@ func (delete *Delete) delete(dataRepository DataRepository,tx *sql.Tx,modelID st
 
 func (delete *Delete) Execute(dataRepository DataRepository)(*map[string]interface {},int) {
 	//开启事务
-	tx,err:= dataRepository.begin()
+	tx,err:= dataRepository.Begin()
 	if err != nil {
 		log.Println(err)
 		return nil,common.ResultSQLError

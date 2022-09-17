@@ -99,7 +99,7 @@ func (save *SaveManyToMany)createManyToManyRow(
 	values=values+commonFieldsValue
 	sql:="insert into "+save.AppDB+"."+midModelID+" ("+columns+") values ("+values+")"
 	//执行sql
-	_,_,err:=dataRepository.execWithTx(sql,tx)
+	_,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		return common.ResultSQLError
 	}
@@ -117,7 +117,7 @@ func (save *SaveManyToMany)deleteManyToManyRow(
 	where:=modelID+"_id='"+pID+"' and "+relatedModelID+"_id='"+releatedID+"'"
 	sql:="delete from "+save.AppDB+"."+midModelID+" where "+where
 	//执行sql
-	_,_,err:=dataRepository.execWithTx(sql,tx)
+	_,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		return common.ResultSQLError
 	}

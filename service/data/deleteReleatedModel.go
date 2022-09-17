@@ -21,9 +21,9 @@ func (dr *DeleteReleated)deleteFile(dataRepository DataRepository,tx *sql.Tx)(in
 	where:="model_id='"+dr.ModelID+"' and row_id in ("+ids+")"
 	sql:="delete from "+dr.AppDB+".core_file where "+where
 	//执行sql
-	_,_,err:=dataRepository.execWithTx(sql,tx)
+	_,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
-		log.Println("deleteFile execWithTx error:", err)
+		log.Println("deleteFile ExecWithTx error:", err)
 		return common.ResultSQLError
 	}
 
@@ -60,7 +60,7 @@ func (dr *DeleteReleated)deleteManyToMany(
 	where:=dr.ModelID+"_id in ("+ids+")"
 	sql:="delete from "+dr.AppDB+"."+midModelID+" where "+where
 	//执行sql
-	_,_,err:=dataRepository.execWithTx(sql,tx)
+	_,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		return common.ResultSQLError
 	}

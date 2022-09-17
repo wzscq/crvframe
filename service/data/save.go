@@ -235,7 +235,7 @@ func (save *Save)createRow(
 	sql:="insert into "+save.AppDB+"."+modelID+" ("+columns+") values ("+values+")"
 	
 	//执行sql
-	id,_,err:=dataRepository.execWithTx(sql,tx)
+	id,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		//判断，如果是Error 1062，则未主键冲突
 		if strings.Contains(err.Error(),"Error 1062") {
@@ -286,7 +286,7 @@ func (save *Save) deleteRow(
 	}
 
 	sql:="delete from "+save.AppDB+"."+modelID+" where id='"+strID+"'"+permissionWhere
-	_,rowCount,err:=dataRepository.execWithTx(sql,tx)
+	_,rowCount,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		return nil,common.ResultSQLError
 	}
@@ -351,7 +351,7 @@ func (save *Save) updateRow(
 	sql=sql+permissionWhere
 	
 	//执行sql
-	_,rowCount,err:=dataRepository.execWithTx(sql,tx)
+	_,rowCount,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		return nil,common.ResultSQLError
 	}
@@ -438,7 +438,7 @@ func (save *Save) Execute(dataRepository DataRepository)(*saveResult,int) {
 	log.Println("start data save Execute")
 	
 	//开启事务
-	tx,err:= dataRepository.begin()
+	tx,err:= dataRepository.Begin()
 	if err != nil {
 		log.Println(err)
 		return nil,common.ResultSQLError

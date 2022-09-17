@@ -152,7 +152,7 @@ func (query *Query) getData(sqlParam *sqlParam,dataRepository DataRepository)([]
 		" order by "+sqlParam.Sorter+
 		" limit "+sqlParam.Limit
 
-	res,err:=dataRepository.query(sql)
+	res,err:=dataRepository.Query(sql)
 	if err!=nil {
 		return nil,common.ResultSQLError
 	}				
@@ -165,7 +165,7 @@ func (query *Query) getCount(sqlParam *sqlParam,dataRepository DataRepository)(i
 		" from "+query.AppDB+"."+query.ModelID+
 		" where "+sqlParam.Where
 
-	res,err:=dataRepository.query(sql)
+	res,err:=dataRepository.Query(sql)
 	if err!=nil {
 		return 0,common.ResultSQLError
 	}

@@ -154,7 +154,7 @@ func (update *Update)update(dataRepository DataRepository,tx *sql.Tx)(*map[strin
 	//拼接更新sql
 	sql:="update "+update.AppDB+"."+update.ModelID+" set "+updateFieldsStr+" where "+whereStr
 	//执行sql
-	_,rowCount,err:=dataRepository.execWithTx(sql,tx)
+	_,rowCount,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		return nil,common.ResultSQLError
 	}
@@ -167,7 +167,7 @@ func (update *Update)update(dataRepository DataRepository,tx *sql.Tx)(*map[strin
 
 func (update *Update) Execute(dataRepository DataRepository)(*map[string]interface {},int) {
 	//开启事务
-	tx,err:= dataRepository.begin()
+	tx,err:= dataRepository.Begin()
 	if err != nil {
 		log.Println(err)
 		return nil,common.ResultSQLError

@@ -7,20 +7,20 @@ import (
 )
 
 type DataRepository interface {
-	begin() (*sql.Tx, error)
-	query(sql string)([]map[string]interface{},error)
-	execWithTx(sql string,tx *sql.Tx)(int64,int64, error)
+	Begin() (*sql.Tx, error)
+	Query(sql string)([]map[string]interface{},error)
+	ExecWithTx(sql string,tx *sql.Tx)(int64,int64, error)
 }
 
 type DefatultDataRepository struct {
 	DB *sql.DB
 }
 
-func (repo *DefatultDataRepository)begin()(*sql.Tx, error){
+func (repo *DefatultDataRepository)Begin()(*sql.Tx, error){
 	return repo.DB.Begin()
 }
 
-func (repo *DefatultDataRepository)execWithTx(sql string,tx *sql.Tx)(int64,int64, error){
+func (repo *DefatultDataRepository)ExecWithTx(sql string,tx *sql.Tx)(int64,int64, error){
 	log.Println(sql)
 	res,err:=tx.Exec(sql)
 	if err!=nil {
@@ -74,7 +74,7 @@ func (repo *DefatultDataRepository)rowsToMap(rows *sql.Rows)([]map[string]interf
 	return list,nil
 }
 
-func (repo *DefatultDataRepository)query(sql string)([]map[string]interface{},error){
+func (repo *DefatultDataRepository)Query(sql string)([]map[string]interface{},error){
 	log.Println(sql)
 	rows, err := repo.DB.Query(sql)
 	if err != nil {

@@ -55,6 +55,7 @@ const (
 	ResultUpdateFieldNotFound=10000037
 	ResultI18nNoLangList=10000038
 	ResultI18nNoLang=10000039
+	ResultLoadExcelFileError=10000040
 	ResultStartFlowWithoutID=20000001
 	ResultCacheFlowInstanceError=20000002
 	ResultNoExecutorForNodeType=20000003
@@ -69,6 +70,11 @@ var errMsg = map[int]CommonRsp{
 		ErrorCode:ResultSuccess,
 		Message:"操作成功",
 		Error:false,
+	},
+	ResultLoadExcelFileError:CommonRsp{
+		ErrorCode:ResultLoadExcelFileError,
+		Message:"加载Excel文件失败，您选择的Excel文件格式不正确或文件损坏，请选择正确文件并重新尝试",
+		Error:true,
 	},
 	ResultWrongRequest:CommonRsp{
 		ErrorCode:ResultWrongRequest,

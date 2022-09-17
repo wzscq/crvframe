@@ -10,6 +10,7 @@ import (
     "crv/frame/oauth"
     "crv/frame/redirect"
     "crv/frame/flow"
+    "crv/frame/esi"
     "time"
     "log"
 )
@@ -95,6 +96,12 @@ func main() {
         LoginCache:loginCache,
     }
     oauthController.Bind(router)
+
+    //esi
+    esiController:=&esi.EsiController{
+        DataRepository:dataRepo,
+    }
+    esiController.Bind(router)
 
     router.Run(conf.Service.Port)
 }

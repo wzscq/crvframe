@@ -111,6 +111,8 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
             let input={...operation.input,...operationData};
             if(item.input&&item.input!=={}){
                 if(formType===FORM_TYPE.UPDATE){
+                    //这里的item是打开表单时在前一个页面操作中选怎的数据或者前一个操作的输出
+                    //在批量更新时将选择的数据和输入的数据合并在一起提交
                     input={...item.input,...input}
                 } else {
                     //以下处理是为了配合流的执行

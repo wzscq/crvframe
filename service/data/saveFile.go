@@ -142,7 +142,7 @@ func (save *SaveFile)createFileRow(dataRepository DataRepository,tx *sql.Tx,mode
 	values=values+commonFieldsValue
 	sql:="insert into "+save.AppDB+".core_file ("+columns+") values ("+values+")"
 	//执行sql
-	id,_,err:=dataRepository.execWithTx(sql,tx)
+	id,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		return common.ResultSQLError
 	}
@@ -200,7 +200,7 @@ func (save *SaveFile)deleteFileRow(dataRepository DataRepository,tx *sql.Tx,row 
 
 	sql:="delete from "+save.AppDB+".core_file where id='"+strID+"'"
 	//执行sql
-	_,_,err:=dataRepository.execWithTx(sql,tx)
+	_,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		return common.ResultSQLError
 	}
