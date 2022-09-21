@@ -8,7 +8,7 @@ const (
 )
 
 type QueryRelatedModel interface {
-	query(dataRepository DataRepository,parentList *queryResult,refField *field)(int)
+	query(dataRepository DataRepository,parentList *queryResult,refField *Field)(int)
 }
 
 func getRelatedModelID(

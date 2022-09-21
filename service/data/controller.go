@@ -12,10 +12,10 @@ type CommonReq struct {
 	ViewID *string `json:"viewID"`
 	Filter *map[string]interface{} `json:"filter"`
 	List *[]map[string]interface{} `json:"list"`
-	Fields *[]field `json:"fields"`
-	Sorter *[]sorter `json:"sorter"`
+	Fields *[]Field `json:"fields"`
+	Sorter *[]Sorter `json:"sorter"`
 	SelectedRowKeys *[]string `json:"selectedRowKeys"`
-	Pagination *pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination"`
 }
 
 type DataController struct {

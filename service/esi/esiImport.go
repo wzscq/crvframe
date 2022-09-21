@@ -21,6 +21,7 @@ type esiImport struct {
 	FileName string
 	FileContent string
 	DataRepository data.DataRepository
+	InputRowData *map[string]interface{}
 }
 
 func (esi *esiImport)doImport()(interface{},*common.CommonError){
@@ -35,7 +36,10 @@ func (esi *esiImport)doImport()(interface{},*common.CommonError){
 		esi.ModelID,
 		esi.UserID,
 		esi.UserRoles,
-		esi.DataRepository)
+		esi.FileName,
+		esi.DataRepository,
+		esiModelSpec,
+		esi.InputRowData)
 
 	contentHandler:=getContentHandler(esiModelSpec)
 
@@ -83,6 +87,7 @@ func (esi *esiImport)getEsiModelSpec()(*esiModelSpec,*common.CommonError){
 		modelSpec=&esiModelSpec{
 			ModelID:esi.ModelID,
 			Fields:esiModel.Fields,
+			Options:esiModel.Options,
 			SpecificID:"",
 		}
 	}

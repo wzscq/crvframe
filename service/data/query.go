@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-type pagination struct {
+type Pagination struct {
     Current int `json:"current"` 
     PageSize int `json:"pageSize"` 
 }
 
-type field struct {
+type Field struct {
 	Field string `json:"field"`
     DataType *string `json:"dataType,omitempty"`
 	//以下字段是在关联字段的级联查询中需要携带的参数，用于关联表数据的查询
@@ -22,10 +22,10 @@ type field struct {
 	RelatedField *string `json:"relatedField,omitempty"`
 	AssociationModelID *string `json:"associationModelID,omitempty"`
 	ViewID *string `json:"viewID,omitempty"`
-	Pagination *pagination `json:"pagination,omitempty"`
+	Pagination *Pagination `json:"pagination,omitempty"`
 	Filter *map[string]interface{} `json:"filter,omitempty"`
-	Fields *[]field `json:"fields,omitempty"`
-	Sorter *[]sorter `json:"sorter,omitempty"` 
+	Fields *[]Field `json:"fields,omitempty"`
+	Sorter *[]Sorter `json:"sorter,omitempty"` 
 }
 
 type queryResult struct {
@@ -36,7 +36,7 @@ type queryResult struct {
 	List []map[string]interface{} `json:"list"`
 }
 
-type sorter struct {
+type Sorter struct {
 	Field string `json:"field"`
 	Order string `json:"order"` 	
 }
@@ -51,11 +51,11 @@ type sqlParam struct {
 type Query struct {
 	ModelID string `json:"modelID"`
 	ViewID *string `json:"viewID"`
-	Pagination *pagination `json:"pagination"`
+	Pagination *Pagination `json:"pagination"`
 	Filter *map[string]interface{} `json:"filter"`
-	Fields *[]field `json:"fields"`
+	Fields *[]Field `json:"fields"`
 	AppDB string `json:"appDB"`
-	Sorter *[]sorter `json:"sorter"` 
+	Sorter *[]Sorter `json:"sorter"` 
 	UserRoles string `json:"userRoles"` 
 }
 

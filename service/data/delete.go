@@ -41,8 +41,8 @@ func (delete *Delete)getPermissionIds(dataRepository DataRepository,idList *[]st
 				*(permissionDataset.Filter),
 			},
 		},
-		Fields:&[]field{
-			field{
+		Fields:&[]Field{
+			Field{
 				Field:"id",
 			},
 		},

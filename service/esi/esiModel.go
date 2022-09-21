@@ -16,6 +16,10 @@ const (
 )
 
 const (
+	DATA_SOURCE_INPUT="input"
+)
+
+const (
 	END_ROW_YES="yes"
 	END_ROW_NO="no"
 	END_ROW_AUTO="auto"
@@ -33,17 +37,25 @@ type esiModelField struct {
 	EndRow string `json:"endRow"`
 	EmptyValue string `json:"emptyValue"`
 	DetectedRangeType string `json:"detectedRangeType"`
+	Source string `json:"source"`
+}
+
+type esiOption struct {
+	GenerateRowID bool `json:"generateRowID"` 
+	MaxHeaderRow int `json:"maxHeaderRow"` 
 }
 
 type esiModelSpec struct {
 	ModelID string `json:"modelID"`
 	Fields []esiModelField `json:"fields"`
+	Options esiOption `json:"options"`
 	SpecificID string `json:"specificID"`
 }
 
 type esiModel struct {
 	ModelID string `json:"modelID"`
 	Fields []esiModelField `json:"fields"`
+	Options esiOption `json:"options"`
 }
 
 func getAppEsiModels(appDB string)(*[]string,*common.CommonError){

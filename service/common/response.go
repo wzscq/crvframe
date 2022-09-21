@@ -56,6 +56,7 @@ const (
 	ResultI18nNoLangList=10000038
 	ResultI18nNoLang=10000039
 	ResultLoadExcelFileError=10000040
+	ResultESIFileAlreadyImported=10000041
 	ResultStartFlowWithoutID=20000001
 	ResultCacheFlowInstanceError=20000002
 	ResultNoExecutorForNodeType=20000003
@@ -70,6 +71,11 @@ var errMsg = map[int]CommonRsp{
 		ErrorCode:ResultSuccess,
 		Message:"操作成功",
 		Error:false,
+	},
+	ResultESIFileAlreadyImported:CommonRsp{
+		ErrorCode:ResultESIFileAlreadyImported,
+		Message:"您选择的文件和已经导入的文件名称相同，不能重复导入相同的文件",
+		Error:true,
 	},
 	ResultLoadExcelFileError:CommonRsp{
 		ErrorCode:ResultLoadExcelFileError,

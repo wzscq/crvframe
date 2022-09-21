@@ -10,7 +10,7 @@ type QueryOneToMany struct {
 	UserRoles string `json:"userRoles"` 
 }
 
-func (queryOneToMany *QueryOneToMany)mergeResult(res *queryResult,relatedRes *queryResult,refField *field){
+func (queryOneToMany *QueryOneToMany)mergeResult(res *queryResult,relatedRes *queryResult,refField *Field){
 	relatedFieldName:=*(refField.RelatedField)
 	fieldName:=refField.Field
 	//将每一行的结果按照ID分配到不同的记录行上的关联字段上
@@ -38,7 +38,7 @@ func (queryOneToMany *QueryOneToMany)mergeResult(res *queryResult,relatedRes *qu
 	}
 }
 
-func (queryOneToMany *QueryOneToMany)getFilter(parentList *queryResult,refField *field)(*map[string]interface{}){
+func (queryOneToMany *QueryOneToMany)getFilter(parentList *queryResult,refField *Field)(*map[string]interface{}){
 	//一对多字段本身是虚拟字段，需要取本表的ID字段到关联表中的关联字段查找和当前表ID字段值相同的记录
 	//首先获取用于过滤的ID列表
 	ids:=GetFieldValues(parentList,"id")
@@ -55,7 +55,7 @@ func (queryOneToMany *QueryOneToMany)getFilter(parentList *queryResult,refField 
 	return &filter
 }
 
-func (queryOneToMany *QueryOneToMany) query(dataRepository DataRepository,parentList *queryResult,refField *field)(int) {
+func (queryOneToMany *QueryOneToMany) query(dataRepository DataRepository,parentList *queryResult,refField *Field)(int) {
 	if refField.RelatedModelID == nil {
 		return common.ResultNoRelatedModel
 	}

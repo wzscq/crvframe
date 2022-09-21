@@ -18,6 +18,105 @@ type EsiController struct {
 	DataRepository data.DataRepository
 }
 
+func (controller *EsiController)getImportFile(inputRowData *map[string]interface{})(string,string,int){
+	fileField,ok:=(*inputRowData)["esiFile"]
+	if !ok {
+		log.Println("EsiController getImportFile end with error:")
+		log.Println("the field esiFile is not found.")
+		return "","",common.ResultWrongRequest
+	}
+
+	fileValueMap,ok:=fileField.(map[string]interface{})
+	if !ok {
+		log.Println("EsiController getImportFile end with error:")
+		log.Println("can not onvert esiFile value to map[stirng]interface{}.")
+		return "","",common.ResultWrongRequest
+	}
+
+	listField,ok:=fileValueMap["list"]
+	if !ok {
+		log.Println("EsiController getImportFile end with error:")
+		log.Println("the field esiFile.list is not found.")
+		return "","",common.ResultWrongRequest
+	}
+
+	esiFileList,ok:=listField.([]interface{})
+	if !ok {
+		log.Println("EsiController getImportFile end with error:")
+		log.Println("can not onvert esiFile.list to []interface{}.")
+		return "","",common.ResultWrongRequest
+	}
+
+	if len(esiFileList)==0 {
+		log.Println("EsiController getImportFile end with error:")
+		log.Println("esiFile.list is empty.")
+		return "","",common.ResultWrongRequest
+	}
+
+	esiFileRow,ok:=esiFileList[0].(map[string]interface{})
+	if !ok {
+		log.Println("EsiController getImportFile end with error:")
+		log.Println("can not onvert esiFile.list[0] to map[stirng]interface{}.")
+		return "","",common.ResultWrongRequest
+	}
+
+	//拿到文件名和文件内容
+	fileNameIntreface,ok:=esiFileRow["name"]
+	if !ok {
+		log.Println("EsiController getImportFile end with error:")
+		log.Println("the field esiFile.list[0].name is not found.")
+		return "","",common.ResultWrongRequest
+	}
+	fileName,ok:=fileNameIntreface.(string)
+	if !ok {
+		log.Println("EsiController getImportFile end with error:")
+		log.Println("can not onvert esiFile.list[0].name to string.")
+		return "","",common.ResultWrongRequest
+	}
+
+	fileContentInterface,ok:=esiFileRow["contentBase64"]
+	if !ok {
+		log.Println("EsiController getImportFile end with error:")
+		log.Println("the field esiFile.list[0].contentBase64 is not found.")
+		return "","",common.ResultWrongRequest
+	}
+	fileContent,ok:=fileContentInterface.(string)
+	if !ok {
+		log.Println("EsiController getImportFile end with error:")
+		log.Println("can not onvert esiFile.list[0].contentBase64 to string.")
+		return "","",common.ResultWrongRequest
+	}
+
+	return fileName,fileContent,common.ResultSuccess
+}
+
+func (controller *EsiController)checkImportFile(appDB,modelID,fileName string)(int){
+	query:=&data.Query{
+		ModelID:modelID,
+		Pagination: &data.Pagination{
+			Current:1,
+			PageSize:1,
+		},
+		Filter:&map[string]interface{}{
+			CC_IMPORT_FILE:fileName,
+		},
+		Fields:&[]data.Field{
+			data.Field{
+				Field:data.CC_ID,
+			},
+		},
+		AppDB:appDB,
+	}
+	result,err:=query.Execute(controller.DataRepository,false)
+	if err!=common.ResultSuccess {
+		return err
+	}
+	if result.Total>0 {
+		return common.ResultESIFileAlreadyImported
+	}
+	return common.ResultSuccess
+}
+
 func (controller *EsiController)esiImport(c *gin.Context){
 	log.Println("EsiController import start")
 
@@ -58,101 +157,23 @@ func (controller *EsiController)esiImport(c *gin.Context){
 	}
 
 	//获取esiFile
-	fileField,ok:=req.List[0]["esiFile"]
-	if !ok {
+	inputRowData:=req.List[0]
+	fileName,fileContent,errorCode:=controller.getImportFile(&inputRowData)
+	if errorCode!=common.ResultSuccess {
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("EsiController import end with error:")
-		log.Println("the field esiFile is not found.")
+		log.Println("getImportFile error")
 		return
 	}
-
-	fileValueMap,ok:=fileField.(map[string]interface{})
-	if !ok {
-		errorCode=common.ResultWrongRequest
+	//检查对应的文件名称如果已经导入过则不允许导入
+	errorCode=controller.checkImportFile(appDB,req.ModelID,fileName)
+	if errorCode!=common.ResultSuccess {
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("EsiController import end with error:")
-		log.Println("can not onvert esiFile value to map[stirng]interface{}.")
-		return
-	}
-
-	listField,ok:=fileValueMap["list"]
-	if !ok {
-		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
-		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("the field esiFile.list is not found.")
-		return
-	}
-
-	esiFileList,ok:=listField.([]interface{})
-	if !ok {
-		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
-		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("can not onvert esiFile.list to []interface{}.")
-		return
-	}
-
-	if len(esiFileList)==0 {
-		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
-		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("esiFile.list is empty.")
-		return
-	}
-
-	esiFileRow,ok:=esiFileList[0].(map[string]interface{})
-	if !ok {
-		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
-		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("can not onvert esiFile.list[0] to map[stirng]interface{}.")
-		return
-	}
-
-	//拿到文件名和文件内容
-	fileNameIntreface,ok:=esiFileRow["name"]
-	if !ok {
-		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
-		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("the field esiFile.list[0].name is not found.")
-		return
-	}
-	fileName,ok:=fileNameIntreface.(string)
-	if !ok {
-		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
-		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("can not onvert esiFile.list[0].name to string.")
-		return
-	}
-
-	fileContentInterface,ok:=esiFileRow["contentBase64"]
-	if !ok {
-		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
-		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("the field esiFile.list[0].contentBase64 is not found.")
-		return
-	}
-	fileContent,ok:=fileContentInterface.(string)
-	if !ok {
-		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
-		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("can not onvert esiFile.list[0].contentBase64 to string.")
+		log.Println("checkImportFile error")
 		return
 	}
 
@@ -165,6 +186,7 @@ func (controller *EsiController)esiImport(c *gin.Context){
 		FileName:fileName,
 		FileContent:fileContent,
 		DataRepository:controller.DataRepository,
+		InputRowData:&inputRowData,
 	}
 
 	result,commonErr:=esiImport.doImport()

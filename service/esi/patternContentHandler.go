@@ -16,6 +16,7 @@ excel表格内容模式识别
 import (
 	"log"
 	"regexp"
+	"strings"
 )
 
 type recognizedLabelCell struct {
@@ -63,8 +64,9 @@ func (epr *patternContentHandler)addValueCell(
 }
 
 func (epr *patternContentHandler)addRecognizedLabelCell(
-	row,col int,
-	esiField *esiModelField){
+	row,col,dataLen int,
+	esiField *esiModelField,
+	data string){
 
 	if epr.RecognizedLabelCells==nil {
 		epr.RecognizedLabelCells=map[int]map[int]*recognizedLabelCell{}
@@ -93,7 +95,21 @@ func (epr *patternContentHandler)addRecognizedLabelCell(
 			Field:esiField,
 		}
 	} else {
-		log.Printf("row:%d,col:%d,match the second field:%s,orignal field is %s\n",row,col,esiField.Field,recCell.Field.Field)
+		//如果之前配置上了，但是现在匹配上的值和字段的正则长度更接近则替换为新的
+		diffOrg:=dataLen-len(recCell.Field.LabelRegexp)
+		if diffOrg<0 {
+			diffOrg=diffOrg*-1
+		}
+
+		diffNow:=dataLen-len(esiField.LabelRegexp)
+		if diffNow<0 {
+			diffNow=diffNow*-1
+		}
+
+		if diffNow<diffOrg {
+			log.Printf("row:%d,col:%d,data:%s,match the second field:%s,orignal field is %s\n",row,col,data,esiField.Field,recCell.Field.Field)
+			epr.RecognizedLabelCells[row][col].Field=esiField
+		}
 	}
 }
 
@@ -105,9 +121,9 @@ func (epr *patternContentHandler)matchLabelPattern(
 	data := []byte(cell)
 	if ret,_:=regexp.Match(esiField.LabelRegexp,data); ret == true	{
 		//匹配上的数据作为列标题行，记录到标题行识别结果中
-		log.Printf("row:%d,col:%d, value:%s match pattern:%s\n",row,col,cell,esiField.LabelRegexp)
+		//log.Printf("row:%d,col:%d, value:%s match pattern:%s\n",row,col,cell,esiField.LabelRegexp)
 		//按照行列号创建索引，对每个单元格打上识别标记
-		epr.addRecognizedLabelCell(row,col,esiField)
+		epr.addRecognizedLabelCell(row,col,len(data),esiField,cell)
 		return true
 	}
 	return false
@@ -118,11 +134,14 @@ func (epr *patternContentHandler)RecognizeFieldLabelCell(
 	cell string)(bool){
 	//log.Printf("row:%d,col:%d,val:%s\n",row,col,cell)
 	isLabelCell:=false
+	
 	//循环每个字段，进行正则匹配
 	for fidx,_:=range(epr.ESIModel.Fields) {
 		esiField:=&epr.ESIModel.Fields[fidx]
-		if epr.matchLabelPattern(row,col,cell,esiField) == true {
-			isLabelCell=true
+		if esiField.Source!=DATA_SOURCE_INPUT{
+			if epr.matchLabelPattern(row,col,cell,esiField) == true {
+				isLabelCell=true
+			}
 		}
 	}
 	return isLabelCell
@@ -195,8 +214,12 @@ func (epr *patternContentHandler)findRecognizedLabelCell(row,col int)(*recognize
 		}
 	}
 
+	labelRow:=row-1
+	if epr.ESIModel.Options.MaxHeaderRow>0{
+		labelRow=epr.ESIModel.Options.MaxHeaderRow
+	}
 	//再找上方的标题
-	for labelRow:=row-1;labelRow>=0;labelRow-- {
+	for ;labelRow>=0;labelRow-- {
 		if epr.isEmptyRow(labelRow,col)==true {
 			return nil
 		}
@@ -267,18 +290,25 @@ func (epr *patternContentHandler)setTempRowValue(
 	epr.TempRow[field.Field]=cell
 }
 
+func (epr *patternContentHandler)removeIncompatibleCharacters(org string)(string){
+	result:=strings.Replace(org, "\\", "\\\\", -1)
+	result=strings.Replace(result, "'", "''", -1)
+	return result
+}
+
 func (epr *patternContentHandler)AddModelTableField(
 	row,col int,
 	cell string)(map[string]interface{}){
-
 	//获取值单元格标记
 	recLabelCell:=epr.getRecognizedValueCell(row,col)
 	if recLabelCell==nil {
 		return nil
 	}
 
+	//Excel单个格中如果包含了特殊字符需要替换掉，否则插入数据库是会报错
+	value:=epr.removeIncompatibleCharacters(cell)
 	//缓存单元格的值到temprow中
-	epr.setTempRowValue(recLabelCell.Field,cell)
+	epr.setTempRowValue(recLabelCell.Field,value)
 	
 	//如果当前行对应的字段存在结束行标志，则保存行数据
 	if recLabelCell.Field.EndRow == END_ROW_YES {
@@ -372,7 +402,13 @@ func (epr *patternContentHandler)handleCell(lastRow,row,col int,content string)(
 		epr.DataRow[row]=nil
 	}
 
-	if epr.RecognizeFieldLabelCell(row,col,content) == true {
+	reconLabelCell:=true
+	//如果设置了header的最大行数，则仅针对之前的行做header识别
+	if epr.ESIModel.Options.MaxHeaderRow>0 && row>epr.ESIModel.Options.MaxHeaderRow {
+		reconLabelCell=false
+	}
+
+	if reconLabelCell && epr.RecognizeFieldLabelCell(row,col,content) == true {
 		log.Printf("%s is a field label\n",content)
 		return nil
 	}

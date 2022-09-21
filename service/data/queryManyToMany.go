@@ -10,7 +10,7 @@ type QueryManyToMany struct {
 	UserRoles string `json:"userRoles"` 
 }
 
-func (queryManyToMany *QueryManyToMany)mergeResult(res *queryResult,relatedRes *queryResult,refField *field){
+func (queryManyToMany *QueryManyToMany)mergeResult(res *queryResult,relatedRes *queryResult,refField *Field){
 	//多对多字段实际已经被转换为了一对多字段，所以这里按照一对多字段展开
 	//
 	relatedModelID:=*(refField.RelatedModelID)
@@ -48,7 +48,7 @@ func (queryManyToMany *QueryManyToMany)mergeResult(res *queryResult,relatedRes *
 	}
 }
 
-func (queryManyToMany *QueryManyToMany)getFilter(parentList *queryResult,refField *field)(*map[string]interface{}){
+func (queryManyToMany *QueryManyToMany)getFilter(parentList *queryResult,refField *Field)(*map[string]interface{}){
 	//多对多字段，将先通过一对多方式查询中间表，然后再通过中间表的多对一查询实际的关联表
 	//这里字段携带的过滤条件在查询中间表的时候不需要考虑，这些过滤条件将在后续多对一的查询中使用
 	//中间表中包含了两个关联表的ID，字段名称就是模型ID+'_id'
@@ -64,17 +64,17 @@ func (queryManyToMany *QueryManyToMany)getFilter(parentList *queryResult,refFiel
 	return &filter
 }
 
-func (queryManyToMany *QueryManyToMany)getRelatedQueryFields(refField *field)(*[]field){
+func (queryManyToMany *QueryManyToMany)getRelatedQueryFields(refField *Field)(*[]Field){
 	//仅针对查询中包含的多对多关联字段，
 	//对于多对多关联字段的查询有程序将其转化为先按照一对多查询中间表
 	//然后在按照多对一的方式查询实际的关联表方式
 	//这里需要对查询的字段做一个转换
 	fieldType:=FIELDTYPE_MANY2ONE
  
-	localIDField:=field{
+	localIDField:=Field{
 		Field:queryManyToMany.ModelID+"_id",
 	}
-	manyToOneField:=field{
+	manyToOneField:=Field{
 		Field:*(refField.RelatedModelID)+"_id",
 		FieldType:&fieldType,
 		RelatedModelID:refField.RelatedModelID,
@@ -84,11 +84,11 @@ func (queryManyToMany *QueryManyToMany)getRelatedQueryFields(refField *field)(*[
 		Fields:refField.Fields,
 		Sorter:refField.Sorter,
 	}
-	fields:=[]field{localIDField,manyToOneField}
+	fields:=[]Field{localIDField,manyToOneField}
 	return &fields
 }
 
-func (queryManyToMany *QueryManyToMany)query(dataRepository DataRepository,parentList *queryResult,refField *field)(int) {
+func (queryManyToMany *QueryManyToMany)query(dataRepository DataRepository,parentList *queryResult,refField *Field)(int) {
 	if refField.RelatedModelID == nil {
 		return common.ResultNoRelatedModel
 	}
