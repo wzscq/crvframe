@@ -104,6 +104,7 @@ func (queryManyToMany *QueryManyToMany)query(dataRepository DataRepository,paren
 		ModelID:modelID,
 		Filter:filter,
 		Fields:fields,
+		Pagination:refField.Pagination,
 		AppDB:queryManyToMany.AppDB,
 		UserRoles:queryManyToMany.UserRoles,
 	}
