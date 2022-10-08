@@ -5,11 +5,11 @@ import {convertUrl, parseUrl} from '../../../utils/urlParser';
 
 const frameType="tabframe";
 
-export default function ChildFrame({item,locale,resources,isActive}){
+export default function ChildFrame({item,locale,resources}){
     const refFrame=useRef();
     const [lastLocale,setLastLocale]=useState(undefined);
 
-    console.log('ChildFrame',lastLocale,locale,isActive,item);
+    console.log('ChildFrame',lastLocale,locale,item);
 
     //注意这里的处理逻辑，当locale=undefined时表示语言资源尚未加载，这时暂不渲染iframe，
     //当locale!=undefined而lastLocale=undefined时表示iframe第一次渲染，这时触发子页的INIT
@@ -36,7 +36,7 @@ export default function ChildFrame({item,locale,resources,isActive}){
                     removeEventListener("load",onFrameLoad);
                 }
             } else {
-                if(isActive && locale !== lastLocale){
+                if(locale !== lastLocale){
                     console.log('ChildFrame UPDATE_LOCALE ',item.params.key);
                     const url=parseUrl(item.params.url);
                     refFrame.current.contentWindow.postMessage({
@@ -46,7 +46,7 @@ export default function ChildFrame({item,locale,resources,isActive}){
                 }
             }
         }
-    },[refFrame,item,locale,isActive,lastLocale,resources,setLastLocale]);
+    },[refFrame,item,locale,lastLocale,resources,setLastLocale]);
 
     const url=convertUrl(item.params.url);
 

@@ -4,6 +4,7 @@ import (
     "log"
     "crv/frame/common"
     "strconv"
+    "fmt"
 )
 
 /**
@@ -62,6 +63,7 @@ const (
 	Op_and = "Op.and"
 	Op_or  = "Op.or"
 	Op_eq  = "Op.eq"
+    Op_ne  = "Op.ne"
 	Op_is  = "Op.is"
     Op_not = "Op.not"
     Op_gt  = "Op.gt"
@@ -92,17 +94,12 @@ func convertObjectFilter(filter *map[string]interface{})(string,int){
     var where string
     if filter != nil {
         for key, value := range *filter {    
-            log.Printf("convertObjectFilter key %s \n", key)  
             switch key {
             case Op_or:
-                log.Println("value type %T",value)
-                mVal,err1:=value.([]interface{})
-                log.Println("error:%b",err1)
+                mVal,_:=value.([]interface{})
                 str,err=convertArrayFilter("or",mVal)
             case Op_and:
-                log.Println("value type %T",value)
-                mVal,err1:=value.([]interface{})
-                log.Println("error:%b",err1)
+                mVal,_:=value.([]interface{})
                 str,err=convertArrayFilter("and",mVal)
             default:
                 //字段
@@ -160,13 +157,27 @@ func convertFieldFilter(field string,value interface{})(string,int){
 	case string:
         sVal, _ := value.(string)
 		return convertFieldValueString(" like ",field,sVal)
+    case float64:
+        fVal,_:=value.(float64)
+        sVal:=fmt.Sprintf("%f",fVal)
+        return convertFieldValueString(" = ",field,sVal)
+    case int64:
+        iVal,_:=value.(int64)
+        sVal:=fmt.Sprintf("%d",iVal)
+        return convertFieldValueString(" = ",field,sVal)
     case map[string]interface{}:
         mVal,_:=value.(map[string]interface{})
         return convertFieldValueMap(field,mVal)
+    case nil:
+        return convertFieldValueNull(" is " ,field)
 	default:
-        log.Println("convertFieldFilter not supported field filter type %T!\n", v)
+        log.Printf("convertFieldFilter not supported field filter type %T!\n", v)
 		return "",common.ResultNotSupported
 	}
+}
+
+func convertFieldValueNull(op string,field string)(string,int){
+    return field+op+" null ",common.ResultSuccess
 }
 
 func convertFieldValueString(op string,field string,value string)(string,int){
@@ -212,9 +223,19 @@ func convertFieldOpNormal(op string,field string,value interface{})(string,int){
     case []string:
         sliceVal:=value.([]string)
         return convertFieldValueStringArray(op,field,sliceVal)
+    case int64:
+        iVal,_:=value.(int64)
+        sVal:=fmt.Sprintf("%d",iVal)
+        return convertFieldValueString(op,field,sVal)
+    case float64:
+        fVal,_:=value.(float64)
+        sVal:=fmt.Sprintf("%f",fVal)
+        return convertFieldValueString(op,field,sVal)
     case []interface{}:
         sliceVal:=value.([]interface{})
-        return convertFieldValueArray(op,field,sliceVal)    
+        return convertFieldValueArray(op,field,sliceVal)   
+    case nil:
+        return convertFieldValueNull(op,field)   
     default:
         log.Print("convertFieldOpNormal not supported operator %v with value type %T \n",op,value)
 		return "",common.ResultNotSupported
@@ -230,12 +251,18 @@ func convertFieldValueMap(field string,value map[string]interface{})(string,int)
         switch key {
         case Op_eq:
             str,err=convertFieldOpNormal(" = ",field,value)
+        case Op_ne:
+            str,err=convertFieldOpNormal(" <> ",field,value)
         case Op_gt:
             str,err=convertFieldOpNormal(" > ",field,value)
         case Op_lt:
             str,err=convertFieldOpNormal(" < ",field,value)
         case Op_in:
             str,err=convertFieldOpNormal(" in ",field,value)
+        case Op_is:
+            str,err=convertFieldOpNormal(" is ",field,value)
+        case Op_not:
+            str,err=convertFieldOpNormal(" is not ",field,value)
         default:
             //字段
             log.Println("convertFieldValueMap not supported operator type %v \n", key)

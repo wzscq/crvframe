@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"encoding/json"
 	"bytes"
-	//"io/ioutil"
+	"io/ioutil"
 )
 
 type commonRep struct {
@@ -78,9 +78,16 @@ func (controller *RedirectController)redirect(c *gin.Context){
 		return 
 	}
 
-	log.Println("resp",resp)
 	defer resp.Body.Close()
-	rsp:=common.CreateResponse(nil,nil)
+	body, err := ioutil.ReadAll(resp.Body)
+	log.Println("resp",string(body))
+	
+	rsp:=&common.CommonRsp{}
+    if err := json.Unmarshal(body, rsp); err != nil {
+        log.Println(err)
+    }
+
+	//rsp:=common.CreateResponse(nil,nil)
 	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end redirect success")
 }
