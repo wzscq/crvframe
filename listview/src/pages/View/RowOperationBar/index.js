@@ -22,7 +22,8 @@ export default function RowOperationBar({sendMessageToParent,record,showCount,bu
                         ...operation,
                         input:{
                             modelID:modelID,
-                            selectedRowKeys:[record['id']]
+                            selectedRowKeys:[record['id']],
+                            ...operation.input
                         }
                     }
                 }

@@ -118,9 +118,11 @@ export default function FormView({fromTitle,formType,sendMessageToParent}){
                         {controls}
                     </div>
                 </div>
-                <div className='form-footer'>
-                    <FormHeader sendMessageToParent={sendMessageToParent} form={form}  label={footLabel} operations={footOperations} />
-                </div>
+                {form.footer?
+                    (<div className='form-footer'>
+                        <FormHeader sendMessageToParent={sendMessageToParent} form={form}  label={footLabel} operations={footOperations} />
+                    </div>):null
+                }
             </div>
         </ConfigProvider>
     );
