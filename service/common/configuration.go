@@ -15,6 +15,7 @@ type redisConf struct {
 	FlowInstanceDB int `json:"flowInstanceDB"`
 	FlowInstanceExpired string `json:"flowInstanceExpired"`
 	AppCacheDB int `json:"appCacheDB"`
+	Password string `json:"password"`
 }
 
 type mysqlConf struct {

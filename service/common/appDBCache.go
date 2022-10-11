@@ -8,10 +8,10 @@ type DefatultAppCache struct {
 	client *redis.Client
 }
 
-func (cache *DefatultAppCache)Init(url string,db int){
+func (cache *DefatultAppCache)Init(url string,db int,password string){
 	cache.client=redis.NewClient(&redis.Options{
         Addr:     url,
-        Password: "", // no password set
+        Password: password, // no password set
         DB:       db,  // use default DB
     })
 }

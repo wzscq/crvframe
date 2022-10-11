@@ -8,7 +8,7 @@ import (
 )
 
 type FlowInstanceRepository interface {
-	Init(url string,db int,expire time.Duration)
+	Init(url string,db int,expire time.Duration,password string)
 	saveInstance(instance *flowInstance)(error)
 	getInstance(instanceID string)(*flowInstance,error)
 }
@@ -18,10 +18,10 @@ type DefaultFlowInstanceRepository struct {
 	expire time.Duration
 }
 
-func (repo *DefaultFlowInstanceRepository)Init(url string,db int,expire time.Duration){
+func (repo *DefaultFlowInstanceRepository)Init(url string,db int,expire time.Duration,password string){
 	repo.client=redis.NewClient(&redis.Options{
         Addr:     url,
-        Password: "", // no password set
+        Password: password, // no password set
         DB:       db,  // use default DB
     })
 	repo.expire=expire

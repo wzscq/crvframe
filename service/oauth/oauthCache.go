@@ -10,10 +10,10 @@ type OAuthCache struct {
 	expire time.Duration
 }
 
-func (cache *OAuthCache)Init(url string,db int,expire time.Duration){
+func (cache *OAuthCache)Init(url string,db int,expire time.Duration,password string){
 	cache.client=redis.NewClient(&redis.Options{
         Addr:     url,
-        Password: "", // no password set
+        Password: password, // no password set
         DB:       db,  // use default DB
     })
 	cache.expire=expire

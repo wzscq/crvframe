@@ -37,11 +37,11 @@ func main() {
     }))
 
     appCache:=&common.DefatultAppCache{}
-    appCache.Init(conf.Redis.Server,1)
+    appCache.Init(conf.Redis.Server,1,conf.Redis.Password)
 
     duration, _ := time.ParseDuration(conf.Redis.TokenExpired)
     loginCache:=&user.DefatultLoginCache{}
-    loginCache.Init(conf.Redis.Server,conf.Redis.TokenDB,duration)
+    loginCache.Init(conf.Redis.Server,conf.Redis.TokenDB,duration,conf.Redis.Password)
     
     router.Use(common.AuthMiddleware(loginCache,appCache))
     
@@ -78,7 +78,7 @@ func main() {
 
     flowExpired,_:=time.ParseDuration(conf.Redis.FlowInstanceExpired)
     flowInstanceRepository:=&flow.DefaultFlowInstanceRepository{}
-    flowInstanceRepository.Init(conf.Redis.Server,conf.Redis.FlowInstanceDB,flowExpired)
+    flowInstanceRepository.Init(conf.Redis.Server,conf.Redis.FlowInstanceDB,flowExpired,conf.Redis.Password)
     flowController:=&flow.FlowController{
         InstanceRepository:flowInstanceRepository,
         DataRepository:dataRepo,
@@ -88,7 +88,7 @@ func main() {
     //oauth
     oauthTokenExpired,_:=time.ParseDuration(conf.Redis.OauthTokenExpired)
     oauthCache:=&oauth.OAuthCache{}
-    oauthCache.Init(conf.Redis.Server,conf.Redis.OauthTokenDB,oauthTokenExpired)
+    oauthCache.Init(conf.Redis.Server,conf.Redis.OauthTokenDB,oauthTokenExpired,conf.Redis.Password)
     oauthController:=&oauth.OAuthController{
         AppCache:appCache,
         UserRepository:userRepo,
