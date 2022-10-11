@@ -185,6 +185,7 @@ func convertFieldValueString(op string,field string,value string)(string,int){
 }
 
 func convertFieldValueStringArray(op string,field string,sliceVal []string)(string,int){
+    log.Println("convertFieldValueStringArray",op,field,sliceVal)
     values:=""
     for _,sVal:=range sliceVal {
         values=values+"'"+sVal+"',"
