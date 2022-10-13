@@ -10,6 +10,7 @@ export default function ColumnControl({text,field, record, index}){
     const {getLocaleLabel}=useI18n();
     const [showTip,setShowTip]=useState(false);
     const ref=useRef();
+    let className='listtable-column-text';
     let value=text;
     if(text&&field.fieldType===FIELD_TYPE.MANY2ONE){
         if(field.optionLabel&&text.list&&text.list.length>0){
@@ -17,13 +18,14 @@ export default function ColumnControl({text,field, record, index}){
         } else {
             value=text.value?text.value:text;
         }
-    }
-
-    if(field.options){
+    } else if(field.options){
         const option=field.options.find(item=>item.value===value);
         if(option){
             value=getLocaleLabel(option.label);
         }
+    }else if(text&&(field.dataType==='decimal'||field.dataType==='int')){
+        value=text.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        className='listtable-column-number';
     }
 
     useEffect(()=>{
@@ -36,9 +38,9 @@ export default function ColumnControl({text,field, record, index}){
     
     return showTip?(
             <Tooltip placement="bottomRight" title={value}>
-                <span ref={ref} className='listtable-column-control'>{value}</span>
+                <span ref={ref} className={className}>{value}</span>
             </Tooltip>
         ):(
-            <span ref={ref} className='listtable-column-control'>{value}</span>
+            <span ref={ref} className={className}>{value}</span>
         );
 }

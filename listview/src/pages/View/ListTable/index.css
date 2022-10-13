@@ -8,3 +8,13 @@
 .ant-table-cell-fix-left, .ant-table-cell-fix-right {
     background-color: inherit;
 }
+
+.list-table .ant-table.ant-table-small .ant-table-thead > tr > th {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.list-table .ant-table.ant-table-small .ant-table-tbody > tr > td {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}

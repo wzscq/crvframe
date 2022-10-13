@@ -11,7 +11,7 @@
 
 .frame-tab-main iframe {
     width: 100%;
-    height: calc(100vh - 88px);
+    height: calc(100vh - 80px);
     display: flex;
 }
 
@@ -19,4 +19,9 @@
     width: 100%;
     height: calc(100vh - 88px);
     overflow: scroll;
+}
+
+.frame-tab-main .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab {
+    padding-top: 4px;
+    padding-bottom: 4px;
 }

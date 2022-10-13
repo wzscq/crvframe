@@ -196,7 +196,7 @@ export default function ListTable({sendMessageToParent}){
                 rowKey='id'
                 footer={()=>(<TableFooter/>)}
                 pagination={false}
-                scroll={{ y: height-80 }}
+                scroll={{ y: height-72 }}
                 onRow={onRow}
             />
             <div ref={ref} style={{height:"100%",width:"100%"}}>{}</div>
