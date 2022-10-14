@@ -26,6 +26,7 @@ type Field struct {
 	Filter *map[string]interface{} `json:"filter,omitempty"`
 	Fields *[]Field `json:"fields,omitempty"`
 	Sorter *[]Sorter `json:"sorter,omitempty"` 
+	Summarize *string `json:"summarize,omitempty"` 
 }
 
 type queryResult struct {
@@ -33,6 +34,7 @@ type queryResult struct {
 	ViewID *string `json:"viewID,omitempty"`
 	Value *string `json:"value,omitempty"`
 	Total int `json:"total"`
+	Summaries *map[string]interface{} `json:"summaries,omitempty"`
 	List []map[string]interface{} `json:"list"`
 }
 
@@ -160,22 +162,44 @@ func (query *Query) getData(sqlParam *sqlParam,dataRepository DataRepository)([]
 	return res,common.ResultSuccess
 }
 
-func (query *Query) getCount(sqlParam *sqlParam,dataRepository DataRepository)(int,int) {
-	sql:="select count(id) as count"+
+func (query *Query)getSummarizeFields()(string){
+	var summarizeFields string
+	for _,field:=range *query.Fields {
+		if field.Summarize!=nil && len(*field.Summarize)>0 {
+			summarizeFields=summarizeFields+*field.Summarize+" as "+field.Field+","
+		}
+	}
+	return summarizeFields
+}
+
+func (query *Query) getCountAndSummaries(
+	sqlParam *sqlParam,
+	dataRepository DataRepository)(int,*map[string]interface{},int) {
+
+	summarizeFields:=query.getSummarizeFields()
+
+	sql:="select "+summarizeFields+" count(id) as __count"+
 		" from "+query.AppDB+"."+query.ModelID+
 		" where "+sqlParam.Where
 
 	res,err:=dataRepository.Query(sql)
 	if err!=nil {
-		return 0,common.ResultSQLError
+		return 0,nil,common.ResultSQLError
 	}
 	log.Println(res)
-	count,err:=strconv.Atoi(res[0]["count"].(string))
+	count,err:=strconv.Atoi(res[0]["__count"].(string))
 	if err!=nil {
-		return 0,common.ResultSQLError
+		return 0,nil,common.ResultSQLError
 	}
 	log.Println(count)
-	return count,common.ResultSuccess
+
+	var summaries *map[string]interface{}
+	if len(summarizeFields)>0 {
+		delete(res[0],"__count")
+		summaries=&res[0]
+	}
+
+	return count,summaries,common.ResultSuccess
 }
 
 func (query *Query) getSqlParam(withPermission bool)(*sqlParam,int) {
@@ -233,7 +257,7 @@ func (query *Query) query(dataRepository DataRepository,withPermission bool)(*qu
 		return result,errorCode
 	}
 
-	result.Total,errorCode=query.getCount(sqlParam,dataRepository)
+	result.Total,result.Summaries,errorCode=query.getCountAndSummaries(sqlParam,dataRepository)
 	if errorCode != common.ResultSuccess {
 		return result,errorCode
 	}

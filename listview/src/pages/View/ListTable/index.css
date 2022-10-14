@@ -18,3 +18,11 @@
     padding-top: 4px;
     padding-bottom: 4px;
 }
+
+.list-table .ant-table-summary .ant-table-cell {
+    text-align: right;
+    font-weight: bold;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background-color: #fafafa;
+}

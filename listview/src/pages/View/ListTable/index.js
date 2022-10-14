@@ -21,7 +21,7 @@ export default function ListTable({sendMessageToParent}){
     const {origin,item}=useSelector(state=>state.frame);
     const {currentView} = useSelector(state=>state.data);
     const {fields,views,modelID}=useSelector(state=>state.definition);
-    const {selectedRowKeys,list,fixedColumn,filter,pagination,sorter}=useSelector(state=>state.data.views[state.data.currentView].data);
+    const {selectedRowKeys,list,summaries,fixedColumn,filter,pagination,sorter}=useSelector(state=>state.data.views[state.data.currentView].data);
 
     const viewConf=useMemo(()=>{
         return views.find(item=>item.viewID===currentView);
@@ -106,7 +106,8 @@ export default function ListTable({sendMessageToParent}){
                 if(fieldConf){
                     let searchField={
                         field:fieldItem.field,
-                        dataType:fieldConf.dataType
+                        dataType:fieldConf.dataType,
+                        summarize:fieldItem.summarize
                     };
                     if(fieldItem.fields&&fieldItem.fields.length>0){
                         searchField={
@@ -185,6 +186,38 @@ export default function ListTable({sendMessageToParent}){
         });
     },[viewConf]);
 
+    const getSummary=useCallback(()=>{
+        if(viewConf&&viewConf.fields&&summaries){
+            const commonColCount=viewConf.toolbar?.rowToolbar?2:1;
+            return (
+                <Table.Summary fixed>
+                    <Table.Summary.Row>
+                        <Table.Summary.Cell index={0}><I18nLabel label={{key:"page.crvlistview.summary"}}/></Table.Summary.Cell>
+                        {
+                            commonColCount===2?<Table.Summary.Cell index={1}></Table.Summary.Cell>:null
+                        }    
+                        {
+                            viewConf.fields.map((field,index)=>{
+                                if(field.summarize&&summaries[field.field]){
+                                    return (
+                                        <Table.Summary.Cell index={index+commonColCount}>{summaries[field.field]}</Table.Summary.Cell>
+                                    );
+                                } else {
+                                    return (
+                                        <Table.Summary.Cell index={index+commonColCount}></Table.Summary.Cell>
+                                    );
+                                }
+                            })
+                        }
+                    </Table.Summary.Row>
+                </Table.Summary>
+            )
+        }
+        return null;
+    },[summaries,viewConf]);
+
+    const scrollY=summaries?height-102:height-72;
+
     return (
         <div className="list-table">
             <Table 
@@ -196,8 +229,9 @@ export default function ListTable({sendMessageToParent}){
                 rowKey='id'
                 footer={()=>(<TableFooter/>)}
                 pagination={false}
-                scroll={{ y: height-72 }}
+                scroll={{ y: scrollY }}
                 onRow={onRow}
+                summary={getSummary}
             />
             <div ref={ref} style={{height:"100%",width:"100%"}}>{}</div>
         </div>
