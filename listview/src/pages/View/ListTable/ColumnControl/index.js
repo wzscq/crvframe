@@ -2,6 +2,7 @@ import {useState,useEffect,useRef} from 'react';
 import { Tooltip } from 'antd';
 
 import { FIELD_TYPE } from "../../../../utils/constant";
+import {getManyToOneValueFunc} from "../../../../utils/functions";
 import useI18n from '../../../../hooks/useI18n';
 
 import './index.css';
@@ -15,6 +16,9 @@ export default function ColumnControl({text,field, record, index}){
     if(text&&field.fieldType===FIELD_TYPE.MANY2ONE){
         if(field.optionLabel&&text.list&&text.list.length>0){
             value=text.list[0][field.optionLabel];
+            if(value===undefined){
+                value=getManyToOneValueFunc(field.optionLabel)(text.list[0]);
+            }
         } else {
             value=text.value?text.value:text;
         }

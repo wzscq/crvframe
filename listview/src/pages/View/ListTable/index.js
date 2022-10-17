@@ -1,5 +1,5 @@
 /* eslint-disable no-new-func */
-import { Table } from "antd";
+import { Table, Tooltip } from "antd";
 import { useEffect, useMemo,useCallback } from "react";
 import { useDispatch, useSelector, } from "react-redux";
 import { useResizeDetector } from 'react-resize-detector';
@@ -44,12 +44,14 @@ export default function ListTable({sendMessageToParent}){
 
         return {
             dataIndex:field.field,
-            title:<I18nLabel label={field.name}/>,
+            title:()=>(<Tooltip title={<I18nLabel label={field.name}/>}><div className="table-header"><I18nLabel label={field.name}/></div></Tooltip>),
             filterDropdown:<FilterDropdown sendMessageToParent={sendMessageToParent} field={field} index={index}/>,
             filterIcon: <FilterIcon field={field}/>,
             width:field.width,
             fixed:(isFixed?'left':''),
-            ellipsis: true,
+            ellipsis: {
+                showTitle: false,
+            },
             onCell:(record,rowIndex)=>{
                 if(field.cellStyle){
                     const cellStyle=getCellStyleFunc(field.cellStyle)(record,rowIndex);
@@ -199,8 +201,10 @@ export default function ListTable({sendMessageToParent}){
                         {
                             viewConf.fields.map((field,index)=>{
                                 if(field.summarize&&summaries[field.field]){
+                                    let value=summaries[field.field];
+                                    value=value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                                     return (
-                                        <Table.Summary.Cell index={index+commonColCount}>{summaries[field.field]}</Table.Summary.Cell>
+                                        <Table.Summary.Cell index={index+commonColCount}>{value}</Table.Summary.Cell>
                                     );
                                 } else {
                                     return (

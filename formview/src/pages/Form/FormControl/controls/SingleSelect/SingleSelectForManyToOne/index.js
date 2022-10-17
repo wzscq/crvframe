@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { modiData,removeErrorField } from '../../../../../../redux/dataSlice';
 import {FRAME_MESSAGE_TYPE,CASCADE_TYPE} from '../../../../../../utils/constant';
+import { getManyToOneValueFunc } from '../../../../../../utils/functions';
 import I18nLabel from '../../../../../../component/I18nLabel';
 
 import './index.css';
@@ -154,7 +155,7 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
     const getFilter=(control,value)=>{
         const fieldsFilter=control.fields.map(element => {
             const tempFieldFilter={};
-            tempFieldFilter[element.field]='%'+value+'%';
+            tempFieldFilter[element.field]='%'+value.replace("'","")+'%';
             return tempFieldFilter;
         });
         const op='Op.or';
@@ -301,12 +302,20 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
         if(updatedValue&&item.id===updatedValue.value){
             hasOriginValue=true;
         }
-        return (<Option key={item.id} value={item.id}>{item[optionLabel]}</Option>);
+        let label=item[optionLabel];
+        if(label===undefined){
+            label=getManyToOneValueFunc(optionLabel)(item);
+        }
+        return (<Option key={item.id} value={item.id}>{label}</Option>);
     }):[];
 
     if(hasOriginValue===false&&updatedValue&&updatedValue.list&&updatedValue.list.length>0){
         const item=updatedValue.list[0];
-        optionControls.push(<Option key={'origin'} value={item.id}>{item[optionLabel]}</Option>);
+        let label=item[optionLabel];
+        if(label===undefined){
+            label=getManyToOneValueFunc(optionLabel)(item);
+        }
+        optionControls.push(<Option key={'origin'} value={item.id}>{label}</Option>);
     }
 
     let selectControl= (<Select

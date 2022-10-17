@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import {FRAME_MESSAGE_TYPE} from '../../../../../../../utils/constant';
+import {getManyToOneValueFunc} from '../../../../../../../utils/functions';
 import './index.css';
 
 const { Option } = Select;
@@ -19,7 +20,7 @@ export default function SingleSelectForManyToOne({field,filterValue,onFilterChan
     const getFilter=(field,value)=>{
         const fieldsFilter=field.fields.map(element => {
             const tempFieldFilter={};
-            tempFieldFilter[element.field]='%'+value+'%';
+            tempFieldFilter[element.field]='%'+value.replace("'","''")+'%';
             return tempFieldFilter;
         });
         const op='Op.or';
@@ -86,7 +87,11 @@ export default function SingleSelectForManyToOne({field,filterValue,onFilterChan
     const optionLabel=field.optionLabel?field.optionLabel:'id';
 
     const optionControls=options?options.map((item,index)=>{
-        return (<Option key={index} value={item.id}>{item[optionLabel]}</Option>);
+        let label=item[optionLabel];
+        if(label===undefined){
+            label=getManyToOneValueFunc(optionLabel)(item)
+        }
+        return (<Option key={index} value={item.id}>{label}</Option>);
     }):[];
 
     return (<Select  

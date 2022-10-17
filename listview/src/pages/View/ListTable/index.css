@@ -26,3 +26,9 @@
     padding-bottom: 4px;
     background-color: #fafafa;
 }
+
+.list-table .ant-table-cell-ellipsis .ant-table-column-title .table-header {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: keep-all;
+}
