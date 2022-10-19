@@ -153,7 +153,7 @@ func convertArrayFilter(logicOp string,value []interface{})(string,int){
 {fieldname:{Op.gt,value}} => filename > value  //明确给出操作符，按照操作符来解析 
 */
 func convertFieldFilter(field string,value interface{})(string,int){
-    switch v := value.(type) {
+    switch value.(type) {
 	case string:
         sVal, _ := value.(string)
 		return convertFieldValueString(" like ",field,sVal)
@@ -171,7 +171,7 @@ func convertFieldFilter(field string,value interface{})(string,int){
     case nil:
         return convertFieldValueNull(" is " ,field)
 	default:
-        log.Printf("convertFieldFilter not supported field filter type %T!\n", v)
+        log.Printf("convertFieldFilter not supported field filter type %T!\n", value)
 		return "",common.ResultNotSupported
 	}
 }

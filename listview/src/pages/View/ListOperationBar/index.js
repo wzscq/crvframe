@@ -11,7 +11,7 @@ import './index.css';
 export default function ListOperationBar({sendMessageToParent}){
     const {currentView} = useSelector(state=>state.data);
     const {fields,views,modelID,operations}=useSelector(state=>state.definition);
-    const {selectedRowKeys,filter,pagination,sorter}=useSelector(state=>state.data.views[state.data.currentView].data);
+    const {selectedRowKeys,filter,filterData,pagination,sorter}=useSelector(state=>state.data.views[state.data.currentView].data);
 
     const searchFields=useMemo(()=>{
         let searchFields=[];
@@ -35,6 +35,7 @@ export default function ListOperationBar({sendMessageToParent}){
                 viewID:currentView,
                 selectedRowKeys:selectedRowKeys,
                 filter:filter,
+                filterData:filterData,
                 pagination:pagination,
                 sorter:sorter,
                 fields:searchFields
@@ -51,7 +52,7 @@ export default function ListOperationBar({sendMessageToParent}){
             };
             sendMessageToParent(message);
         }
-    },[operations,currentView,modelID,selectedRowKeys,filter,pagination,sorter,searchFields,sendMessageToParent]);
+    },[operations,currentView,modelID,selectedRowKeys,filter,filterData,pagination,sorter,searchFields,sendMessageToParent]);
 
     const buttonControls=useMemo(()=>{
         let buttonControls=[];

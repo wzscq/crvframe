@@ -53,6 +53,7 @@ type viewConf struct {
 	Name interface{} `json:"name"`
 	Description string `json:"description"`
 	Fields []map[string]interface{} `json:"fields"`
+	FilterData []map[string]interface{} `json:"filterData,omitempty"`
 	Filter map[string]interface{} `json:"filter"`
 	Toolbar *viewToolbarConf `json:"toolbar,omitempty"`
 	Roles *interface{} `json:"roles"`

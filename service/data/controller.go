@@ -7,9 +7,16 @@ import (
 	"net/http"
 )
 
+type filterDataItem struct {
+	ModelID string `json:"modelID"`
+	Filter *map[string]interface{} `json:"filter"`
+	Fields *[]Field `json:"fields"`
+}
+
 type CommonReq struct {
 	ModelID string `json:"modelID"`
 	ViewID *string `json:"viewID"`
+	FilterData *[]filterDataItem `json:"filterData"`
 	Filter *map[string]interface{} `json:"filter"`
 	List *[]map[string]interface{} `json:"list"`
 	Fields *[]Field `json:"fields"`
@@ -26,6 +33,7 @@ func (controller *DataController) query(c *gin.Context) {
 	log.Println("start data query")
 	//获取用户账号
 	userRoles:= c.MustGet("userRoles").(string)
+	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
 	var rep CommonReq
 	var errorCode int
@@ -34,17 +42,20 @@ func (controller *DataController) query(c *gin.Context) {
 		log.Println(err)
 		errorCode=common.ResultWrongRequest
     } else {
-		query:=&Query{
-			ModelID:rep.ModelID,
-			ViewID:rep.ViewID,
-			Pagination:rep.Pagination,
-			Filter:rep.Filter,
-			Fields:rep.Fields,
-			AppDB:appDB,
-			Sorter:rep.Sorter,
-			UserRoles:userRoles,
+		errorCode=processFilter(rep.Filter,rep.FilterData,userID,userRoles,appDB,controller.DataRepository)
+		if errorCode==common.ResultSuccess {
+			query:=&Query{
+				ModelID:rep.ModelID,
+				ViewID:rep.ViewID,
+				Pagination:rep.Pagination,
+				Filter:rep.Filter,
+				Fields:rep.Fields,
+				AppDB:appDB,
+				Sorter:rep.Sorter,
+				UserRoles:userRoles,
+			}
+			result,errorCode=query.Execute(controller.DataRepository,true)
 		}
-		result,errorCode=query.Execute(controller.DataRepository,true)
 	}
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 	c.IndentedJSON(http.StatusOK, rsp)

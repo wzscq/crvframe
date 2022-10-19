@@ -143,7 +143,7 @@ export default function ListTable({sendMessageToParent}){
                 }
             }
             const frameParams={frameType:item.frameType,frameID:item.params.key,origin:origin};
-            const queryParams={modelID,viewID:currentView,filter:queryFilter,pagination,sorter,fields:searchFields};
+            const queryParams={modelID,viewID:currentView,filterData:viewConf.filterData,filter:queryFilter,pagination,sorter,fields:searchFields};
             sendMessageToParent(createQueryDataMessage(frameParams,queryParams));
         }
     },[viewConf,searchFields,filter,pagination,sorter,sendMessageToParent,origin,item,currentView,modelID]);
