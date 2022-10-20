@@ -108,16 +108,24 @@ export const dataSlice = createSlice({
         },
         setSorter: (state,action) => {
             state.views[state.currentView].data.sorter=action.payload;
+            const pagination=state.views[state.currentView].data.pagination;
+            state.views[state.currentView].data.pagination={...pagination,current:1}
         },
         setFieldFilter:(state,action) => {
             const filter=state.views[state.currentView].data.filter;
             state.views[state.currentView].data.filter={...filter,...action.payload};
+            const pagination=state.views[state.currentView].data.pagination;
+            state.views[state.currentView].data.pagination={...pagination,current:1}
         },
         resetFieldFilter:(state,action) => {
             delete state.views[state.currentView].data.filter[action.payload];
+            const pagination=state.views[state.currentView].data.pagination;
+            state.views[state.currentView].data.pagination={...pagination,current:1}
         },
         setFilter:(state,action) => {
             state.views[state.currentView].data.filter=action.payload;
+            const pagination=state.views[state.currentView].data.pagination;
+            state.views[state.currentView].data.pagination={...pagination,current:1}
         },
         setPagination:(state,action) => {
             state.views[state.currentView].data.pagination=action.payload;

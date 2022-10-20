@@ -158,17 +158,20 @@ func (controller *DataController) update(c *gin.Context) {
 		return
     }
 
-	update:=&Update{
-		ModelID:rep.ModelID,
-		ViewID:rep.ViewID,
-		AppDB:appDB,
-		UserID:userID,
-		SelectedRowKeys:rep.SelectedRowKeys,
-		UserRoles:userRoles,
-		List:rep.List,
-		Filter:rep.Filter,
+	errorCode=processFilter(rep.Filter,rep.FilterData,userID,userRoles,appDB,controller.DataRepository)
+	if errorCode==common.ResultSuccess {
+		update:=&Update{
+			ModelID:rep.ModelID,
+			ViewID:rep.ViewID,
+			AppDB:appDB,
+			UserID:userID,
+			SelectedRowKeys:rep.SelectedRowKeys,
+			UserRoles:userRoles,
+			List:rep.List,
+			Filter:rep.Filter,
+		}
+		result,errorCode=update.Execute(controller.DataRepository)
 	}
-	result,errorCode=update.Execute(controller.DataRepository)
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 	c.IndentedJSON(http.StatusOK, rsp)
 	log.Println("end data update")

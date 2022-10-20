@@ -15,6 +15,7 @@ type commonRep struct {
 	ModelID string `json:"modelID"`
 	ViewID *string `json:"viewID"`
 	To *string `json:"to"`
+	FilterData *[]map[string]interface{} `json:"filterData"`
 	Filter *map[string]interface{} `json:"filter"`
 	List *[]map[string]interface{} `json:"list"`
 	UserID string `json:"userID"`

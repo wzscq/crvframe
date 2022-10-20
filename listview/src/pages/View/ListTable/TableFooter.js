@@ -19,6 +19,9 @@ export default function TableFooter(){
     const {total,pagination} = useSelector(state=>state.data.views[state.data.currentView].data);
 
     const onPaginationChange=(page, pageSize)=>{
+        if(pageSize!==pagination.pageSize){
+            page=1;
+        }
         dispatch(setPagination({...pagination,current:page,pageSize:pageSize}));
     }
 

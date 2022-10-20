@@ -11,9 +11,9 @@ import './index.css';
 export default function ListOperationBar({sendMessageToParent}){
     const {currentView} = useSelector(state=>state.data);
     const {fields,views,modelID,operations}=useSelector(state=>state.definition);
-    const {selectedRowKeys,filter,filterData,pagination,sorter}=useSelector(state=>state.data.views[state.data.currentView].data);
+    const {selectedRowKeys,filter,pagination,sorter}=useSelector(state=>state.data.views[state.data.currentView].data);
 
-    const searchFields=useMemo(()=>{
+    const {searchFields,filterData,viewFilter}=useMemo(()=>{
         let searchFields=[];
         const viewConf=views.find(item=>item.viewID===currentView);
         if(viewConf&&viewConf.fields){
@@ -24,17 +24,29 @@ export default function ListOperationBar({sendMessageToParent}){
                 }
             });
         }
-        return searchFields
+
+        return {searchFields,filterData:viewConf?.filterData,viewFilter:viewConf.filter}
     },[fields,currentView,views]);
 
     const doOperation=useCallback((opItem)=>{
         const operation=operations.find(element=>element.id===opItem.operationID);
         if(operation){
+            let queryFilter=filter;
+            if(viewFilter&&Object.keys(viewFilter).length>0){
+                if(Object.keys(filter).length>0){
+                    queryFilter={
+                        'Op.and':[filter,viewFilter]
+                    };
+                } else {
+                    queryFilter=viewFilter;
+                }
+            }
+
             const input={
                 modelID:modelID,
                 viewID:currentView,
                 selectedRowKeys:selectedRowKeys,
-                filter:filter,
+                filter:queryFilter,
                 filterData:filterData,
                 pagination:pagination,
                 sorter:sorter,
@@ -52,7 +64,7 @@ export default function ListOperationBar({sendMessageToParent}){
             };
             sendMessageToParent(message);
         }
-    },[operations,currentView,modelID,selectedRowKeys,filter,filterData,pagination,sorter,searchFields,sendMessageToParent]);
+    },[operations,currentView,modelID,viewFilter,selectedRowKeys,filter,filterData,pagination,sorter,searchFields,sendMessageToParent]);
 
     const buttonControls=useMemo(()=>{
         let buttonControls=[];

@@ -155,7 +155,10 @@ func (save *Save)getRowCreateColumnValues(row map[string]interface{})(string,str
 		}
 
 		//根据不同值类型做处理，目前仅支持字符串
-		switch v := value.(type) {
+		switch value.(type) {
+		case nil:
+			columns=columns+key+","
+			values=values+"null,"
 		case string:
 			columns=columns+key+","
 			sVal, _ := value.(string)
@@ -167,7 +170,7 @@ func (save *Save)getRowCreateColumnValues(row map[string]interface{})(string,str
 		case map[string]interface{}:
 			releatedField,ok:=value.(map[string]interface{})
 			if !ok {
-				log.Println("createRow not supported value type %T!\n", v)
+				log.Println("createRow not supported value type %T!\n", value)
 				return "","","",common.ResultNotSupportedValueType	
 			}
 
@@ -179,7 +182,7 @@ func (save *Save)getRowCreateColumnValues(row map[string]interface{})(string,str
 				return "","","",common.ResultNotSupportedValueType	
 			}
 		default:
-			log.Println("createRow not supported value type %T!\n", v)
+			log.Println("createRow not supported value type %T!\n", value)
 			return "","","",common.ResultNotSupportedValueType
 		}
 	}
