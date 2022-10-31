@@ -12,6 +12,7 @@ echo build the code ...
 cd ../formview
 npm install
 npm run build
+node ./copy_tinymce.js
 cd ../build
 
 echo remove last package if exist
@@ -20,7 +21,5 @@ if [ -e package/web/formview ]; then
 fi
 
 mv ../formview/build ./package/web/formview
-
-node ./copy_tinymce.js
 
 echo formview package build over.
