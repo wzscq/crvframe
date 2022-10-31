@@ -39,6 +39,23 @@ func (controller *DefinitionController)getUserFunction(c *gin.Context){
 	log.Println("end definition getUserFunction")
 }
 
+func (controller *DefinitionController)getUserMenus(c *gin.Context){
+	log.Println("start definition getUserMenus")
+	//获取用户角色
+	userRoles:= c.MustGet("userRoles").(string)
+	appDB:= c.MustGet("appDB").(string)
+	
+	m:=menu{
+		AppDB:appDB,
+	}
+
+	menus,errorCode:=m.getUserMenus(userRoles)
+	
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),menus)
+	c.IndentedJSON(http.StatusOK, rsp)
+	log.Println("end definition getUserMenus")
+}
+
 func (controller *DefinitionController)getModelViewConf(c *gin.Context){
 	log.Println("start definition getModelViewConf")
 	//获取用户角色
@@ -132,6 +149,7 @@ func (controller *DefinitionController)getAppI18n(c *gin.Context){
 
 func (controller *DefinitionController) Bind(router *gin.Engine) {
 	log.Println("Bind DefinitionController")
+	router.POST("/definition/getUserMenus", controller.getUserMenus)
 	router.POST("/definition/getUserFunction", controller.getUserFunction)
 	router.POST("/definition/getModelViewConf", controller.getModelViewConf)
 	router.POST("/definition/getModelFormConf", controller.getModelFormConf)

@@ -130,6 +130,7 @@ export default function OperationDialog(){
                 const params={
                     url:current.params.url,
                     method:current.params.method,
+                    responseType:current.params.responseType,
                     data:current.input
                 }
                 dispatch(requestAction(params));

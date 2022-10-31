@@ -1,41 +1,17 @@
-import { Menu} from 'antd';
-import { AppstoreFilled } from '@ant-design/icons';
+import { Button} from 'antd';
+import { MenuUnfoldOutlined,MenuFoldOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { getHost } from '../../../api';
-import { createOpenOperation,setOperation,OPEN_LOCATION } from '../../../operation';
-import useI18n from '../../../hook/useI18n';
-
+import { setInlineCollapsed } from '../../../redux/menuSlice';
 
 export default function FunctionMenu(){
-    const {getLocaleLabel}=useI18n();
-    const handleClick=(e)=>{
-        const key=e.key;
-        const host=getHost();
-        let params={
-            url:host+key,
-            title:"",
-            key,
-            location:OPEN_LOCATION.TAB
-        }
-        if(key==='/functions'){
-            params.title={key:'page.main.functionList',default:'功能列表'};
-            params.url=process.env.REACT_APP_FUNCTION_LIST_URL 
-            //params.url="http://localhost:3001";
-        }
-
-        if(key==="/log"){
-            params.title="Operation Log";
-        }
-
-        const operationItem=createOpenOperation(params,{},{key:'page.main.openPage',default:'打开功能页面'});
-        setOperation(operationItem);
+    const inlineCollapsed=useSelector(state=>state.menu.inlineCollapsed);
+    const dispatch=useDispatch();
+    const handleClick=()=>{
+        dispatch(setInlineCollapsed(!inlineCollapsed));
     }
 
-    const menuItems=[
-        {key:'/functions',icon:(<AppstoreFilled />),label:getLocaleLabel({key:'page.main.functionList',default:'功能列表'})}
-    ];
-
     return (
-        <Menu onClick={handleClick} selectedKeys={["mail"]} mode="horizontal" items={menuItems} />
+        <Button style={{display:'none'}} onClick={handleClick} type="primary" icon={inlineCollapsed?<MenuUnfoldOutlined /> : <MenuFoldOutlined />} size={'small'} />
     );
 }

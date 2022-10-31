@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import {
+/*import {
     OPEN_LOCATION
-} from '../operation';
+} from '../operation';*/
 
 // Define the initial state using that type
 const initialState = {
-    items:[{
+    items:[/*{
         params:{
             url:process.env.REACT_APP_FUNCTION_LIST_URL,
             title:{key:'page.main.functionList',default:'功能列表'},
             key:'/functions',
             location:OPEN_LOCATION.TAB
         }
-    }],
+    }*/],
     current:"/functions"
 }
 

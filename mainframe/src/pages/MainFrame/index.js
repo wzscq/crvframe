@@ -4,16 +4,19 @@ import { useDispatch } from 'react-redux';
 import {info as logInfo} from '../../redux/logSlice';
 import { 
     setOperation,
-    FRAME_MESSAGE_TYPE } from '../../operation';
-import Dialog from '../../dialog';
-import FrameHeader from './FrameHeader';
-import FrameTab from './FrameTab';
+    FRAME_MESSAGE_TYPE 
+} from '../../operation';
+
 import {
     queryData,
     getAppIcon,
     getImage
 } from '../../api';
 import {userInfoStorage} from '../../utils/sessionStorage';
+import Dialog from '../../dialog';
+import FrameHeader from "./FrameHeader";
+import FrameContent from "./FrameContent";
+
 import './index.css';
 
 export default function MainFrame(){   
@@ -28,7 +31,10 @@ export default function MainFrame(){
         } else if (type===FRAME_MESSAGE_TYPE.QUERY_REQUEST) {
             queryData(data);
         } else if (type===FRAME_MESSAGE_TYPE.GET_IMAGE) {
+            console.log('wzstest get image');
             getImage(data);
+        } else {
+            console.error('not supported frame message type:'+type);
         }
     }
 
@@ -52,7 +58,7 @@ export default function MainFrame(){
     return (
         <div className="main-frame">
             <FrameHeader/>
-            <FrameTab />
+            <FrameContent/>
             <Dialog/>
         </div>
     )

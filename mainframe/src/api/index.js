@@ -90,15 +90,23 @@ export const logoutApi = createAsyncThunk(
 //request api
 export const requestAction = createAsyncThunk(
   'request',
-  async ({url,method,data}, _) => {
+  async ({url,method,data,responseType}, _) => {
+    console.log('url:'+url+' responseType:'+responseType)
     const {token}=userInfoStorage.get();
     const config={
       url:host+url,
       method,
       data:{...data},
-      headers:{token:token}
+      headers:{token:token},
+      responseType:responseType
     }
     const response =await axios(config);
+    //判断一下返回的类型，如果是文件流则做一个转换，用来实现文件下载
+    if(responseType==='blob'){
+      let fileName=response.headers['content-disposition'];
+      fileName=fileName.substring("attachment; filename=".length);
+      return {data:response.data,download:true,fileName:fileName}
+    }
     return response.data;
   }
 );
@@ -193,6 +201,22 @@ export const getAppI18n = createAsyncThunk(
   async ({appID,locale}, _) => {
     const reponse= await axios({url:host+DEF_I18N_URL+appID+'/'+locale,method:"get"});
     console.log('getAppI18n reponse',reponse);
+    return reponse.data;
+  }
+);
+
+//获取用户菜单
+const DEF_GETUSERMENU_URL="/definition/getUserMenus";
+export const getUserMenus = createAsyncThunk(
+  'getUserMenus',
+  async () => {
+    const {token}=userInfoStorage.get();
+    const reponse= await axios({
+      url:host+DEF_GETUSERMENU_URL,
+      method:"post",
+      headers:{token:token}
+    });
+    console.log('getUserMenus reponse',reponse);
     return reponse.data;
   }
 );

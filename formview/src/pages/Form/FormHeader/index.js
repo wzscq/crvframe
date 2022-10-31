@@ -145,7 +145,7 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
                 <Space>
                     {
                         operations.map(element=>{
-                            return (<Button type="primary" onClick={()=>doOperation(element)}>{getLocaleLabel(element.name)}</Button>);
+                            return (<Button key={element.id} type="primary" onClick={()=>doOperation(element)}>{getLocaleLabel(element.name)}</Button>);
                         })
                     }
                 </Space>

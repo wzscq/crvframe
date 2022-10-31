@@ -1,5 +1,5 @@
 .frame-tab-main {
-    width:100vw;
+    width:100%;
     border-top: 1px solid gainsboro;
     height: calc(100vh - 47px);
 }
@@ -24,4 +24,13 @@
 .frame-tab-main .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab {
     padding-top: 4px;
     padding-bottom: 4px;
+}
+
+.frame-tab-main .iframe-mask {
+    position: absolute;
+    left: 0;
+    top: 34px;
+    width: 100%;
+    height: calc(100vh - 80px);
+    display: flex;
 }

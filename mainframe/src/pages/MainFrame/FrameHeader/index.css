@@ -15,13 +15,15 @@
     width: fit-content;
     height: 45px;
     float: left;
-    text-align: center;
+    text-align: left;
 }
 
 .frame-header .function-menu {
     width: calc(100% - 423px);
     height: 45px;
     float: left;
+    line-height: 45px;
+    display: none;
 }
 
 .frame-header .system-menu {

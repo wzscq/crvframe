@@ -11,3 +11,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.ant-menu-vertical.ant-menu-sub > .ant-menu-item {
+  margin-bottom: 0;
+}
+
+.ant-menu-vertical > .ant-menu-item {
+  height: 32px;
+  line-height: 32px;
+}

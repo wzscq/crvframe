@@ -9,6 +9,7 @@ import EditTable from './EditTable';
 import FunctionTextArea from './FunctionTextArea';
 import ImageList from './ImageList';
 import Number from './Number';
+import RichText from './RichText';
 /**
  * 以下为控件类型枚举常量定义
  */
@@ -23,7 +24,8 @@ import Number from './Number';
     EDITTABLE:'EditTable',  //表格编辑控件
     FUNCTIONTEXTAREA:'FunctionTextArea', //函数计算文本控件
     IMAGELIST:'ImageList', //图片文件列表
-    Number:'Number' //数值录入
+    Number:'Number', //数值录入
+    RichText:"RichText" //富文本
 }
 
 /**
@@ -40,7 +42,8 @@ export const controlRegister={
     [CONTROL_TYPE.EDITTABLE]:EditTable,
     [CONTROL_TYPE.FUNCTIONTEXTAREA]:FunctionTextArea,
     [CONTROL_TYPE.IMAGELIST]:ImageList,
-    [CONTROL_TYPE.Number]:Number
+    [CONTROL_TYPE.Number]:Number,
+    [CONTROL_TYPE.RichText]:RichText
 }
 
 export const getControl=(control,field,sendMessageToParent,dataPath)=>{

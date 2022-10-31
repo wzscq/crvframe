@@ -2,15 +2,15 @@ import { Tabs } from 'antd';
 import { useEffect, useMemo } from 'react';
 
 import { useSelector,useDispatch } from 'react-redux';
-import {setActiveTab,closeTab} from '../../../redux/tabSlice';
-import {setActive} from '../../../redux/logSlice';
-import LogTab from '../../../tabs/LogTab';
+import {setActiveTab,closeTab} from '../../../../redux/tabSlice';
+import {setActive} from '../../../../redux/logSlice';
+import LogTab from '../../../../tabs/LogTab';
 import ChildFrame from './ChildFrame';
-import useI18n from '../../../hook/useI18n';
+import useI18n from '../../../../hook/useI18n';
 
 import "./index.css";
 
-export default function FrameTab(){
+export default function FrameTab({inResize}){
     const dispatch=useDispatch();
     const {current,items}=useSelector(state=>state.tab);
     const {getLocaleLabel,locale,resources}=useI18n();
@@ -63,11 +63,11 @@ export default function FrameTab(){
 
             return (
                 <TabPane tab={titleLabel} key={key} closable={true}>
-                    <ChildFrame locale={locale}  resources={resources} item={item}/>
+                    <ChildFrame inResize={inResize} locale={locale}  resources={resources} item={item}/>
                 </TabPane>
             );
         });
-    },[items,getLocaleLabel,locale,resources]);
+    },[items,getLocaleLabel,locale,resources,inResize]);
     
     //这里注意初始时由于locale是undefined，在刷新页面时会导致tab页多次刷新会造成多次触发子页面INIT的情况，这里暂时用locale是否未空做个临时处理
     return (

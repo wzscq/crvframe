@@ -11,10 +11,10 @@ const initialState = {
     message:""
 }
 
-const downloadReportFile=({data,fileName})=>{
-    //let blob=new Blob([data],{type:`application/octet-stream`});
+const downloadFile=({data,fileName})=>{
+    let blob=[data];
     var a = document.createElement('a');
-    var url = window.URL.createObjectURL(data);
+    var url = window.URL.createObjectURL(new Blob(blob));
     a.href = url;
     a.download = fileName;
     document.body.appendChild(a);
@@ -37,11 +37,16 @@ export const requestSlice = createSlice({
         builder.addCase(requestAction.fulfilled, (state, action) => {
             console.log("requst fulfilled:",action);
             state.pending=false;
-            state.result=action.payload.result;
-            if(action.payload.error){
-                state.error=true;
-                state.message=action.payload.message;
-                state.errorCode=action.payload.errorCode;
+            //判断是否是文件下载
+            if(action.payload.download===true){
+                downloadFile(action.payload);
+            } else {
+                state.result=action.payload.result;
+                if(action.payload.error){
+                    state.error=true;
+                    state.message=action.payload.message;
+                    state.errorCode=action.payload.errorCode;
+                }
             }
         });
         builder.addCase(requestAction.rejected , (state, action) => {
@@ -64,7 +69,7 @@ export const requestSlice = createSlice({
         builder.addCase(downloadAction.fulfilled, (state, action) => {
             console.log("requst fulfilled:",action);
             state.pending=false;
-            downloadReportFile(action.payload);
+            downloadFile(action.payload);
         });
         builder.addCase(downloadAction.rejected , (state, action) => {
             console.log("requst return error:",action);

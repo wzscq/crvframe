@@ -3,3 +3,13 @@
     height: 100vh;
     background-color: white;
 }
+
+.main-frame .content {
+    width: 100%;
+    height: calc(100vh - 45px);
+    position: relative;
+}
+
+.main-frame .sc-dkrFOg {
+    display: none !important;
+}

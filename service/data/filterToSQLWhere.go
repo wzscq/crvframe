@@ -264,6 +264,8 @@ func convertFieldValueMap(field string,value map[string]interface{})(string,int)
             str,err=convertFieldOpNormal(" is ",field,value)
         case Op_not:
             str,err=convertFieldOpNormal(" is not ",field,value)
+        case Op_like:
+            str,err=convertFieldOpNormal(" like ",field,value)
         default:
             //字段
             log.Println("convertFieldValueMap not supported operator type %v \n", key)

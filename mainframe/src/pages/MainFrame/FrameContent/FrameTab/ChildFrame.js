@@ -1,11 +1,11 @@
 import { useEffect,useRef, useState} from "react";
 
-import { FRAME_MESSAGE_TYPE } from '../../../operation';
-import {convertUrl, parseUrl} from '../../../utils/urlParser';
+import { FRAME_MESSAGE_TYPE } from '../../../../operation';
+import {convertUrl, parseUrl} from '../../../../utils/urlParser';
 
 const frameType="tabframe";
 
-export default function ChildFrame({item,locale,resources}){
+export default function ChildFrame({item,locale,resources,inResize}){
     const refFrame=useRef();
     const [lastLocale,setLastLocale]=useState(undefined);
 
@@ -51,12 +51,14 @@ export default function ChildFrame({item,locale,resources}){
     const url=convertUrl(item.params.url);
 
     return locale?(
-        <iframe           
+        <>
+        <iframe         
             title={frameType+"_"+item.params.key} 
             id={frameType+"_"+item.params.key} 
             ref={refFrame} 
             frameBorder={0} 
             scrolling={"yes"} 
             src={url} />
-    ):null;
+        <div className="iframe-mask" style={{display:inResize?'block':'none'}}/>
+    </>):null;
 }
