@@ -20,4 +20,7 @@ if [ -e package/web/formview ]; then
 fi
 
 mv ../formview/build ./package/web/formview
+
+node ./copy_tinymce.js
+
 echo formview package build over.
