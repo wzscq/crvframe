@@ -141,9 +141,11 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
         }
     }
 
+    console.log('TINYMCE_URL:',process.env.REACT_APP_TINYMCE_URL);
+
     let fileControl=(
         <Editor
-            tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
+            tinymceScriptSrc={process.env.REACT_APP_TINYMCE_URL}
             onInit={(evt, editor) => {
                 editorRef.current = editor;
                 editor.on('change', onContentChange);
