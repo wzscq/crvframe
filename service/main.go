@@ -37,7 +37,7 @@ func main() {
     }))
 
     appCache:=&common.DefatultAppCache{}
-    appCache.Init(conf.Redis.Server,1,conf.Redis.Password)
+    appCache.Init(conf.Redis.Server,conf.Redis.AppCacheDB,conf.Redis.Password)
 
     duration, _ := time.ParseDuration(conf.Redis.TokenExpired)
     loginCache:=&user.DefatultLoginCache{}
