@@ -15,7 +15,7 @@ const (
 )
 
 type nodeExecutor interface {
-	run(instance *flowInstance,node *instanceNode,req *flowReqRsp,userID,userRoles string)(*flowReqRsp,*common.CommonError)
+	run(instance *flowInstance,node *instanceNode,req *flowReqRsp,userID,userRoles,userToken string)(*flowReqRsp,*common.CommonError)
 }
 
 func getExecutor(node *node,dataRepo data.DataRepository)(nodeExecutor){

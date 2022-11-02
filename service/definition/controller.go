@@ -18,6 +18,10 @@ type getModelFormRep struct {
 	FormID string `json:"formID"`
 }
 
+type getReportConfReq struct {
+	ReportID string  `json:"reportID"`
+}
+
 type DefinitionController struct {
 	 
 }
@@ -111,6 +115,26 @@ func (controller *DefinitionController)getModelFormConf(c *gin.Context){
 	log.Println("end definition getModelViewConf")
 }
 
+func (controller *DefinitionController)getReportConf(c *gin.Context){
+	log.Println("start definition getReportConf")
+	//获取用户角色
+	appDB:= c.MustGet("appDB").(string)
+	
+	var req getReportConfReq	
+	if err := c.BindJSON(&req); err != nil {
+		log.Println(err)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
+		log.Println("end definition getReportConf with error")	
+	}
+
+	reportConf,errorCode:=getReportConf(appDB,req.ReportID)
+
+	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),reportConf)
+	c.IndentedJSON(http.StatusOK, rsp)
+	log.Println("end definition getReportConf")
+}
+
 func (controller *DefinitionController)getAppImage(c *gin.Context){
 	log.Println("start definition getAppImage")
 
@@ -153,6 +177,7 @@ func (controller *DefinitionController) Bind(router *gin.Engine) {
 	router.POST("/definition/getUserFunction", controller.getUserFunction)
 	router.POST("/definition/getModelViewConf", controller.getModelViewConf)
 	router.POST("/definition/getModelFormConf", controller.getModelFormConf)
+	router.POST("/definition/getReportConf", controller.getReportConf)
 	router.GET("/appimages/:appId/:image", controller.getAppImage)
 	router.GET("/appI18n/:appId/:locale", controller.getAppI18n)
 }

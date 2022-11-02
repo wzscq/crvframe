@@ -61,7 +61,7 @@ func (nodeExecutor *nodeExecutorRequest)getNodeConf()(*requestConf){
 func (nodeExecutor *nodeExecutorRequest)sendRequest(
 	nodeConf *requestConf,
 	req *flowReqRsp,
-	appDB,userID,userRoles string)(*response,int){
+	appDB,userID,userRoles,userToken string)(*response,int){
 	
 	reqBody:=request{
 		ModelID:*req.ModelID,
@@ -75,8 +75,18 @@ func (nodeExecutor *nodeExecutorRequest)sendRequest(
 	postJson,_:=json.Marshal(reqBody)
 	postBody:=bytes.NewBuffer(postJson)
 	log.Println("http.Post ",nodeConf.Url,string(postJson))
-	resp,err:=http.Post(nodeConf.Url,"application/json",postBody)
+	postReq,err:=http.NewRequest("POST",nodeConf.Url,postBody)
+	if err != nil { 
+		log.Println(err)
+		return nil,common.ResultPostExternalApiError
+	}
+	postReq.Header.Set("token", userToken)
+	postReq.Header.Set("userID", userID)
+	postReq.Header.Set("appDB", appDB)
+	postReq.Header.Set("userRoles", userRoles)
+	postReq.Header.Set("Content-Type","application/json")
 
+	resp, err := (&http.Client{}).Do(postReq)
 	if err != nil || resp==nil || resp.StatusCode != 200 { 
 		log.Println(resp)
 		return nil,common.ResultPostExternalApiError
@@ -101,14 +111,14 @@ func (nodeExecutor *nodeExecutorRequest)run(
 	instance *flowInstance,
 	node *instanceNode,
 	req *flowReqRsp,
-	userID,userRoles string)(*flowReqRsp,*common.CommonError){
+	userID,userRoles,userToken string)(*flowReqRsp,*common.CommonError){
 	
 	nodeConf:=nodeExecutor.getNodeConf()
 	if nodeConf==nil {
 		return nil,common.CreateError(common.ResultLoadNodeConfError,nil)
 	}
 
-	rsp,errorCode:=nodeExecutor.sendRequest(nodeConf,req,instance.AppDB,userID,userRoles)
+	rsp,errorCode:=nodeExecutor.sendRequest(nodeConf,req,instance.AppDB,userID,userRoles,userToken)
 	if errorCode!=common.ResultSuccess {
 		return nil,common.CreateError(errorCode,nil)
 	}

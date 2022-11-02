@@ -98,7 +98,7 @@ func (nodeExecutor *nodeExecutorForm)run(
 	instance *flowInstance,
 	node *instanceNode,
 	req *flowReqRsp,
-	userID,userRoles string)(*flowReqRsp,*common.CommonError){
+	userID,userRoles,userToken string)(*flowReqRsp,*common.CommonError){
 
 	if req.Stage==nil || *(req.Stage) == 0 {
 		return nodeExecutor.runStage0(instance,node,req,userID)

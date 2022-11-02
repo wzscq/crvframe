@@ -62,7 +62,7 @@ func (flow *flowInstance)getNodeConfig(id string)(node *node){
 	return nil
 }
 
-func (flow *flowInstance)runNode(dataRepo data.DataRepository,node *instanceNode,req *flowReqRsp,userID,userRoles string)(*flowReqRsp,*common.CommonError){
+func (flow *flowInstance)runNode(dataRepo data.DataRepository,node *instanceNode,req *flowReqRsp,userID,userRoles,userToken string)(*flowReqRsp,*common.CommonError){
 	//根据节点类型，找到对应的节点，然后执行节点
 	nodeCfg:=flow.getNodeConfig(node.ID)
 	if nodeCfg==nil {
@@ -74,10 +74,10 @@ func (flow *flowInstance)runNode(dataRepo data.DataRepository,node *instanceNode
 		log.Println("can not find the node executor with type: ",nodeCfg.Type)
 		return nil,common.CreateError(common.ResultNoExecutorForNodeType,nil)
 	}
-	return executor.run(flow,node,req,userID,userRoles)
+	return executor.run(flow,node,req,userID,userRoles,userToken)
 }
 
-func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowReqRsp,userID,userRoles string)(*flowReqRsp,*common.CommonError){
+func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowReqRsp,userID,userRoles,userToken string)(*flowReqRsp,*common.CommonError){
 	log.Println("start flowInstance push")
 	//每个节点的执行都包含两个步骤，启动和结束，
 	//先判断当前正在执行的节点（ExecutedNodes中最后一个节点）是否存在，如果存在则加载这个节点并运行
@@ -91,7 +91,7 @@ func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowReqRsp,u
 
 	//循环执行所有同步的node
 	for currentNode!=nil {
-		result,err:=flow.runNode(dataRepo,currentNode,flowRep,userID,userRoles)
+		result,err:=flow.runNode(dataRepo,currentNode,flowRep,userID,userRoles,userToken)
 		if err!= nil {
 			return nil,err
 		}

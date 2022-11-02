@@ -169,7 +169,7 @@ func (nodeExecutor *nodeExecutorMerge)run(
 	instance *flowInstance,
 	node *instanceNode,
 	req *flowReqRsp,
-	userID,userRoles string)(*flowReqRsp,*common.CommonError){
+	userID,userRoles,userToken string)(*flowReqRsp,*common.CommonError){
 	
 	nodeConf:=nodeExecutor.getNodeConf()
 	if nodeConf==nil {

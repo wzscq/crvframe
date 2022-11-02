@@ -6,6 +6,12 @@ export const convertUrl=(url)=>{
     if(process.env.REACT_APP_CRV_FORM_VIEW_URL){
         url=url.replace('/formview/',process.env.REACT_APP_CRV_FORM_VIEW_URL); 
     }
+
+    if(process.env.REACT_APP_CRV_REPORT_VIEW_URL){
+        url=url.replace('/report/',process.env.REACT_APP_CRV_REPORT_VIEW_URL); 
+        console.log(url);
+    }
+
     return url;
 }
 

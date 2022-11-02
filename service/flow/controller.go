@@ -31,6 +31,10 @@ type FlowController struct {
 	DataRepository data.DataRepository
 }
 
+type repHeader struct {
+	Token     string  `json:"token"`
+}
+
 func (controller *FlowController)start(c *gin.Context){
 	log.Println("start FlowController start")
 	//获取相关参数
@@ -38,8 +42,17 @@ func (controller *FlowController)start(c *gin.Context){
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
 
-	var rep flowReqRsp
 	var result *flowReqRsp
+	var header repHeader
+	if err := c.ShouldBindHeader(&header); err != nil {
+		log.Println(err)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
+		log.Println("end FlowController start")
+		return
+	}
+
+	var rep flowReqRsp
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
@@ -65,7 +78,7 @@ func (controller *FlowController)start(c *gin.Context){
 		return
 	}
 	//执行流
-	result,err:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles)
+	result,err:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles,header.Token)
 
 	//如果流中存在待执行的节点，则保存流实例到缓存
 	if !flowInstance.Completed {
@@ -95,9 +108,17 @@ func (controller *FlowController)push(c *gin.Context){
 	userRoles:= c.MustGet("userRoles").(string)
 	userID:= c.MustGet("userID").(string)
 	//appDB:= c.MustGet("appDB").(string)
+	var result *flowReqRsp
+	var header repHeader
+	if err := c.ShouldBindHeader(&header); err != nil {
+		log.Println(err)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
+		log.Println("end FlowController start")
+		return
+	}
 
 	var rep flowReqRsp
-	var result *flowReqRsp
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
@@ -124,7 +145,7 @@ func (controller *FlowController)push(c *gin.Context){
 	}
 
 	//执行流
-	result,commonErr:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles)
+	result,commonErr:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles,header.Token)
 
 	//如果流中存在待执行的节点，则保存流实例到缓存
 	if !flowInstance.Completed {
