@@ -9,6 +9,7 @@ import {
 
 import {
     queryData,
+    queryReportData,
     getAppIcon,
     getImage
 } from '../../api';
@@ -30,6 +31,8 @@ export default function MainFrame(){
             setOperation(data.operationItem);
         } else if (type===FRAME_MESSAGE_TYPE.QUERY_REQUEST) {
             queryData(data);
+        } else if (type===FRAME_MESSAGE_TYPE.REPORT_QUERY){
+            queryReportData(data);
         } else if (type===FRAME_MESSAGE_TYPE.GET_IMAGE) {
             console.log('wzstest get image');
             getImage(data);

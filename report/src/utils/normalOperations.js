@@ -31,7 +31,7 @@ export function createGetReportConfMessage(frameParams,reportID){
     };
 }
 
-const DATA_QUERY_URL="/data/query";
+const REPORT_QUERY_URL="/report/query";
 
 const opUpdateData={
     type:OP_TYPE.UPDATE_FRAME_DATA,
@@ -43,16 +43,16 @@ const opUpdateData={
 const opQueryData={
     type:OP_TYPE.REQUEST,
     params:{
-        url:DATA_QUERY_URL,
+        url:REPORT_QUERY_URL,
         method:"post"
     },
     input:{},
-    description:{key:'page.crvformview.queryData',default:'查询模型数据'}
+    description:{key:'page.report.queryData',default:'查询报表数据'}
 }
 
 /**
  * 查询参数如下
- queryParams={modelID,viewID,filter,pagination,sorter,fields}
+ queryParams={reportID,controlID}
  */
 export function createQueryDataMessage(frameParams,queryParams){
     opUpdateData.params={...opUpdateData.params,...frameParams};

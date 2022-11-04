@@ -158,7 +158,7 @@ export const getImage = ({frameParams,queryParams})=>{
   .catch(function (error) {
     console.log(error);
     message.error(getLocaleLabel({key:'message.main.getImageError',default:'获取图片数据时发生错误'}));
-  });;
+  });
 }
 
 //通用的查询接口，用于快速数据查询
@@ -167,6 +167,38 @@ export const queryData = ({frameParams,queryParams})=>{
   const {token}=userInfoStorage.get();
   const config={
     url:host+DATA_QUERY_URL,
+    method:'post',
+    data:{...queryParams},
+    headers:{token:token}
+  }
+  axios(config).then(function (response) {
+    console.log(response);
+    if(response.data.error===true){
+      message.error(response.data.message);
+    } else {
+      const {frameID,frameType,dataKey}=frameParams;
+      const frameControl=document.getElementById(frameType+"_"+frameID);
+      if(frameControl){
+          const origin=parseUrl(frameControl.getAttribute("src")).origin;
+          frameControl.contentWindow.postMessage({
+            type:FRAME_MESSAGE_TYPE.QUERY_RESPONSE,
+            dataKey:dataKey,
+            data:response.data.result},origin);
+      }
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+    message.error(getLocaleLabel({key:'message.main.queryDataError',default:'查询数据时发生错误'}));
+  });;
+}
+
+//通用的查询接口，用于报表数据查询
+const REPORT_QUERY_URL="/report/query";
+export const queryReportData = ({frameParams,queryParams})=>{
+  const {token}=userInfoStorage.get();
+  const config={
+    url:host+REPORT_QUERY_URL,
     method:'post',
     data:{...queryParams},
     headers:{token:token}

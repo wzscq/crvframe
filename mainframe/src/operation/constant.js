@@ -53,7 +53,8 @@ export const FRAME_MESSAGE_TYPE={
     UPDATE_LOCALE:'updateLocale',//"UPDATE_LOCALE",
     QUERY_REQUEST:'queryRequest',//"QUERY_REQUEST",
     QUERY_RESPONSE:'queryResponse',//"QUERY_RESPONSE",
-    GET_IMAGE:'getImage' //"GET_IMAGE"
+    GET_IMAGE:'getImage', //"GET_IMAGE"
+    REPORT_QUERY:'queryReportData' 
 }
 
 /**

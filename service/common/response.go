@@ -64,6 +64,8 @@ const (
 	ResultPushFlowWithoutID=20000005
 	ResultLoadFlowInstanceError=20000006
 	ResultLoadNodeConfError=20000007
+	//以下未翻译
+	ResultNoReportControl=  30000001
 )
 
 var errMsg = map[int]CommonRsp{
@@ -71,6 +73,11 @@ var errMsg = map[int]CommonRsp{
 		ErrorCode:ResultSuccess,
 		Message:"操作成功",
 		Error:false,
+	},
+	ResultNoReportControl:CommonRsp{
+		ErrorCode:ResultNoReportControl,
+		Message:"找不到对应报表组件的查询语句，请与管理员联系处理",
+		Error:true,
 	},
 	ResultESIFileAlreadyImported:CommonRsp{
 		ErrorCode:ResultESIFileAlreadyImported,

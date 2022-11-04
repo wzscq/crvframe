@@ -11,6 +11,7 @@ import (
     "crv/frame/redirect"
     "crv/frame/flow"
     "crv/frame/esi"
+    "crv/frame/report"
     "time"
     "log"
 )
@@ -102,6 +103,12 @@ func main() {
         DataRepository:dataRepo,
     }
     esiController.Bind(router)
+
+    //report
+    reportController:=&report.ReportController{
+        DataRepository:dataRepo,
+    }
+    reportController.Bind(router)
 
     router.Run(conf.Service.Port)
 }

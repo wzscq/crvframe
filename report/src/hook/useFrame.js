@@ -14,7 +14,7 @@ import {
 export default function useFrame(){
     const dispatch=useDispatch();
     const {origin}=useSelector(state=>state.frame);
-    const {forms} = useSelector(state=>state.definition);
+    //const {forms} = useSelector(state=>state.definition);
 
     console.log("formview useframe",origin);
 
@@ -40,10 +40,14 @@ export default function useFrame(){
             if(dataType===DATA_TYPE.MODEL_CONF){
                 dispatch(setDefinition(data));
             } else if (dataType===DATA_TYPE.QUERY_RESULT){
-                dispatch(setData({data,controls:forms[0].controls}));
+                //console.log("QUERY_RESULT",data)
+                //dispatch(setData(data));
             } else {
                 console.log("update data with wrong data type:",dataType);
             }
+        } else if (type===FRAME_MESSAGE_TYPE.QUERY_RESPONSE){
+            console.log("QUERY_RESPONSE",data)
+            dispatch(setData(data));
         } else if (type===FRAME_MESSAGE_TYPE.RELOAD_DATA){
             console.log("reload data");
             dispatch(refreshData());
@@ -51,7 +55,7 @@ export default function useFrame(){
             console.log("UPDATE_LOCALE",event.data)
             //dispatch(setLocale(event.data.i18n));
         }
-    },[dispatch,forms]);
+    },[dispatch]);
         
     useEffect(()=>{
         window.addEventListener("message",receiveMessageFromMainFrame);

@@ -37,6 +37,7 @@ export const FRAME_MESSAGE_TYPE={
     QUERY_RESPONSE:'queryResponse',//"QUERY_RESPONSE",
     GET_IMAGE:'getImage',//"GET_IMAGE",
     UPDATE_LOCALE:'updateLocale',//"UPDATE_LOCALE"
+    REPORT_QUERY:'queryReportData' 
 }
 
 export const DATA_TYPE={
