@@ -64,3 +64,7 @@ func (cache *DefatultLoginCache)GetUserRoles(token string)(string,error){
 func (cache *DefatultLoginCache)GetUserToken(userID string)(string,error){
 	return cache.client.Get(cache.client.Context(), "userID:"+userID).Result()
 }
+
+func (cache *DefatultLoginCache)GetTokenTTL(token string)(time.Duration,error){
+	return cache.client.TTL(cache.client.Context(),"token:"+token).Result()
+}

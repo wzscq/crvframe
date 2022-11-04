@@ -43,7 +43,7 @@ func main() {
     duration, _ := time.ParseDuration(conf.Redis.TokenExpired)
     loginCache:=&user.DefatultLoginCache{}
     loginCache.Init(conf.Redis.Server,conf.Redis.TokenDB,duration,conf.Redis.Password)
-    
+
     router.Use(common.AuthMiddleware(loginCache,appCache))
     
     userRepo:=&user.DefatultUserRepository{}
