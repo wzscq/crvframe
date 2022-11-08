@@ -23,6 +23,9 @@ type mysqlConf struct {
 	Password string `json:"password"`
 	User string `json:"user"`
 	DBName string `json:"dbName"`
+	ConnMaxLifetime int `json:"connMaxLifetime"` 
+  MaxOpenConns int `json:"maxOpenConns"`
+  MaxIdleConns int `json:"maxIdleConns"`
 }
 
 type serviceConf struct {

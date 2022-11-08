@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/go-sql-driver/mysql"
 	"log"
+	"time"
 )
 
 type User struct {
@@ -55,7 +56,9 @@ func (repo *DefatultUserRepository)GetUserRoles(userID string,dbName string)(str
 	return roles, nil
 }
 
-func (repo *DefatultUserRepository)Connect(server string,user string,password string,dbName string){
+func (repo *DefatultUserRepository)Connect(
+	server,user,password,dbName string,
+	connMaxLifetime,maxOpenConns,maxIdleConns int){
 	// Capture connection properties.
     cfg := mysql.Config{
         User:   user,
@@ -76,5 +79,9 @@ func (repo *DefatultUserRepository)Connect(server string,user string,password st
     if pingErr != nil {
         log.Fatal(pingErr)
     }
+
+		repo.DB.SetConnMaxLifetime(time.Minute * time.Duration(connMaxLifetime))
+		repo.DB.SetMaxOpenConns(maxOpenConns)
+		repo.DB.SetMaxIdleConns(maxIdleConns)
     log.Println("connect to mysql server "+server)
 }

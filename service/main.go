@@ -51,7 +51,10 @@ func main() {
         conf.Mysql.Server,
         conf.Mysql.User,
         conf.Mysql.Password,
-        conf.Mysql.DBName)
+        conf.Mysql.DBName,
+        conf.Mysql.ConnMaxLifetime,
+        conf.Mysql.MaxOpenConns,
+        conf.Mysql.MaxIdleConns)
 
 	userController:=&user.UserController{
         UserRepository:userRepo,
@@ -68,7 +71,10 @@ func main() {
         conf.Mysql.Server,
         conf.Mysql.User,
         conf.Mysql.Password,
-        conf.Mysql.DBName)
+        conf.Mysql.DBName,
+        conf.Mysql.ConnMaxLifetime,
+        conf.Mysql.MaxOpenConns,
+        conf.Mysql.MaxIdleConns)
     dataController:=&data.DataController{
         DataRepository:dataRepo,
     }
