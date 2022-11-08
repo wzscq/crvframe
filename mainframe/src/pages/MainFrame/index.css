@@ -6,7 +6,7 @@
 
 .main-frame .content {
     width: 100%;
-    height: calc(100vh - 45px);
+    height: 100%;
     position: relative;
 }
 

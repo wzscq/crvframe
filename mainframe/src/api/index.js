@@ -31,6 +31,11 @@ export const getLogoImage=()=>{
   return host+"/appimages/"+appID+"/logo.png";
 }
 
+export const getSmallLogoImage=()=>{
+  const {appID}=userInfoStorage.get();
+  return host+"/appimages/"+appID+"/logosmall.png";
+}
+
 //redire to oauth login page
 export const getOAuthLoginPage = createAsyncThunk(
   'getOAuthLoginPage',

@@ -2,14 +2,14 @@ import { Menu, Dropdown,Avatar} from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 
-import {DIALOG_TYPE} from '../../../dialog';
+import {DIALOG_TYPE} from '../../../../dialog';
 import {
     createOpenOperation,
     createLogoutOperation,
     setOperation,
     OPEN_LOCATION
-} from '../../../operation';
-import useI18n from '../../../hook/useI18n';
+} from '../../../../operation';
+import useI18n from '../../../../hook/useI18n';
 
 export default function SystemMenu(){
     const {getLocaleLabel}=useI18n();

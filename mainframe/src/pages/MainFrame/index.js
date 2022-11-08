@@ -15,7 +15,6 @@ import {
 } from '../../api';
 import {userInfoStorage} from '../../utils/sessionStorage';
 import Dialog from '../../dialog';
-import FrameHeader from "./FrameHeader";
 import FrameContent from "./FrameContent";
 
 import './index.css';
@@ -60,7 +59,6 @@ export default function MainFrame(){
 
     return (
         <div className="main-frame">
-            <FrameHeader/>
             <FrameContent/>
             <Dialog/>
         </div>

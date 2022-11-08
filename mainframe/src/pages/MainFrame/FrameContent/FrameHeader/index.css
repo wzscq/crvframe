@@ -11,13 +11,6 @@
     height: 35px;
 }
 
-.frame-header .logo {
-    width: fit-content;
-    height: 45px;
-    float: left;
-    text-align: left;
-}
-
 .frame-header .function-menu {
     width: calc(100% - 423px);
     height: 45px;
@@ -30,7 +23,7 @@
     width: 150px;
     height: 45px;
     float: right;
-    line-height: 45px;
+    line-height: 42px;
     text-align: center;
 }
 
@@ -61,3 +54,4 @@
 .frame-header .ant-menu-horizontal {
     border: 0;
 }
+

@@ -1,10 +1,9 @@
 import FunctionMenu from './FunctionMenu';
 import SystemMenu from './SystemMenu';
 
-import SelectLanguage from '../../../component/SelectLanguage';
-import {userInfoStorage} from '../../../utils/sessionStorage';
-import OperationDialog from '../../../operation';
-import Logo from './Logo';
+import SelectLanguage from '../../../../component/SelectLanguage';
+import {userInfoStorage} from '../../../../utils/sessionStorage';
+import OperationDialog from '../../../../operation';
 import './index.css';
 
 export default function FrameHeader(){
@@ -12,9 +11,6 @@ export default function FrameHeader(){
 
     return (
         <div className="frame-header">
-            <div className="logo">
-                <Logo/>
-            </div>
             <div className="function-menu">
                 <FunctionMenu/>
             </div>

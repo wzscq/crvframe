@@ -5,6 +5,9 @@ import * as IconList from '@ant-design/icons';
 
 import { getUserMenus } from '../../../../api';
 import { setOperation } from '../../../../operation';
+
+import Logo from './Logo';
+
 import './index.css';
 
 export default function MenuBar({collapsed}){
@@ -44,6 +47,9 @@ export default function MenuBar({collapsed}){
     const menuItems=getMenus(menus,"");
 
     return (<div className='menu-wrapper'>
+        <div className='logo'>
+            <Logo collapsed={collapsed}/>
+        </div>
         <Menu
             mode="inline"
             theme="dark"
