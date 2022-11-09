@@ -10,7 +10,8 @@ import {
     FRAME_MESSAGE_TYPE,
     SAVE_TYPE
 } from '../../../../../utils/constant';
-import {base64EncodeUnicode} from '../../../../../utils/functions';
+import {utf8_to_b64,
+    b64_to_utf8} from '../../../../../utils/functions'; 
 import I18nLabel from '../../../../../component/I18nLabel';
 
 const selectOriginValue=(data,dataPath,field)=>{
@@ -76,7 +77,7 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
                 data.list&&data.list.length>0){
                 const file=data.list[0];
                 const contentBase64=file.url;
-                const content=atob(contentBase64);
+                const content=b64_to_utf8(contentBase64);
                 setOriginContent(content);
             }
         }
@@ -105,7 +106,7 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
     const onContentChange=()=>{
         console.log('richtext content changed');
         const content=editorRef.current.getContent();
-        const base64Content=base64EncodeUnicode(content);
+        const base64Content=utf8_to_b64(content);
         //这里仿照文件控件的结构来处理，仅保留当前内容
         const saveType={};
         saveType[CC_COLUMNS.CC_SAVE_TYPE]=SAVE_TYPE.CREATE;
