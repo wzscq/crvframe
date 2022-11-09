@@ -77,7 +77,9 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
                 data.list&&data.list.length>0){
                 const file=data.list[0];
                 const contentBase64=file.url;
+                console.log('contentBase64:'+contentBase64);
                 const content=b64_to_utf8(contentBase64);
+                console.log('content:'+content);
                 setOriginContent(content);
             }
         }
