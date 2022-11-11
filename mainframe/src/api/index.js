@@ -109,8 +109,10 @@ export const requestAction = createAsyncThunk(
     //判断一下返回的类型，如果是文件流则做一个转换，用来实现文件下载
     if(responseType==='blob'){
       let fileName=response.headers['content-disposition'];
-      fileName=fileName.substring("attachment; filename=".length);
-      return {data:response.data,download:true,fileName:fileName}
+      if(fileName){
+        fileName=fileName.substring("attachment; filename=".length);
+        return {data:response.data,download:true,fileName:fileName}
+      }
     }
     return response.data;
   }

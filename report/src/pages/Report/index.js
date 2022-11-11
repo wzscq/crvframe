@@ -16,6 +16,7 @@ export default function Report(){
     const sendMessageToParent=useFrame();
 
     const frameParams=useMemo(()=>{
+        console.log(origin,item);
         if(origin&&item){
             return ({
                 frameType:item.frameType,
@@ -28,6 +29,7 @@ export default function Report(){
     [origin,item]);
     //加载配置
     useEffect(()=>{
+        console.log(frameParams,loaded);
         if(frameParams!==null){
             if(loaded===false){
                 sendMessageToParent(createGetReportConfMessage(frameParams,reportID));

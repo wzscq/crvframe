@@ -20,14 +20,16 @@ export default function ChildFrame({item,locale,resources,inResize}){
         if(refFrame.current&&locale!==undefined){
             if(lastLocale===undefined){
                 const onFrameLoad=()=>{
-                    console.log('ChildFrame INIT ',item.params.key);
-                    const url=parseUrl(item.params.url);
-                    refFrame.current.contentWindow.postMessage({
-                        type:FRAME_MESSAGE_TYPE.INIT,
-                        i18n:{locale,resources},
-                        data:{...item,
-                        frameType:frameType}},url.origin);
-                    setLastLocale(locale);
+                    setTimeout(()=>{
+                        console.log('ChildFrame INIT ',item.params.key);
+                        const url=parseUrl(item.params.url);
+                        refFrame.current.contentWindow.postMessage({
+                            type:FRAME_MESSAGE_TYPE.INIT,
+                            i18n:{locale,resources},
+                            data:{...item,
+                            frameType:frameType}},url.origin);
+                        setLastLocale(locale);
+                    },200);
                 };
                 refFrame.current.addEventListener("load",onFrameLoad);
                 const removeEventListener=refFrame.current.removeEventListener;
