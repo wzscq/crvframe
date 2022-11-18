@@ -98,7 +98,7 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
             }
             return (errFieldCount<=0);
         };
-        
+
         if(operation){
             if(operation.validateFormData!==false){
                 //验证表单数据合法性

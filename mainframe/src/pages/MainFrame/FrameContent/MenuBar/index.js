@@ -5,6 +5,7 @@ import * as IconList from '@ant-design/icons';
 
 import { getUserMenus } from '../../../../api';
 import { setOperation } from '../../../../operation';
+import useI18n from '../../../../hook/useI18n';
 
 import Logo from './Logo';
 
@@ -12,6 +13,8 @@ import './index.css';
 
 export default function MenuBar({collapsed}){
     const {menus,loaded}=useSelector(state=>state.menu);
+    const {getLocaleLabel}=useI18n();
+
     const dispatch=useDispatch();
 
     useEffect(()=>{
@@ -37,7 +40,7 @@ export default function MenuBar({collapsed}){
                 key:key,
                 icon:<IconItem/>,
                 children:item.children?getMenus(item.children,key):undefined,
-                label:item.name,
+                label:getLocaleLabel(item.name),
                 operation:item.operation
             });
         }

@@ -1,5 +1,6 @@
 import {useState,useEffect,useRef} from 'react';
 import { Tooltip } from 'antd';
+import moment from 'moment';
 
 import { FIELD_TYPE } from "../../../../utils/constant";
 import {getManyToOneValueFunc} from "../../../../utils/functions";
@@ -13,6 +14,7 @@ export default function ColumnControl({text,field, record, index}){
     const ref=useRef();
     let className='listtable-column-text';
     let value=text;
+ 
     if(text&&field.fieldType===FIELD_TYPE.MANY2ONE){
         if(field.optionLabel&&text.list&&text.list.length>0){
             value=text.list[0][field.optionLabel];
@@ -27,11 +29,13 @@ export default function ColumnControl({text,field, record, index}){
         if(option){
             value=getLocaleLabel(option.label);
         }
-    }else if(text&&(field.dataType==='decimal'||field.dataType==='int')){
+    } else if(text&&(field.dataType==='decimal'||field.dataType==='int')){
         value=text.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         className='listtable-column-number';
+    } else if(text&&field.dataType==='datetime'&&field.format){
+        value=moment(text).format(field.format);
     }
-
+    
     useEffect(()=>{
         if(ref.current){
             if(ref.current.offsetWidth < ref.current.scrollWidth){

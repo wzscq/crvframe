@@ -18,6 +18,12 @@ export const menuSlice = createSlice({
     setInlineCollapsed:(state,action) => {
         state.inlineCollapsed=action.payload;
     },
+    resetMenu:(state,action)=>{
+      state.menus=initialState.menus;
+      state.loaded=initialState.loaded;
+      state.pending=initialState.pending;
+      state.inlineCollapsed=initialState.inlineCollapsed;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getUserMenus.pending, (state, action) => {
@@ -42,6 +48,9 @@ export const menuSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const {setInlineCollapsed} = menuSlice.actions;
+export const {
+  setInlineCollapsed,
+  resetMenu
+} = menuSlice.actions;
 
 export default menuSlice.reducer;

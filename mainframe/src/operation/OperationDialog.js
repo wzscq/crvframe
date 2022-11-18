@@ -13,6 +13,7 @@ import {
 import {open,close} from '../redux/dialogSlice';
 import {operationDone,operationPending,confirm} from '../redux/operationSlice';
 import {openTab,closeAllTab} from '../redux/tabSlice';
+import {resetMenu} from '../redux/menuSlice';
 import OpertaionItem from './OpertaionItem';
 import {info as logInfo} from '../redux/logSlice';
 import {parseUrl} from '../utils/urlParser';
@@ -53,6 +54,7 @@ export default function OperationDialog(){
         dispatch(operationDone({result:OP_RESULT.SUCCESS}));
         dispatch(logoutApi());
         dispatch(closeAllTab());
+        dispatch(resetMenu());
         navigate('/login/'+appID);
     }
 

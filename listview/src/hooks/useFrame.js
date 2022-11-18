@@ -8,6 +8,12 @@ import {setLocale} from '../redux/i18nSlice';
 
 import {FRAME_MESSAGE_TYPE,DATA_TYPE} from '../utils/constant';
 
+const getParentOrigin=()=>{
+    const a = document.createElement("a");
+    a.href=document.referrer;
+    return a.origin;
+} 
+
 export default function useFrame(){
     const dispatch=useDispatch();
     const {origin}=useSelector(state=>state.frame);
@@ -19,7 +25,7 @@ export default function useFrame(){
             console.log("the origin of parent is null,can not send message to parent.");
         }
     },[origin]);
-        
+
     //这里在主框架窗口中挂载事件监听函数，负责和子窗口之间的操作交互
     const receiveMessageFromMainFrame=useCallback((event)=>{
         //console.log("receiveMessageFromMainFrame:",event);
@@ -51,6 +57,13 @@ export default function useFrame(){
             window.removeEventListener("message",receiveMessageFromMainFrame);
         }
     });
+
+    useEffect(()=>{
+        if(origin===null){
+            console.log('postMessage to parent init');
+            window.parent.postMessage({type:FRAME_MESSAGE_TYPE.INIT},getParentOrigin());
+        }
+    },[origin]);
 
     return sendMessageToParent;
 }

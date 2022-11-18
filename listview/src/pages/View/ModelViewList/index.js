@@ -26,12 +26,12 @@ export default function ModelViewList(){
         return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
     }
 
-    const filterSort=(optionA, optionB) => {
+    /*const filterSort=(optionA, optionB) => {
         return optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
-    }
+    }*/
 
     return (
-        <Select filterOption={filterOption} filterSort={filterSort}  value={currentView} showSearch style={{ width: "100%"}} onChange={onViewChange}>
+        <Select filterOption={filterOption} value={currentView} showSearch style={{ width: "100%"}} onChange={onViewChange}>
             {options}
         </Select>
     )
