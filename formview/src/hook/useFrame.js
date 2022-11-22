@@ -11,6 +11,12 @@ import {
     DATA_TYPE
 } from '../utils/constant';
 
+const getParentOrigin=()=>{
+    const a = document.createElement("a");
+    a.href=document.referrer;
+    return a.origin;
+}
+
 export default function useFrame(){
     const dispatch=useDispatch();
     const {origin}=useSelector(state=>state.frame);
@@ -59,6 +65,13 @@ export default function useFrame(){
             window.removeEventListener("message",receiveMessageFromMainFrame);
         }
     },[receiveMessageFromMainFrame]);
+
+    useEffect(()=>{
+        if(origin===null){
+            console.log('postMessage to parent init');
+            window.parent.postMessage({type:FRAME_MESSAGE_TYPE.INIT},getParentOrigin());
+        }
+    },[origin]);
 
     return sendMessageToParent;
 }

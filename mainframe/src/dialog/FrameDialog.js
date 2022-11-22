@@ -14,7 +14,25 @@ export default function FrameDialog({item}){
     const refFrame=useRef();
 
     const onFrameLoad=useCallback(()=>{
-        if(refFrame.current){
+        const receiveMessageFromSubFrame=(event)=>{
+            const {type}=event.data;
+            if(type===FRAME_MESSAGE_TYPE.INIT){
+                window.removeEventListener('message',receiveMessageFromSubFrame);
+                const url=parseUrl(item.params.url);
+                refFrame.current.contentWindow.postMessage({
+                    type:FRAME_MESSAGE_TYPE.INIT,
+                    i18n:{locale,resources},
+                    data:{...item,frameType:frameType}},url.origin);
+                console.log('post init message to frame ',url.origin);
+                
+            }
+        }
+        
+        window.addEventListener('message',receiveMessageFromSubFrame);
+        setTimeout(()=>{
+            window.removeEventListener('message',receiveMessageFromSubFrame);
+        },1000);
+        /*if(refFrame.current){
             setTimeout(()=>{
                 const url=parseUrl(item.params.url);
                 refFrame.current.contentWindow.postMessage({
@@ -23,7 +41,7 @@ export default function FrameDialog({item}){
                     data:{...item,frameType:frameType}},url.origin);
                 console.log('post init message to frame ',url.origin);
             },200);
-        }
+        }*/
     },[refFrame,item,locale,resources]);
 
     useEffect(()=>{

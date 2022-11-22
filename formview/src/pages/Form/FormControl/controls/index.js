@@ -4,6 +4,7 @@ import Transfer from './Transfer';
 import FileControl from './FileControl';
 import SingleSelect from './SingleSelect';
 import DatePicker from './DatePicker';
+import TimePicker from './TimePicker';
 import TextArea from './TextArea';
 import EditTable from './EditTable';
 import FunctionTextArea from './FunctionTextArea';
@@ -17,6 +18,7 @@ import RichText from './RichText';
     TEXT:"Text",   //文本录入框
     TEXTAREA:'TextArea',  //多行文本编辑框
     DATEPICKER:"DatePicker",   //日期选择框
+    TIMEPICKER:"TimePicker",  //时间选择
     PASSWORD:"Password",    //密码输入控件
     TRANSFER:"Transfer",    //穿梭框控件
     FILE:"File", //文件选择
@@ -38,6 +40,7 @@ export const controlRegister={
     [CONTROL_TYPE.FILE]:FileControl,
     [CONTROL_TYPE.SINGLESELECT]:SingleSelect,
     [CONTROL_TYPE.DATEPICKER]:DatePicker,
+    [CONTROL_TYPE.TIMEPICKER]:TimePicker,
     [CONTROL_TYPE.TEXTAREA]:TextArea,
     [CONTROL_TYPE.EDITTABLE]:EditTable,
     [CONTROL_TYPE.FUNCTIONTEXTAREA]:FunctionTextArea,

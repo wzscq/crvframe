@@ -21,11 +21,9 @@ export default function ChildFrame({item,locale,resources,inResize}){
             if(lastLocale===undefined){
                 const onFrameLoad=()=>{
                     const receiveMessageFromSubFrame=(event)=>{
-                        console.log('receiveMessageFromSubFrame',event);
                         const {type}=event.data;
                         if(type===FRAME_MESSAGE_TYPE.INIT){
-                            //window.removeEventListener('message',receiveMessageFromSubFrame);
-                            console.log('ChildFrame INIT ',item.params.key);
+                            window.removeEventListener('message',receiveMessageFromSubFrame);
                             const url=parseUrl(item.params.url);
                             refFrame.current.contentWindow.postMessage({
                                 type:FRAME_MESSAGE_TYPE.INIT,
@@ -38,11 +36,11 @@ export default function ChildFrame({item,locale,resources,inResize}){
                     
                     window.addEventListener('message',receiveMessageFromSubFrame);
                     setTimeout(()=>{
-                        window.addEventListener('message',receiveMessageFromSubFrame);
+                        window.removeEventListener('message',receiveMessageFromSubFrame);
                     },1000);
-                       
+
                     /*setTimeout(()=>{
-                        console.log('ChildFrame INIT ',item.params.key);
+                        console.log('ChildFrame INIT 2',item.params.key);
                         const url=parseUrl(item.params.url);
                         refFrame.current.contentWindow.postMessage({
                             type:FRAME_MESSAGE_TYPE.INIT,
@@ -50,7 +48,7 @@ export default function ChildFrame({item,locale,resources,inResize}){
                             data:{...item,
                             frameType:frameType}},url.origin);
                         setLastLocale(locale);
-                    },200);*/
+                    },100);*/
                 };
                 refFrame.current.addEventListener("load",onFrameLoad);
                 const removeEventListener=refFrame.current.removeEventListener;
