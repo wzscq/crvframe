@@ -40,12 +40,12 @@ export default function Number({dataPath,control,field}){
     const selectValue=useMemo(makeSelector,[dataPath,control,field]);
     const {updatedValue,valueError}=useSelector(state=>selectValue(state.data,dataPath,field.field));
 
-    const onChange=(e)=>{
+    const onChange=(value)=>{
         dispatch(modiData({
             dataPath:dataPath,
             field:field.field,
-            updated:e.target.value,
-            update:e.target.value}));
+            updated:value,
+            update:value}));
         
         if(valueError){
             const errFieldPath=dataPath.join('.')+'.'+field.field;

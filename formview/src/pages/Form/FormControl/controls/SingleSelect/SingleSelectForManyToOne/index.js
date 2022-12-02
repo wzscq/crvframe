@@ -159,17 +159,37 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
             return tempFieldFilter;
         });
         const op='Op.or';
+        //如果control本身带了过滤条件，则需要合并到搜索条件中
+        if(control.filter){
+            return {'Op.and':[control.filter,{[op]:fieldsFilter}]};
+        }
         return {[op]:fieldsFilter};
     };
 
-    const getCascadeItemFilter=(cascade,cascadeParentValue)=>{
+    const getCascadeItemFilter=(cascade,cascadeParentValue,field)=>{
+        let res={};
         if(cascade.type===CASCADE_TYPE.MANY2ONE){
             if(cascade.relatedField&&cascadeParentValue[cascade.relatedField]){
-                return ({[cascade.relatedField]:cascadeParentValue[cascade.relatedField]});        
+                res= {filterbyParent:{[cascade.relatedField]:cascadeParentValue[cascade.relatedField]}};        
+            }
+        } else if(cascade.type===CASCADE_TYPE.MANY2MANY){
+            if(cascade.relatedField&&cascadeParentValue[cascade.relatedField]){
+                //根据中间表先筛选出对应本表关联表的ID
+                const filterDataItem={
+                    modelID:cascade.middleModelID,
+                    filter:{[cascade.relatedField]:cascadeParentValue[cascade.relatedField]},
+                    fields:[
+                        {field:field.field}
+                    ]
+                }
+                //需要拿到父字段的关联表
+                const filterbyParent={id:{'Op.in':['%{'+cascade.middleModelID+'.'+field.field+'}']}};
+                res={filterbyParent,filterDataItem};
             }
         } else {
             console.error('not supported cascade type:',cascade.type);
         }
+        return res;
     }
 
     const getQueryParams=(field,control,value)=>{
@@ -201,20 +221,27 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
          * 同时以c_id字段查询过滤c表数据。这种情况需要前端再做一次数据过滤。目前程序暂时不实现这个逻辑。
          */
         console.log('getQueryParams',control);
-        const filter=getFilter(control,value)
+        const filter=getFilter(control,value);
         if(control.cascade){
             const filterCascade=[filter];
+            const filterData=control.filterData?control.filterData:[];
             if(Array.isArray(control.cascade)){
                 control.cascade.forEach(cascadeItem=>{
-                    const filterbyParent=getCascadeItemFilter(cascadeItem,cascadeParentValue);
+                    const {filterbyParent,filterDataItem}=getCascadeItemFilter(cascadeItem,cascadeParentValue,field);
                     if(filterbyParent){
                         filterCascade.push(filterbyParent);
                     }
+                    if(filterDataItem){
+                        filterData.push(filterDataItem);
+                    }
                 });
             } else {
-                const filterbyParent=getCascadeItemFilter(control.cascade,cascadeParentValue);
+                const {filterbyParent,filterDataItem}=getCascadeItemFilter(control.cascade,cascadeParentValue,field);
                 if(filterbyParent){
                     filterCascade.push(filterbyParent);
+                }
+                if(filterDataItem){
+                    filterData.push(filterDataItem);
                 }
             }
                     
@@ -223,6 +250,7 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
             return {
                 modelID:field.relatedModelID,
                 fields:control.fields,
+                filterData:filterData.length>0?filterData:undefined,
                 filter:mergedFilter,
                 pagination:{current:1,pageSize:500}
             }
@@ -231,6 +259,7 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
         return {
             modelID:field.relatedModelID,
             fields:control.fields,
+            filterData:control.filterData,
             filter:filter,
             pagination:{current:1,pageSize:500}
         }

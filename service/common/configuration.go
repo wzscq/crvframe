@@ -45,12 +45,12 @@ type Config struct {
 
 var gConfig Config
 
-func InitConfig()(*Config){
+func InitConfig(confFile string)(*Config){
 	log.Println("init configuation start ...")
 	//获取用户账号
 	//获取用户角色信息
 	//根据角色过滤出功能列表
-	fileName := "conf/conf.json"
+	fileName := confFile
 	filePtr, err := os.Open(fileName)
 	if err != nil {
         log.Fatal("Open file failed [Err:%s]", err.Error())

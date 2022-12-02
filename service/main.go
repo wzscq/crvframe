@@ -14,6 +14,7 @@ import (
     "crv/frame/report"
     "time"
     "log"
+    "os"
 )
 
 func main() {
@@ -24,8 +25,14 @@ func main() {
     var cstZone = time.FixedZone("CST", 8*3600) // 东八
 	time.Local = cstZone
 
+    confFile:="conf/conf.json"
+    if len(os.Args)>1 {
+        confFile=os.Args[1]
+        log.Println(confFile)
+    }
+
     //初始化配置
-    conf:=common.InitConfig()
+    conf:=common.InitConfig(confFile)
 
     router := gin.Default()
 

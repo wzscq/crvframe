@@ -8,6 +8,7 @@ import (
 	"time"
 	"strings"
 	"strconv"
+	"fmt"
 )
 
 const (
@@ -167,6 +168,11 @@ func (save *Save)getRowCreateColumnValues(row map[string]interface{})(string,str
 			if key == CC_ID {
 				strID=sVal
 			}
+		case float64:
+			columns=columns+key+","
+			fVal,_:=value.(float64)
+      sVal:=fmt.Sprintf("%f",fVal) 
+			values=values+"'"+sVal+"',"
 		case map[string]interface{}:
 			releatedField,ok:=value.(map[string]interface{})
 			if !ok {
@@ -182,7 +188,7 @@ func (save *Save)getRowCreateColumnValues(row map[string]interface{})(string,str
 				return "","","",common.ResultNotSupportedValueType	
 			}
 		default:
-			log.Println("createRow not supported value type %T!\n", value)
+			log.Printf("createRow not supported value type %T!\n", value)
 			return "","","",common.ResultNotSupportedValueType
 		}
 	}
