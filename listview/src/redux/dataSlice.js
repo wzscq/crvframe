@@ -144,13 +144,18 @@ export const dataSlice = createSlice({
             state.views[state.currentView].data.pagination={...pagination}
         },
         initDataView:(state,action) => {
-            const views=action.payload;
+            const {views,currentView}=action.payload;
             views.forEach((viewItem,index)=>{
-                if(index===0){
+                /*if(index===0){
                     state.currentView=viewItem.viewID;
-                }
+                }*/
                 state.views[viewItem.viewID]=initViewItem(viewItem);
             });
+            if(currentView){
+                state.currentView=currentView;
+            } else {
+                state.currentView=views[0]?.viewID;
+            }
         },
     }
 });

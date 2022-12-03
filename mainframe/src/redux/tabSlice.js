@@ -29,8 +29,8 @@ export const tabSlice = createSlice({
                 item=action.payload;
                 state.items.push(item);
             }
-            //当对应的列表设置为当前激活页，目前是通过key来作为唯一标识
-            state.current=item.params.key;
+            //将对应的列表设置为当前激活页，目前是通过key来作为唯一标识
+            state.current=item.params.key;   
         },
         closeTab:(state,action) => {
             //先看一下当前要求打开的页面是否已经在打开页面列表中，同时获取到对应的索引

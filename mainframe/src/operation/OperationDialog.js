@@ -12,7 +12,7 @@ import {
 
 import {open,close} from '../redux/dialogSlice';
 import {operationDone,operationPending,confirm} from '../redux/operationSlice';
-import {openTab,closeAllTab} from '../redux/tabSlice';
+import {openTab,closeAllTab,setActiveTab} from '../redux/tabSlice';
 import {resetMenu} from '../redux/menuSlice';
 import OpertaionItem from './OpertaionItem';
 import {info as logInfo} from '../redux/logSlice';
@@ -24,7 +24,8 @@ import {
     OP_RESULT,
     OPEN_LOCATION,
     FRAME_MESSAGE_TYPE,
-    MESSAGE_TYPE
+    MESSAGE_TYPE,
+    DATA_TYPE
 } from "./constant";
 import useI18n from "../hook/useI18n";
 
@@ -34,7 +35,8 @@ export default function OperationDialog(){
     const navigate=useNavigate();
     const {doneList,current,needConfirm}=useSelector(state=>state.operation);
     const {pending,error,result:requestResult,message:resultMessage,errorCode}=useSelector(state=>state.request);
-    
+    const {current:currentTab,items:tabItems}=useSelector(state=>state.tab);
+
     //已完成操作列表
     const operationList=doneList.map((item,index)=>{
         return <OpertaionItem
@@ -91,7 +93,23 @@ export default function OperationDialog(){
     const openTabFunc=()=>{
         //打开tab页
         dispatch(logInfo("打开Tab页:"+JSON.stringify(current)));
-        dispatch(openTab({params:current.params}));
+        let item=tabItems.find((item)=>item.params.key===current.params.key);
+        if(!item){  //如果页面未打开则直接打开
+            dispatch(openTab({params:current.params}));
+        } else {
+            //如果已经打开,但不是当前窗口，则将其设置为当前激活tab
+            if(currentTab!==current.params.key){
+                dispatch(setActiveTab(current.params.key));
+            }
+            //如果指定了视图，则发送更新当前视图消息
+            if(current.params.view){
+                const frameControl=document.getElementById("tabframe_"+current.params.key);
+                if(frameControl){
+                    const origin=parseUrl(frameControl.getAttribute("src")).origin;
+                    frameControl.contentWindow.postMessage({type:FRAME_MESSAGE_TYPE.UPDATE_DATA,dataType:DATA_TYPE.FRAME_PARAMS,data:{view:current.params.view}},origin);
+                }        
+            }
+        }
         dispatch(operationDone({result:OP_RESULT.SUCCESS}));
     }
 

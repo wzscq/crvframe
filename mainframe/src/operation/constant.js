@@ -57,6 +57,12 @@ export const FRAME_MESSAGE_TYPE={
     REPORT_QUERY:'queryReportData' 
 }
 
+export const DATA_TYPE={
+    MODEL_CONF:'modelConf',//"DATA_TYPE_MODEL_CONF",   //模型配置数据
+    QUERY_RESULT:'queryResult',//"DATA_TYPE_QUERY_RESULT",   //数据查询结果
+    FRAME_PARAMS:'frameParams'
+}
+
 /**
  * 这里对一个操作项的数据结构做个说明
  * operationItem{

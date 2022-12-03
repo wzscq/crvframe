@@ -3,7 +3,7 @@ import {useSelector,useDispatch} from 'react-redux';
 
 import {setParam} from '../redux/frameSlice';
 import { setDefinition } from '../redux/definitionSlice';
-import {setData,refreshData} from '../redux/dataSlice';
+import {setData,refreshData,setCurrentView} from '../redux/dataSlice';
 import {setLocale} from '../redux/i18nSlice';
 
 import {FRAME_MESSAGE_TYPE,DATA_TYPE} from '../utils/constant';
@@ -40,6 +40,10 @@ export default function useFrame(){
                 dispatch(setDefinition(data));
             } else if (dataType===DATA_TYPE.QUERY_RESULT){
                 dispatch(setData(data));
+            } else if (dataType===DATA_TYPE.FRAME_PARAMS){
+                if(data.view){
+                    dispatch(setCurrentView(data.view));
+                }
             } else {
                 console.log("update data with wrong data type:",dataType);
             }

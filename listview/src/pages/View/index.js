@@ -33,7 +33,7 @@ export default function View(){
                 sendMessageToParent(createGetModelConfMessage({frameType:item.frameType,frameID:item.params.key,origin:origin},modelID));
             } else {
                 console.log("loaded views :",views);
-                dispatch(initDataView(views));
+                dispatch(initDataView({views,currentView:item.params.view}));
             }
         }
     },[loaded,origin,item,modelID,dispatch,sendMessageToParent,views]);
