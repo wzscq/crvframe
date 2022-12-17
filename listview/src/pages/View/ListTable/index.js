@@ -142,8 +142,14 @@ export default function ListTable({sendMessageToParent}){
                     queryFilter=viewConf.filter;
                 }
             }
+            //如果页面没有指定排序字段，则按照视图配置的排序
+            let querySorter=sorter;
+            if(querySorter.length===0){
+                querySorter=viewConf.sorter;
+            }
+
             const frameParams={frameType:item.frameType,frameID:item.params.key,origin:origin};
-            const queryParams={modelID,viewID:currentView,filterData:viewConf.filterData,filter:queryFilter,pagination,sorter,fields:searchFields};
+            const queryParams={modelID,viewID:currentView,filterData:viewConf.filterData,filter:queryFilter,pagination,sorter:querySorter,fields:searchFields};
             sendMessageToParent(createQueryDataMessage(frameParams,queryParams));
         }
     },[viewConf,searchFields,filter,pagination,sorter,sendMessageToParent,origin,item,currentView,modelID]);

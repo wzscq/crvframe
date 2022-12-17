@@ -7,6 +7,11 @@ import (
 	"crv/frame/common"
 )
 
+type Sorter struct {
+	Field string `json:"field"`
+	Order string `json:"order"` 	
+}
+
 type fieldConf struct {
 	Field string `json:"field"`
     Name interface{} `json:"name"`
@@ -55,6 +60,7 @@ type viewConf struct {
 	Fields []map[string]interface{} `json:"fields"`
 	FilterData []map[string]interface{} `json:"filterData,omitempty"`
 	Filter map[string]interface{} `json:"filter"`
+	Sorter []Sorter `json:"sorter"`
 	Toolbar *viewToolbarConf `json:"toolbar,omitempty"`
 	Roles *interface{} `json:"roles"`
 	RowStyle *string `json:"rowStyle,omitempty"`
