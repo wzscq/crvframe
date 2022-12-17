@@ -144,7 +144,7 @@ export const dataSlice = createSlice({
             state.views[state.currentView].data.pagination={...pagination}
         },
         initDataView:(state,action) => {
-            const {views,currentView}=action.payload;
+            const {views,currentView,filter}=action.payload;
             views.forEach((viewItem,index)=>{
                 /*if(index===0){
                     state.currentView=viewItem.viewID;
@@ -155,6 +155,11 @@ export const dataSlice = createSlice({
                 state.currentView=currentView;
             } else {
                 state.currentView=views[0]?.viewID;
+            }
+            if(filter){
+                state.views[state.currentView].data.filter=filter;
+                const pagination=state.views[state.currentView].data.pagination;
+                state.views[state.currentView].data.pagination={...pagination,current:1}
             }
         },
     }

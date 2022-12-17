@@ -102,13 +102,16 @@ export default function OperationDialog(){
                 dispatch(setActiveTab(current.params.key));
             }
             //如果指定了视图，则发送更新当前视图消息
-            if(current.params.view){
-                const frameControl=document.getElementById("tabframe_"+current.params.key);
-                if(frameControl){
-                    const origin=parseUrl(frameControl.getAttribute("src")).origin;
-                    frameControl.contentWindow.postMessage({type:FRAME_MESSAGE_TYPE.UPDATE_DATA,dataType:DATA_TYPE.FRAME_PARAMS,data:{view:current.params.view}},origin);
-                }        
-            }
+            const frameControl=document.getElementById("tabframe_"+current.params.key);
+            if(frameControl){
+                const origin=parseUrl(frameControl.getAttribute("src")).origin;
+                const message={
+                        type:FRAME_MESSAGE_TYPE.UPDATE_DATA,
+                        dataType:DATA_TYPE.FRAME_PARAMS,
+                        data:current.params
+                    };
+                frameControl.contentWindow.postMessage(message,origin);
+            }        
         }
         dispatch(operationDone({result:OP_RESULT.SUCCESS}));
     }
