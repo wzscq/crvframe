@@ -162,6 +162,18 @@ export const dataSlice = createSlice({
                 state.views[state.currentView].data.pagination={...pagination,current:1}
             }
         },
+        setViewFilter:(state,action) => {
+            const {view,filter}=action.payload;
+            if(view){
+                state.currentView=view;
+            }
+            
+            if(filter){
+                state.views[state.currentView].data.filter=filter;
+                const pagination=state.views[state.currentView].data.pagination;
+                state.views[state.currentView].data.pagination={...pagination,current:1}
+            }
+        },
     }
 });
 
@@ -177,7 +189,8 @@ export const {
     resetFieldFilter,
     setPagination,
     refreshData,
-    setFilter
+    setFilter,
+    setViewFilter
 } = dataSlice.actions
 
 export default dataSlice.reducer

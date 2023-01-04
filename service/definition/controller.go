@@ -112,7 +112,7 @@ func (controller *DefinitionController)getModelFormConf(c *gin.Context){
 
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),mvConf)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end definition getModelViewConf")
+	log.Println("end definition getModelFormConf")
 }
 
 func (controller *DefinitionController)getReportConf(c *gin.Context){

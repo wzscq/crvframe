@@ -81,7 +81,15 @@ func GetUserDataset(appDB string,modelID string,userRoles string,opType string)(
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
 		log.Println("Open file failed [Err:%s]", err.Error())
-		return nil,common.ResultOpenFileError
+		if os.IsNotExist(err) {
+			modelFile = "apps/"+appDB+"/models/"+modelID+"/datasets.json"
+			filePtr, err = os.Open(modelFile)
+			if err != nil {
+				return nil,common.ResultOpenFileError
+			}
+		} else {
+			return nil,common.ResultOpenFileError
+		}
 	}
 	defer filePtr.Close()
 	// 创建json解码器
