@@ -6,6 +6,7 @@ import {convertUrl, parseUrl} from '../utils/urlParser';
 
 import './FrameDialog.css';
 import useI18n from "../hook/useI18n";
+import {setOperation} from '../operation';
 
 const frameType="frameDialog";
 
@@ -57,6 +58,18 @@ export default function FrameDialog({item}){
     const {params:{key,width,height}}=item;
     const url=convertUrl(item.params.url);
 
+    const onCancel=()=>{
+        const closeModelOpertion={
+            type:"close",
+            params:{
+                location:"modal"
+            },
+            input:{},
+            description:"关闭对话框"
+        }
+        setOperation(closeModelOpertion);
+    }
+
     return (
         <Modal 
             className='frame-dialog-modal'
@@ -66,6 +79,7 @@ export default function FrameDialog({item}){
             centered
             width={width}
             visible={true} 
+            onCancel={onCancel}
             footer={null}>
             <iframe 
                 frameBorder={0} 
