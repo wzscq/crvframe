@@ -30,6 +30,22 @@ const (
 	EMPTY_VALUE_NO="no"
 )
 
+const (
+	SHEETSELECTOR_OPTIONAL_YES="yes"
+	SHEETSELECTOR_OPTIONAL_NO="no"
+)
+
+const (
+	SHEETSELECTOR_TYPE_INDEX="index"
+	SHEETSELECTOR_TYPE_NAME="name"
+)
+
+type SheetSelector struct {
+	Type string `json:"type"`
+	Value string `json:"value"`
+	Optional string `json:"optional"`
+}
+
 type esiModelField struct {
 	Field string `json:"field"`
 	LabelRegexp string `json:"labelRegexp"`
@@ -49,6 +65,8 @@ type esiModelSpec struct {
 	ModelID string `json:"modelID"`
 	Fields []esiModelField `json:"fields"`
 	Options esiOption `json:"options"`
+	FileField string `json:"fileField"`
+	SheetSelectors []SheetSelector `json:"sheets"`
 	SpecificID string `json:"specificID"`
 }
 
@@ -56,6 +74,8 @@ type esiModel struct {
 	ModelID string `json:"modelID"`
 	Fields []esiModelField `json:"fields"`
 	Options esiOption `json:"options"`
+	FileField string `json:"fileField"`
+	SheetSelectors []SheetSelector `json:"sheets"`
 }
 
 func getAppEsiModels(appDB string)(*[]string,*common.CommonError){

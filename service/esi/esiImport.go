@@ -9,7 +9,7 @@ import (
 )
 
 type DataRowHandler interface {
-	handleRow(row map[string]interface{})(*common.CommonError)
+	handleRow(row map[string]interface{},sheetName string)(*common.CommonError)
 	onInit()(*common.CommonError)
 	onOver(commit bool)(*common.CommonError)
 }
@@ -50,7 +50,7 @@ func (esi *esiImport)doImport()(interface{},*common.CommonError){
 		return nil,err
 	}
 
-	err=parseBase64File(esi.FileName,esi.FileContent,contentHandler,dataRowHandler)
+	err=parseBase64File(esi.FileName,esi.FileContent,contentHandler,dataRowHandler,esiModelSpec.SheetSelectors)
 	if err!=nil {
 		dataRowHandler.onOver(false)
 		return nil,err

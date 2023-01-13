@@ -9,7 +9,7 @@ import (
 
 type ReportControl struct {
 	ID string `json:"id"`
-	controlType string `json:"controlType"`
+	ControlType string `json:"controlType"`
 	Option map[string]interface{} `json:"option"`
 	DataView interface{} `json:"dataView"`
 	MinHeight int `json:"minHeight"`

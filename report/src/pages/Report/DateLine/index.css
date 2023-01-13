@@ -1,0 +1,27 @@
+.report-dateline {
+  padding: 10px;
+}
+
+.report-dateline .ant-timeline-item-left .ant-timeline-item-label {
+  width: calc(20% - 12px) !important;
+}
+
+.report-dateline .ant-timeline-item-left .ant-timeline-item-tail {
+  left: 20% !important;
+}
+
+.report-dateline .ant-timeline-item-left .ant-timeline-item-head {
+  left: 20% !important;
+}
+
+.report-dateline .ant-timeline-item-left .ant-timeline-item-content {
+  left: calc(20% - 4px) !important;
+  width: calc(70% - 14px) !important;
+}
+
+.report-dateline .dateline-title {
+  width: 100%;
+  text-align: left;
+  border-bottom: 1px solid #EFEFEF;
+  margin-bottom: 10px;
+}

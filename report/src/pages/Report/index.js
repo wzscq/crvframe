@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 import useFrame from "../../hook/useFrame";
 import {createGetReportConfMessage} from '../../utils/normalOperations';
 import PageLoading from '../../components/PageLoading';
-import Chart from './Chart';
+import {getControl}  from './controls';
 
 import './index.css';
 
@@ -43,7 +43,11 @@ export default function Report(){
 
     const {colCount,rowHeight}=reportConf;
     const controls=reportConf.controls.map(item=>{
-        return (<Chart key={item.id} frameParams={frameParams} controlConf={item} reportID={reportID} sendMessageToParent={sendMessageToParent} />);
+        console.log('control:',item);
+        return getControl(item,frameParams,reportID,sendMessageToParent);
+        /*if(item.controlType==='EChart'){
+            return (<Chart key={item.id} frameParams={frameParams} controlConf={item} reportID={reportID} sendMessageToParent={sendMessageToParent} />);
+        }*/
     });
 
     return (

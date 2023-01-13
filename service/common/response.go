@@ -57,6 +57,7 @@ const (
 	ResultI18nNoLang=10000039
 	ResultLoadExcelFileError=10000040
 	ResultESIFileAlreadyImported=10000041
+	ResultExcelSheetNotExist = 10000042
 	ResultStartFlowWithoutID=20000001
 	ResultCacheFlowInstanceError=20000002
 	ResultNoExecutorForNodeType=20000003
@@ -73,6 +74,11 @@ var errMsg = map[int]CommonRsp{
 		ErrorCode:ResultSuccess,
 		Message:"操作成功",
 		Error:false,
+	},
+	ResultExcelSheetNotExist:CommonRsp{
+		ErrorCode:ResultExcelSheetNotExist,
+		Message:"读取Excel文件时指定的sheet不存在，请确认您选择的Excel文件是否正确",
+		Error:true,
 	},
 	ResultNoReportControl:CommonRsp{
 		ErrorCode:ResultNoReportControl,

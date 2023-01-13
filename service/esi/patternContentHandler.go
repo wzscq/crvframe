@@ -47,6 +47,14 @@ func getContentHandler(esiModel *esiModelSpec)(*patternContentHandler){
 	}
 }
 
+func (epr *patternContentHandler)resetAll(){
+	epr.RecognizedLabelCells=nil
+	epr.RecognizedValueCells=nil
+	epr.IgnoreLabelRows=nil
+	epr.DataRow=map[int]interface{}{}
+	epr.TempRow=map[string]string{}
+}
+
 func (epr *patternContentHandler)addValueCell(
 	row,col int,
 	labelCell *recognizedLabelCell){
