@@ -17,7 +17,7 @@ type ReportReq struct {
 type reportResult struct {
 	ReportID string `json:"reportID"`
 	ControlID string `json:"controlID"`
-	List []map[string]interface{} `json:"list"`
+	List interface{} `json:"list"`
 }
 
 type ReportController struct {
@@ -33,12 +33,14 @@ func (controller *ReportController) query(c *gin.Context) {
 		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end report query with error")
 		return
-    }
+  }
 
-	//userID:= c.MustGet("userID").(string)
+	userToken:=c.MustGet("userToken").(string)
+	userRoles:= c.MustGet("userRoles").(string)
+	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
 	//获取报表控件对应的查询语句
-	sql,err:=definition.GetReportQuery(appDB,req.ReportID,req.ControlID)
+	query,err:=definition.GetReportQuery(appDB,req.ReportID,req.ControlID)
 	if err!=nil {
 		rsp:=common.CreateResponse(err,nil)
 		c.IndentedJSON(http.StatusOK, rsp)
@@ -46,13 +48,10 @@ func (controller *ReportController) query(c *gin.Context) {
 		return
 	}
 
-	//执行查询获取数据
-	res,sqlErr:=controller.DataRepository.Query(sql)
-	if sqlErr!=nil {
-		params:=map[string]interface{}{
-			"sqlErr":sqlErr.Error(),
-		}
-		rsp:=common.CreateResponse(common.CreateError(common.ResultSQLError,params),nil)
+	res,commonErr:=QueryData(appDB,userID,userRoles,userToken,query,controller.DataRepository)
+	
+	if commonErr!=nil {
+		rsp:=common.CreateResponse(commonErr,nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end report query with error")
 		return

@@ -1,8 +1,8 @@
 package common
 
 import (
-    "github.com/gin-gonic/gin"
-    "time"
+  "github.com/gin-gonic/gin"
+  "time"
 	"log"
 	"strings"
 	"net/http"
@@ -57,6 +57,7 @@ func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 							c.Set("userID",userID)
 							c.Set("appDB",appDB)
 							c.Set("userRoles",userRoles)
+							c.Set("userToken",header.Token)
 						}
 					}
 				}

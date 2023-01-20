@@ -110,11 +110,11 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
             const operationData=getOperationData(update);
             let input={...operation.input,...operationData};
             if(item.input&&item.input!=={}){
-                if(formType===FORM_TYPE.UPDATE){
-                    //这里的item是打开表单时在前一个页面操作中选怎的数据或者前一个操作的输出
+                //if(formType===FORM_TYPE.UPDATE){
+                    //这里的item是打开表单时在前一个页面操作中选择的数据或者前一个操作的输出
                     //在批量更新时将选择的数据和输入的数据合并在一起提交
                     input={...item.input,...input}
-                } else {
+                /*} else {
                     //以下处理是为了配合流的执行
                     if(item.input.flowInstanceID){
                         input.flowInstanceID=item.input.flowInstanceID;
@@ -123,7 +123,9 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
                     if(item.input.stage){
                         input.stage=item.input.stage;
                     }
-                }
+
+
+                }*/
             }
             const message={
                 type:FRAME_MESSAGE_TYPE.DO_OPERATION,

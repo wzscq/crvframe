@@ -229,7 +229,7 @@ export const queryReportData = ({frameParams,queryParams})=>{
   .catch(function (error) {
     console.log(error);
     message.error(getLocaleLabel({key:'message.main.queryDataError',default:'查询数据时发生错误'}));
-  });;
+  });
 }
 
 //获取APP支持的语言种类信息，同时返回指定语言资源，

@@ -22,12 +22,12 @@ type ReportControl struct {
 type ReportConf struct {
 	ReportID string `json:"reportID"`
 	ColCount int `json:"colCount"`
-    RowHeight int `json:"rowHeight"`
-    Controls  []ReportControl `json:"controls"`
+  RowHeight int `json:"rowHeight"`
+  Controls  []ReportControl `json:"controls"`
 }
 
 type ReportControlQuery struct {
-	Query string `json:"query"`
+	Query interface{} `json:"query"`
 	ID string `json:"id"`
 }
 
@@ -56,7 +56,7 @@ func getReportConf(appDB,reportID string)(*ReportConf,int){
 	return &reportConf,common.ResultSuccess
 }
 
-func GetReportQuery(appDB,reportID,controlID string)(string,*common.CommonError){
+func GetReportQuery(appDB,reportID,controlID string)(interface{},*common.CommonError){
 	var reportConf ReportQueryConf
 	confFile := "apps/"+appDB+"/reports/"+reportID+".json"
 	filePtr, err := os.Open(confFile)

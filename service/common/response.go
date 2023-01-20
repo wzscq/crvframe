@@ -58,6 +58,7 @@ const (
 	ResultLoadExcelFileError=10000040
 	ResultESIFileAlreadyImported=10000041
 	ResultExcelSheetNotExist = 10000042
+	
 	ResultStartFlowWithoutID=20000001
 	ResultCacheFlowInstanceError=20000002
 	ResultNoExecutorForNodeType=20000003
@@ -66,7 +67,10 @@ const (
 	ResultLoadFlowInstanceError=20000006
 	ResultLoadNodeConfError=20000007
 	//以下未翻译
-	ResultNoReportControl=  30000001
+	ResultJonsMarshalError = 10000043  
+	ResultNoReportControl=  10000044
+	ResultNotSupportedReportQuery=10000045
+	ResultReadExternalApiResultError=10000046
 )
 
 var errMsg = map[int]CommonRsp{
@@ -83,6 +87,11 @@ var errMsg = map[int]CommonRsp{
 	ResultNoReportControl:CommonRsp{
 		ErrorCode:ResultNoReportControl,
 		Message:"找不到对应报表组件的查询语句，请与管理员联系处理",
+		Error:true,
+	},
+	ResultNotSupportedReportQuery:CommonRsp{
+		ErrorCode:ResultNotSupportedReportQuery,
+		Message:"配置的报表查询语句配置错误，请与管理员联系处理",
 		Error:true,
 	},
 	ResultESIFileAlreadyImported:CommonRsp{
@@ -128,6 +137,11 @@ var errMsg = map[int]CommonRsp{
 	ResultJsonDecodeError:CommonRsp{
 		ErrorCode:ResultJsonDecodeError,
 		Message:"解析JSON文件时发生错误，请与管理员联系处理",
+		Error:true,
+	},
+	ResultJonsMarshalError:CommonRsp{
+		ErrorCode:ResultJonsMarshalError,
+		Message:"将对象转换为JSON文本时发生错误，请与管理员联系处理",
 		Error:true,
 	},
 	ResultAppDBError:CommonRsp{
@@ -250,9 +264,14 @@ var errMsg = map[int]CommonRsp{
 		Message:"调用外部API失败，请与管理员联系处理",
 		Error:true,
 	},
+	ResultReadExternalApiResultError:CommonRsp{
+		ErrorCode:ResultReadExternalApiResultError,
+		Message:"解析外部API返回结果失败，请与管理员联系处理",
+		Error:true,
+	},
 	ResultNoExternalApiId:CommonRsp{
 		ErrorCode:ResultNoExternalApiId,
-		Message:"调用外部API时为提供API标识，请与管理员联系处理",
+		Message:"调用外部API时未提供API标识，请与管理员联系处理",
 		Error:true,
 	},
 	ResultNoExternalApiUrl:CommonRsp{
