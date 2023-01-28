@@ -101,9 +101,11 @@ We recomend run crvframe with docker.
 run docker instance using:
 
 ``` 
-#please replace the volumn directories of yourself.
+#Replace the volume directory with the configuration directory you created earlier.
 docker run -d --name crvframe -p80:80 -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf wangzhsh/crvframe:0.1.0
 ```
+
+
 
 
 
