@@ -21,19 +21,15 @@ Before install and run crvframe,you must install and run these softwares:
 Before run the dokcer instance，create the directories for configuration files.
 
 ```
+#The directory /root/crvframe is the root directory of crvframe configurations, you can use any other dirctory as the root directory.
 mkdir  /root/crvframe
+#The sub directory /appfile is used to store attaches or temp files.
 mkdir  /root/crvframe/appfile
+#The sub directory /apps is used to store application conifiguration files.
 mkdir  /root/crvframe/apps 
+#The sub directory /conf contain a file named conf.json. It is the configuration file of the crvframe itself.
 mkdir  /root/crvframe/conf 
 ```
-
-The directory /root/crvframe is the root directory of crvframe configurations, you can use any other dirctory as the root directory.
-
-The sub directory /appfile is used to store attaches or temp files.
-
-The sub directory /apps is used to store application conifiguration files.
-
-The sub directory /conf contain a file named conf.json. It is the configuration file of the crvframe itself.
 
 The content of conf.json is
 
