@@ -107,7 +107,16 @@ run docker instance using:
 docker run -d --name crvframe -p80:80 -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf wangzhsh/crvframe:0.1.0
 ```
 
+# Create your first APP
+    The crvframe support multi apps in same running instance.Each app has its own database and configuration and Each app has a unique APPID. To access to a app, user must use the app access URL which contain the APPID.The form of the app access URL is http://hostname:port/#/login/APPID.
 
+    Let's create a app named demoapp,we will use the name as APPID,so the APPID is demoapp.
+
+## Create APP database in MYSQL
+    Choose a meaningful name for the database of the app.Here we create a database with name demodb.
+
+## Init APP database
+        
 
 
 
