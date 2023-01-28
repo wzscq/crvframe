@@ -82,7 +82,7 @@ The meaning of the configuration items:
   * **password**:The MYSQL server auth password.
   * **dbName**:The default MYSQL database for connection.
   
-  The flowing items are parameters of Go [database/sql](https://pkg.go.dev/database/sql) package.
+    The flowing items are parameters of Go [database/sql](https://pkg.go.dev/database/sql) package.
   * **connMaxLifetime**:The maximum amount of time a connection may be reused.
   * **maxOpenConns**:The maximum number of open connections to the database.
   * **maxIdleConns**:The maximum number of connections in the idle connection pool.
@@ -93,16 +93,18 @@ The meaning of the configuration items:
 ## file
   * **root**:The root directory for crvframe service to store files.
 
-
-create and put the conf.json file to the directory /root/crvframe/conf.
+**create and put the conf.json file to the directory /root/crvframe/conf.**
 
 # Run
 We recomend run crvframe with docker.
+
 run docker instance using:
 
 ``` 
+#please replace the volumn directories of yourself.
 docker run -d --name crvframe -p80:80 -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf wangzhsh/crvframe:0.1.0
 ```
+
 
 
 
