@@ -18,6 +18,8 @@ Before install and run crvframe,you must install and run these softwares:
   * Mysql
   * Redis
 
+
+# Configurations
 Before run the dokcer instance，create the directories for configuration files.
 
 ```
