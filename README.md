@@ -111,6 +111,7 @@ docker run -d --name crvframe -p80:80 -v /root/crvframe/appfile:/services/crvfra
 The crvframe support multi apps in same running instance.Each app has its own database and configuration files. 
 
 Each app has a unique APPID. To access to a app, user must use the app access URL which contain the APPID.The form of the app access URL is:
+    
     http://hostname:port/#/login/APPID.
 
 Let's create a app named demoapp,we will use the name as APPID,so the APPID is **demoapp**.
