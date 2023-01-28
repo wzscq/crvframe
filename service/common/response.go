@@ -58,7 +58,11 @@ const (
 	ResultLoadExcelFileError=10000040
 	ResultESIFileAlreadyImported=10000041
 	ResultExcelSheetNotExist = 10000042
-	
+	ResultJonsMarshalError = 10000043  
+	ResultNoReportControl=  10000044
+	ResultNotSupportedReportQuery=10000045
+	ResultReadExternalApiResultError=10000046
+
 	ResultStartFlowWithoutID=20000001
 	ResultCacheFlowInstanceError=20000002
 	ResultNoExecutorForNodeType=20000003
@@ -66,11 +70,7 @@ const (
 	ResultPushFlowWithoutID=20000005
 	ResultLoadFlowInstanceError=20000006
 	ResultLoadNodeConfError=20000007
-	//以下未翻译
-	ResultJonsMarshalError = 10000043  
-	ResultNoReportControl=  10000044
-	ResultNotSupportedReportQuery=10000045
-	ResultReadExternalApiResultError=10000046
+	
 )
 
 var errMsg = map[int]CommonRsp{

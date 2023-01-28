@@ -1,0 +1,443 @@
+{
+    "modelID": "core_user", 
+    "fields": [
+        {
+            "field": "id", 
+            "name": "ID", 
+            "dataType": "varchar"
+        }, 
+        {
+            "field": "user_name_en", 
+            "name": "英文名称", 
+            "dataType": "varchar",
+            "quickSearch":true
+        }, 
+        {
+            "field": "user_name_zh", 
+            "name": "中文名称", 
+            "dataType": "varchar",
+            "quickSearch":true
+        }, 
+        {
+            "field": "password", 
+            "name": "密码", 
+            "dataType": "password"
+        }, 
+        {
+            "field": "create_time", 
+            "name": "创建时间", 
+            "dataType": "datetime"
+        }, 
+        {
+            "field": "create_user", 
+            "name": "创建人", 
+            "dataType": "varchar"
+        }, 
+        {
+            "field": "update_time", 
+            "name": "更新时间", 
+            "dataType": "datetime"
+        }, 
+        {
+            "field": "update_user", 
+            "name": "更新人", 
+            "dataType": "varchar"
+        }, 
+        {
+            "field": "remark", 
+            "name": "备注", 
+            "dataType": "varchar",
+            "quickSearch":true
+        }, 
+        {
+            "field": "version", 
+            "name": "数据版本", 
+            "dataType": "int"
+        },
+        {
+            "field": "user_role",
+            "name": "用户角色",
+            "fieldType":"many2many",
+            "relatedModelID":"core_role"
+        }
+    ], 
+    "datasets":[
+        {
+            "id":"DEFAULT",
+            "fields":"*",
+            "queryRoles":"*",
+            "mutationRoles":"*"
+        }
+    ],
+    "operations": [
+        {
+            "id": "create", 
+            "name": "创建",
+            "type":"open",
+            "params":{
+                    "url":"/formview/#/core_user/form1/create",
+                    "location":"modal",
+                    "title":"创建用户",
+                    "key":"/model/core_user/form1/create",
+                    "width":800,
+                    "height":440
+            },
+            "input":{},
+            "description":"打开创建用户对话框" ,
+            "roles":"admin"
+        }, 
+        {
+            "id": "edit", 
+            "name": "编辑",
+            "type":"open",
+            "params":{
+                    "url":"/formview/#/core_user/form1/edit",
+                    "location":"modal",
+                    "title":"编辑用户信息",
+                    "key":"/model/core_user/form1/edit",
+                    "width":800,
+                    "height":450
+            },
+            "input":{},
+            "description":"打开用户信息编辑对话框",
+            "roles":"admin"
+        }, 
+        {
+            "id": "detail", 
+            "name": "查看详情",
+            "type":"open",
+            "params":{
+                    "url":"/formview/#/core_user/form1/detail",
+                    "location":"modal",
+                    "title":"用户信息详情",
+                    "key":"/model/core_user/form1/edit",
+                    "width":800,
+                    "height":450
+            },
+            "input":{},
+            "description":"打开用户信息编辑对话框",
+            "roles":"admin"
+        }, 
+        {
+            "id": "delete", 
+            "name": "删除",
+            "type":"request",
+            "params":{
+                "url":"/data/delete",
+                "method":"post"
+            },
+            "description":"删除选中数据",
+            "successOperation":{
+                "type":"message",
+                "params":{
+                    "type":"success",
+                    "content":"删除用户信息成功!",
+                    "duration":"2"
+                },
+                "description":"提示删除数据成功",
+                "successOperation":{
+                    "type":"reloadFrameData",
+                    "params":{
+                        "location":"tab",
+                        "key":"/model/core_user"
+                    },
+                    "description":"刷新页面数据"
+                }
+            },
+            "roles":"admin"
+        },
+        {
+            "id":"save",
+            "name":"保存",
+            "type":"request",
+            "params":{
+                "url":"/data/save",
+                "method":"post"
+            },
+            "description":"保存数据",
+            "successOperation":{
+                "type":"close",
+                "params":{
+                    "location":"modal"
+                },
+                "input":{},
+                "description":"关闭对话框",
+                "successOperation":{
+                    "type":"reloadFrameData",
+                    "params":{
+                        "location":"tab",
+                        "key":"/model/core_user"
+                    },
+                    "description":"刷新页面数据"
+                }
+            },
+            "roles":"admin"
+        }
+    ], 
+    "views": [
+        {
+            "viewID": "view1", 
+            "name": "用户信息维护", 
+            "description": "仅包含必要的用户信息", 
+            "fields": [
+                {
+                    "field": "id", 
+                    "width": 100
+                }, 
+                {
+                    "field": "user_name_en", 
+                    "width": 200
+                }, 
+                {
+                    "field": "user_name_zh", 
+                    "width": 200
+                }, 
+                {
+                    "field": "remark", 
+                    "width": 400
+                }
+            ], 
+            "filter": { }, 
+            "toolbar": {
+                "listToolbar": {
+                    "showCount": 3, 
+                    "buttons": [
+                        {
+                            "operationID": "create",
+                            "name":"创建用户"
+                        }, 
+                        {
+                            "operationID": "delete",
+                            "name":"删除选中用户",
+                            "prompt":"确定要删除当前选择的用户记录吗？"
+                       }
+                    ]
+                }, 
+                "rowToolbar": {
+                    "showCount": 2,
+                    "width":120, 
+                    "buttons": [
+                        {
+                            "operationID": "edit",
+                            "name":"编辑"
+                        },
+                        {
+                            "operationID": "detail",
+                            "name":"详情"
+                        }, 
+                        {
+                            "operationID": "delete",
+                            "name":"删除",
+                            "prompt":"确定要删除这个用户信息吗？"
+                        }
+                    ]
+                }
+            },
+            "roles":["admin"]
+        },
+        {
+            "viewID": "view2", 
+            "name": "用户信息维护高级", 
+            "description": "包含全部用户信息", 
+            "fields": [
+                {
+                    "field": "id", 
+                    "width": 200
+                }, 
+                {
+                    "field": "user_name_en", 
+                    "width": 200
+                }, 
+                {
+                    "field": "user_name_zh", 
+                    "width": 200
+                }, 
+                {
+                    "field": "password", 
+                    "width": 200
+                }, 
+                {
+                    "field": "create_time", 
+                    "width": 200
+                }, 
+                {
+                    "field": "create_user", 
+                    "width": 200
+                }, 
+                {
+                    "field": "update_time", 
+                    "width": 200
+                }, 
+                {
+                    "field": "update_user", 
+                    "width": 200
+                }, 
+                {
+                    "field": "remark", 
+                    "width": 200
+                }, 
+                {
+                    "field": "version", 
+                    "width": 200
+                }
+            ],
+            "roles":["admin","operator"]
+        }
+    ],
+    "forms":[
+        {
+            "formID": "form1",
+            "colCount": 4,
+            "rowCount": 26,
+            "rowHeight": 30,
+            "header":{
+                "label":"创建用户"
+            },
+            "footer":{
+                "operations":[
+                    {
+                        "operationID":"save",
+                        "name":"保存"
+                    },
+                    {
+                        "name":"关闭",
+                        "type":"close",
+                        "validateFormData":false,
+                        "params":{
+                            "location":"modal"
+                        },
+                        "input":{},
+                        "description":"关闭对话框"                            
+                    }
+                ]
+            },
+            "controls": [
+                {
+                    "controlType": "Text",
+                    "row": 1,
+                    "col": 1,
+                    "field": "id", 
+                    "label": "ID",
+                    "colSpan": 2,
+                    "rowSpan": 1,
+                    "required":true
+                }, 
+                {
+                    "controlType": "Text",
+                    "row": 2,
+                    "col": 1,
+                    "field": "user_name_en", 
+                    "colSpan": 2,
+                    "rowSpan": 1
+                }, 
+                {
+                    "controlType": "Text",
+                    "row": 3,
+                    "col": 1,
+                    "field": "user_name_zh", 
+                    "colSpan": 2,
+                    "rowSpan": 1
+                }, 
+                {
+                    "controlType": "Password",
+                    "row": 4,
+                    "col": 1,
+                    "field": "password", 
+                    "colSpan": 2,
+                    "rowSpan": 1,
+                    "required":true
+                },
+                {
+                    "controlType": "Text",
+                    "row": 5,
+                    "col": 1,
+                    "field": "remark", 
+                    "colSpan": 2,
+                    "rowSpan": 2
+                },
+                {
+                    "field": "user_role",
+                    "controlType": "Transfer",
+                    "required":true,
+                    "row": 1,
+                    "col": 3,
+                    "colSpan": 2,
+                    "rowSpan": 6,
+                    "fields":[
+                        {
+                            "field": "id"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "formID": "form2",
+            "colCount": 4,
+            "rowCount": 26,
+            "rowHeight": 30,
+            "header":{
+                "label":""
+            },
+            "footer":{
+                "operations":[
+                    {
+                        "name":"关闭",
+                        "type":"close",
+                        "validateFormData":false,
+                        "params":{
+                            "location":"modal"
+                        },
+                        "input":{},
+                        "description":"关闭对话框"                            
+                    }
+                ]
+            },
+            "controls": [
+                {
+                    "controlType": "Text",
+                    "row": 1,
+                    "col": 1,
+                    "field": "id", 
+                    "label": "ID",
+                    "colSpan": 1,
+                    "rowSpan": 1,
+                    "required":true
+                }, 
+                {
+                    "controlType": "Text",
+                    "row": 1,
+                    "col": 2,
+                    "field": "user_name_en", 
+                    "colSpan": 1,
+                    "rowSpan": 1
+                }, 
+                {
+                    "controlType": "Text",
+                    "row": 1,
+                    "col": 3,
+                    "field": "user_name_zh", 
+                    "colSpan": 1,
+                    "rowSpan": 1
+                }, 
+                {
+                    "controlType": "Password",
+                    "row": 1,
+                    "col": 4,
+                    "field": "password", 
+                    "colSpan": 1,
+                    "rowSpan": 1,
+                    "required":true
+                },
+                {
+                    "controlType": "Text",
+                    "row": 2,
+                    "col": 1,
+                    "field": "remark", 
+                    "colSpan": 4,
+                    "rowSpan": 2
+                }
+            ]
+        }
+    ]
+}

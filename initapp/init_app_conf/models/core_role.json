@@ -1,0 +1,248 @@
+{
+    "modelID": "core_role", 
+    "fields": [
+        {
+            "field": "id", 
+            "name": "ID", 
+            "dataType": "varchar",
+            "quickSearch":true
+        }, 
+        {
+            "field": "create_time", 
+            "name": "创建时间", 
+            "dataType": "datetime"
+        }, 
+        {
+            "field": "create_user", 
+            "name": "创建人", 
+            "dataType": "varchar"
+        }, 
+        {
+            "field": "update_time", 
+            "name": "更新时间", 
+            "dataType": "datetime"
+        }, 
+        {
+            "field": "update_user", 
+            "name": "更新人", 
+            "dataType": "varchar"
+        }, 
+        {
+            "field": "remark", 
+            "name": "备注", 
+            "dataType": "varchar",
+            "quickSearch":true
+        }, 
+        {
+            "field": "version", 
+            "name": "数据版本", 
+            "dataType": "int"
+        }
+    ], 
+    "datasets":[
+        {
+            "id":"DEFAULT",
+            "fields":"*",
+            "queryRoles":"*",
+            "mutationRoles":"*"
+        }
+    ],
+    "operations": [
+        {
+            "id": "create", 
+            "name": "创建",
+            "type":"open",
+            "params":{
+                    "url":"/formview/#/core_role/form1/create",
+                    "location":"modal",
+                    "title":"创建角色",
+                    "key":"/model/core_role/form1/create",
+                    "width":600,
+                    "height":400
+            },
+            "input":{},
+            "description":"打开创建角色对话框" ,
+            "roles":"admin"
+        }, 
+        {
+            "id": "edit", 
+            "name": "编辑",
+            "type":"open",
+            "params":{
+                    "url":"/formview/#/core_role/form1/edit",
+                    "location":"modal",
+                    "title":"编辑角色信息",
+                    "key":"/model/core_role/form1/edit",
+                    "width":600,
+                    "height":400
+            },
+            "input":{},
+            "description":"打开角色编辑对话框",
+            "roles":"admin"
+        },  
+        {
+            "id": "delete", 
+            "name": "删除",
+            "type":"request",
+            "params":{
+                "url":"/data/delete",
+                "method":"post"
+            },
+            "description":"删除选中数据",
+            "successOperation":{
+                "type":"message",
+                "params":{
+                    "type":"success",
+                    "content":"删除角色成功!",
+                    "duration":"2"
+                },
+                "description":"提示删除数据成功",
+                "successOperation":{
+                    "type":"reloadFrameData",
+                    "params":{
+                        "location":"tab",
+                        "key":"/model/core_role"
+                    },
+                    "description":"刷新页面数据"
+                }
+            },
+            "roles":"admin"
+        },
+        {
+            "id":"save",
+            "name":"保存",
+            "type":"request",
+            "params":{
+                "url":"/data/save",
+                "method":"post"
+            },
+            "description":"保存数据",
+            "successOperation":{
+                "type":"close",
+                "params":{
+                    "location":"modal"
+                },
+                "input":{},
+                "description":"关闭对话框",
+                "successOperation":{
+                    "type":"reloadFrameData",
+                    "params":{
+                        "location":"tab",
+                        "key":"/model/core_role"
+                    },
+                    "description":"刷新页面数据"
+                }
+            },
+            "roles":"admin"
+        }
+    ], 
+    "views": [
+        {
+            "viewID": "view1", 
+            "name": "角色信息维护", 
+            "description": "仅包含必要的角色信息", 
+            "fields": [
+                {
+                    "field": "id", 
+                    "width": 100
+                }, 
+                {
+                    "field": "create_time", 
+                    "width": 200
+                }, 
+                {
+                    "field": "create_user", 
+                    "width": 200
+                }, 
+                {
+                    "field": "update_time", 
+                    "width": 200
+                }, 
+                {
+                    "field": "update_user", 
+                    "width": 200
+                }, 
+                {
+                    "field": "remark", 
+                    "width": 200
+                }, 
+                {
+                    "field": "version", 
+                    "width": 200
+                }
+            ], 
+            "filter": { }, 
+            "toolbar": {
+                "listToolbar": {
+                    "showCount": 3, 
+                    "buttons": [
+                        {
+                            "operationID": "create",
+                            "name":"创建角色"
+                        }
+                    ]
+                }, 
+                "rowToolbar": {
+                    "showCount": 2,
+                    "width":60, 
+                    "buttons": [
+                        {
+                            "operationID": "delete",
+                            "name":"删除"
+                        }
+                    ]
+                }
+            },
+            "roles":"admin"
+        }
+    ],
+    "forms":[
+        {
+            "formID": "form1",
+            "colCount": 4,
+            "rowCount": 2,
+            "rowHeight": 30,
+            "header":{
+                "label":"创建角色"
+            },
+            "footer":{
+                "operations":[
+                    {
+                        "operationID":"save",
+                        "name":"保存"
+                    },
+                    {
+                        "name":"关闭",
+                        "type":"close",
+                        "validateFormData":false,
+                        "params":{
+                            "location":"modal"
+                        },
+                        "input":{},
+                        "description":"关闭对话框"                            
+                    }
+                ]
+            },
+            "controls": [
+                {
+                    "controlType": "Text",
+                    "row": 1,
+                    "col": 1,
+                    "field": "id", 
+                    "label": "ID",
+                    "colSpan": 1,
+                    "rowSpan": 1,
+                    "required":true
+                },
+                {
+                    "controlType": "Text",
+                    "row": 2,
+                    "col": 1,
+                    "field": "remark", 
+                    "colSpan": 4,
+                    "rowSpan": 2
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,185 @@
+{
+    "modelID": "core_file", 
+    "fields": [
+        {
+            "field": "id", 
+            "name": "ID", 
+            "dataType": "int"
+        }, 
+        {
+            "field": "model_id", 
+            "name": "模型ID", 
+            "dataType": "varchar",
+            "quickSearch":true
+        }, 
+        {
+            "field": "field_id", 
+            "name": "字段", 
+            "dataType": "varchar",
+            "quickSearch":true
+        }, 
+        {
+            "field": "row_id", 
+            "name": "记录ID", 
+            "dataType": "varchar"
+        },
+        {
+            "field": "path", 
+            "name": "文件路径", 
+            "dataType": "varchar"
+        },
+        {
+            "field": "name", 
+            "name": "文件名", 
+            "dataType": "varchar",
+            "quickSearch":true
+        },
+        {
+            "field": "ext", 
+            "name": "扩展名", 
+            "dataType": "varchar"
+        },
+        {
+            "field": "create_time", 
+            "name": "创建时间", 
+            "dataType": "datetime"
+        }, 
+        {
+            "field": "create_user", 
+            "name": "创建人", 
+            "dataType": "varchar"
+        }, 
+        {
+            "field": "update_time", 
+            "name": "更新时间", 
+            "dataType": "datetime"
+        }, 
+        {
+            "field": "update_user", 
+            "name": "更新人", 
+            "dataType": "varchar"
+        }, 
+        {
+            "field": "version", 
+            "name": "数据版本", 
+            "dataType": "int"
+        }
+    ], 
+    "datasets":[
+        {
+            "id":"DEFAULT",
+            "fields":"*",
+            "queryRoles":"*",
+            "mutationRoles":"*"
+        }
+    ],
+    "operations": [   
+        {
+            "id": "delete", 
+            "name": "删除",
+            "type":"request",
+            "params":{
+                "url":"/data/delete",
+                "method":"post"
+            },
+            "description":"删除选中数据",
+            "successOperation":{
+                "type":"message",
+                "params":{
+                    "type":"success",
+                    "content":"删除文件记录成功!",
+                    "duration":"2"
+                },
+                "description":"提示删除数据成功",
+                "successOperation":{
+                    "type":"reloadFrameData",
+                    "params":{
+                        "location":"tab",
+                        "key":"/model/core_file"
+                    },
+                    "description":"刷新页面数据"
+                }
+            },
+            "roles":"admin"
+        }
+    ], 
+    "views": [
+        {
+            "viewID": "view1", 
+            "name": "文件记录维护", 
+            "description": "查看并维护系统文件", 
+            "fields": [
+                {
+                    "field": "id", 
+                    "width": 100
+                }, 
+                {
+                    "field": "model_id", 
+                    "width": 200
+                }, 
+                {
+                    "field": "field_id", 
+                    "width": 200
+                },
+                {
+                    "field": "row_id", 
+                    "width": 200
+                }, 
+                {
+                    "field": "path", 
+                    "width": 300
+                },
+                {
+                    "field": "name", 
+                    "width": 200
+                },
+                {
+                    "field": "ext", 
+                    "width": 200
+                },
+                {
+                    "field": "create_time", 
+                    "width": 200
+                }, 
+                {
+                    "field": "create_user", 
+                    "width": 200
+                }, 
+                {
+                    "field": "update_time", 
+                    "width": 200
+                }, 
+                {
+                    "field": "update_user", 
+                    "width": 200
+                }
+            ], 
+            "filter": { }, 
+            "toolbar": {
+                "listToolbar": {
+                    "showCount": 3, 
+                    "buttons": [
+                        {
+                            "operationID": "delete",
+                            "name":"删除选中文件",
+                            "prompt":"确定要删除当前选择的文件记录吗？"
+                        }
+                    ]
+                }, 
+                "rowToolbar": {
+                    "showCount": 2,
+                    "width":120, 
+                    "buttons": [ 
+                        {
+                            "operationID": "delete",
+                            "name":"删除",
+                            "prompt":"确定要删除这个文件记录吗？"
+                        }
+                    ]
+                }
+            },
+            "roles":"admin"
+        }
+    ],
+    "forms":[]
+}

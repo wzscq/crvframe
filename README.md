@@ -82,7 +82,7 @@ The meaning of the configuration items:
   * **server**:The MYSQL server address with format of IP:PORT.
   * **user**:The MYSQL server auth user.
   * **password**:The MYSQL server auth password.
-  * **dbName**:The default MYSQL database for connection.
+  * **dbName**:The default MYSQL database for connection. This database must be exist before the crvframe can be run.
   
     The flowing items are parameters of Go [database/sql](https://pkg.go.dev/database/sql) package.
   * **connMaxLifetime**:The maximum amount of time a connection may be reused.
@@ -120,7 +120,24 @@ Let's create a app named demoapp,we will use the name as APPID,so the APPID is *
 Choose a meaningful name for the database of the app.Here we create a database with name **demodb**.
 
 ## Init app database
-  
+From this code repository,find the file /initapp/init_app_database.sql, this is the init script for crvframe app database.
+Use MySQL client to connect to the MySQL server, use the database **demodb** created last step.
+Run this init script in **demodb** database.
+
+## Create app configuration
+In the directory of application conifiguration files,create the a sub directory for the app. 
+
+The directory name must be the same as the app database name. 
+
+For this guid, we create a sub directory named demodb in /root/crvframe/apps:
+
+    mkdir  /root/crvframe/apps/demodb
+
+From this code repository,find the folder /initapp/init_app_conf, copy all of the files and sub folders in the folder to the app configuration directory /root/crvframe/apps/demodb.
+
+
+
+
 
 
 
