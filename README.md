@@ -81,6 +81,7 @@ The meaning of the configuration items:
   * **user**:The MYSQL server auth user.
   * **password**:The MYSQL server auth password.
   * **dbName**:The default MYSQL database for connection.
+  
   The flowing items are parameters of Go [database/sql](https://pkg.go.dev/database/sql) package.
   * **connMaxLifetime**:The maximum amount of time a connection may be reused.
   * **maxOpenConns**:The maximum number of open connections to the database.
