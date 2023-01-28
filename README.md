@@ -62,9 +62,10 @@ the configuration file of the crvframe itself is named conf.json. Its content is
     }
 }
 ``` 
-**redis**
+The meaning of the configuration items:
+##redis
 
-  **server**:redis server address with format of IP:PORT.
+  * **server**:redis server address with format of IP:PORT.
 
 
 
