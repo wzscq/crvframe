@@ -10,8 +10,27 @@ A lowcode framework for CRUD applications. You simply create configuration files
 
 * **report**: A front-end component of the framework used to show data with charts.It uses [echarts](https://echarts.apache.org) to create the data charts.
 
-* **service** Back-end service of the fromework write with golang. It provides APIs to manipulation data in database.
+* **service**: Back-end service of the fromework write with golang. It provides APIs to manipulation data in database.
 Currently, only MySQL is supported.
+
+# Dependencies
+Before install and run crvframe,you must install and run these softwares:
+* Mysql
+* Redis
+
+# Run
+We recomend run crvframe with docker.
+Before run the dokcer instance，create the directories for configuration files.
+
+``` mkdir  /root/crvframe  ```
+``` mkdir  /root/crvframe/appfile  ```
+``` mkdir  /root/crvframe/apps  ```
+``` mkdir  /root/crvframe/conf  ```
+
+
+
+run it using:
+``` docker run -d --name crvframe -p80:80 -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf wangzhsh/crvframe:0.1.0  ```
 
 
 
