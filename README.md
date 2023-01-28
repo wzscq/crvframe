@@ -8,7 +8,11 @@ A lowcode framework for CRUD applications. You simply create configuration files
 
 * **formview**: A front-end component of the framework used to create or update data. It can also be used to view the detail of the data.
 
-* **report**: A front-end component of the framework used to show data with charts.It uses [echarts](https://echarts.apache.org) to show data.
+* **report**: A front-end component of the framework used to show data with charts.It uses [echarts](https://echarts.apache.org) to create the data charts.
+
+* **service** Back-end service of the fromework write with golang. It provides APIs to manipulation data in database.
+Currently, only MySQL is supported.
+
 
 
 
