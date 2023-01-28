@@ -15,11 +15,9 @@ Currently, only MySQL is supported.
 
 # Dependencies
 Before install and run crvframe,you must install and run these softwares:
-* Mysql
-* Redis
+  * Mysql
+  * Redis
 
-# Run
-We recomend run crvframe with docker.
 Before run the dokcer instance，create the directories for configuration files.
 
 ```
@@ -29,7 +27,49 @@ mkdir  /root/crvframe/apps
 mkdir  /root/crvframe/conf 
 ```
 
-run it using:
+The directory /root/crvframe is the root directory of crvframe configurations, you can use any other dirctory as the root directory.
+
+The sub directory /appfile is used to store attaches or temp files.
+
+The sub directory /apps is used to store application conifiguration files.
+
+The sub directory /conf contain a file named conf.json. It is the configuration file of the crvframe itself.
+
+The content of conf.json is
+
+``` 
+{
+    "redis":{
+        "server":"127.0.0.1:6379",
+        "tokenExpired":"6000s",
+        "oauthTokenExpired":"60s",
+        "tokenDB":0,
+        "oauthTokenDB":4,
+        "flowInstanceDB":2,
+        "appCacheDB":1,
+        "flowInstanceExpired":"0s"
+    },
+    "mysql":{
+        "server":"127.0.0.1:3306",
+        "password":"",
+        "user":"",
+        "dbName":"",
+        "connMaxLifetime":60,
+        "maxOpenConns":10,
+        "maxIdleConns":10
+    },
+    "service":{
+        "port":"127.0.0.1:8200"
+    },
+    "file":{
+        "root":"appfile"
+    }
+}
+``` 
+
+# Run
+We recomend run crvframe with docker.
+run docker instance using:
 
 ``` 
 docker run -d --name crvframe -p80:80 -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf wangzhsh/crvframe:0.1.0
