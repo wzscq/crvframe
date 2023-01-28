@@ -23,10 +23,10 @@ We recomend run crvframe with docker.
 Before run the dokcer instance，create the directories for configuration files.
 
 ```
-        mkdir  /root/crvframe
-        mkdir  /root/crvframe/appfile
-        mkdir  /root/crvframe/apps 
-        mkdir  /root/crvframe/conf 
+mkdir  /root/crvframe
+mkdir  /root/crvframe/appfile
+mkdir  /root/crvframe/apps 
+mkdir  /root/crvframe/conf 
 ```
 
 
