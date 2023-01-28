@@ -41,9 +41,10 @@ the configuration file of the crvframe itself is named conf.json. Its content is
         "oauthTokenExpired":"60s",
         "tokenDB":0,
         "oauthTokenDB":4,
-        "flowInstanceDB":2,
         "appCacheDB":1,
+        "flowInstanceDB":2,
         "flowInstanceExpired":"0s"
+        "password":""
     },
     "mysql":{
         "server":"127.0.0.1:3306",
@@ -65,9 +66,31 @@ the configuration file of the crvframe itself is named conf.json. Its content is
 The meaning of the configuration items:
 ## redis
 
-  * **server**:redis server address with format of IP:PORT.
+  * **server**:The redis server address with format of IP:PORT.
+  * **password**:The redis server auth password. This item is optional.
+  * **tokenExpired**:How long to keep the user token after the last user operation.
+  * **oauthTokenExpired**:The crvframe provides a simple oauth server. This configuration item is used for oauth token.
+  * **tokenDB**:Which DB of the redis is used to store login token.
+  * **oauthTokenDB**:Which DB of the redis is used to store oauth login token.
+  * **appCacheDB**:Which DB of the redis is used to store application ID.
+  * **flowInstanceDB**:deprecate soon later.
+  * **flowInstanceExpired**:deprecate soon later.
 
+## mysql
+  * **server**:The MYSQL server address with format of IP:PORT.
+  * **user**:The MYSQL server auth user.
+  * **password**:The MYSQL server auth password.
+  * **dbName**:The default MYSQL database for connection.
+  The flowing items are parameters of Go [database/sql](https://pkg.go.dev/database/sql) package.
+  * **connMaxLifetime**:The maximum amount of time a connection may be reused.
+  * **maxOpenConns**:The maximum number of open connections to the database.
+  * **maxIdleConns**:The maximum number of connections in the idle connection pool.
 
+## service
+  * **port**:The crvframe service address with format of IP:PORT.
+
+## file
+  * **root**:The root directory for crvframe service to store files.
 
 
 create and put the conf.json file to the directory /root/crvframe/conf.
