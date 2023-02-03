@@ -261,9 +261,13 @@ func (query *Query) query(dataRepository DataRepository,withPermission bool)(*qu
 	if errorCode != common.ResultSuccess {
 		return result,errorCode
 	}
-			
-	result.List,errorCode=query.getData(sqlParam,dataRepository)
-	return result,errorCode
+	
+	if result.Total>0 {
+		result.List,errorCode=query.getData(sqlParam,dataRepository)
+		return result,errorCode
+	}
+
+	return result,common.ResultSuccess
 }
 
 func (query *Query) queryRelatedModels(dataRepository DataRepository,parentList *queryResult)(int) {

@@ -135,12 +135,3 @@ For this guid, we create a sub directory named demodb in /root/crvframe/apps:
 
 From this code repository,find the folder /initapp/init_app_conf, copy all of the files and sub folders in the folder to the app configuration directory /root/crvframe/apps/demodb.
 
-
-
-
-
-
-
-
-
- 
