@@ -20,7 +20,7 @@ Before install and run crvframe,you must install and run these softwares:
 
 
 # Configurations
-Before run the dokcer instance，create the directories for configuration files.
+Before run the docker instance，create the directories for configuration files.
 
 ```
 #create root directory of crvframe configurations, you can use any other dirctory as the root directory.
