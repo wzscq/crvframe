@@ -1,8 +1,5 @@
 {
     "locales":[
-        {"key":"zh_CN","label":"中文"}
-    ],
-    "locales1":[
         {"key":"zh_CN","label":"中文"},
         {"key":"en_US","label":"English"}
     ],

@@ -23,7 +23,7 @@ export const getLoginImage=(appID)=>{
 }
 
 export const getAppIcon=(appID)=>{
-  return host+"/appimages/"+appID+"/"+appID+".ico";
+  return host+"/appimages/"+appID+"/icon.ico";
 }
 
 export const getLogoImage=()=>{
