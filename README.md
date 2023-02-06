@@ -139,8 +139,11 @@ From this code repository,find the folder /initapp/init_app_conf, copy all of th
 Use redis clinet tool to connect to the redis server. Choose the app cache DB which setted with conf.json.Add following key values to the DB.
 
 **key**：
+    
     appid:demoapp
+
 **value**：
+    
     demoadb
 
 **note**：The key is prefixed with the fixed string appid，followed by a colon，then followed by the app id. The value is the database name of the app.
