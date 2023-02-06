@@ -135,11 +135,13 @@ For this guid, we create a sub directory named demodb in /root/crvframe/apps:
 
 From this code repository,find the folder /initapp/init_app_conf, copy all of the files and sub folders in the folder to the app configuration directory /root/crvframe/apps/demodb.
 
-## Register your app in Redis app cache DB
+## Register your app in redis app cache DB
 Use redis clinet tool to connect to the redis server. Choose the app cache DB which setted with conf.json.Add following key values to the DB.
 
-    key：appid:demoapp
-    value：demoadb
+**key**：
+    appid:demoapp
+**value**：
+    demoadb
 
 **note**：The key is prefixed with the fixed string appid，followed by a colon，then followed by the app id. The value is the database name of the app.
 
