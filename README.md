@@ -148,4 +148,15 @@ Use redis clinet tool to connect to the redis server. Choose the app cache DB wh
 
 **note**：The key is prefixed with the fixed string appid，followed by a colon，then followed by the app id. The value is the database name of the app.
 
+## Sign in
+Use following url to open login page of your app:
+
+    http://hostname/mainframe/#/login/demoapp
+
+**note**：Replace the hostname with your real hostname or ip address. 
+
+The defalut account of the app is **admin**,the password is the same as the account name.
+
+
+
 
