@@ -62,6 +62,7 @@ const (
 	ResultNoReportControl=  10000044
 	ResultNotSupportedReportQuery=10000045
 	ResultReadExternalApiResultError=10000046
+	ResultJsonEncodeError = 10000047
 
 	ResultStartFlowWithoutID=20000001
 	ResultCacheFlowInstanceError=20000002
