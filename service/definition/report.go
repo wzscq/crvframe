@@ -12,6 +12,7 @@ type ReportControl struct {
 	ControlType string `json:"controlType"`
 	Option map[string]interface{} `json:"option"`
 	DataView interface{} `json:"dataView"`
+	SQLParameters map[string]interface{} `json:"sqlParameters"`
 	MinHeight int `json:"minHeight"`
 	Row int `json:"row"`
 	Col int `json:"col"`
@@ -24,6 +25,7 @@ type ReportConf struct {
 	ColCount int `json:"colCount"`
   RowHeight int `json:"rowHeight"`
   Controls  []ReportControl `json:"controls"`
+	FilterForm *map[string]interface{} `json:"filterForm"`
 }
 
 type ReportControlQuery struct {

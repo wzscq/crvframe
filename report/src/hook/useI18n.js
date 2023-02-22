@@ -6,16 +6,18 @@ export default function useI18n(){
 
     const getLocaleLabel=useCallback((title)=>{
         console.log('getLocaleLabel',locale,title);
-        if(title.key&&resources[title.key]){
-            return resources[title.key];
-        }
+        if(title){
+            if(title.key&&resources[title.key]){
+                return resources[title.key];
+            }
 
-        if(title[locale]){
-            return title[locale]
-        }
+            if(title[locale]){
+                return title[locale]
+            }
 
-        if(title.default){
-            return title.default;
+            if(title.default){
+                return title.default;
+            }
         }
         return title;
          

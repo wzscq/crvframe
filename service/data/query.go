@@ -29,7 +29,7 @@ type Field struct {
 	Summarize *string `json:"summarize,omitempty"` 
 }
 
-type queryResult struct {
+type QueryResult struct {
 	ModelID string `json:"modelID"`
 	ViewID *string `json:"viewID,omitempty"`
 	Value *string `json:"value,omitempty"`
@@ -242,9 +242,9 @@ func (query *Query) getSqlParam(withPermission bool)(*sqlParam,int) {
 	return &sqlParam,errorCode
 }
 
-func (query *Query) query(dataRepository DataRepository,withPermission bool)(*queryResult,int) {
+func (query *Query) query(dataRepository DataRepository,withPermission bool)(*QueryResult,int) {
 	var errorCode int
-	result:=&queryResult{
+	result:=&QueryResult{
 		ModelID:query.ModelID,
 		ViewID:query.ViewID,
 		Total:0,
@@ -270,7 +270,7 @@ func (query *Query) query(dataRepository DataRepository,withPermission bool)(*qu
 	return result,common.ResultSuccess
 }
 
-func (query *Query) queryRelatedModels(dataRepository DataRepository,parentList *queryResult)(int) {
+func (query *Query) queryRelatedModels(dataRepository DataRepository,parentList *QueryResult)(int) {
 	//循环所有字段，对每个关联字段进行处理
 	for _, field := range *(query.Fields) {
 		//由于MANY_TO_MANY和ONE_TO_MANY字段本身不对应实际数据库表中的字段，
@@ -287,7 +287,7 @@ func (query *Query) queryRelatedModels(dataRepository DataRepository,parentList 
 	return common.ResultSuccess
 }
 
-func (query *Query) Execute(dataRepository DataRepository,withPermission bool)(*queryResult,int) {
+func (query *Query) Execute(dataRepository DataRepository,withPermission bool)(*QueryResult,int) {
 	//先查本表数据
 	result,errorCode:=query.query(dataRepository,withPermission)
 	

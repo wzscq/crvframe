@@ -11,9 +11,18 @@ import (
 	"time"
 )
 
-func QueryBySql(sql string,dataRepository data.DataRepository)(interface{},*common.CommonError){
+func QueryBySql(
+	sql,userID,userRoles string,
+	sqlParameters map[string]interface{},
+	dataRepository data.DataRepository)(interface{},*common.CommonError){
+	//用参数替换sql中的变量
+	replaceSql,commonErr:=processFilter(sql,userID,userRoles,&sqlParameters)
+	if commonErr != common.ResultSuccess {
+		return  nil,common.CreateError(commonErr,nil)
+	}
+
 	//执行查询获取数据
-	res,sqlErr:=dataRepository.Query(sql)
+	res,sqlErr:=dataRepository.Query(replaceSql)
 	if sqlErr!=nil {
 		params:=map[string]interface{}{
 			"sqlErr":sqlErr.Error(),
@@ -117,10 +126,12 @@ func QueryByRequest(
 
 func QueryData(
 	appDB,userID,userRoles,userToken string,
-	query interface{},dataRepository data.DataRepository)(interface{},*common.CommonError){
+	query interface{},
+	filterData map[string]interface{},
+	dataRepository data.DataRepository)(interface{},*common.CommonError){
 	switch query.(type) {
 	case string:
-		return QueryBySql(query.(string),dataRepository)
+		return QueryBySql(query.(string),userID,userRoles,filterData,dataRepository)
 	case map[string]interface{}: 
 		return QueryByRequest(appDB,userID,userRoles,userToken,query.(map[string]interface{}))
 	}

@@ -1,0 +1,22 @@
+.control-transfer,
+.control-transfer .ant-space-vertical,
+.control-transfer .ant-space-vertical .ant-space-item:nth-child(2),
+.control-transfer .ant-space-vertical .ant-space-item:nth-child(2) .ant-transfer,
+.control-transfer .ant-space-vertical .ant-space-item:nth-child(2) .ant-transfer .ant-transfer-list
+ {
+    height: 100%;
+    width: 100%;
+}
+
+.control-transfer .ant-transfer-list-body-search-wrapper {
+    padding: 2px;
+}
+
+.control-transfer .ant-transfer-list-header {
+    padding: 2px;
+    height: 30px;
+}
+
+.control-transfer .ant-transfer-list-content-item-text {
+    flex: none;
+}

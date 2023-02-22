@@ -49,9 +49,9 @@ func (imgFile *ImageFile) getBase64String(item map[string]interface{})(string,in
 	return base64Encoding,common.ResultSuccess
 }
 
-func (imgFile *ImageFile) getImages()(*queryResult,int){
+func (imgFile *ImageFile) getImages()(*QueryResult,int){
 	var errorCode int
-	result:=&queryResult{
+	result:=&QueryResult{
 		ModelID:imgFile.ModelID,
 		Total:0,
 		List:[]map[string]interface{}{},

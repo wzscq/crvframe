@@ -1,11 +1,12 @@
 import { useParams } from 'react-router-dom';
-import {useEffect, useMemo} from 'react';
+import {useEffect, useMemo } from 'react';
 import {useSelector} from 'react-redux';
 
 import useFrame from "../../hook/useFrame";
 import {createGetReportConfMessage} from '../../utils/normalOperations';
 import PageLoading from '../../components/PageLoading';
 import {getControl}  from './controls';
+import Header from './Header';
 
 import './index.css';
 
@@ -13,6 +14,7 @@ export default function Report(){
     const {reportID}=useParams();
     const {origin,item}=useSelector(state=>state.frame);
     const {loaded,reportConf} = useSelector(state=>state.definition);
+
     const sendMessageToParent=useFrame();
 
     const frameParams=useMemo(()=>{
@@ -51,8 +53,11 @@ export default function Report(){
     });
 
     return (
+        <>
+        <Header filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
         <div className='layout-grid' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
             {controls}
         </div>
+        </>
     );
 }

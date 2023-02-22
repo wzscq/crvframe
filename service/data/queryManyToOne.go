@@ -9,7 +9,7 @@ type QueryManyToOne struct {
 	UserRoles string `json:"userRoles"` 
 }
 
-func (queryManyToOne *QueryManyToOne)mergeResult(res *queryResult,relatedRes *queryResult,refField *Field){
+func (queryManyToOne *QueryManyToOne)mergeResult(res *QueryResult,relatedRes *QueryResult,refField *Field){
 	relatedFieldName:="id"
 	fieldName:=refField.Field
 	//将每一行的结果按照ID分配到不同的记录行上的关联字段上
@@ -21,7 +21,7 @@ func (queryManyToOne *QueryManyToOne)mergeResult(res *queryResult,relatedRes *qu
 			switch value.(type) {
 			case string:
 				strValue=value.(string)
-				value=&queryResult{
+				value=&QueryResult{
 					ModelID:*(refField.RelatedModelID),
 					ViewID:refField.ViewID,
 					Total:0,
@@ -29,19 +29,19 @@ func (queryManyToOne *QueryManyToOne)mergeResult(res *queryResult,relatedRes *qu
 					List:[]map[string]interface{}{},
 				}
 				row[fieldName]=value
-			case *queryResult:
-				strValue=*(value.(*queryResult).Value)
+			case *QueryResult:
+				strValue=*(value.(*QueryResult).Value)
 			}
 
 			if strValue == relatedRow[relatedFieldName] {
-				value.(*queryResult).Total+=1
-				value.(*queryResult).List=append(value.(*queryResult).List,relatedRow)
+				value.(*QueryResult).Total+=1
+				value.(*QueryResult).List=append(value.(*QueryResult).List,relatedRow)
 			}
 		}
 	}
 }
 
-func (queryManyToOne *QueryManyToOne)getFilter(parentList *queryResult,refField *Field)(*map[string]interface{}){
+func (queryManyToOne *QueryManyToOne)getFilter(parentList *QueryResult,refField *Field)(*map[string]interface{}){
 	//多对一字段本身是数据字段，这个字段的值是对应关联表的ID字段的值
 	//查询时就是查询关联表ID字段值在当前字段值列表中的记录
 	//查询时同时需要合并字段上本身携带的过滤条件
@@ -64,7 +64,7 @@ func (queryManyToOne *QueryManyToOne)getFilter(parentList *queryResult,refField 
 	return &filter
 }
 
-func (queryManyToOne *QueryManyToOne) query(dataRepository DataRepository,parentList *queryResult,refField *Field)(int) {
+func (queryManyToOne *QueryManyToOne) query(dataRepository DataRepository,parentList *QueryResult,refField *Field)(int) {
 	if refField.RelatedModelID == nil {
 		return common.ResultNoRelatedModel
 	}

@@ -37,7 +37,7 @@ func (controller *DataController) query(c *gin.Context) {
 	appDB:= c.MustGet("appDB").(string)
 	var rep CommonReq
 	var errorCode int
-	var result *queryResult
+	var result *QueryResult
 	if err := c.BindJSON(&rep); err != nil {
 		log.Println(err)
 		errorCode=common.ResultWrongRequest

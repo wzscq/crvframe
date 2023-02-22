@@ -173,9 +173,9 @@ func getPathData(path []string,level int,data *map[string]interface{},values *[]
 	} else {
 		//如果不是最后一级，则数据中应该存在list属性
 		log.Printf("dataNode type is %T",dataNode)
-		result,ok:=dataNode.(*queryResult)
+		result,ok:=dataNode.(*QueryResult)
 		if !ok {
-			log.Println("getPathData dataNode is not a queryResult ")
+			log.Println("getPathData dataNode is not a QueryResult ")
 			return
 		}
 

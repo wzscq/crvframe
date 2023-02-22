@@ -11,7 +11,7 @@ type QueryFile struct {
 	UserRoles string `json:"userRoles"` 
 }
 
-func (queryFile *QueryFile)mergeResult(res *queryResult,relatedRes *queryResult,refField *Field){
+func (queryFile *QueryFile)mergeResult(res *QueryResult,relatedRes *QueryResult,refField *Field){
 	relatedFieldName:="row_id"
 	fieldName:=refField.Field
 	//将每一行的结果按照ID分配到不同的记录行上的关联字段上
@@ -21,7 +21,7 @@ func (queryFile *QueryFile)mergeResult(res *queryResult,relatedRes *queryResult,
 			//一对多字段,关联表的关联字段存储了本表的ID，
 			value, ok := row[fieldName]
 			if !ok {
-				value=&queryResult{
+				value=&QueryResult{
 					Total:0,
 					ModelID:"core_file",
 					List:[]map[string]interface{}{},
@@ -31,14 +31,14 @@ func (queryFile *QueryFile)mergeResult(res *queryResult,relatedRes *queryResult,
 			log.Println(row["id"],relatedRow[relatedFieldName])
 			//所以判断本表ID的值和关联表对应关联字段的值是否相等
 			if row["id"] == relatedRow[relatedFieldName] {
-				value.(*queryResult).Total+=1
-				value.(*queryResult).List=append(value.(*queryResult).List,relatedRow)
+				value.(*QueryResult).Total+=1
+				value.(*QueryResult).List=append(value.(*QueryResult).List,relatedRow)
 			}
 		}
 	}
 }
 
-func (queryFile *QueryFile)getFilter(parentList *queryResult,fileField *Field)(*map[string]interface{}){
+func (queryFile *QueryFile)getFilter(parentList *QueryResult,fileField *Field)(*map[string]interface{}){
 	//文件表的查询，需要通过model_id,file_id,row_id三个字段来查询
 	//首先获取用于过滤的ID列表
 	ids:=GetFieldValues(parentList,"id")
@@ -106,7 +106,7 @@ func (queryFile *QueryFile)getQueryFields()(*[]Field){
 	return &fields
 }
 
-func (queryFile *QueryFile) query(dataRepository DataRepository,parentList *queryResult,refField *Field)(int) {
+func (queryFile *QueryFile) query(dataRepository DataRepository,parentList *QueryResult,refField *Field)(int) {
 	filter:=queryFile.getFilter(parentList,refField)
 	files:=queryFile.getQueryFields()
 	//执行查询，构造一个新的Query对象进行子表的查询，这样可以实现多层级数据表的递归查询操作

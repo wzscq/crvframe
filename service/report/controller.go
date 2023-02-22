@@ -12,6 +12,7 @@ import (
 type ReportReq struct {
 	ReportID string `json:"reportID"`
 	ControlID string `json:"controlID"`
+	SQLParameters map[string]interface{} `json:"sqlParameters"`
 }
 
 type reportResult struct {
@@ -48,7 +49,7 @@ func (controller *ReportController) query(c *gin.Context) {
 		return
 	}
 
-	res,commonErr:=QueryData(appDB,userID,userRoles,userToken,query,controller.DataRepository)
+	res,commonErr:=QueryData(appDB,userID,userRoles,userToken,query,req.SQLParameters,controller.DataRepository)
 	
 	if commonErr!=nil {
 		rsp:=common.CreateResponse(commonErr,nil)

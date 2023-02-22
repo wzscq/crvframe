@@ -10,7 +10,7 @@ type QueryManyToMany struct {
 	UserRoles string `json:"userRoles"` 
 }
 
-func (queryManyToMany *QueryManyToMany)mergeResult(res *queryResult,relatedRes *queryResult,refField *Field){
+func (queryManyToMany *QueryManyToMany)mergeResult(res *QueryResult,relatedRes *QueryResult,refField *Field){
 	//多对多字段实际已经被转换为了一对多字段，所以这里按照一对多字段展开
 	//
 	relatedModelID:=*(refField.RelatedModelID)
@@ -25,7 +25,7 @@ func (queryManyToMany *QueryManyToMany)mergeResult(res *queryResult,relatedRes *
 			//一对多字段,关联表的关联字段存储了本表的ID，
 			value, ok := row[fieldName]
 			if !ok {
-				value=&queryResult{
+				value=&QueryResult{
 					ModelID:*(refField.RelatedModelID),
 					ViewID:refField.ViewID,
 					Total:0,
@@ -35,12 +35,12 @@ func (queryManyToMany *QueryManyToMany)mergeResult(res *queryResult,relatedRes *
 			}
 			//这里的关联字段本身的值是一个多对一字段，这里取出其中的值
 			if row["id"] == relatedRow[localRelatedFieldName] {
-				relatedValue,ok:=relatedRow[relatedFieldName].(*queryResult)
+				relatedValue,ok:=relatedRow[relatedFieldName].(*QueryResult)
 				if ok {
-					value.(*queryResult).Total+=relatedValue.Total
+					value.(*QueryResult).Total+=relatedValue.Total
 					//对于多对多字段来说，这里不是取中间表的数据，而是取中间表关联的下一层表的数据
 					if relatedValue.Total>0 {
-						value.(*queryResult).List=append(value.(*queryResult).List,relatedValue.List...)
+						value.(*QueryResult).List=append(value.(*QueryResult).List,relatedValue.List...)
 					}
 				}
 			}
@@ -48,7 +48,7 @@ func (queryManyToMany *QueryManyToMany)mergeResult(res *queryResult,relatedRes *
 	}
 }
 
-func (queryManyToMany *QueryManyToMany)getFilter(parentList *queryResult,refField *Field)(*map[string]interface{}){
+func (queryManyToMany *QueryManyToMany)getFilter(parentList *QueryResult,refField *Field)(*map[string]interface{}){
 	//多对多字段，将先通过一对多方式查询中间表，然后再通过中间表的多对一查询实际的关联表
 	//这里字段携带的过滤条件在查询中间表的时候不需要考虑，这些过滤条件将在后续多对一的查询中使用
 	//中间表中包含了两个关联表的ID，字段名称就是模型ID+'_id'
@@ -88,7 +88,7 @@ func (queryManyToMany *QueryManyToMany)getRelatedQueryFields(refField *Field)(*[
 	return &fields
 }
 
-func (queryManyToMany *QueryManyToMany)query(dataRepository DataRepository,parentList *queryResult,refField *Field)(int) {
+func (queryManyToMany *QueryManyToMany)query(dataRepository DataRepository,parentList *QueryResult,refField *Field)(int) {
 	if refField.RelatedModelID == nil {
 		return common.ResultNoRelatedModel
 	}

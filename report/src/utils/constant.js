@@ -52,6 +52,11 @@ export const FORM_TYPE={
     UPDATE:'update',//'FORM_TYPE_UPDATE'
 }
 
+export const FORM_LABEL_POS={
+    LEFT:'left',
+    TOP:'top'
+}
+
 //系统默认字段，这些字段有特殊用户，用户字段不能和这些字段重复
 export const CC_COLUMNS={
 	CC_SAVE_TYPE:"_save_type",

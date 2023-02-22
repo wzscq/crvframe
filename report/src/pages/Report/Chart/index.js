@@ -2,15 +2,17 @@ import { useEffect, useRef,useMemo } from "react";
 import { useResizeDetector } from 'react-resize-detector';
 import * as echarts from 'echarts';
 import { useDispatch, useSelector } from "react-redux";
+import moment from 'moment';
 
-import {setDataLoaded} from '../../../redux/dataSlice';
+import {setDataLoaded} from '../../../redux/reportSlice';
 import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 
 export default function Chart({controlConf,reportID,sendMessageToParent,frameParams}){
     const refChart=useRef();
     const { width,ref,height } = useResizeDetector();
-    const {id,option,minHeight,row,col,colSpan,rowSpan}=controlConf;
-    const data=useSelector(state=>state.data.chart[id]);
+    const {id,option,minHeight,row,col,colSpan,rowSpan,sqlParameters}=controlConf;
+    const filterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
+    const data=useSelector(state=>state.report.chart[id]);
     const dispatch=useDispatch();
 
     console.log('Chart refresh');
@@ -18,6 +20,23 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
     useEffect(()=>{
         if(data===undefined){
             dispatch(setDataLoaded({controlID:id,loaded:false}));
+
+            const parsedSQLParameters={};
+            if(sqlParameters){
+                Object.keys(sqlParameters).forEach(key=>{
+                    const funStr='"use strict";'+
+                        'return (function(moment,filterData){ '+
+                            'try {'+
+                                sqlParameters[key]+
+                            '} catch(e) {'+
+                            '   console.error(e);'+
+                            '   return undefined;'+
+                            '}'+
+                        '})';
+                    parsedSQLParameters[key]=Function(funStr)()(moment,filterData);
+                });
+            }
+
             //查询数据请求
             const keyFrameParams={
                 ...frameParams,
@@ -28,12 +47,12 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
                 type:FRAME_MESSAGE_TYPE.REPORT_QUERY,
                 data:{
                     frameParams:keyFrameParams,
-                    queryParams:{reportID,controlID:id}
+                    queryParams:{reportID,controlID:id,sqlParameters:parsedSQLParameters}
                 }
             }
             sendMessageToParent(message);
         }
-    },[data,id,frameParams,reportID,sendMessageToParent,dispatch]);
+    },[data,id,frameParams,reportID,sqlParameters,filterData,sendMessageToParent,dispatch]);
 
     const chartOption=useMemo(()=>{
         if(data?.loaded===true){

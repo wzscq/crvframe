@@ -3,7 +3,7 @@ import {useSelector,useDispatch} from 'react-redux';
 
 import {setParam} from '../redux/frameSlice';
 import { setDefinition } from '../redux/definitionSlice';
-import {setData,refreshData} from '../redux/dataSlice';
+import {setData,refreshData} from '../redux/reportSlice';
 import {setLocale} from '../redux/i18nSlice';
 
 import {

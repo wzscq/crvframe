@@ -2,7 +2,7 @@ import { useEffect,useMemo } from "react";
 import { Timeline as TimelineCtl } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 
-import {setDataLoaded} from '../../../redux/dataSlice';
+import {setDataLoaded} from '../../../redux/reportSlice';
 import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 import Title from './Title';
 
@@ -11,7 +11,8 @@ import './index.css';
 export default function DateLine({controlConf,reportID,sendMessageToParent,frameParams}){
   const {id,option,minHeight,row,col,colSpan,rowSpan}=controlConf;
   const {title,label,content}=option;
-  const data=useSelector(state=>state.data.chart[id]);
+  const filterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
+  const data=useSelector(state=>state.report.chart[id]);
   const dispatch=useDispatch();
 
   useEffect(()=>{
@@ -27,7 +28,7 @@ export default function DateLine({controlConf,reportID,sendMessageToParent,frame
           type:FRAME_MESSAGE_TYPE.REPORT_QUERY,
           data:{
               frameParams:keyFrameParams,
-              queryParams:{reportID,controlID:id}
+              queryParams:{reportID,controlID:id,filterData}
           }
       }
       sendMessageToParent(message);

@@ -43,7 +43,7 @@ export default function FormView({fromTitle,formType,sendMessageToParent}){
                 //这里增加处理逻辑，允许表单配置中配置临时字段，临时字段不对应实际数据表的字段，
                 //仅用于调用特殊接口时使用，比如导入接口，允许选择一个文件，这里通过临时字段来装载选择的文件信息
                 if(!field&&item.field){
-                    field={field:item.field,fieldType:item.fieldType}                    
+                    field={field:item.field,fieldType:item.fieldType,relatedModelID:item.relatedModelID}                    
                 }
                 //如果是编辑页面，则将ID字段置为不可修改,详情页面则所有字段都不允许修改
                 if((item.field==='id'&&formType===FORM_TYPE.EDIT)||

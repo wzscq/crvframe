@@ -10,7 +10,7 @@ type QueryOneToMany struct {
 	UserRoles string `json:"userRoles"` 
 }
 
-func (queryOneToMany *QueryOneToMany)mergeResult(res *queryResult,relatedRes *queryResult,refField *Field){
+func (queryOneToMany *QueryOneToMany)mergeResult(res *QueryResult,relatedRes *QueryResult,refField *Field){
 	relatedFieldName:=*(refField.RelatedField)
 	fieldName:=refField.Field
 	//将每一行的结果按照ID分配到不同的记录行上的关联字段上
@@ -20,7 +20,7 @@ func (queryOneToMany *QueryOneToMany)mergeResult(res *queryResult,relatedRes *qu
 			//一对多字段,关联表的关联字段存储了本表的ID，
 			value, ok := row[fieldName]
 			if !ok {
-				value=&queryResult{
+				value=&QueryResult{
 					ModelID:*(refField.RelatedModelID),
 					ViewID:refField.ViewID,
 					Total:0,
@@ -31,14 +31,14 @@ func (queryOneToMany *QueryOneToMany)mergeResult(res *queryResult,relatedRes *qu
 			log.Println(row["id"],relatedRow[relatedFieldName])
 			//所以判断本表ID的值和关联表对应关联字段的值是否相等
 			if row["id"] == relatedRow[relatedFieldName] {
-				value.(*queryResult).Total+=1
-				value.(*queryResult).List=append(value.(*queryResult).List,relatedRow)
+				value.(*QueryResult).Total+=1
+				value.(*QueryResult).List=append(value.(*QueryResult).List,relatedRow)
 			}
 		}
 	}
 }
 
-func (queryOneToMany *QueryOneToMany)getFilter(parentList *queryResult,refField *Field)(*map[string]interface{}){
+func (queryOneToMany *QueryOneToMany)getFilter(parentList *QueryResult,refField *Field)(*map[string]interface{}){
 	//一对多字段本身是虚拟字段，需要取本表的ID字段到关联表中的关联字段查找和当前表ID字段值相同的记录
 	//首先获取用于过滤的ID列表
 	ids:=GetFieldValues(parentList,"id")
@@ -55,7 +55,7 @@ func (queryOneToMany *QueryOneToMany)getFilter(parentList *queryResult,refField 
 	return &filter
 }
 
-func (queryOneToMany *QueryOneToMany) query(dataRepository DataRepository,parentList *queryResult,refField *Field)(int) {
+func (queryOneToMany *QueryOneToMany) query(dataRepository DataRepository,parentList *QueryResult,refField *Field)(int) {
 	if refField.RelatedModelID == nil {
 		return common.ResultNoRelatedModel
 	}

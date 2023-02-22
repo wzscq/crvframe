@@ -8,7 +8,7 @@ const (
 )
 
 type QueryRelatedModel interface {
-	query(dataRepository DataRepository,parentList *queryResult,refField *Field)(int)
+	query(dataRepository DataRepository,parentList *QueryResult,refField *Field)(int)
 }
 
 func getRelatedModelID(
@@ -53,7 +53,7 @@ func GetRelatedModelQuerier(fieldType string,appDB string,modelID string,userRol
 	return nil
 }
 
-func GetFieldValues(res *queryResult,fieldName string)([]string){
+func GetFieldValues(res *QueryResult,fieldName string)([]string){
 	var valList []string
 	for _,row:=range res.List {
 		if row[fieldName]!=nil {
