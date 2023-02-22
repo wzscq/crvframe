@@ -58,11 +58,10 @@ const (
 	ResultLoadExcelFileError=10000040
 	ResultESIFileAlreadyImported=10000041
 	ResultExcelSheetNotExist = 10000042
-	ResultJonsMarshalError = 10000043  
+	ResultJsonMarshalError = 10000043  
 	ResultNoReportControl=  10000044
 	ResultNotSupportedReportQuery=10000045
 	ResultReadExternalApiResultError=10000046
-	ResultJsonEncodeError = 10000047
 
 	ResultStartFlowWithoutID=20000001
 	ResultCacheFlowInstanceError=20000002
@@ -140,8 +139,8 @@ var errMsg = map[int]CommonRsp{
 		Message:"解析JSON文件时发生错误，请与管理员联系处理",
 		Error:true,
 	},
-	ResultJonsMarshalError:CommonRsp{
-		ErrorCode:ResultJonsMarshalError,
+	ResultJsonMarshalError:CommonRsp{
+		ErrorCode:ResultJsonMarshalError,
 		Message:"将对象转换为JSON文本时发生错误，请与管理员联系处理",
 		Error:true,
 	},
