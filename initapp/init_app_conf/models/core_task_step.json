@@ -1,0 +1,33 @@
+{
+  "modelID": "core_task_step",
+  "fields": [
+    {"field":"id","name":"编号","dataType":"varchar"},
+    {"field":"task_id","name":"任务编号","dataType":"varchar"},
+    {"field":"name","name":"名称","dataType":"varchar","quickSearch":true},
+    {"field":"execution_status","name":"任务执行状态","dataType":"int"},
+    {"field":"execution_progress","name":"执行进度","dataType":"int"},
+    {"field":"result_status","name":"结果状态","dataType":"int"},
+    {"field":"error_code","name":"错误码","dataType":"varchar"},
+    {"field":"message","name":"错误信息","dataType":"varchar"},
+    {"field":"create_time","name":"记录创建时间","dataType":"datetime"},
+    {"field":"create_user","name":"记录创建人","dataType":"varchar"},
+    {"field":"update_time","name":"记录更新时间","dataType":"datetime"},
+    {"field":"update_user","name":"记录更新人","dataType":"varchar"},
+    {"field":"version","name":"数据版本号","dataType":"int"}
+  ],
+  "datasets":[
+    {
+        "id":"DEFAULT",
+        "fields":"*",
+        "queryRoles":"*",
+        "mutationRoles":"*"
+    }
+  ],
+  "operations": [
+  ],
+  "views": [
+    
+  ],
+  "forms":[
+  ]
+}

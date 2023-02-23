@@ -1,4 +1,20 @@
-SET NAMES utf8;
+/*
+ Navicat MySQL Data Transfer
+
+ Source Server         : 
+ Source Server Type    : MySQL
+ Source Server Version : 80018
+ Source Host           : 
+ Source Schema         : init_app
+
+ Target Server Type    : MySQL
+ Target Server Version : 80018
+ File Encoding         : 65001
+
+ Date: 23/02/2023 14:43:23
+*/
+
+SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
@@ -61,6 +77,48 @@ CREATE TABLE `core_role_core_user`  (
 -- Records of core_role_core_user
 -- ----------------------------
 INSERT INTO `core_role_core_user` VALUES ('admin', 'admin', 1, NULL, NULL, NULL, NULL, NULL);
+
+-- ----------------------------
+-- Table structure for core_task
+-- ----------------------------
+DROP TABLE IF EXISTS `core_task`;
+CREATE TABLE `core_task`  (
+  `id` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `execution_status` int(11) NOT NULL DEFAULT 0,
+  `execution_progress` int(11) NOT NULL DEFAULT 0,
+  `result_status` int(11) NOT NULL DEFAULT 0,
+  `error_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `message` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `create_time` datetime(0) NOT NULL,
+  `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `update_time` datetime(0) NOT NULL,
+  `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `version` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for core_task_step
+-- ----------------------------
+DROP TABLE IF EXISTS `core_task_step`;
+CREATE TABLE `core_task_step`  (
+  `id` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `task_id` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `step` int(11) NOT NULL DEFAULT 0,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `execution_status` int(11) NOT NULL DEFAULT 0,
+  `execution_progress` int(11) NOT NULL DEFAULT 0,
+  `result_status` int(11) NOT NULL DEFAULT 0,
+  `error_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `message` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `create_time` datetime(0) NOT NULL,
+  `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `update_time` datetime(0) NOT NULL,
+  `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `version` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for core_user

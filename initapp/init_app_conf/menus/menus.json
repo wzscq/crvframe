@@ -43,6 +43,24 @@
             },
             {
                 "id":"3",
+                "name":"任务管理",
+                "description":"任务管理",
+                "icon":"SwitcherOutlined",
+                "operation":{
+                    "type":"open",
+                    "params":{
+                        "url":"/listview/#/core_task",
+                        "location":"tab",
+                        "title":"任务管理",
+                        "key":"/model/core_task"
+                    },
+                    "input":{},
+                    "description":"打开任务管理窗口"
+                },
+                "roles":"admin"
+            },
+            {
+                "id":"4",
                 "name":"操作日志",
                 "description":"显示操作日志",
                 "icon":"UnorderedListOutlined",
@@ -60,7 +78,7 @@
                 "roles":"admin"
             },
             {
-                "id":"4",
+                "id":"5",
                 "name":"文件管理",
                 "description":"系统文件管理",
                 "icon":"FileTextOutlined",
