@@ -50,7 +50,7 @@ export default function EditTable({dataPath,control,field,sendMessageToParent}){
     const {rowKeys}=useSelector(state=>selectValue(state.data,dataPath,field.field));
     
     const onAddNewRow=useCallback(()=>{
-        dispatch(createRow([...dataPath,field.field,'list']));
+        dispatch(createRow({dataPath:[...dataPath,field.field,'list'],initData:{}}));
     },[dispatch,dataPath,field]);
 
     const onDeleteRow=useCallback((rowKey)=>{
