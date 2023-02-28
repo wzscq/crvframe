@@ -155,7 +155,7 @@ Use following url to open login page of your app:
 
 **note**：Replace the hostname with your real hostname or ip address. 
 
-The defalut account of the app is **admin**,the password is the same as the account name.
+The defalut account of the app is **admin**,the password is the same as the account.
 
 
 
