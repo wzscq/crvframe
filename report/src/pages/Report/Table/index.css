@@ -1,0 +1,8 @@
+.report-table {
+  padding: 5px;
+}
+
+.report-table .ant-table.ant-table-bordered > .ant-table-title {
+  padding: 3px;
+  text-align: left;
+}
