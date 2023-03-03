@@ -158,5 +158,45 @@ Use following url to open login page of your app:
 The defalut account of the app is **admin**,the password is the same as the account.
 
 
+# Config Your APP
+
+## Add Menu Items
+
+In the root directory of the crvframe configuration created at deployment time, locate the subdirectory apps/yourappid/menus. There should be a JSON file menus.json. You can use this file to configure the app's menu. The contents of this file are shown below：
+
+
+    [
+      {
+        "id":"100",
+        "name":"系统管理",
+        "description":"系统管理相关功能",
+        "icon":"SettingOutlined",
+        "children":[
+          {
+            "id":"1",
+            "name":"用户管理",
+            "description":"维护系统登录账号",
+            "icon":"UserOutlined",
+            "operation":{
+              "type":"open",
+              "params":{
+                  "url":"/listview/#/core_user",
+                  "location":"tab",
+                  "title":"用户管理",
+                  "key":"/model/core_user"
+              },
+              "input":{},
+              "description":"打开用户管理功能"
+            },
+            "roles":"admin"
+          }
+        ]
+      }
+    ]
+
+    
+
+
+
 
 
