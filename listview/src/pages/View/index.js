@@ -12,10 +12,10 @@ import SearchBar from './SearchBar';
 import StatusBar from './StatusBar';
 
 import {createGetModelConfMessage} from '../../utils/normalOperations';
+import {initDataView} from '../../redux/dataSlice';
+import NoView from './NoView';
 
 import './index.css';
-
-import {initDataView} from '../../redux/dataSlice';
 
 export default function View(){
     const dispatch= useDispatch();
@@ -38,22 +38,26 @@ export default function View(){
         }
     },[loaded,origin,item,modelID,dispatch,sendMessageToParent,views]);
 
-    if(loaded&&currentView){
-        return (
-            <div className='list_view_main'>
-                <Row>
-                    <Col span={6}><ModelViewList/></Col>
-                    <Col span={18}><ListOperationBar sendMessageToParent={sendMessageToParent}/></Col>
-                </Row>
-                <Row>
-                    <Col span={18}><StatusBar/></Col>
-                    <Col span={6}><SearchBar/></Col>
-                </Row>
-                <Row>
-                    <Col span={24}><ListTable sendMessageToParent={sendMessageToParent} /></Col>                   
-                </Row>
-            </div>
-        );
+    if(loaded){
+        if(currentView){
+            return (
+                <div className='list_view_main'>
+                    <Row>
+                        <Col span={6}><ModelViewList/></Col>
+                        <Col span={18}><ListOperationBar sendMessageToParent={sendMessageToParent}/></Col>
+                    </Row>
+                    <Row>
+                        <Col span={18}><StatusBar/></Col>
+                        <Col span={6}><SearchBar/></Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}><ListTable sendMessageToParent={sendMessageToParent} /></Col>                   
+                    </Row>
+                </div>
+            );
+        } else {
+            return <NoView/>
+        }
     } else {
         return(<PageLoading/>);
     }
