@@ -162,7 +162,7 @@ The defalut account of the app is **admin**,the password is the same as the acco
 
 ## Add Menu Items
 
-In the root directory of the crvframe configuration created at deployment time, locate the subdirectory apps/yourappid/menus. There should be a JSON file menus.json. You can use this file to configure the app's menu. The contents of this file are shown below：
+In the root directory of the crvframe configuration created at deployment time, locate the subdirectory apps/your_app_id/menus. There should be a JSON file menus.json. You can use this file to configure the app's menu. The contents of this file are shown below：
 
 
     [
@@ -194,7 +194,21 @@ In the root directory of the crvframe configuration created at deployment time, 
       }
     ]
 
-    
+
+The content of menus.json is a JSON array, each item of the array is a menu item.
+
+**The meaning of each item:**
+**id** The ID of the menu item in the menu array, which must be unique.
+**name** The name of the menu, which appears on the menu bar on the main page of the app.
+**description**  This item is used to describe the function of the menu item.
+**icon** The menu icon, which appears to the left of the menu name.The crvframe uses the antd component, and the icon name can be found on the antd web page below: 
+
+
+    https://ant.design/components/icon
+
+
+
+
 
 
 
