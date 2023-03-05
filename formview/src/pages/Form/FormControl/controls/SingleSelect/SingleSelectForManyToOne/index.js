@@ -169,21 +169,24 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
     const getCascadeItemFilter=(cascade,cascadeParentValue,field)=>{
         let res={};
         if(cascade.type===CASCADE_TYPE.MANY2ONE){
-            if(cascade.relatedField&&cascadeParentValue[cascade.relatedField]){
-                res= {filterbyParent:{[cascade.relatedField]:cascadeParentValue[cascade.relatedField]}};        
+            if(cascade.parentField&&cascadeParentValue[cascade.parentField]){
+                const relatedField=cascade.relatedField?cascade.relatedField:cascade.parentField;
+                res= {filterbyParent:{[relatedField]:cascadeParentValue[cascade.parentField]}};        
             }
         } else if(cascade.type===CASCADE_TYPE.MANY2MANY){
-            if(cascade.relatedField&&cascadeParentValue[cascade.relatedField]){
+            if(cascade.parentField&&cascadeParentValue[cascade.parentField]){
                 //根据中间表先筛选出对应本表关联表的ID
+                const relatedField=cascade.relatedField?cascade.relatedField:field.field;
+                const parentRelatedField=cascade.parentRelatedField?cascade.parentRelatedField:cascade.parentField;
                 const filterDataItem={
                     modelID:cascade.middleModelID,
-                    filter:{[cascade.relatedField]:cascadeParentValue[cascade.relatedField]},
+                    filter:{[parentRelatedField]:cascadeParentValue[cascade.parentField]},
                     fields:[
-                        {field:field.field}
+                        {field:relatedField}
                     ]
                 }
                 //需要拿到父字段的关联表
-                const filterbyParent={id:{'Op.in':['%{'+cascade.middleModelID+'.'+field.field+'}']}};
+                const filterbyParent={id:{'Op.in':['%{'+cascade.middleModelID+'.'+relatedField+'}']}};
                 res={filterbyParent,filterDataItem};
             }
         } else {

@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch } from 'react-redux';
+import { message } from 'antd';
 
 import {info as logInfo} from '../../redux/logSlice';
 import { 
     setOperation,
+    ERROR_CODE,
     FRAME_MESSAGE_TYPE 
 } from '../../operation';
+import { createLogoutOperation } from '../../operation/operationItemFactory';
 
 import {
     queryData,
@@ -21,6 +24,14 @@ import './index.css';
 
 export default function MainFrame(){   
     const dispatch=useDispatch();
+
+    const errorCallback=(error)=>{
+        message.error(error.message);
+        if(error.errorCode===ERROR_CODE.TOKEN_EXPIRED){
+            setOperation(createLogoutOperation());
+        }
+    }
+
     //这里在主框架窗口中挂载事件监听函数，负责和子窗口之间的操作交互
     const receiveMessageFromSubFrame=(event)=>{
         dispatch(logInfo('receiveMessageFromSubFrame:'+JSON.stringify(event.data)));
@@ -29,12 +40,12 @@ export default function MainFrame(){
             dispatch(logInfo('do_operation:'+JSON.stringify(event.data.data.operationItem)));
             setOperation(data.operationItem);
         } else if (type===FRAME_MESSAGE_TYPE.QUERY_REQUEST) {
-            queryData(data);
+            queryData(data,errorCallback);
         } else if (type===FRAME_MESSAGE_TYPE.REPORT_QUERY){
-            queryReportData(data);
+            queryReportData(data,errorCallback);
         } else if (type===FRAME_MESSAGE_TYPE.GET_IMAGE) {
             console.log('wzstest get image');
-            getImage(data);
+            getImage(data,errorCallback);
         } else {
             console.error('not supported frame message type:'+type);
         }
@@ -62,5 +73,5 @@ export default function MainFrame(){
             <FrameContent/>
             <Dialog/>
         </div>
-    )
+    );
 }

@@ -14,6 +14,7 @@ import RowOperationBar from '../RowOperationBar';
 import ColumnControl from "./ColumnControl";
 import I18nLabel from "../../../components/I18nLabel";
 import './index.css';
+import { FIELD_TYPE } from "../../../utils/constant";
 
 export default function ListTable({sendMessageToParent}){
     const dispatch=useDispatch();
@@ -42,11 +43,14 @@ export default function ListTable({sendMessageToParent}){
             return Function(funStr)();
         };
 
+        const filterDropdown=field.fieldType!==FIELD_TYPE.MANY2MANY?<FilterDropdown sendMessageToParent={sendMessageToParent} field={field} index={index}/>:undefined;
+        const filterIcon=field.fieldType!==FIELD_TYPE.MANY2MANY?<FilterIcon field={field}/>:undefined;
+
         return {
             dataIndex:field.field,
             title:()=>(<Tooltip title={<I18nLabel label={field.name}/>}><div className="table-header"><I18nLabel label={field.name}/></div></Tooltip>),
-            filterDropdown:<FilterDropdown sendMessageToParent={sendMessageToParent} field={field} index={index}/>,
-            filterIcon: <FilterIcon field={field}/>,
+            filterDropdown:filterDropdown,
+            filterIcon: filterIcon,
             width:field.width,
             fixed:(isFixed?'left':''),
             ellipsis: {

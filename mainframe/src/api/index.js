@@ -139,7 +139,7 @@ export const downloadAction = createAsyncThunk(
 
 //获取图片文件内容，base64格式，填充到文件的url中，用于图片预览
 const GET_IMAGE_URL="/data/getImage";
-export const getImage = ({frameParams,queryParams})=>{
+export const getImage = ({frameParams,queryParams},errorCallback)=>{
   const {token}=userInfoStorage.get();
   const config={
     url:host+GET_IMAGE_URL,
@@ -150,7 +150,7 @@ export const getImage = ({frameParams,queryParams})=>{
   axios(config).then(function (response) {
     console.log(response);
     if(response.data.error===true){
-      message.error(response.data.message);
+      errorCallback(response.data);
     } else {
       const {frameID,frameType,dataKey}=frameParams;
       const frameControl=document.getElementById(frameType+"_"+frameID);
@@ -171,7 +171,7 @@ export const getImage = ({frameParams,queryParams})=>{
 
 //通用的查询接口，用于快速数据查询
 const DATA_QUERY_URL="/data/query";
-export const queryData = ({frameParams,queryParams})=>{
+export const queryData = ({frameParams,queryParams},errorCallback)=>{
   const {token}=userInfoStorage.get();
   const config={
     url:host+DATA_QUERY_URL,
@@ -182,7 +182,8 @@ export const queryData = ({frameParams,queryParams})=>{
   axios(config).then(function (response) {
     console.log(response);
     if(response.data.error===true){
-      message.error(response.data.message);
+      //message.error(response.data.message);
+      errorCallback(response.data);
     } else {
       const {frameID,frameType,dataKey}=frameParams;
       const frameControl=document.getElementById(frameType+"_"+frameID);
@@ -203,7 +204,7 @@ export const queryData = ({frameParams,queryParams})=>{
 
 //通用的查询接口，用于报表数据查询
 const REPORT_QUERY_URL="/report/query";
-export const queryReportData = ({frameParams,queryParams})=>{
+export const queryReportData = ({frameParams,queryParams},errorCallback)=>{
   const {token}=userInfoStorage.get();
   const config={
     url:host+REPORT_QUERY_URL,
@@ -214,7 +215,8 @@ export const queryReportData = ({frameParams,queryParams})=>{
   axios(config).then(function (response) {
     console.log(response);
     if(response.data.error===true){
-      message.error(response.data.message);
+      //message.error(response.data.message);
+      errorCallback(response.data);
     } else {
       const {frameID,frameType,dataKey}=frameParams;
       const frameControl=document.getElementById(frameType+"_"+frameID);
