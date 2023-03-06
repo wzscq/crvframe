@@ -160,9 +160,9 @@ The defalut account of the app is **admin**,the password is the same as the acco
 
 # Config Your APP
 
-## Add Menu Items
+## Config Menu Items
 
-In the root directory of the crvframe configuration created at deployment time, locate the subdirectory apps/your_app_id/menus. There should be a JSON file menus.json. You can use this file to configure the app's menu. The contents of this file are shown below：
+In the root directory of the crvframe configuration created at deployment time, locate the subdirectory apps/your_app_id/menus. There should be a JSON file menus.json. You can use this file to configure the app's menu. The example of the contents of this file are shown below：
 
 
     [
@@ -211,7 +211,24 @@ The content of menus.json is a JSON array, each item of the array is a menu item
     https://ant.design/components/icon
 
 
-  
+  * **children** The parent menu has a child list, the list is a json array, and each item of the array is a menu item, submenu items can also have submenu items. the parent menu item can not have operation and roles.
+
+  * **operation** The action of the menu item. For more information on how to configure operations, see the Operations paragraph in this readme.
+
+  * **roles** It indicates which roles can see the menu item. The roles can be a array of string, each item is a role ID. The roles can also be a string that indicates only one role can see the menu item. If the value of roles is "*"，all roles of the app can see the menu item. 
+
+
+## Config Models
+
+A model is a entity of the app, it typically has a corresponding table in the app's database. An app often has multiple models. The models of the app has multiple relationships to each other. In crvframe, we use model configuration files to configure the application's models, through which the crvframe service knows how to manipulate the data in the application database. 
+
+In the root directory of the crvframe configuration created at deployment time, locate the subdirectory apps/your_app_id/models. There should already have some JSON files. Attention the files with the name start with core_, these files are initial models of the app used by the crvframe itsself, and you must be carefully when modifying these model configuration files. 
+
+The example of the contents of this file are shown below：
+
+
+
+
 
 
 
