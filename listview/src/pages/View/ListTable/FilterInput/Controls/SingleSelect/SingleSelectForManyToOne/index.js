@@ -23,8 +23,12 @@ export default function SingleSelectForManyToOne({field,filterValue,onFilterChan
             tempFieldFilter[element.field]='%'+value.replace("'","''")+'%';
             return tempFieldFilter;
         });
-        const op='Op.or';
-        return {[op]:fieldsFilter};
+        
+        if(field.filter===undefined||field.filter===null){
+            return {'Op.or':fieldsFilter};
+        }
+            
+        return {'Op.and':[field.filter,{'Op.or':fieldsFilter}]};
     };
 
     const getQueryParams=(field,value)=>{
