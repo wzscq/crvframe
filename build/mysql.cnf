@@ -1,0 +1,61 @@
+[mysqld]
+# performance_schema关闭
+performance_schema=off
+
+# sql_mode
+sql_mode='NO_UNSIGNED_SUBTRACTION,NO_ENGINE_SUBSTITUTION'
+# 创建新表时，默认存储引擎
+default_storage_engine=InnoDB
+# 服务端使用的字符集默认
+character_set_server=utf8mb4
+# 数据库字符集对应一些排序
+collation_server=utf8mb4_general_ci
+
+# 设置client连接mysql时的字符集,防止乱码
+init_connect='SET NAMES utf8mb4'
+# 客户端工具链接加密方式
+default_authentication_plugin=mysql_native_password
+
+# 支持使用load data local infile命令
+local_infile=ON
+
+# 报表抽取使用拼接限制
+group_concat_max_len=1024000
+
+# 交互式连接超时时间，如mysql工具、mysqldump等，数据库默认8小时
+interactive_timeout=1800
+# 非交互式连接超时时间，如mysqlapi程序,jdbc连接数据库等，，数据库默认8小时
+wait_timeout=1800
+
+# 控制内存临时表的最大值,超过限值后就往硬盘写，写的位置由变量 tmpdir 决定
+tmp_table_size=1024M
+# 用户可以创建的内存表(memory table)的大小.这个值用来计算内存表的最大行数值
+max_heap_table_size=1024M
+# 用于索引的缓存区大小
+key_buffer_size=512M
+# Innodb缓存区大小
+innodb_buffer_pool_size=1024M
+# Innodb日志缓存区大小
+innodb_log_buffer_size=16M
+# KB*连接数，每个线程排序的缓冲大小
+sort_buffer_size=2048K
+# KB*连接数，读入缓存区大小
+read_buffer_size=2048K
+# KB*连接数，随机读取缓存区大小
+read_rnd_buffer_size=1024K
+# KB*连接数，关联表缓存大小
+join_buffer_size=4096K
+# KB*连接数，每个线程的堆栈大小
+thread_stack=384K
+# KB*连接数，二进制日志缓存大小
+binlog_cache_size=192K
+# 线程池大小
+thread_cache_size=192
+# 表缓存(最大不要超过2048)
+table_open_cache=1024
+# 表定义缓存
+table_definition_cache=400
+# 最大连接数
+max_connections=400
+# innodb_read_io_threads = 4
+# innodb_write_io_threads = 4
