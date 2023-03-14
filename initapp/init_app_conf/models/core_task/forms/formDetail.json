@@ -1,0 +1,225 @@
+{
+  "formID": "formDetail",
+  "colCount": 8,
+  "rowCount": 26,
+  "rowHeight": 30,
+  "header":{
+      "label":"任务详情"
+  },
+  "footer":{
+      "operations":[
+          {
+              "name":"关闭",
+              "type":"close",
+              "validateFormData":false,
+              "params":{
+                  "location":"modal"
+              },
+              "input":{},
+              "description":"关闭对话框"                            
+          }
+      ]
+  },
+  "controls": [
+      {
+        "field": "id", 
+        "label": "ID",
+        "controlType": "Text",
+        "row": 1,
+        "col": 1,
+        "colSpan": 1,
+        "rowSpan": 1
+      }, 
+      {
+        "field": "name", 
+        "controlType": "Text",
+        "row": 1,
+        "col": 2,
+        "colSpan": 2,
+        "rowSpan": 1
+      }, 
+      {
+        "field": "execution_status", 
+        "controlType": "SingleSelect",
+        "options":[
+          {"value":"0","label":"待执行"},
+          {"value":"1","label":"执行中"},
+          {"value":"2","label":"执行完成"}
+        ],
+        "row": 1,
+        "col": 4,
+        "colSpan": 1,
+        "rowSpan": 1
+      }, 
+      {
+        "field": "execution_progress", 
+        "controlType": "Text",
+        "row": 1,
+        "col": 5,
+        "colSpan": 1,
+        "rowSpan": 1
+      },
+      {
+        "field": "create_user", 
+        "controlType": "Text",
+        "row": 1,
+        "col": 6,
+        "colSpan": 1,
+        "rowSpan": 1
+      }, 
+      {
+        "field": "create_time", 
+        "controlType": "Text",
+        "row": 1,
+        "col": 7,
+        "colSpan": 2,
+        "rowSpan": 1
+      },
+      {
+        "field": "update_user", 
+        "controlType": "Text",
+        "row": 2,
+        "col": 6,
+        "colSpan": 1,
+        "rowSpan": 1
+      },
+      {
+        "field": "update_time", 
+        "controlType": "Text",
+        "row": 2,
+        "col": 7,
+        "colSpan": 2,
+        "rowSpan": 1
+      },
+      {
+        "field": "result_status", 
+        "controlType": "SingleSelect",
+        "options":[
+          {"value":"0","label":"未执行"},
+          {"value":"1","label":"执行成功"},
+          {"value":"2","label":"执行错误"}
+        ],
+        "row": 2,
+        "col": 1,
+        "colSpan": 1,
+        "rowSpan": 1
+      },
+      {
+        "field": "error_code", 
+        "controlType": "Text",
+        "row": 2,
+        "col": 2,
+        "colSpan": 1,
+        "rowSpan": 1
+      }, 
+      {
+        "field": "message", 
+        "controlType": "Text",
+        "row": 2,
+        "col": 3,
+        "colSpan": 3,
+        "rowSpan": 1
+      },
+      {
+        "field": "steps", 
+        "controlType": "EditTable",
+        "controls":[
+          {
+            "field":"id",
+            "label":"ID"
+          },
+          {
+            "field":"step",
+            "visible":true,
+            "label":"序号",
+            "controlType":"Text",
+            "width":50
+          },
+          {
+            "field":"name",
+            "visible":true,
+            "label":"名称",
+            "controlType":"Text",
+            "width":120
+          },
+          {
+            "field":"execution_status",
+            "visible":true,
+            "label":"执行状态",
+            "controlType": "SingleSelect",
+            "options":[
+              {"value":"0","label":"未执行"},
+              {"value":"1","label":"执行成功"},
+              {"value":"2","label":"执行错误"}
+            ],
+            "width":100
+          },
+          {
+            "field":"execution_progress",
+            "visible":true,
+            "label":"进度",
+            "controlType": "Text",
+            "width":50
+          },
+          {
+            "field":"result_status",
+            "visible":true,
+            "label":"结果",
+            "controlType": "SingleSelect",
+            "options":[
+              {"value":"0","label":"未执行"},
+              {"value":"1","label":"执行成功"},
+              {"value":"2","label":"执行错误"}
+            ],
+            "width":100
+          },
+          {
+            "field":"error_code",
+            "visible":true,
+            "label":"错误码",
+            "controlType": "Text",
+            "width":100
+          },
+          {
+            "field":"message",
+            "visible":true,
+            "label":"错误信息",
+            "controlType": "Text",
+            "width":220
+          },
+          {
+            "field":"create_time",
+            "visible":true,
+            "label":"创建时间",
+            "controlType": "Text",
+            "width":120
+          },
+          {
+            "field":"create_user",
+            "visible":true,
+            "label":"创建人",
+            "controlType": "Text",
+            "width":80
+          },
+          {
+            "field":"update_time",
+            "visible":true,
+            "label":"更新时间",
+            "controlType": "Text",
+            "width":120
+          },
+          {
+            "field":"update_user",
+            "visible":true,
+            "label":"更新人",
+            "controlType": "Text",
+            "width":80
+          }
+        ],
+        "row": 3,
+        "col": 1,
+        "colSpan": 8,
+        "rowSpan": 1
+      }
+  ]
+}

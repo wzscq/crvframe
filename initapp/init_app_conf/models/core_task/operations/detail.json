@@ -1,0 +1,15 @@
+{
+  "id": "detail", 
+  "name": "详情",
+  "type":"open",
+  "params":{
+          "url":"/formview/#/core_task/formDetail/detail",
+          "location":"modal",
+          "title":"任务详情",
+          "key":"/model/core_task/formDetail/detail",
+          "width":1200,
+          "height":450
+  },
+  "input":{},
+  "description":"打开任务详情对话框"
+}

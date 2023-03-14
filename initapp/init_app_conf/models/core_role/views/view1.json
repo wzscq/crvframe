@@ -1,0 +1,57 @@
+{
+  "viewID": "view1", 
+  "name": "角色信息维护", 
+  "description": "仅包含必要的角色信息", 
+  "fields": [
+      {
+          "field": "id", 
+          "width": 100
+      }, 
+      {
+          "field": "create_time", 
+          "width": 200
+      }, 
+      {
+          "field": "create_user", 
+          "width": 200
+      }, 
+      {
+          "field": "update_time", 
+          "width": 200
+      }, 
+      {
+          "field": "update_user", 
+          "width": 200
+      }, 
+      {
+          "field": "remark", 
+          "width": 200
+      }, 
+      {
+          "field": "version", 
+          "width": 200
+      }
+  ], 
+  "filter": { }, 
+  "toolbar": {
+      "listToolbar": {
+          "showCount": 3, 
+          "buttons": [
+              {
+                  "operationID": "create",
+                  "name":"创建角色"
+              }
+          ]
+      }, 
+      "rowToolbar": {
+          "showCount": 2,
+          "width":60, 
+          "buttons": [
+              {
+                  "operationID": "delete",
+                  "name":"删除"
+              }
+          ]
+      }
+  }
+}

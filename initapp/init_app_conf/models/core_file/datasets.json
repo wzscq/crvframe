@@ -1,0 +1,10 @@
+{
+  "datasets":[
+    {
+      "id":"DEFAULT",
+      "fields":"*",
+      "queryRoles":"*",
+      "mutationRoles":"*"
+    }
+  ]
+}

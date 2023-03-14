@@ -1,0 +1,75 @@
+{
+  "viewID": "view1", 
+  "name": "文件记录维护", 
+  "description": "查看并维护系统文件", 
+  "fields": [
+      {
+          "field": "id", 
+          "width": 100
+      }, 
+      {
+          "field": "model_id", 
+          "width": 200
+      }, 
+      {
+          "field": "field_id", 
+          "width": 200
+      },
+      {
+          "field": "row_id", 
+          "width": 200
+      }, 
+      {
+          "field": "path", 
+          "width": 300
+      },
+      {
+          "field": "name", 
+          "width": 200
+      },
+      {
+          "field": "ext", 
+          "width": 200
+      },
+      {
+          "field": "create_time", 
+          "width": 200
+      }, 
+      {
+          "field": "create_user", 
+          "width": 200
+      }, 
+      {
+          "field": "update_time", 
+          "width": 200
+      }, 
+      {
+          "field": "update_user", 
+          "width": 200
+      }
+  ], 
+  "filter": { }, 
+  "toolbar": {
+      "listToolbar": {
+          "showCount": 3, 
+          "buttons": [
+              {
+                  "operationID": "delete",
+                  "name":"删除选中文件",
+                  "prompt":"确定要删除当前选择的文件记录吗？"
+              }
+          ]
+      }, 
+      "rowToolbar": {
+          "showCount": 2,
+          "width":120, 
+          "buttons": [ 
+              {
+                  "operationID": "delete",
+                  "name":"删除",
+                  "prompt":"确定要删除这个文件记录吗？"
+              }
+          ]
+      }
+  }
+}

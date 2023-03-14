@@ -1,0 +1,27 @@
+{
+  "id": "delete", 
+  "name": "删除",
+  "type":"request",
+  "params":{
+      "url":"/data/delete",
+      "method":"post"
+  },
+  "description":"删除选中数据",
+  "successOperation":{
+      "type":"message",
+      "params":{
+          "type":"success",
+          "content":"删除角色成功!",
+          "duration":"2"
+      },
+      "description":"提示删除数据成功",
+      "successOperation":{
+          "type":"reloadFrameData",
+          "params":{
+              "location":"tab",
+              "key":"/model/core_role"
+          },
+          "description":"刷新页面数据"
+      }
+  }
+}

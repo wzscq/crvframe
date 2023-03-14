@@ -1,0 +1,68 @@
+{
+  "formID": "form2",
+  "colCount": 4,
+  "rowCount": 26,
+  "rowHeight": 30,
+  "header":{
+      "label":""
+  },
+  "footer":{
+      "operations":[
+          {
+              "name":"关闭",
+              "type":"close",
+              "validateFormData":false,
+              "params":{
+                  "location":"modal"
+              },
+              "input":{},
+              "description":"关闭对话框"                            
+          }
+      ]
+  },
+  "controls": [
+      {
+          "controlType": "Text",
+          "row": 1,
+          "col": 1,
+          "field": "id", 
+          "label": "ID",
+          "colSpan": 1,
+          "rowSpan": 1,
+          "required":true
+      }, 
+      {
+          "controlType": "Text",
+          "row": 1,
+          "col": 2,
+          "field": "user_name_en", 
+          "colSpan": 1,
+          "rowSpan": 1
+      }, 
+      {
+          "controlType": "Text",
+          "row": 1,
+          "col": 3,
+          "field": "user_name_zh", 
+          "colSpan": 1,
+          "rowSpan": 1
+      }, 
+      {
+          "controlType": "Password",
+          "row": 1,
+          "col": 4,
+          "field": "password", 
+          "colSpan": 1,
+          "rowSpan": 1,
+          "required":true
+      },
+      {
+          "controlType": "Text",
+          "row": 2,
+          "col": 1,
+          "field": "remark", 
+          "colSpan": 4,
+          "rowSpan": 2
+      }
+  ]
+}

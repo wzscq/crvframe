@@ -1,0 +1,42 @@
+{
+  "modelID": "core_role", 
+  "fields": [
+      {
+          "field": "id", 
+          "name": "ID", 
+          "dataType": "varchar",
+          "quickSearch":true
+      }, 
+      {
+          "field": "create_time", 
+          "name": "创建时间", 
+          "dataType": "datetime"
+      }, 
+      {
+          "field": "create_user", 
+          "name": "创建人", 
+          "dataType": "varchar"
+      }, 
+      {
+          "field": "update_time", 
+          "name": "更新时间", 
+          "dataType": "datetime"
+      }, 
+      {
+          "field": "update_user", 
+          "name": "更新人", 
+          "dataType": "varchar"
+      }, 
+      {
+          "field": "remark", 
+          "name": "备注", 
+          "dataType": "varchar",
+          "quickSearch":true
+      }, 
+      {
+          "field": "version", 
+          "name": "数据版本", 
+          "dataType": "int"
+      }
+  ]
+}

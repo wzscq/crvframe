@@ -1,0 +1,68 @@
+{
+  "modelID": "core_file", 
+  "fields": [
+      {
+          "field": "id", 
+          "name": "ID", 
+          "dataType": "int"
+      }, 
+      {
+          "field": "model_id", 
+          "name": "模型ID", 
+          "dataType": "varchar",
+          "quickSearch":true
+      }, 
+      {
+          "field": "field_id", 
+          "name": "字段", 
+          "dataType": "varchar",
+          "quickSearch":true
+      }, 
+      {
+          "field": "row_id", 
+          "name": "记录ID", 
+          "dataType": "varchar"
+      },
+      {
+          "field": "path", 
+          "name": "文件路径", 
+          "dataType": "varchar"
+      },
+      {
+          "field": "name", 
+          "name": "文件名", 
+          "dataType": "varchar",
+          "quickSearch":true
+      },
+      {
+          "field": "ext", 
+          "name": "扩展名", 
+          "dataType": "varchar"
+      },
+      {
+          "field": "create_time", 
+          "name": "创建时间", 
+          "dataType": "datetime"
+      }, 
+      {
+          "field": "create_user", 
+          "name": "创建人", 
+          "dataType": "varchar"
+      }, 
+      {
+          "field": "update_time", 
+          "name": "更新时间", 
+          "dataType": "datetime"
+      }, 
+      {
+          "field": "update_user", 
+          "name": "更新人", 
+          "dataType": "varchar"
+      }, 
+      {
+          "field": "version", 
+          "name": "数据版本", 
+          "dataType": "int"
+      }
+  ]
+}

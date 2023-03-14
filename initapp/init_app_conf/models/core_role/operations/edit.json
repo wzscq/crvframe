@@ -1,0 +1,15 @@
+{
+  "id": "edit", 
+  "name": "编辑",
+  "type":"open",
+  "params":{
+    "url":"/formview/#/core_role/form1/edit",
+    "location":"modal",
+    "title":"编辑角色信息",
+    "key":"/model/core_role/form1/edit",
+    "width":600,
+    "height":400
+  },
+  "input":{},
+  "description":"打开角色编辑对话框"
+}

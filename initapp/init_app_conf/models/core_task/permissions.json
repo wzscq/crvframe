@@ -1,0 +1,14 @@
+{
+  "operations": [
+    {
+      "id": "detail", 
+      "roles":"*"
+    }
+  ],
+  "views":[
+    {
+        "id": "viewDefault", 
+        "roles":"*"
+    }
+  ]
+}

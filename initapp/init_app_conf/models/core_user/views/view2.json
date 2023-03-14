@@ -1,0 +1,47 @@
+{
+  "viewID": "view2", 
+  "name": "用户信息维护高级", 
+  "description": "包含全部用户信息", 
+  "fields": [
+      {
+          "field": "id", 
+          "width": 200
+      }, 
+      {
+          "field": "user_name_en", 
+          "width": 200
+      }, 
+      {
+          "field": "user_name_zh", 
+          "width": 200
+      }, 
+      {
+          "field": "password", 
+          "width": 200
+      }, 
+      {
+          "field": "create_time", 
+          "width": 200
+      }, 
+      {
+          "field": "create_user", 
+          "width": 200
+      }, 
+      {
+          "field": "update_time", 
+          "width": 200
+      }, 
+      {
+          "field": "update_user", 
+          "width": 200
+      }, 
+      {
+          "field": "remark", 
+          "width": 200
+      }, 
+      {
+          "field": "version", 
+          "width": 200
+      }
+  ]
+}

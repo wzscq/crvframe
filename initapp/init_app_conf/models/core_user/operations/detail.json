@@ -1,0 +1,15 @@
+{
+  "id": "detail", 
+  "name": "查看详情",
+  "type":"open",
+  "params":{
+          "url":"/formview/#/core_user/form1/detail",
+          "location":"modal",
+          "title":"用户信息详情",
+          "key":"/model/core_user/form1/detail",
+          "width":800,
+          "height":450
+  },
+  "input":{},
+  "description":"打开用户信息详情对话框"
+}

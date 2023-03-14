@@ -1,0 +1,59 @@
+{
+  "viewID": "view1", 
+  "name": "用户信息维护", 
+  "description": "仅包含必要的用户信息", 
+  "fields": [
+      {
+          "field": "id", 
+          "width": 100
+      }, 
+      {
+          "field": "user_name_en", 
+          "width": 200
+      }, 
+      {
+          "field": "user_name_zh", 
+          "width": 200
+      }, 
+      {
+          "field": "remark", 
+          "width": 400
+      }
+  ], 
+  "filter": { }, 
+  "toolbar": {
+      "listToolbar": {
+          "showCount": 3, 
+          "buttons": [
+              {
+                  "operationID": "create",
+                  "name":"创建用户"
+              }, 
+              {
+                  "operationID": "delete",
+                  "name":"删除选中用户",
+                  "prompt":"确定要删除当前选择的用户记录吗？"
+             }
+          ]
+      }, 
+      "rowToolbar": {
+          "showCount": 2,
+          "width":120, 
+          "buttons": [
+              {
+                  "operationID": "edit",
+                  "name":"编辑"
+              },
+              {
+                  "operationID": "detail",
+                  "name":"详情"
+              }, 
+              {
+                  "operationID": "delete",
+                  "name":"删除",
+                  "prompt":"确定要删除这个用户信息吗？"
+              }
+          ]
+      }
+  }
+}

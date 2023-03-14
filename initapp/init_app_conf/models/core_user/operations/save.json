@@ -1,0 +1,26 @@
+{
+  "id":"save",
+  "name":"保存",
+  "type":"request",
+  "params":{
+      "url":"/data/save",
+      "method":"post"
+  },
+  "description":"保存数据",
+  "successOperation":{
+      "type":"close",
+      "params":{
+          "location":"modal"
+      },
+      "input":{},
+      "description":"关闭对话框",
+      "successOperation":{
+          "type":"reloadFrameData",
+          "params":{
+              "location":"tab",
+              "key":"/model/core_user"
+          },
+          "description":"刷新页面数据"
+      }
+  }
+}

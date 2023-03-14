@@ -1,0 +1,34 @@
+{
+  "operations": [
+    {
+        "id": "delete", 
+        "roles":"admin"
+    },
+    {
+        "id": "edit", 
+        "roles":"admin"
+    },
+    {
+        "id": "create", 
+        "roles":"admin"
+    },
+    {
+        "id": "save", 
+        "roles":"admin"
+    },
+    {
+      "id": "detail", 
+      "roles":"admin"
+    }
+  ],
+  "views":[
+    {
+        "id": "view1", 
+        "roles":"admin"
+    },
+    {
+      "id": "view2", 
+      "roles":["admin","operator"]
+    }
+  ]
+}

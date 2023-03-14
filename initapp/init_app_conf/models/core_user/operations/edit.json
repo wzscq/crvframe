@@ -1,0 +1,15 @@
+{
+  "id": "edit", 
+  "name": "编辑",
+  "type":"open",
+  "params":{
+          "url":"/formview/#/core_user/form1/edit",
+          "location":"modal",
+          "title":"编辑用户信息",
+          "key":"/model/core_user/form1/edit",
+          "width":800,
+          "height":450
+  },
+  "input":{},
+  "description":"打开用户信息编辑对话框"
+}

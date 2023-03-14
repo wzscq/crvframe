@@ -1,0 +1,55 @@
+{
+  "viewID": "viewDefault", 
+  "name": "任务信息维护", 
+  "description": "任务信息维护", 
+  "fields": [
+    {"field":"id","width":150},
+    {"field":"name","width":150},
+    {
+      "field":"execution_status",
+      "filterControlType": "SingleSelect",
+      "options":[
+        {"value":"0","label":"待执行"},
+        {"value":"1","label":"执行中"},
+        {"value":"2","label":"执行完成"}
+      ],
+      "width":150
+    },
+    {"field":"execution_progress","width":150},
+    {
+      "field":"result_status",
+      "filterControlType": "SingleSelect",
+      "options":[
+        {"value":"0","label":"未执行"},
+        {"value":"1","label":"执行成功"},
+        {"value":"2","label":"执行错误"}
+      ],
+      "width":150
+    },
+    {"field":"error_code","width":150},
+    {"field":"message","width":150},
+    {"field":"create_time","width":150},
+    {"field":"create_user","width":150},
+    {"field":"update_time","width":150},
+    {"field":"update_user","width":150},
+    {"field":"version","width":150}
+  ],
+  "filter": { }, 
+  "toolbar": {
+    "listToolbar": {
+      "showCount": 3, 
+      "buttons": [
+      ]
+    }, 
+    "rowToolbar": {
+      "showCount": 2,
+      "width":50, 
+      "buttons": [
+        {
+          "operationID": "detail",
+          "name":"详情"
+        }
+      ]
+    }
+  }
+}

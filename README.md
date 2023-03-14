@@ -219,12 +219,33 @@ The content of menus.json is a JSON array, each item of the array is a menu item
 
 
 ## Config Models
+A model is a entity of the app, it typically has a corresponding table in the app's database. An app often has multiple models. The models of the app has multiple relationships to each other. The crvframe use model configuration files to configure the application's models, through which the crvframe service knows how to show and manipulate the data in the application database.
 
-A model is a entity of the app, it typically has a corresponding table in the app's database. An app often has multiple models. The models of the app has multiple relationships to each other. In crvframe, we use model configuration files to configure the application's models, through which the crvframe service knows how to manipulate the data in the application database. 
+In the root directory of the crvframe configuration created at deployment time, locate the subdirectory apps/your_app_id/models folder. There should already have some sub folders. Each folder is a model, the
+ folder name is the model name. Attention the folders with the name start with core_, these folders are initial models of the app used by the crvframe itsself, and you must be carefully when modifying these model configuration files. 
 
-In the root directory of the crvframe configuration created at deployment time, locate the subdirectory apps/your_app_id/models. There should already have some JSON files. Attention the files with the name start with core_, these files are initial models of the app used by the crvframe itsself, and you must be carefully when modifying these model configuration files. 
+### model.json
+Each model folder contains a file named model.json, which contains configuration about the model. The contents of the file are shown below：
 
-The example of the contents of this file are shown below：
+
+    {
+      "modelID": "core_user",
+      "fields": [
+        {"field": "id", "name": "ID", "dataType": "varchar"}, 
+        {"field": "user_name_en", "name": "英文名称", "dataType": "varchar","quickSearch":true}, 
+        {"field": "user_name_zh", "name": "中文名称", "dataType": "varchar","quickSearch":true}, 
+        {"field": "password", "name": "密码", "dataType": "password"}, 
+        {"field": "create_time", "name": "创建时间", "dataType": "datetime"}, 
+        {"field": "create_user", "name": "创建人", "dataType": "varchar"}, 
+        {"field": "update_time", "name": "更新时间", "dataType": "datetime"}, 
+        {"field": "update_user", "name": "更新人", "dataType": "varchar"}, 
+        {"field": "remark", "name": "备注", "dataType": "varchar","quickSearch":true}, 
+        {"field": "version", "name": "数据版本", "dataType": "int"},
+        {"field": "user_role","name": "用户角色","fieldType":"many2many","relatedModelID":"core_role"}
+      ]
+    }
+
+
 
 
 

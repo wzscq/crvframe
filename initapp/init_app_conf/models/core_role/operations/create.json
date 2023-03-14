@@ -1,0 +1,15 @@
+{
+  "id": "create", 
+  "name": "创建",
+  "type":"open",
+  "params":{
+          "url":"/formview/#/core_role/form1/create",
+          "location":"modal",
+          "title":"创建角色",
+          "key":"/model/core_role/form1/create",
+          "width":600,
+          "height":400
+  },
+  "input":{},
+  "description":"打开创建角色对话框" 
+}
