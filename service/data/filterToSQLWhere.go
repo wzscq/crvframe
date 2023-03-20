@@ -181,14 +181,14 @@ func convertFieldValueNull(op string,field string)(string,int){
 }
 
 func convertFieldValueString(op string,field string,value string)(string,int){
-    return field+op+"'"+value+"'",common.ResultSuccess        
+    return field+op+"'"+replaceApostrophe(value)+"'",common.ResultSuccess        
 }
 
 func convertFieldValueStringArray(op string,field string,sliceVal []string)(string,int){
     log.Println("convertFieldValueStringArray",op,field,sliceVal)
     values:=""
     for _,sVal:=range sliceVal {
-        values=values+"'"+sVal+"',"
+        values=values+"'"+replaceApostrophe(sVal)+"',"
     }
     values=values[0:len(values)-1]
     return field+op+"("+values+")",common.ResultSuccess        
@@ -202,7 +202,7 @@ func convertFieldValueArray(op string,field string,sliceVal []interface{})(strin
         switch val.(type) {
         case string: 
             sVal, _ := val.(string)           
-            values=values+"'"+sVal+"',"    
+            values=values+"'"+replaceApostrophe(sVal)+"',"    
         case float64:
             f64Val,_:=val.(float64)
             sVal:= strconv.FormatFloat(f64Val, 'f', -1, 64)

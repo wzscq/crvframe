@@ -58,7 +58,7 @@ func (delete *Delete)getPermissionIds(dataRepository DataRepository,idList *[]st
 	//循环结果的每行数据
 	strIDs:=""
 	for _,row:=range result.List {
-		strIDs=strIDs+"'"+row["id"].(string)+"',"
+		strIDs=strIDs+"'"+replaceApostrophe(row["id"].(string))+"',"
 	}
 	//去掉末尾的逗号
 	strIDs=strIDs[0:len(strIDs)-1]
@@ -73,7 +73,7 @@ func (delete *Delete)idListToString(idList *[]string)(string,int){
 	}
 
 	for _, strID := range *idList {
-		strIDs=strIDs+"'"+strID+"',"
+		strIDs=strIDs+"'"+replaceApostrophe(strID)+"',"
 	}
 	//去掉末尾的逗号
 	strIDs=strIDs[0:len(strIDs)-1]

@@ -100,7 +100,7 @@ func (update *Update)getUpdateFields(permissionFields string)(string,int){
 		switch v := value.(type) {
 		case string:
 			sVal, _ := value.(string)
-			updateFieldsStr=updateFieldsStr+key+"='"+sVal+"',"
+			updateFieldsStr=updateFieldsStr+key+"='"+replaceApostrophe(sVal)+"',"
 		case map[string]interface{}:
 			//这里udpate的时候实际上只支持many2one字段，目前many2one字段提交的时候是直接使用string类型传递的，所以这里只是提供一个校验
 			releatedField,ok:=value.(map[string]interface{})

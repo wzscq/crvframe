@@ -70,7 +70,7 @@ func (dr *DeleteReleated)deleteManyToMany(
 func (dr *DeleteReleated)getIds()(string){
 	ids:=""
 	for _,strID:=range *(dr.IdList) {
-		ids=ids+"'"+strID+"',"
+		ids=ids+"'"+replaceApostrophe(strID)+"',"
 	}
 	ids=ids[0:len(ids)-1]
 	return ids

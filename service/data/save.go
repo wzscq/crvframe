@@ -118,7 +118,7 @@ func (save *Save)getRowUpdateColumnValues(row map[string]interface{},permissionF
 		switch v := value.(type) {
 		case string:
 			sVal, _ := value.(string)
-			values=values+key+"='"+sVal+"',"
+			values=values+key+"='"+replaceApostrophe(sVal)+"',"
 		case map[string]interface{}:
 			releatedField,ok:=value.(map[string]interface{})
 			if !ok {
@@ -163,7 +163,7 @@ func (save *Save)getRowCreateColumnValues(row map[string]interface{})(string,str
 		case string:
 			columns=columns+key+","
 			sVal, _ := value.(string)
-			values=values+"'"+sVal+"',"
+			values=values+"'"+replaceApostrophe(sVal)+"',"
 			//如果提交的数据中本身携带了ID字段，则将其取出，后续将放在返回值中
 			if key == CC_ID {
 				strID=sVal
@@ -172,7 +172,7 @@ func (save *Save)getRowCreateColumnValues(row map[string]interface{})(string,str
 			columns=columns+key+","
 			fVal,_:=value.(float64)
       sVal:=fmt.Sprintf("%f",fVal) 
-			values=values+"'"+sVal+"',"
+			values=values+"'"+replaceApostrophe(sVal)+"',"
 		case map[string]interface{}:
 			releatedField,ok:=value.(map[string]interface{})
 			if !ok {
@@ -294,7 +294,7 @@ func (save *Save) deleteRow(
 		permissionWhere=" and ( "+permissionWhere+" )"
 	}
 
-	sql:="delete from "+save.AppDB+"."+modelID+" where id='"+strID+"'"+permissionWhere
+	sql:="delete from "+save.AppDB+"."+modelID+" where id='"+replaceApostrophe(strID)+"'"+permissionWhere
 	_,rowCount,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
 		return nil,common.ResultSQLError

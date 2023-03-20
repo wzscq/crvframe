@@ -198,7 +198,7 @@ func (save *SaveFile)deleteFileRow(dataRepository DataRepository,tx *sql.Tx,row 
 	fileName:=fieldID+"_row"+rowID+"_id"+strID+"_"+name
 	save.deleteFile(path,fileName)
 
-	sql:="delete from "+save.AppDB+".core_file where id='"+strID+"'"
+	sql:="delete from "+save.AppDB+".core_file where id='"+replaceApostrophe(strID)+"'"
 	//执行sql
 	_,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
