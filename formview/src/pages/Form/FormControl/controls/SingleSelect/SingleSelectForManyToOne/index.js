@@ -361,8 +361,8 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
         onChange={onChange}
         onFocus={onFocus}
         filterOption={(input, option) =>
-            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0||
-            option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+            option.children?.toLowerCase().indexOf(input.toLowerCase()) >= 0||
+            option.value?.toLowerCase().indexOf(input.toLowerCase()) >= 0
         }       
         status={valueError?'error':null}
         >
