@@ -7,12 +7,12 @@ sql_mode='NO_UNSIGNED_SUBTRACTION,NO_ENGINE_SUBSTITUTION'
 # 创建新表时，默认存储引擎
 default_storage_engine=InnoDB
 # 服务端使用的字符集默认
-character_set_server=utf8mb4
+character_set_server=utf8
 # 数据库字符集对应一些排序
-collation_server=utf8mb4_general_ci
+collation_server=utf8_general_ci
 
 # 设置client连接mysql时的字符集,防止乱码
-init_connect='SET NAMES utf8mb4'
+init_connect='SET NAMES utf8'
 # 客户端工具链接加密方式
 default_authentication_plugin=mysql_native_password
 

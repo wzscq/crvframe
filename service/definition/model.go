@@ -331,12 +331,64 @@ func (m *model)getModelForm(forms []formConf, formID string)([]formConf){
 	return fromRes
 }
 
+func (m *model)loadModelForm(modelID,formID string)(formConf,int){
+	var form formConf
+	formFile := "apps/"+m.AppDB+"/models/"+modelID+"/forms/"+formID+".json"
+	filePtr, err := os.Open(formFile)
+	if err != nil {
+		log.Println("Open file failed [Err:%s]", err.Error())
+		return form,common.ResultOpenFileError
+	}
+	defer filePtr.Close()
+	// 创建json解码器
+	decoder := json.NewDecoder(filePtr)
+	err = decoder.Decode(&form)
+	if err != nil {
+		log.Println("json file decode failed [Err:%s]", err.Error())
+		return form,common.ResultJsonDecodeError
+	}
+
+	return form,common.ResultSuccess
+}
+
+func (m *model)getModelFormConfV2(modelID,formID,userRoles string)(modelFormConf,int){
+	log.Println("getModelFormConfV2 start")
+	var mfConf modelFormConf
+	modelConf,err:=m.getModelConf(modelID)
+	if err!=common.ResultSuccess {
+		return mfConf,err
+	}
+	mfConf.ModelID=modelID;
+	mfConf.Fields=modelConf.Fields;
+
+	//获取权限信息
+	permisson,err:=m.getPermissions(modelID,userRoles)
+	if err!=common.ResultSuccess {
+		return mfConf,err
+	}
+
+	//获取操作配置
+	mfConf.Operations,_=m.getModelOperations(modelID,permisson.Operations)
+	
+	//获取视图配置
+	form,err:=m.loadModelForm(modelID,formID)
+	if err!=common.ResultSuccess {
+		return mfConf,err
+	}
+	mfConf.Forms=[]formConf{form} 
+
+	return mfConf,common.ResultSuccess
+}
+
 func (m *model)getModelFormConf(modelID,formID,userRoles string)(modelFormConf,int){
 	var mfConf modelFormConf
 	modelFile := "apps/"+m.AppDB+"/models/"+modelID+".json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
 		log.Println("Open file failed [Err:%s]", err.Error())
+		if os.IsNotExist(err) {
+			return m.getModelFormConfV2(modelID,formID,userRoles)
+		}
 		return mfConf,common.ResultOpenFileError
 	}
 	defer filePtr.Close()
