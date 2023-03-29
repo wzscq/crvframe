@@ -47,7 +47,7 @@ export default function MainFrame(){
             console.log('wzstest get image');
             getImage(data,errorCallback);
         } else {
-            console.error('not supported frame message type:'+type);
+            console.log('not supported frame message type:'+type);
         }
     }
 
