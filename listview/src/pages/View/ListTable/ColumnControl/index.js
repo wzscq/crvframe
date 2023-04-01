@@ -16,13 +16,14 @@ export default function ColumnControl({text,field, record, index}){
     let value=text;
  
     if(text&&field.fieldType===FIELD_TYPE.MANY2ONE){
+        console.log(field,text);
         if(field.optionLabel&&text.list&&text.list.length>0){
             value=text.list[0][field.optionLabel];
             if(value===undefined){
                 value=getManyToOneValueFunc(field.optionLabel)(text.list[0]);
             }
         } else {
-            value=text.value?text.value:text;
+            value=text.value!==undefined?text.value:"";
         }
     } else if(field.options){
         const option=field.options.find(item=>item.value===value);
