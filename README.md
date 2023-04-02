@@ -271,7 +271,7 @@ This example is the configuration of the core_user model, and there should be a 
     * **quickSearch**  This attribete indicates whether the field is used as a quick search field. When a user performs a quick search on a list view, all quick search fields are searched.
 
 ### Config Model Operations
-Each model folder contains a subfolder called operations that contains JSON files, each of which is an operation configuration file with a file name that is the operation ID.An example of operation configuration file is shown below：
+Each model folder contains a subfolder called operations that contains JSON files, each of which is an operation configuration file with a file name that is the operation ID.Let's see the operation configuration file /core_user/operations/create.json, It's content is shown below：
 
 
     {
@@ -291,8 +291,44 @@ Each model folder contains a subfolder called operations that contains JSON file
     }
 
 
+**The meaning of each item:**
+
+  * **id** Operation ID,which must be the same as the configuration file name.
+
+  * **name** The default label of the opeation button on the web.
+
+  * **type** The operation type. All types supported by crvframe will deacribed in the next paragraph.
+
+  * **params** Parameters of the operation, each type of operation has different parameters, the parameters of each operation will be described in the next paragraph.
+
+  * **input** The optional input data of the operation，normally you need not to set this attribute，in a series of operations，crvframe use the result the previous oeration as the input data of the next one.  
+
+  * **input** The description of the operation，which will be dispalyed in the operation dialog.
+
+  * **successOperation** If the operation succeeds, the successOperation is executed. The successOperation is a operation itself and has also the successOperation attribute. With this attribute, you can configue a sequeence of operations.
+
+  * **errorOperation**  If the operation fails, the errorOperation is executed. The errorOperation is a operation itself.
+
+**Operation Types:**
+
+  * **open**
 
 
+  * **close**
+
+  * **request**
+
+  * **reloadFrameData**
+
+  * **logout**
+
+  * **message**
+
+  * **downloadFile**
+
+
+
+  
 
       
 
