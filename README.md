@@ -225,7 +225,7 @@ In the root directory of the crvframe configuration created at deployment time, 
  folder name is the model name. Attention the folders with the name start with core_, these folders are initial models of the app used by the crvframe itsself, and you must be carefully when modifying these model configuration files. 
 
 ### model.json
-Each model folder contains a file named model.json, which contains configuration about the model. The contents example of the file are shown below：
+Each model folder contains a file named model.json, which contains configuration about the model. An example of model.json is shown below：
 
 
     {
@@ -246,12 +246,34 @@ Each model folder contains a file named model.json, which contains configuration
     }
 
 
-This is the configuration of the core_user model，there should be a corresponding table named core_user in your app‘s database.
+This example is the configuration of the core_user model, and there should be a corresponding table named core_user in the app's database.
 
 **The meaning of each item:**
 
-  * **modelID** The idendtification of the model, also the table name of the model.
-  
+  * **modelID** The idendtification of the model, which is also the table name of the model.
+
+  * **fields** The array of model fields. Eache field has following attributes:
+
+    * **field** The name of the field.
+
+    * **name** The label of the field on the web.
+
+    * **dataType** The value type of the field, currently, the crvframe support these types: varchar、int、datetime、decimal.
+
+    * **fieldType** Applies only to relationship fields and represents the relationship type. If the field is referenced to another model or by annother model, the field is the relationship field.crvframe support three relationship types: one2many、many2one、many2many.
+
+    * **relatedModelID** Applies only to relationship fields to indicate the referenced model.
+
+    * **relatedField** Applies only to one2many fields to indicate the related many2one field. Each one2many filed should has a corresponding many2one field in the related model. The one2many field is dummy and there is no actual field in the database table, which is only used by crvframe to identify relationships of models.
+
+    * **AssociationModelID** Applies only to many2many fields to indicate the association model. If this attribute is not set, crvframe uses literal ascending sort to connect modelID and relatedModelID the AssociationModelID, and there is a _ as separator between modleID and relatedModelID.  
+    
+    * **quickSearch**  This attribete indicates whether the field is used as a quick search field. When a user performs a quick search on a list view, all quick search fields are searched.
+
+     
+      
+
+
    
 
 
