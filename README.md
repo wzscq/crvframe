@@ -219,13 +219,13 @@ The content of menus.json is a JSON array, each item of the array is a menu item
 
 
 ## Config Models
-A model is a entity of the app, it typically has a corresponding table in the app's database. An app often has multiple models. The models of the app has multiple relationships to each other. The crvframe use model configuration files to configure the application's models, through which the crvframe service knows how to show and manipulate the data in the application database.
+A model is a entity of the app, it typically has a corresponding table in the app's database. An app often has multiple models. The models of the app has multiple relationships to each other. The crvframe use model configuration files to configure the application's models, through which the crvframe service knows how to show and manipulate the data in the database.
 
 In the root directory of the crvframe configuration created at deployment time, locate the subdirectory apps/your_app_id/models folder. There should already have some sub folders. Each folder is a model, the
  folder name is the model name. Attention the folders with the name start with core_, these folders are initial models of the app used by the crvframe itsself, and you must be carefully when modifying these model configuration files. 
 
 ### model.json
-Each model folder contains a file named model.json, which contains configuration about the model. The contents of the file are shown below：
+Each model folder contains a file named model.json, which contains configuration about the model. The contents example of the file are shown below：
 
 
     {
@@ -246,8 +246,13 @@ Each model folder contains a file named model.json, which contains configuration
     }
 
 
+This is the configuration of the core_user model，there should be a corresponding table named core_user in your app‘s database.
 
+**The meaning of each item:**
 
+  * **modelID** The idendtification of the model, also the table name of the model.
+  
+   
 
 
 
