@@ -312,6 +312,7 @@ Each model folder contains a subfolder called operations that contains JSON file
 **Operation Types:**
 
   |operation type|parameters|description|
+  | -------------| ---------|-----------|
 
   |**open**||||
 
