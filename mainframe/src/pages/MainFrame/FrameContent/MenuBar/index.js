@@ -4,15 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as IconList from '@ant-design/icons';
 
 import { getUserMenus } from '../../../../api';
-import { setOperation } from '../../../../operation';
 import useI18n from '../../../../hook/useI18n';
-
 import Logo from './Logo';
+import {
+    ERROR_CODE,
+    createLogoutOperation,
+    setOperation} from '../../../../operation';
 
 import './index.css';
 
 export default function MenuBar({collapsed}){
-    const {menus,loaded}=useSelector(state=>state.menu);
+    const {menus,loaded,errorCode}=useSelector(state=>state.menu);
     const {getLocaleLabel}=useI18n();
 
     const dispatch=useDispatch();
@@ -22,6 +24,14 @@ export default function MenuBar({collapsed}){
             dispatch(getUserMenus());
         }
     },[loaded,dispatch]);
+
+    useEffect(()=>{
+        if(errorCode===ERROR_CODE.TOKEN_EXPIRED){
+            console.log('logout:'+errorCode);
+            setOperation(createLogoutOperation())
+        }
+    },
+    [errorCode]);
 
     const onClick=({item})=>{
         console.log(item.props.operation);

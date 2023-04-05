@@ -19,8 +19,9 @@ export default function ChildFrame({item,locale,resources,inResize}){
     useEffect(()=>{
         if(refFrame.current&&locale!==undefined){
             if(lastLocale===undefined){
-                const onFrameLoad=()=>{
+                /*const onFrameLoad=()=>{
                     const receiveMessageFromSubFrame=(event)=>{
+                        console.log("receiveMessageFromSubFrame",event);
                         const {type}=event.data;
                         if(type===FRAME_MESSAGE_TYPE.INIT){
                             window.removeEventListener('message',receiveMessageFromSubFrame);
@@ -34,28 +35,19 @@ export default function ChildFrame({item,locale,resources,inResize}){
                         }
                     }
                     
+                    console.log("addEventListener('message',receiveMessageFromSubFrame)");
                     window.addEventListener('message',receiveMessageFromSubFrame);
                     setTimeout(()=>{
                         window.removeEventListener('message',receiveMessageFromSubFrame);
-                    },1000);
+                    },10000);
 
-                    /*setTimeout(()=>{
-                        console.log('ChildFrame INIT 2',item.params.key);
-                        const url=parseUrl(item.params.url);
-                        refFrame.current.contentWindow.postMessage({
-                            type:FRAME_MESSAGE_TYPE.INIT,
-                            i18n:{locale,resources},
-                            data:{...item,
-                            frameType:frameType}},url.origin);
-                        setLastLocale(locale);
-                    },100);*/
                 };
                 refFrame.current.addEventListener("load",onFrameLoad);
                 const removeEventListener=refFrame.current.removeEventListener;
                 return ()=>{
                     console.log('ChildFrame removeEventListener ',item.params.key);
                     removeEventListener("load",onFrameLoad);
-                }
+                }*/
             } else {
                 if(locale !== lastLocale){
                     console.log('ChildFrame UPDATE_LOCALE ',item.params.key);
@@ -68,6 +60,52 @@ export default function ChildFrame({item,locale,resources,inResize}){
             }
         }
     },[refFrame,item,locale,lastLocale,resources,setLastLocale]);
+
+    useEffect(()=>{
+        if(refFrame.current){
+            const onFrameLoad=()=>{
+                console.log('onFrameLoad',item.params.key);
+                const receiveMessageFromSubFrame=(event)=>{
+                    console.log("receiveMessageFromSubFrame",event);
+                    const {type}=event.data;
+                    if(type===FRAME_MESSAGE_TYPE.INIT){
+                        window.removeEventListener('message',receiveMessageFromSubFrame);
+                        const url=parseUrl(item.params.url);
+                        refFrame.current.contentWindow.postMessage({
+                            type:FRAME_MESSAGE_TYPE.INIT,
+                            i18n:{locale,resources},
+                            data:{...item,
+                            frameType:frameType}},url.origin);
+                        setLastLocale(locale);
+                    }
+                }
+                
+                console.log("addEventListener('message',receiveMessageFromSubFrame)");
+                window.addEventListener('message',receiveMessageFromSubFrame);
+                setTimeout(()=>{
+                    window.removeEventListener('message',receiveMessageFromSubFrame);
+                },10000);
+        
+                /*setTimeout(()=>{
+                    console.log('ChildFrame INIT 2',item.params.key);
+                    const url=parseUrl(item.params.url);
+                    refFrame.current.contentWindow.postMessage({
+                        type:FRAME_MESSAGE_TYPE.INIT,
+                        i18n:{locale,resources},
+                        data:{...item,
+                        frameType:frameType}},url.origin);
+                    setLastLocale(locale);
+                },100);*/
+            };
+            refFrame.current.addEventListener("load",onFrameLoad);
+            const removeEventListener=refFrame.current.removeEventListener;
+            return ()=>{
+                console.log('ChildFrame removeEventListener ',item.params.key);
+                removeEventListener("load",onFrameLoad);
+            }
+        }
+    },[refFrame,item,locale,resources,setLastLocale]);
+
 
     const url=convertUrl(item.params.url);
 

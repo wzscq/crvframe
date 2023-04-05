@@ -77,6 +77,7 @@ export const operationSlice = createSlice({
                         //执行失败，但是没有失败的后续操作，则需要用户确认后关闭操作信息对话框 
                         state.needConfirm=!(state.current);
                     }
+                    console.log("operationDone",JSON.stringify(state.current));
                 }
             } else {
                 message.warning("The current operation is not exist when operaiton done！");

@@ -8,7 +8,8 @@ const initialState = {
     menus:[],
     loaded:false,
     pending:false,
-    inlineCollapsed:false
+    inlineCollapsed:false,
+    errorCode:0
 }
 
 export const menuSlice = createSlice({
@@ -29,17 +30,21 @@ export const menuSlice = createSlice({
     builder.addCase(getUserMenus.pending, (state, action) => {
       state.pending=true;
       state.loaded=true;
+      state.errorCode=0;
     });
     builder.addCase(getUserMenus.fulfilled, (state, action) => {
         state.pending=false;
         if(action.payload.error){
             message.error(action.payload.message);
+            state.errorCode=action.payload.errorCode;
         } else {
             state.menus=action.payload.result;
+            state.errorCode=0;
         }
     });
     builder.addCase(getUserMenus.rejected , (state, action) => {
       state.pending=false;
+      state.errorCode=0;
       if(action.error&&action.error.message){
         message.error(action.error.message);
       }

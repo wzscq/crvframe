@@ -26,6 +26,7 @@ export default function MainFrame(){
     const dispatch=useDispatch();
 
     const errorCallback=(error)=>{
+        console.log('errorCallback:'+JSON.stringify(error));       
         message.error(error.message);
         if(error.errorCode===ERROR_CODE.TOKEN_EXPIRED){
             setOperation(createLogoutOperation());

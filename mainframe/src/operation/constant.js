@@ -30,7 +30,7 @@ export const OP_RESULT={
 }
 
 export const ERROR_CODE={
-    TOKEN_EXPIRED:"10000004"
+    TOKEN_EXPIRED:10000004
 }
 
 /**

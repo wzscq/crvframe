@@ -72,8 +72,10 @@ export default function useFrame(){
 
     useEffect(()=>{
         if(origin===null){
-            console.log('postMessage to parent init');
-            window.parent.postMessage({type:FRAME_MESSAGE_TYPE.INIT},getParentOrigin());
+            setTimeout(()=>{
+                console.log('postMessage to parent init');
+                window.parent.postMessage({type:FRAME_MESSAGE_TYPE.INIT},getParentOrigin());
+            },0);
         }
     },[origin]);
 
