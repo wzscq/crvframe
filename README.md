@@ -313,9 +313,10 @@ Each model folder contains a subfolder called operations that contains JSON file
 
   |operation type|parameters|description|
   | -------------| ---------|-----------|
-
-  |**open**||||
-
+  |   **open**   |  `json`         |open a web page |
+  |              |  `{`    |           |
+  |              |  `"id":10`    |           |
+  |              |  `}`    |           |
 
   * **close**
 
