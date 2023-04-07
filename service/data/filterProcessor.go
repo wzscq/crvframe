@@ -221,3 +221,30 @@ func getFilterData(
 	log.Printf("getFilterData end\n")
 	return &res,common.ResultSuccess
 }
+
+//替换查询条件中字段值为数组的情况，将数组转为Op.in查询条件
+func ReplaceArrayValue(filter *map[string]interface{},fields *[]Field){
+	log.Printf("ReplaceFilterArray start\n")
+	//遍历filter中的每个字段
+	for field,value:=range(*filter){
+		//如果字段值为数组，则将数组转为Op.in查询条件
+		switch value.(type) {
+			case []interface{}:
+				//在Fields中查找对应字段
+				for _,fieldItem:=range(*fields){
+					if fieldItem.Field==field {
+						(*filter)[field]=arrayToOpin(value.([]interface{}))
+						break
+					}
+				}
+			default:
+		}			
+	}
+	log.Printf("ReplaceFilterArray end\n")
+}
+
+func arrayToOpin(value []interface{})(map[string]interface{}){
+	return map[string]interface{}{
+		Op_in:value,
+	}
+}

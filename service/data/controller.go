@@ -44,6 +44,7 @@ func (controller *DataController) query(c *gin.Context) {
     } else {
 		errorCode=processFilter(rep.Filter,rep.FilterData,userID,userRoles,appDB,controller.DataRepository)
 		if errorCode==common.ResultSuccess {
+			ReplaceArrayValue(rep.Filter,rep.Fields)
 			query:=&Query{
 				ModelID:rep.ModelID,
 				ViewID:rep.ViewID,
