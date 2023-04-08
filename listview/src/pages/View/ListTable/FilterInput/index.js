@@ -8,10 +8,13 @@ import I18nLabel from '../../../../components/I18nLabel';
 export default function FilterInput({sendMessageToParent,field}){
     const dispatch=useDispatch();
     const filter = useSelector(state=>state.data.views[state.data.currentView].data.filter);
+    const filterValueLabel = useSelector(state=>state.data.views[state.data.currentView].data.filterValueLabel);
     const [filterValue,setFilterValue]=useState(filter[field.field]);
+    const [filterLabel,setFilterLabel]=useState(filterValueLabel[field.field]);
     
     const onFilterChange=(value,label)=>{
         setFilterValue(value);
+        setFilterLabel(label);
         //dispatch(setFieldFilter({[field.field]:e.target.value}));
     }
 
@@ -20,7 +23,7 @@ export default function FilterInput({sendMessageToParent,field}){
     }
 
     const onSearch=useCallback(()=>{
-        dispatch(setFieldFilter({[field.field]:filterValue}));
+        dispatch(setFieldFilter({value:{[field.field]:filterValue},label:{[field.field]:filterLabel}}));
     },[field,filterValue,dispatch]);
 
     return (

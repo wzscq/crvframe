@@ -6,8 +6,8 @@ const { Option } = Select;
 export default function SingleSelectForOptions({field,filterValue,onFilterChange}){
     const {getLocaleLabel}=useI18n();
 
-    const onChange=(value)=>{
-        onFilterChange(value);
+    const onChange=(value,option)=>{
+        onFilterChange(value,option.children);
     }
 
     const options=field.options.map((item,index)=>

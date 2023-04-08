@@ -13,8 +13,13 @@ export default function MultiSelectForRelatedField({field,filterValue,onFilterCh
     const {origin,item:frameItem}=useSelector(state=>state.frame);
     const [options,setOptions]=useState([]);
     
-    const onChange=(value)=>{
-        onFilterChange(value);
+    const onChange=(value,option)=>{
+        //这里的value是一个数组，对于查询来说需要将这个数组替换为一个Op.in的查询
+        const filterVal={
+            'Op.in':value
+        }
+        const label=option.map(item=>item.children).join(',');
+        onFilterChange(filterVal,label);
     }
 
     const getFilter=(field,value)=>{
@@ -101,7 +106,7 @@ export default function MultiSelectForRelatedField({field,filterValue,onFilterCh
     return (<Select  
         mode="multiple"
         style={{minWidth:200,marginBottom:8,display:'block'}}
-        value={filterValue} 
+        value={filterValue?.['Op.in']} 
         allowClear
         showSearch
         onSearch={onSearch}

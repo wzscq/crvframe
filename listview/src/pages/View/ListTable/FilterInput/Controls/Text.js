@@ -2,7 +2,7 @@ import { Input } from "antd";
 
 export default function Text({field,filterValue,onFilterChange}){
     const onChange=(e)=>{
-        onFilterChange(e.target.value);
+        onFilterChange(e.target.value,e.target.value);
     }
 
     return (

@@ -6,8 +6,12 @@ const { Option } = Select;
 export default function MultiSelectForOptions({field,filterValue,onFilterChange}){
     const {getLocaleLabel}=useI18n();
 
-    const onChange=(value)=>{
-        onFilterChange(value);
+    const onChange=(value,option)=>{
+        const label=option.map(item=>item.children).join(',');
+        const filterVal={
+            'Op.in':value
+        }
+        onFilterChange(filterVal,label);
     }
 
     const options=field.options.map((item,index)=>
@@ -18,7 +22,7 @@ export default function MultiSelectForOptions({field,filterValue,onFilterChange}
     return (<Select  
         mode="multiple"
         style={{minWidth:200,marginBottom:8,display:'block'}}
-        value={filterValue} 
+        value={filterValue?.['Op.in']} 
         allowClear
         onChange={onChange}
         >

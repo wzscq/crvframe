@@ -36,8 +36,8 @@ export default function ColumnControl({text,field, record, index}){
     } else if(text&&field.dataType==='datetime'&&field.format){
         value=moment(text).format(field.format);
     } else if(text&&field.fieldType===FIELD_TYPE.MANY2MANY){
-        if(field.optionLabel&&text.list&&text.list.length>0){
-            value=getManyToOneValueFunc(field.optionLabel)(text.list);
+        if(field.aggregateFunction&&text.list&&text.list.length>0){
+            value=getManyToOneValueFunc(field.aggregateFunction)(text.list);
         } else {
             value="";
         }

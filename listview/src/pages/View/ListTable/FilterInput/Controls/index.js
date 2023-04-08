@@ -22,7 +22,7 @@ export const controlRegister={
 }
 
 export const getControl=(field,sendMessageToParent,filterValue,onFilterChange)=>{
-    const filterControlType=field.filterControlType?field.filterControlType:CONTROL_TYPE.TEXT;
+    const filterControlType=field.filterControlType?field.filterControlType:CONTROL_TYPE.Text;
     const Component=controlRegister[filterControlType];
     if(Component){
         return <Component 

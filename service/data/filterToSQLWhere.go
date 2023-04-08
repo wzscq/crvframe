@@ -243,6 +243,27 @@ func convertFieldOpNormal(op string,field string,value interface{})(string,int){
 	}
 }
 
+func convertOpInString(op string,field string,value string)(string,int){
+    return field+" in ("+value+") ",common.ResultSuccess
+}
+
+func convertFieldOpIn(op string,field string,value interface{})(string,int){
+    switch value.(type) {
+    case string:
+        sVal:=value.(string)
+        return convertOpInString(op,field,sVal)
+    case []string:
+        sliceVal:=value.([]string)
+        return convertFieldValueStringArray(op,field,sliceVal)
+    case []interface{}:
+        sliceVal:=value.([]interface{})
+        return convertFieldValueArray(op,field,sliceVal)   
+    default:
+        log.Print("convertFieldOpIn not supported operator %v with value type %T \n",op,value)
+        return "",common.ResultNotSupported
+    }
+}
+
 func convertFieldValueMap(field string,value map[string]interface{})(string,int){
     var where string
     var str string
@@ -259,7 +280,7 @@ func convertFieldValueMap(field string,value map[string]interface{})(string,int)
         case Op_lt:
             str,err=convertFieldOpNormal(" < ",field,value)
         case Op_in:
-            str,err=convertFieldOpNormal(" in ",field,value)
+            str,err=convertFieldOpIn(" in ",field,value)
         case Op_is:
             str,err=convertFieldOpNormal(" is ",field,value)
         case Op_not:

@@ -311,11 +311,11 @@ Each model folder contains a subfolder called operations that contains JSON file
 
 **Operation Types:**
 
-  |operation type|parameters|description|
-  | -------------| ---------|-----------|
-  |   **open**   |  `json {"id":10}`         |open a web page |
-  
-  
+  * **open**
+    * **description**: open a web page.
+    * **parameters**: 
+
+
   * **close**
 
   * **request**

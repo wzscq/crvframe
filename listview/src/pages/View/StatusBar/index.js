@@ -11,7 +11,7 @@ export default function StatusBar(){
     const {getLocaleLabel}=useI18n();
     const dispatch=useDispatch();
     const {fields}=useSelector(state=>state.definition);
-    const {total,selectedRowKeys,sorter,filter,fixedColumn}=useSelector(state=>state.data.views[state.data.currentView].data);
+    const {total,selectedRowKeys,sorter,filterValueLabel,fixedColumn}=useSelector(state=>state.data.views[state.data.currentView].data);
     
     const resetFixedColumn=useCallback(()=>{
         dispatch(setFixedColumn(0));
@@ -45,14 +45,14 @@ export default function StatusBar(){
     const filterTags=useMemo(()=>{
         const filterTags=[];
         fields.forEach(field => {
-            if(filter[field.field]){
+            if(filterValueLabel[field.field]){
                 filterTags.push(
-                    <Tag closable onClose={()=>deleteFilter(field.field)}><span style={{padding:5}}>{getLocaleLabel(field.name)}{":"}{filter[field.field]}</span></Tag>
+                    <Tag closable onClose={()=>deleteFilter(field.field)}><span style={{padding:5}}>{getLocaleLabel(field.name)}{":"}{filterValueLabel[field.field]}</span></Tag>
                 );
             }
         });
         return filterTags;
-    },[filter,fields,deleteFilter,getLocaleLabel]);
+    },[filterValueLabel,fields,deleteFilter,getLocaleLabel]);
 
     const sumLabel=getLocaleLabel({key:'page.crvlistview.total',default:'共 '})+
                     total+

@@ -13,8 +13,8 @@ export default function SingleSelectForManyToOne({field,filterValue,onFilterChan
     const {origin,item:frameItem}=useSelector(state=>state.frame);
     const [options,setOptions]=useState([]);
     
-    const onChange=(value)=>{
-        onFilterChange(value);
+    const onChange=(value,option)=>{
+        onFilterChange(value,option.children);
     }
 
     const getFilter=(field,value)=>{

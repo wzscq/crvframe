@@ -15,6 +15,7 @@ import ColumnControl from "./ColumnControl";
 import I18nLabel from "../../../components/I18nLabel";
 import './index.css';
 import { FIELD_TYPE } from "../../../utils/constant";
+import RefAutoComplete from "antd/lib/auto-complete";
 
 export default function ListTable({sendMessageToParent}){
     const dispatch=useDispatch();
@@ -43,8 +44,8 @@ export default function ListTable({sendMessageToParent}){
             return Function(funStr)();
         };
 
-        const filterDropdown=field.fieldType!==FIELD_TYPE.MANY2MANY?<FilterDropdown sendMessageToParent={sendMessageToParent} field={field} index={index}/>:undefined;
-        const filterIcon=field.fieldType!==FIELD_TYPE.MANY2MANY?<FilterIcon field={field}/>:undefined;
+        const filterDropdown=<FilterDropdown sendMessageToParent={sendMessageToParent} field={field} index={index}/>;
+        const filterIcon=<FilterIcon field={field}/>;
 
         return {
             dataIndex:field.field,
@@ -135,8 +136,64 @@ export default function ListTable({sendMessageToParent}){
 
     useEffect(()=>{
         if(item&&origin&&searchFields.length>0){
+            const getAssociationModelID=(modleid,relatedModelID)=>{
+                if(modelID>relatedModelID){
+                    return `${relatedModelID}_${modelID}`;
+                }
+                    
+                return `${modelID}_${relatedModelID}`;
+            }
+
+            const getRelatedFilter=(fieldConf,filterValue)=>{
+                console.log('getRelatedFilter',fieldConf,filterValue);
+                filterValue=filterValue['Op.in'];
+                if(filterValue instanceof Array){
+                    //对many2many或one2many或者one2many字段进行特殊处理
+                    if(fieldConf.fieldType===FIELD_TYPE.MANY2MANY){
+                        const subSelect='select '+modelID+"_id as id from "+getAssociationModelID(modelID,fieldConf.relatedModelID)+" where "+fieldConf.relatedModelID+"_id in ('"+filterValue.join("','")+"')";
+                        return {id:{'Op.in':subSelect}};
+                    } else if(fieldConf.fieldType===FIELD_TYPE.ONE2MANY){
+                        const subSelect='select '+fieldConf.relatedField+" as id from "+fieldConf.relatedModelID+" where id in '"+filterValue.join("','")+"')";
+                        return {id:{'Op.in':subSelect}};
+                    }
+                }
+            };
+    
+            let queryFilter={...filter};
+            let relatedFilter=[];
             //合并视图本身的过滤条件
-            let queryFilter=filter;
+            if(viewConf.filter&&Object.keys(viewConf.filter).length>0){
+                relatedFilter.push(viewConf.filter);
+            }
+
+            Object.keys(queryFilter).forEach(key=>{
+                const fieldConf=fields.find(item=>item.field===key);
+                if(fieldConf&&(fieldConf.fieldType===FIELD_TYPE.MANY2MANY||
+                    fieldConf.fieldType===FIELD_TYPE.ONE2MANY)){
+                    const relfilter=getRelatedFilter(fieldConf,queryFilter[key])
+                    if(relfilter){
+                        relatedFilter.push(relfilter);
+                    }
+                    delete queryFilter[key];
+                }
+            });
+
+            if(relatedFilter.length>0){
+                if(Object.keys(queryFilter).length>0){
+                    queryFilter={
+                        'Op.and':[queryFilter,...relatedFilter]
+                    };
+                } else {
+                    if(relatedFilter.length===1){
+                        queryFilter=relatedFilter[0];
+                    } else {
+                        queryFilter={
+                            'Op.and':relatedFilter
+                        };
+                    }
+                }
+            }
+            /*//合并视图本身的过滤条件
             if(viewConf.filter&&Object.keys(viewConf.filter).length>0){
                 if(Object.keys(filter).length>0){
                     queryFilter={
@@ -145,7 +202,7 @@ export default function ListTable({sendMessageToParent}){
                 } else {
                     queryFilter=viewConf.filter;
                 }
-            }
+            }*/
             //如果页面没有指定排序字段，则按照视图配置的排序
             let querySorter=sorter;
             if(querySorter.length===0){

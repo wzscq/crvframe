@@ -113,17 +113,26 @@ export const dataSlice = createSlice({
         },
         setFieldFilter:(state,action) => {
             const filter=state.views[state.currentView].data.filter;
-            state.views[state.currentView].data.filter={...filter,...action.payload};
+            state.views[state.currentView].data.filter={...filter,...action.payload.value};
+
+            const filterValueLabel=state.views[state.currentView].data.filterValueLabel;
+            state.views[state.currentView].data.filterValueLabel={...filterValueLabel,...action.payload.label};
+
             const pagination=state.views[state.currentView].data.pagination;
             state.views[state.currentView].data.pagination={...pagination,current:1}
         },
         resetFieldFilter:(state,action) => {
             delete state.views[state.currentView].data.filter[action.payload];
+            delete state.views[state.currentView].data.filterValueLabel[action.payload];
+
             const pagination=state.views[state.currentView].data.pagination;
             state.views[state.currentView].data.pagination={...pagination,current:1}
         },
         setFilter:(state,action) => {
             state.views[state.currentView].data.filter=action.payload;
+            //当设置的查询条件不是通过字段设置的时候，需要清空filterValueLabel
+            state.views[state.currentView].data.filterValueLabel={};
+
             const pagination=state.views[state.currentView].data.pagination;
             state.views[state.currentView].data.pagination={...pagination,current:1}
         },
