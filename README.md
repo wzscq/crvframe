@@ -309,7 +309,7 @@ Each model folder contains a subfolder called operations that contains JSON file
 
   * **errorOperation**  If the operation fails, the errorOperation is executed. The errorOperation is a operation itself.
 
-[**Operation Types:**]
+**Operation Types:**
   * **open**
     * **description**: open a web page.
     * **parameters**: 
@@ -404,11 +404,13 @@ Each model folder contains a subfolder called operations that contains JSON file
         ```
           {
             "input":{
-              "to":"external_api_id"
+              "to":"external_api_id",
+              "other_key":"other_value",
             },
           }
         ```
-
+        **note** You can set other keys and values in input, before sending the http request crvframe will merge the value of input and the value of the page,so these values will send to the api.If the key of the input value is the same as the key of the page value,thie value of input will be overwritten by the value of the page.
+      
   * **reloadFrameData**
 
   * **logout**
