@@ -326,13 +326,13 @@ Each model folder contains a subfolder called operations that contains JSON file
     }
 
 
-      * **url** url of the page to open. crvframe supplies three basic pages to used to present the data. 
-        * **listview**  The listview present data in a table and are used to explore or search for data in the model. The URL of a list view page begins with /listview/#/ followed by the id of the model. The example above opens a listview of the model with id core_user.
-        * **formview** The formview used to create、edit or view a single record of a model. The URL of a list view page begins with /formview/#/ followed by the id of the model and the id of the form and the type of the form。
+    * **url** url of the page to open. crvframe supplies three basic pages to used to present the data. 
+      * **listview**  The listview present data in a table and are used to explore or search for data in the model. The URL of a list view page begins with /listview/#/ followed by the id of the model. The example above opens a listview of the model with id core_user.
+      * **formview** The formview used to create、edit or view a single record of a model. The URL of a list view page begins with /formview/#/ followed by the id of the model and the id of the form and the type of the form。
           
           
-          //this url is used to open a formview of the model core_user. the id of the form is form1 and the type of the form is create. 
-          /formview/#/core_user/form1/create
+    //this url is used to open a formview of the model core_user. the id of the form is form1 and the type of the form is create. 
+    /formview/#/core_user/form1/create
 
 
           crvframe support three form types:
