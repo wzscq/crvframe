@@ -310,7 +310,6 @@ Each model folder contains a subfolder called operations that contains JSON file
   * **errorOperation**  If the operation fails, the errorOperation is executed. The errorOperation is a operation itself.
 
 **Operation Types:**
-
   * **open**
     * **description**: open a web page.
     * **parameters**: 
@@ -351,36 +350,29 @@ Each model folder contains a subfolder called operations that contains JSON file
       * **filter** Used to set the initial filter of the listview.This parameter is optional valid only for listview.
     * **input** When the operation is invoked through a button on a crvframe page, the input is populated by the page.In some cases,you can set the input in operation configuations.
       * When open a formview with the type of create to create a record of the model, you can set the input value as the initial value of the new record.
-      
-      ```
-      {
-        "input":{
-          "list":[{"gender":"female"}]
-        },
-      }
-      ```
-
-      **note** The input value must be placed in an array called list.The input value is an object, each key is a field of the model, and the value is the value to update.The example above set the default value of the gender field to female.    
+        ```
+        {
+          "input":{
+            "list":[{"gender":"female"}]
+          },
+        }
+        ```
+        **note** The input value must be placed in an array called list.The input value is an object, each key is a field of the model, and the value is the value to update.The example above set the default value of the gender field to female.    
 
   * **close**
     * **description**: close a web page.
     * **parameters**: 
-    
-    ```
-    {
-      "params":{
-        "location":"modal",
-      },
-    }
-    ```
-
-    * **location** Now，crvframe can only close the modal window，so the location must be modal.
-
-
+      ```
+      {
+        "params":{
+          "location":"modal",
+        },
+      }
+      ```
+      * **location** Now，crvframe can only close the modal window，so the location must be modal.
   * **request**
     * **description**: send a http request.
     * **parameters**:
-
       ```
       {
         "params":{
@@ -389,40 +381,34 @@ Each model folder contains a subfolder called operations that contains JSON file
         },
       }
       ```
-
       * **url** The destination url of the the http request.crvframe supplies following interfaces for operation on the model's data. 
         * **/data/query** Query data from the database.crvframe's listview use this interface to retrieve data.This interface use post method.
         * **/data/save** Save the model's data into the database.This interface use post method.
         * **/data/delete** Delete the records of models from the database by conditions.This interface use post method.
         * **/data/update** Update values of records of models to the database by conditions.This interface use post method.
         * **/redirect** To invoke the external api，you can use redirect interface.
-      
       * **method** The method of the http request.
-
     * **input** When the operation is invoked through a button on a crvframe page, the input is populated by the page.In some cases,you can set the input in operation configuations.   
       * When you want to use /data/update interface to update the values of some records to fixed values,you can set input in configuration to the fixed values. 
         The belowing example updates the value of the gender field to female.
-
-      ```
-      {
-        "input":{
-          "list":[{"gender":"female"}]
-        },
-      }
-      ```
-
-      **note** The input value must be placed in an array called list.The input value is an object, each key is a field of the model, and the value is the value to update.
-      
-      * When you use redirect interface to invoke the external api,you can supply the id of the external api in input with the key of to.
-
-      ```
+        ```
         {
           "input":{
-            "to":"external_api_id"
+            "list":[{"gender":"female"}]
           },
         }
-      ```
-
+        ```
+        **note** The input value must be placed in an array called list.The input value is an object, each key is a field of the model, and the value is the value to update.
+      
+      * When you use redirect interface to invoke the external api,you can supply the id of the external api in input with the key of to.
+        ```
+          {
+            "input":{
+              "to":"external_api_id"
+            },
+          }
+        ```
+        
   * **reloadFrameData**
 
   * **logout**
