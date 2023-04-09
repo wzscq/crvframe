@@ -315,6 +315,7 @@ Each model folder contains a subfolder called operations that contains JSON file
     * **description**: open a web page.
     * **parameters**: 
 
+
     {
       "params":{
         "url":"/listview/#/core_user",
@@ -323,6 +324,7 @@ Each model folder contains a subfolder called operations that contains JSON file
         "key":"/model/core_user"
       },
     }
+
 
       * **url** url of the page to open. crvframe supplies three basic pages to used to present the data. 
         * **listview**  The listview present data in a table and are used to explore or search for data in the model. The URL of a list view page begins with /listview/#/ followed by the id of the model. The example above opens a listview of the model with id core_user.
