@@ -321,14 +321,16 @@ Each model folder contains a subfolder called operations that contains JSON file
             "url":"/listview/#/core_user",
             "location":"tab",
             "title":"",
-            "key":"/model/core_user"
+            "key":"/model/core_user",
+            "view":"currentView",
+            "filter":"init filter",
           },
         }
         ```
 
-    * **url** url of the page to open. crvframe supplies three basic pages to used to present the data. 
-      * **listview**  The listview present data in a table and are used to explore or search for data in the model. The URL of a list view page begins with /listview/#/ followed by the id of the model. The example above opens a listview of the model with id core_user.
-      * **formview** The formview used to create、edit or view a single record of a model. The URL of a list view page begins with /formview/#/ followed by the id of the model and the id of the form and the type of the form。
+    * **url** URL of the page to open. crvframe supplies three basic pages to used to present the data. 
+      * **listview**  The listview present data in a table and are used to explore or search for data in the model. The URL of a listview page begins with /listview/#/ followed by the id of the model. The example above opens a listview of the model with id core_user.
+      * **formview** The formview used to create、edit or view a single record of a model. The URL of a formview page begins with /formview/#/ followed by the id of the model and the id of the form and the type of the form。
           
         ```          
         //this url is used to open a formview of the model core_user. the id of the form is form1 and the type of the form is create. 
@@ -340,7 +342,24 @@ Each model folder contains a subfolder called operations that contains JSON file
         * **edit** Used to edit the existed record of a model.
         * **detail** Used to view the detail of a record of a model.You can not edit any data in this type of forms.
 
-        * **report** 
+      * **report** The report used to view statistical charts.The URL of a report page begins with /report/#/ followd by the id the the report. 
+
+        ```          
+        //this url is used to open a report page. the id of the report is dashboard. 
+        /report/#/dashboard
+        ```
+
+    * **location** Where to open the page.crvframe support two locations to show the page:
+      * **tab** Open the page in the tab content area below the header bar of the main window.
+      * **modal** Open a modal window to show the page. 
+
+    * **title** The tile of the page.
+
+    * **key** The key of the page, which other operations can use to refer to the page.
+
+    * **view** Each model in a crvframe can have multiple views, and when you use a listview to display the model's data, the first view is displayed by default.You can use this parameter to set the default view that is displayed. This parameter is optional and valid only for listview.
+
+    * **filter** Used to set the initial filter of the listview.This parameter is optional valid only for listview.
 
 
   * **close**
