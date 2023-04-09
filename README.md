@@ -378,6 +378,37 @@ Each model folder contains a subfolder called operations that contains JSON file
 
 
   * **request**
+    * **description**: send a http request.
+    * **parameters**:
+
+    ```
+    {
+      "params":{
+        "url":"/data/save",
+        "method":"post"
+      },
+    }
+    ```
+
+    * **url** The destination url of the the http request.crvframe supplies following interfaces for operation on the model's data. 
+      * **/data/query** Query data from the database.crvframe's listview use this interface to retrieve data.This interface use post method.
+      * **/data/save** Save the model's data into the database.This interface use post method.
+      * **/data/delete** Delete the records of models from the database by conditions.This interface use post method.
+      * **/data/update** Update values of records of models to the database by conditions.This interface use post method.
+    
+    * **method** The method of the http request.
+
+    * **input** When the action is invoked through a button on a crvframe page, the input is populated by the page.   
+
+    ```
+    {
+      "input":{
+        "list":[{"gender":"女"}]
+      },
+    }
+    ```
+
+
 
   * **reloadFrameData**
 
