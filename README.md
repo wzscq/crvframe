@@ -315,18 +315,18 @@ Each model folder contains a subfolder called operations that contains JSON file
     * **description**: open a web page.
     * **parameters**: 
 
-        ```
-        {
-          "params":{
-            "url":"/listview/#/core_user",
-            "location":"tab",
-            "title":"",
-            "key":"/model/core_user",
-            "view":"currentView",
-            "filter":"init filter",
-          },
-        }
-        ```
+    ```
+    {
+      "params":{
+        "url":"/listview/#/core_user",
+        "location":"tab",
+        "title":"",
+        "key":"/model/core_user",
+        "view":"currentView",
+        "filter":"init filter",
+      },
+    }
+    ```
 
     * **url** URL of the page to open. crvframe supplies three basic pages to used to present the data. 
       * **listview**  The listview present data in a table and are used to explore or search for data in the model. The URL of a listview page begins with /listview/#/ followed by the id of the model. The example above opens a listview of the model with id core_user.
@@ -357,12 +357,25 @@ Each model folder contains a subfolder called operations that contains JSON file
 
     * **key** The key of the page, which other operations can use to refer to the page.
 
-    * **view** Each model in a crvframe can have multiple views, and when you use a listview to display the model's data, the first view is displayed by default.You can use this parameter to set the default view that is displayed. This parameter is optional and valid only for listview.
+    * **view** Each model in a crvframe can have multiple views, and when you use a listview to display the model's data, the first view is displayed by default.You can use this parameter to set the default view that is displayed.The value of this parameter is the id of the view. This parameter is optional and valid only for listview.
 
     * **filter** Used to set the initial filter of the listview.This parameter is optional valid only for listview.
 
 
   * **close**
+    * **description**: close a web page.
+    * **parameters**: 
+    
+    ```
+    {
+      "params":{
+        "location":"modal",
+      },
+    }
+    ```
+
+    * **location** Now，crvframe can only close the modal window，so the location must be modal.
+
 
   * **request**
 
