@@ -309,7 +309,7 @@ Each model folder contains a subfolder called operations that contains JSON file
 
   * **errorOperation**  If the operation fails, the errorOperation is executed. The errorOperation is a operation itself.
 
-**Operation Types:**
+[**Operation Types:**]
   * **open**
     * **description**: open a web page.
     * **parameters**: 
@@ -408,7 +408,7 @@ Each model folder contains a subfolder called operations that contains JSON file
             },
           }
         ```
-        
+
   * **reloadFrameData**
 
   * **logout**
