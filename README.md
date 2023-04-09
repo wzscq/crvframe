@@ -315,6 +315,22 @@ Each model folder contains a subfolder called operations that contains JSON file
     * **description**: open a web page.
     * **parameters**: 
 
+    {
+      "id": "create", 
+      "name": "创建",
+      "type":"open",
+      "params":{
+          "url":"/formview/#/core_user/form1/create",
+          "location":"modal",
+          "title":"创建用户",
+          "key":"/model/core_user/form1/create",
+          "width":800,
+          "height":440
+      },
+      "input":{},
+      "description":"打开创建用户对话框"
+    }
+
 
     {
       "params":{
