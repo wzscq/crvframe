@@ -15,7 +15,6 @@ import ColumnControl from "./ColumnControl";
 import I18nLabel from "../../../components/I18nLabel";
 import './index.css';
 import { FIELD_TYPE } from "../../../utils/constant";
-import RefAutoComplete from "antd/lib/auto-complete";
 
 export default function ListTable({sendMessageToParent}){
     const dispatch=useDispatch();
@@ -213,7 +212,7 @@ export default function ListTable({sendMessageToParent}){
             const queryParams={modelID,viewID:currentView,filterData:viewConf.filterData,filter:queryFilter,pagination,sorter:querySorter,fields:searchFields};
             sendMessageToParent(createQueryDataMessage(frameParams,queryParams));
         }
-    },[viewConf,searchFields,filter,pagination,sorter,sendMessageToParent,origin,item,currentView,modelID]);
+    },[viewConf,fields,searchFields,filter,pagination,sorter,sendMessageToParent,origin,item,currentView,modelID]);
 
     //处理行的选中
     const onSelectChange=selectedRowKeys => {

@@ -24,7 +24,7 @@ export default function FilterInput({sendMessageToParent,field}){
 
     const onSearch=useCallback(()=>{
         dispatch(setFieldFilter({value:{[field.field]:filterValue},label:{[field.field]:filterLabel}}));
-    },[field,filterValue,dispatch]);
+    },[field,filterValue,filterLabel,dispatch]);
 
     return (
     <div>

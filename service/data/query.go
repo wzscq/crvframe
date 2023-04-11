@@ -15,7 +15,7 @@ type Pagination struct {
 
 type Field struct {
 	Field string `json:"field"`
-    DataType *string `json:"dataType,omitempty"`
+  DataType *string `json:"dataType,omitempty"`
 	//以下字段是在关联字段的级联查询中需要携带的参数，用于关联表数据的查询
 	FieldType *string `json:"fieldType,omitempty"`
 	RelatedModelID *string `json:"relatedModelID,omitempty"`
