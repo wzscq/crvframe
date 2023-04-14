@@ -75,7 +75,7 @@ export default function useFrame(){
             setTimeout(()=>{
                 console.log('postMessage to parent init');
                 window.parent.postMessage({type:FRAME_MESSAGE_TYPE.INIT},getParentOrigin());
-            },0);
+            },200);
         }
     },[origin]);
 
