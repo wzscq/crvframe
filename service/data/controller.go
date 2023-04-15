@@ -170,6 +170,7 @@ func (controller *DataController) update(c *gin.Context) {
 			UserRoles:userRoles,
 			List:rep.List,
 			Filter:rep.Filter,
+			Fields:rep.Fields,
 		}
 		result,errorCode=update.Execute(controller.DataRepository)
 	}

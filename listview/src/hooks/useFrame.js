@@ -61,6 +61,16 @@ export default function useFrame(){
     });
 
     useEffect(()=>{
+        const onload=()=>{
+            console.log("list view is onload")
+        }
+        window.addEventListener("load",onload);
+        return ()=>{
+            window.removeEventListener("load",onload);
+        }
+    })
+
+    useEffect(()=>{
         if(origin===null){
             setTimeout(()=>{
                 console.log('postMessage to parent init');

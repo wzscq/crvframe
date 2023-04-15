@@ -84,11 +84,11 @@ const (
 逻辑操作符，and or
 第一层中的不同key值间的逻辑关系是and
 */
-func FilterToSQLWhere(filter *map[string]interface{})(string,int) {
-    return convertObjectFilter(filter)
+func FilterToSQLWhere(filter *map[string]interface{},fields *[]Field,modelID string)(string,int) {
+    return convertObjectFilter(filter,fields,modelID)
 }
 
-func convertObjectFilter(filter *map[string]interface{})(string,int){
+func convertObjectFilter(filter *map[string]interface{},fields *[]Field,modelID string)(string,int){
     var str string
     var err int
     var where string
@@ -97,13 +97,13 @@ func convertObjectFilter(filter *map[string]interface{})(string,int){
             switch key {
             case Op_or:
                 mVal,_:=value.([]interface{})
-                str,err=convertArrayFilter("or",mVal)
+                str,err=convertArrayFilter("or",mVal,fields,modelID)
             case Op_and:
                 mVal,_:=value.([]interface{})
-                str,err=convertArrayFilter("and",mVal)
+                str,err=convertArrayFilter("and",mVal,fields,modelID)
             default:
                 //字段
-                str,err=convertFieldFilter(key,value)
+                str,err=convertFieldFilter(key,value,fields,modelID)
             }
 
             if err != common.ResultSuccess {
@@ -122,7 +122,7 @@ func convertObjectFilter(filter *map[string]interface{})(string,int){
     return where,common.ResultSuccess
 }
 
-func convertArrayFilter(logicOp string,value []interface{})(string,int){
+func convertArrayFilter(logicOp string,value []interface{},fields *[]Field,modelID string)(string,int){
 
     log.Println(value)
     if len(value) == 0 {
@@ -135,7 +135,7 @@ func convertArrayFilter(logicOp string,value []interface{})(string,int){
 	for _, v := range value {
         //每个行应该是一个对象
         mVal,_:=v.(map[string]interface{})
-        str,err=convertObjectFilter(&mVal)
+        str,err=convertObjectFilter(&mVal,fields,modelID)
         if err != common.ResultSuccess {
             return "",err
         }
@@ -152,7 +152,7 @@ func convertArrayFilter(logicOp string,value []interface{})(string,int){
 {fieldname:[val1,val2]} => fieldname in (val1,val2)  //数据，相当于Op.in操作符
 {fieldname:{Op.gt,value}} => filename > value  //明确给出操作符，按照操作符来解析 
 */
-func convertFieldFilter(field string,value interface{})(string,int){
+func convertFieldFilter(field string,value interface{},fields *[]Field,modelID string)(string,int){
     switch value.(type) {
 	case string:
         sVal, _ := value.(string)
@@ -167,7 +167,7 @@ func convertFieldFilter(field string,value interface{})(string,int){
         return convertFieldValueString(" = ",field,sVal)
     case map[string]interface{}:
         mVal,_:=value.(map[string]interface{})
-        return convertFieldValueMap(field,mVal)
+        return convertFieldValueMap(field,mVal,fields,modelID)
     case nil:
         return convertFieldValueNull(" is " ,field)
 	default:
@@ -216,6 +216,29 @@ func convertFieldValueArray(op string,field string,sliceVal []interface{})(strin
     return field+op+"("+values+")",common.ResultSuccess        
 }
 
+func joinSlice(sliceVal []interface{},split string)(string){
+    values:=""
+    for _,val:=range sliceVal {
+        log.Printf("joinSlice val type %T \n",val)
+        
+        switch val.(type) {
+        case string: 
+            sVal, _ := val.(string)           
+            values=values+"'"+replaceApostrophe(sVal)+"',"    
+        case float64:
+            f64Val,_:=val.(float64)
+            sVal:= strconv.FormatFloat(f64Val, 'f', -1, 64)
+            values=values+sVal+","
+        }    
+    }
+
+    if len(values)>1 {
+        values=values[0:len(values)-1]
+    }
+
+    return values        
+}
+
 func convertFieldOpNormal(op string,field string,value interface{})(string,int){
     switch value.(type) {
 	case string:
@@ -247,7 +270,43 @@ func convertOpInString(op string,field string,value string)(string,int){
     return field+" in ("+value+") ",common.ResultSuccess
 }
 
-func convertFieldOpIn(op string,field string,value interface{})(string,int){
+func convertMany2manyValue(modelID string,field *Field,value interface{})(string,int){
+    if field.RelatedModelID == nil {
+        log.Print("convertMany2manyValue the many2many field %s has not related model id \n",field.Field)
+        return "",common.ResultNoRelatedModel
+    }
+    
+    var sVal string
+    switch value.(type) {
+    case []string:
+    case []interface{}:
+        sliceVal:=value.([]interface{})
+        sVal=joinSlice(sliceVal,",")   
+    default:
+        log.Print("convertMany2manyValue not supported value type %T \n",value)
+        return "",common.ResultNotSupported
+    }
+    
+    //const subSelect='select '+modelID+"_id as id from "+getAssociationModelID(modelID,fieldConf.relatedModelID)+" where "+fieldConf.relatedModelID+"_id in ('"+filterValue.join("','")+"')
+    associationModelID:=getRelatedModelID(modelID,*field.RelatedModelID,field.AssociationModelID)
+    subSelect:="select "+modelID+"_id as id from "+associationModelID+" where "+*field.RelatedModelID+"_id in ("+sVal+")"
+    return subSelect,common.ResultSuccess
+}
+
+func convertFieldOpIn(op string,field string,value interface{},fields *[]Field,modelID string)(string,int){
+    //查看当前字段是否是many2many字段
+    for _,fieldItem:=range *fields {
+        if fieldItem.Field==field && fieldItem.FieldType !=nil && *fieldItem.FieldType == FIELDTYPE_MANY2MANY {
+            //对字段的值做转换，改为一个子查询字符串
+            var err int
+            value,err=convertMany2manyValue(modelID,&fieldItem,value)
+            if err != common.ResultSuccess {
+                return "",err
+            }
+            field="id"
+        }
+    }
+
     switch value.(type) {
     case string:
         sVal:=value.(string)
@@ -264,7 +323,7 @@ func convertFieldOpIn(op string,field string,value interface{})(string,int){
     }
 }
 
-func convertFieldValueMap(field string,value map[string]interface{})(string,int){
+func convertFieldValueMap(field string,value map[string]interface{},fields *[]Field,modelID string)(string,int){
     var where string
     var str string
     var err int
@@ -284,7 +343,7 @@ func convertFieldValueMap(field string,value map[string]interface{})(string,int)
         case Op_lte:
             str,err=convertFieldOpNormal(" <= ",field,value)
         case Op_in:
-            str,err=convertFieldOpIn(" in ",field,value)
+            str,err=convertFieldOpIn(" in ",field,value,fields,modelID)
         case Op_is:
             str,err=convertFieldOpNormal(" is ",field,value)
         case Op_not:
@@ -306,7 +365,7 @@ func convertFieldValueMap(field string,value map[string]interface{})(string,int)
         } else {
             where = where + " and " + str 
         }
-        
+
         index++
     }         
     return where,common.ResultSuccess

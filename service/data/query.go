@@ -15,7 +15,7 @@ type Pagination struct {
 
 type Field struct {
 	Field string `json:"field"`
-  DataType *string `json:"dataType,omitempty"`
+  	DataType *string `json:"dataType,omitempty"`
 	//以下字段是在关联字段的级联查询中需要携带的参数，用于关联表数据的查询
 	FieldType *string `json:"fieldType,omitempty"`
 	RelatedModelID *string `json:"relatedModelID,omitempty"`
@@ -98,11 +98,11 @@ func (query *Query) getQueryFields(permissionFields string)(string,int) {
 
 func (query *Query) getQueryWhere(permissionFilter *map[string]interface{})(string,int) {
 	if permissionFilter == nil {
-		return FilterToSQLWhere(query.Filter)
+		return FilterToSQLWhere(query.Filter,query.Fields,query.ModelID)
 	}
 
 	if query.Filter == nil {
-		return FilterToSQLWhere(permissionFilter)
+		return FilterToSQLWhere(permissionFilter,query.Fields,query.ModelID)
 	}
 
 	filter:=&map[string]interface{}{
@@ -112,7 +112,7 @@ func (query *Query) getQueryWhere(permissionFilter *map[string]interface{})(stri
 		},
 	}
 
-	return FilterToSQLWhere(filter)
+	return FilterToSQLWhere(filter,query.Fields,query.ModelID)
 }
 
 func (query *Query) getQueryLimit()(string,int) {

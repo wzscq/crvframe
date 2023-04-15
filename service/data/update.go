@@ -12,6 +12,7 @@ import (
 type Update struct {
 	ModelID string `json:"modelID"`
 	ViewID *string `json:"viewID"`
+	Fields *[]Field `json:"fields"`
 	Filter *map[string]interface{} `json:"filter"`
 	List *[]map[string]interface{} `json:"list"`
 	SelectedRowKeys *[]string `json:"selectedRowKeys"`
@@ -56,11 +57,11 @@ func (update *Update)getUpdateFilter()(*map[string]interface{}){
 
 func (update *Update)getUpdateWhere(permissionFilter,updateFilter *map[string]interface{})(string,int){
 	if permissionFilter == nil {
-		return FilterToSQLWhere(updateFilter)
+		return FilterToSQLWhere(updateFilter,update.Fields,update.ModelID)
 	}
 
 	if updateFilter == nil {
-		return FilterToSQLWhere(permissionFilter)
+		return FilterToSQLWhere(permissionFilter,update.Fields,update.ModelID)
 	}
 
 	filter:=&map[string]interface{}{
@@ -70,7 +71,7 @@ func (update *Update)getUpdateWhere(permissionFilter,updateFilter *map[string]in
 		},
 	}
 
-	return FilterToSQLWhere(filter)
+	return FilterToSQLWhere(filter,update.Fields,update.ModelID)
 }
 
 func (update *Update)getUpdateFields(permissionFields string)(string,int){

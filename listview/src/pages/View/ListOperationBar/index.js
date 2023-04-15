@@ -20,7 +20,16 @@ export default function ListOperationBar({sendMessageToParent}){
             viewConf.fields.forEach((fieldItem,index) => {
                 const fieldConf=fields.find(item=>item.field===fieldItem.field);
                 if(fieldConf){
-                    searchFields.push({field:fieldItem.field,dataType:fieldConf.dataType});
+                    const searchField={
+                        field:fieldItem.field,
+                        dataType:fieldConf.dataType,
+                        fieldType:fieldConf.fieldType,
+                        relatedModelID:fieldConf.relatedModelID,
+                        relatedField:fieldConf.relatedField,
+                        associationModelID:fieldConf.associationModelID,
+                        fields:fieldItem.fields
+                    }
+                    searchFields.push(searchField);
                 }
             });
         }
