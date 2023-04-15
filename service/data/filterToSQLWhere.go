@@ -279,6 +279,10 @@ func convertFieldValueMap(field string,value map[string]interface{})(string,int)
             str,err=convertFieldOpNormal(" > ",field,value)
         case Op_lt:
             str,err=convertFieldOpNormal(" < ",field,value)
+        case Op_gte:
+            str,err=convertFieldOpNormal(" >= ",field,value)
+        case Op_lte:
+            str,err=convertFieldOpNormal(" <= ",field,value)
         case Op_in:
             str,err=convertFieldOpIn(" in ",field,value)
         case Op_is:
@@ -302,6 +306,8 @@ func convertFieldValueMap(field string,value map[string]interface{})(string,int)
         } else {
             where = where + " and " + str 
         }
+        
+        index++
     }         
     return where,common.ResultSuccess
 }
