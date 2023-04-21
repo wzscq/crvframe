@@ -7,11 +7,15 @@ import { SyncOutlined } from '@ant-design/icons';
 import {
     requestAction,
     downloadAction,
-    logoutApi
+    logoutApi,
+    queryData,
+    queryReportData,
+    getImage
 } from '../api';
 
+import {createLogoutOperation} from './operationItemFactory';
 import {open,close} from '../redux/dialogSlice';
-import {operationDone,operationPending,confirm} from '../redux/operationSlice';
+import {setOperation,operationDone,operationPending,confirm} from '../redux/operationSlice';
 import {openTab,closeAllTab,setActiveTab} from '../redux/tabSlice';
 import {resetMenu} from '../redux/menuSlice';
 import OpertaionItem from './OpertaionItem';
@@ -25,7 +29,8 @@ import {
     OPEN_LOCATION,
     FRAME_MESSAGE_TYPE,
     MESSAGE_TYPE,
-    DATA_TYPE
+    DATA_TYPE,
+    ERROR_CODE
 } from "./constant";
 import useI18n from "../hook/useI18n";
 
@@ -260,6 +265,44 @@ export default function OperationDialog(){
             ]
         }
     }
+
+    useEffect(()=>{
+        const errorCallback=(error)=>{
+            console.log('errorCallback:'+JSON.stringify(error));       
+            message.error(error.message);
+            if(error.errorCode===ERROR_CODE.TOKEN_EXPIRED){
+                dispatch(setOperation(createLogoutOperation()));
+            }
+        }
+    
+        //这里在主框架窗口中挂载事件监听函数，负责和子窗口之间的操作交互
+        const receiveMessageFromSubFrame=(event)=>{
+            if(runing===true){
+                message.warning(getLocaleLabel({key:'message.main.hasOperationWhenSet',default:'当前操作尚未执行完成，请稍后再试！'}));
+                return;
+            }
+            dispatch(logInfo('receiveMessageFromSubFrame:'+JSON.stringify(event.data)));
+            const {type,data}=event.data;
+            if(type===FRAME_MESSAGE_TYPE.DO_OPERATION){
+                dispatch(logInfo('do_operation:'+JSON.stringify(event.data.data.operationItem)));
+                dispatch(setOperation(data.operationItem));
+            } else if (type===FRAME_MESSAGE_TYPE.QUERY_REQUEST) {
+                queryData(data,errorCallback);
+            } else if (type===FRAME_MESSAGE_TYPE.REPORT_QUERY){
+                queryReportData(data,errorCallback);
+            } else if (type===FRAME_MESSAGE_TYPE.GET_IMAGE) {
+                console.log('wzstest get image');
+                getImage(data,errorCallback);
+            } else {
+                console.log('not supported frame message type:'+type);
+            }
+        }
+
+        window.addEventListener('message',receiveMessageFromSubFrame);
+        return ()=>{
+            window.removeEventListener('message',receiveMessageFromSubFrame);
+        }
+    },[runing,dispatch,getLocaleLabel]);
 
     return (
         needConfirm?(<Modal 

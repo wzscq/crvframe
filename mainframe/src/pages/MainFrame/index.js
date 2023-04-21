@@ -1,20 +1,8 @@
 import { useEffect } from "react";
-import { useDispatch } from 'react-redux';
-import { message } from 'antd';
-
-import {info as logInfo} from '../../redux/logSlice';
-import { 
-    setOperation,
-    ERROR_CODE,
-    FRAME_MESSAGE_TYPE 
-} from '../../operation';
-import { createLogoutOperation } from '../../operation/operationItemFactory';
+//import { useDispatch } from 'react-redux';
 
 import {
-    queryData,
-    queryReportData,
     getAppIcon,
-    getImage
 } from '../../api';
 import {userInfoStorage} from '../../utils/sessionStorage';
 import Dialog from '../../dialog';
@@ -23,9 +11,9 @@ import FrameContent from "./FrameContent";
 import './index.css';
 
 export default function MainFrame(){   
-    const dispatch=useDispatch();
+    //const dispatch=useDispatch();
 
-    const errorCallback=(error)=>{
+    /*const errorCallback=(error)=>{
         console.log('errorCallback:'+JSON.stringify(error));       
         message.error(error.message);
         if(error.errorCode===ERROR_CODE.TOKEN_EXPIRED){
@@ -57,7 +45,7 @@ export default function MainFrame(){
         return ()=>{
             window.removeEventListener('message',receiveMessageFromSubFrame);
         }
-    });
+    });*/
 
     useEffect(()=>{
         const {appID}=userInfoStorage.get();

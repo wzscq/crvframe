@@ -29,7 +29,7 @@ export const operationSlice = createSlice({
             if(state.current){
                 console.log('hasOperationWhenSet:',action.payload);
                 //message.warning('当前操作尚未执行完成，请稍后再试！');
-                message.warning(getLocaleLabel({key:'message.main.hasOperationWhenSet',default:'当前操作尚未执行完成，请稍后再试！'}));
+                //message.warning(getLocaleLabel({key:'message.main.hasOperationWhenSet',default:'当前操作尚未执行完成，请稍后再试！'}));
             } else {
                 state.current=action.payload;
                 state.doneList=[];

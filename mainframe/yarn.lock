@@ -1880,15 +1880,15 @@
   "resolved" "https://registry.npmmirror.com/@popperjs/core/-/core-2.11.6.tgz"
   "version" "2.11.6"
 
-"@reduxjs/toolkit@^1.6.2":
-  "integrity" "sha1-LytTZd933WaX2ij99E8zUB7Zujc="
-  "resolved" "https://registry.npmmirror.com/@reduxjs/toolkit/download/@reduxjs/toolkit-1.6.2.tgz"
-  "version" "1.6.2"
+"@reduxjs/toolkit@^1.9.5":
+  "integrity" "sha512-Rt97jHmfTeaxL4swLRNPD/zV4OxTes4la07Xc4hetpUW/vc75t5m1ANyxG6ymnEQ2FsLQsoMlYB2vV1sO3m8tQ=="
+  "resolved" "https://registry.npmmirror.com/@reduxjs/toolkit/-/toolkit-1.9.5.tgz"
+  "version" "1.9.5"
   dependencies:
-    "immer" "^9.0.6"
-    "redux" "^4.1.0"
-    "redux-thunk" "^2.3.0"
-    "reselect" "^4.0.0"
+    "immer" "^9.0.21"
+    "redux" "^4.2.1"
+    "redux-thunk" "^2.4.2"
+    "reselect" "^4.1.8"
 
 "@rollup/plugin-node-resolve@^7.1.1":
   "integrity" "sha1-gN44Tt+9e/yRARZJEPhgeBUaPso="
@@ -6404,10 +6404,10 @@
   "resolved" "https://registry.npmmirror.com/ignore/download/ignore-5.1.9.tgz?cache=0&sync_timestamp=1635926740448&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fignore%2Fdownload%2Fignore-5.1.9.tgz"
   "version" "5.1.9"
 
-"immer@^9.0.6":
-  "integrity" "sha512-KGllzpbamZDvOIxnmJ0jI840g7Oikx58lBPWV0hUh7dtAyZpFqqrBZdKka5GlTwMTZ1Tjc/bKKW4VSFAt6BqMA=="
-  "resolved" "https://registry.npmmirror.com/immer/download/immer-9.0.7.tgz"
-  "version" "9.0.7"
+"immer@^9.0.21":
+  "integrity" "sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA=="
+  "resolved" "https://registry.npmmirror.com/immer/-/immer-9.0.21.tgz"
+  "version" "9.0.21"
 
 "immer@8.0.1":
   "integrity" "sha1-nHPbaD4rOXXEJPsFcq9YiYd65lY="
@@ -10316,7 +10316,7 @@
   "resolved" "https://registry.npmmirror.com/react-is/-/react-is-18.2.0.tgz"
   "version" "18.2.0"
 
-"react-redux@^7.2.1", "react-redux@^7.2.6":
+"react-redux@^7.2.1 || ^8.0.2", "react-redux@^7.2.6":
   "integrity" "sha1-SWM6JP5VK1+cr1j+uKE4k23f6ao="
   "resolved" "https://registry.npmmirror.com/react-redux/download/react-redux-7.2.6.tgz"
   "version" "7.2.6"
@@ -10424,7 +10424,7 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-"react@*", "react@^16.14.0 || ^17.0.0", "react@^16.8.3 || ^17", "react@^17.0.0 || ^18.0.0", "react@^17.0.2", "react@>= 16", "react@>= 16.8.0", "react@>=16", "react@>=16.0.0", "react@>=16.11.0", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0", "react@>=16.9.0", "react@17.0.2":
+"react@*", "react@^16.8.3 || ^17", "react@^16.9.0 || ^17.0.0 || ^18", "react@^17.0.0 || ^18.0.0", "react@^17.0.2", "react@>= 16", "react@>= 16.8.0", "react@>=16", "react@>=16.0.0", "react@>=16.11.0", "react@>=16.6.0", "react@>=16.8", "react@>=16.8.0", "react@>=16.9.0", "react@17.0.2":
   "integrity" "sha1-0LXMUW0p6z7uOD91tihkz7aAADc="
   "resolved" "https://registry.npmmirror.com/react/download/react-17.0.2.tgz"
   "version" "17.0.2"
@@ -10513,15 +10513,15 @@
     "indent-string" "^4.0.0"
     "strip-indent" "^3.0.0"
 
-"redux-thunk@^2.3.0":
-  "integrity" "sha512-OOYGNY5Jy2TWvTL1KgAlVy6dcx3siPJ1wTq741EPyUKfn6W6nChdICjZwCd0p8AZBs5kWpZlbkXW2nE/zjUa+Q=="
-  "resolved" "https://registry.npmmirror.com/redux-thunk/download/redux-thunk-2.4.1.tgz"
-  "version" "2.4.1"
+"redux-thunk@^2.4.2":
+  "integrity" "sha512-+P3TjtnP0k/FEjcBL5FZpoovtvrTNT/UXd4/sluaSyrURlSlhLSzEdfsTBW7WsKB6yPvgd7q/iZPICFjW4o57Q=="
+  "resolved" "https://registry.npmmirror.com/redux-thunk/-/redux-thunk-2.4.2.tgz"
+  "version" "2.4.2"
 
-"redux@^4", "redux@^4.0.0", "redux@^4.1.0":
-  "integrity" "sha1-FA81Qm2Zu0cpr3YK/PeeqqxAcQQ="
-  "resolved" "https://registry.npmmirror.com/redux/download/redux-4.1.2.tgz?cache=0&sync_timestamp=1635663041213&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fredux%2Fdownload%2Fredux-4.1.2.tgz"
-  "version" "4.1.2"
+"redux@^4", "redux@^4.0.0", "redux@^4.2.1":
+  "integrity" "sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w=="
+  "resolved" "https://registry.npmmirror.com/redux/-/redux-4.2.1.tgz"
+  "version" "4.2.1"
   dependencies:
     "@babel/runtime" "^7.9.2"
 
@@ -10655,10 +10655,10 @@
   "resolved" "https://registry.nlark.com/requires-port/download/requires-port-1.0.0.tgz"
   "version" "1.0.0"
 
-"reselect@^4.0.0":
-  "integrity" "sha512-uVdlz8J7OO+ASpBYoz1Zypgx0KasCY20H+N8JD13oUMtPvSHQuscrHop4KbXrbsBcdB9Ds7lVK7eRkBIfO43vQ=="
-  "resolved" "https://registry.npmmirror.com/reselect/download/reselect-4.1.5.tgz"
-  "version" "4.1.5"
+"reselect@^4.1.8":
+  "integrity" "sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ=="
+  "resolved" "https://registry.npmmirror.com/reselect/-/reselect-4.1.8.tgz"
+  "version" "4.1.8"
 
 "resize-observer-polyfill@^1.5.0", "resize-observer-polyfill@^1.5.1":
   "integrity" "sha1-DpAg3T0hAkRY1OvSfiPkAmmBBGQ="
