@@ -287,7 +287,7 @@ func (save *Save) deleteRow(
 	permissionWhere:=""
 	errorCode:=common.ResultSuccess
 	if permissionDS.Filter !=nil {
-		permissionWhere,errorCode=FilterToSQLWhere(permissionDS.Filter)
+		permissionWhere,errorCode=FilterToSQLWhere(permissionDS.Filter,nil,save.ModelID)
 		if errorCode != common.ResultSuccess {
 			return nil,errorCode
 		}
@@ -345,7 +345,7 @@ func (save *Save) updateRow(
 	//更新用户有权限的数据
 	permissionWhere:=""
 	if permissionDS.Filter !=nil {
-		permissionWhere,errCode=FilterToSQLWhere(permissionDS.Filter)
+		permissionWhere,errCode=FilterToSQLWhere(permissionDS.Filter,nil,save.ModelID)
 		if errCode != common.ResultSuccess {
 			return nil,errCode
 		}

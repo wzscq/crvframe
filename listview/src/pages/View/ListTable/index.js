@@ -14,7 +14,7 @@ import RowOperationBar from '../RowOperationBar';
 import ColumnControl from "./ColumnControl";
 import I18nLabel from "../../../components/I18nLabel";
 import './index.css';
-import { FIELD_TYPE } from "../../../utils/constant";
+//import { FIELD_TYPE } from "../../../utils/constant";
 
 export default function ListTable({sendMessageToParent}){
     const dispatch=useDispatch();
@@ -135,15 +135,15 @@ export default function ListTable({sendMessageToParent}){
 
     useEffect(()=>{
         if(item&&origin&&searchFields.length>0){
-            const getAssociationModelID=(modleid,relatedModelID)=>{
+            /*const getAssociationModelID=(modleid,relatedModelID)=>{
                 if(modelID>relatedModelID){
                     return `${relatedModelID}_${modelID}`;
                 }
                     
                 return `${modelID}_${relatedModelID}`;
-            }
+            }*/
 
-            const getRelatedFilter=(fieldConf,filterValue)=>{
+            /*const getRelatedFilter=(fieldConf,filterValue)=>{
                 console.log('getRelatedFilter',fieldConf,filterValue);
                 filterValue=filterValue['Op.in'];
                 if(filterValue instanceof Array){
@@ -156,7 +156,7 @@ export default function ListTable({sendMessageToParent}){
                         return {id:{'Op.in':subSelect}};
                     }
                 }
-            };
+            };*/
     
             let queryFilter={...filter};
             let relatedFilter=[];
@@ -165,6 +165,8 @@ export default function ListTable({sendMessageToParent}){
                 relatedFilter.push(viewConf.filter);
             }
 
+            //这里处理many2many的过滤，在前端构造sql实现过滤不太合理，暂时注释掉，改为后端处理
+            /*
             Object.keys(queryFilter).forEach(key=>{
                 const fieldConf=fields.find(item=>item.field===key);
                 if(fieldConf&&(fieldConf.fieldType===FIELD_TYPE.MANY2MANY||
@@ -175,7 +177,7 @@ export default function ListTable({sendMessageToParent}){
                     }
                     delete queryFilter[key];
                 }
-            });
+            });*/
 
             if(relatedFilter.length>0){
                 if(Object.keys(queryFilter).length>0){
