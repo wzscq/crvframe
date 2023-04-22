@@ -23,7 +23,7 @@ export default function ColumnControl({text,field, record, index}){
                 value=getManyToOneValueFunc(field.optionLabel)(text.list[0]);
             }
         } else {
-            value=text.value!==undefined?text.value:"";
+            value=text.value!==undefined?text.value:text;
         }
     } else if(field.options){
         const option=field.options.find(item=>item.value===value);

@@ -62,6 +62,7 @@ export default function OperationDialog(){
         dispatch(logoutApi());
         dispatch(closeAllTab());
         dispatch(resetMenu());
+        dispatch(close());
         navigate('/login/'+appID);
     }
 

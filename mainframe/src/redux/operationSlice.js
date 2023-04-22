@@ -5,7 +5,7 @@ import {
     ERROR_CODE,
     createLogoutOperation
 } from '../operation';
-import {getLocaleLabel} from '../utils/localeResources';
+//import {getLocaleLabel} from '../utils/localeResources';
 
 const initialState = {
     //一组连续的操作中已经执行完成的操作列表
