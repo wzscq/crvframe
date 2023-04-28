@@ -61,6 +61,7 @@ export default function EditTable({dataPath,control,field,sendMessageToParent}){
     },[dispatch,dataPath,field]);
 
     const label=control.label?control.label:(field?field.name:"");
+    const header=(<Header control={control} onAddNewRow={onAddNewRow}/>);
     return (
         <div className='control-edittable'>
             <Space size={2} direction="vertical" style={{width:'100%'}}>
@@ -69,16 +70,14 @@ export default function EditTable({dataPath,control,field,sendMessageToParent}){
                     <I18nLabel label={label}/>
                 </div>
                 <div className='control-edittable'>
-                    <div className='control-edittable-header-wrapper'>
-                        <Header control={control} onAddNewRow={onAddNewRow}/>
-                    </div>
-                    <div className='control-edittable-body-wrapper'>
+                    <div className='control-edittable-body-wrapper' style={{maxHeight:control.maxHeight}}>
                         <Body 
                             dataPath={[...dataPath,field.field,'list']}
                             sendMessageToParent={sendMessageToParent} 
                             control={control} 
                             rowKeys={rowKeys} 
                             onDeleteRow={onDeleteRow} 
+                            header={header}
                         />
                     </div>
                 </div>

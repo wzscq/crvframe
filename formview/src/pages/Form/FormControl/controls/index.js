@@ -11,6 +11,7 @@ import FunctionTextArea from './FunctionTextArea';
 import ImageList from './ImageList';
 import Number from './Number';
 import RichText from './RichText';
+import ValueLabel from './ValueLabel';
 /**
  * 以下为控件类型枚举常量定义
  */
@@ -27,7 +28,8 @@ import RichText from './RichText';
     FUNCTIONTEXTAREA:'FunctionTextArea', //函数计算文本控件
     IMAGELIST:'ImageList', //图片文件列表
     Number:'Number', //数值录入
-    RichText:"RichText" //富文本
+    RichText:"RichText", //富文本
+    ValueLabel:"ValueLabel"  //用于显示不能修改的值
 }
 
 /**
@@ -46,7 +48,8 @@ export const controlRegister={
     [CONTROL_TYPE.FUNCTIONTEXTAREA]:FunctionTextArea,
     [CONTROL_TYPE.IMAGELIST]:ImageList,
     [CONTROL_TYPE.Number]:Number,
-    [CONTROL_TYPE.RichText]:RichText
+    [CONTROL_TYPE.RichText]:RichText,
+    [CONTROL_TYPE.ValueLabel]:ValueLabel
 }
 
 export const getControl=(control,field,sendMessageToParent,dataPath)=>{

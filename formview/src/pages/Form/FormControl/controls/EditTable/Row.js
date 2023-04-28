@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import DeleteRowButton from "./DeleteRowButton";
 import TableCell from "./TableCell";
 
-export default function Row({dataPath,control,rowKey,onDeleteRow,sendMessageToParent}){
+export default function Row({dataPath,control,rowKey,onDeleteRow,sendMessageToParent,setCurrentRow,isCurrent}){
 
     const {templateColumns,columns}=useMemo(()=>{
         let templateColumns='';
@@ -12,27 +12,31 @@ export default function Row({dataPath,control,rowKey,onDeleteRow,sendMessageToPa
             templateColumns+=(field.width?(field.width+'px '):'auto ');
             return (
                 <TableCell 
-                    colNo={index}
+                    colNo={index+1}
                     key={field.field}               
                     dataPath={dataPath}
                     field={field} 
                     disabled={control.disabled}
-                    sendMessageToParent={sendMessageToParent}  />
+                    sendMessageToParent={sendMessageToParent}
+                    setCurrentRow={setCurrentRow}
+                    isCurrent={isCurrent}
+                    rowKey={rowKey}
+                    />
             );
         });
         return {templateColumns,columns};
-    },[control,dataPath,sendMessageToParent]);
+    },[control,dataPath,sendMessageToParent,rowKey,setCurrentRow,isCurrent]);
 
-    const gridTemplateColumns=templateColumns+' 30px';
-    columns.push(<DeleteRowButton 
-        lable={control.deleteButtonLabel}
-        disabled={control.disabled} 
-        colNo={columns.length}
-        rowKey={rowKey} 
-        onDeleteRow={onDeleteRow}/>);
+    const gridTemplateColumns='30px '+templateColumns;
 
     return (
         <div style={{display:'grid',gridTemplateColumns:gridTemplateColumns,gridAutoRows:'minmax(20px, auto)'}}>
+            <DeleteRowButton 
+                lable={control.deleteButtonLabel}
+                disabled={control.disabled} 
+                colNo={0}
+                rowKey={rowKey} 
+                onDeleteRow={onDeleteRow}/>
             {columns}
         </div>
     );

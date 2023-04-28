@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import {InputNumber,Space,Tooltip } from 'antd';
+import {Input,Space,Tooltip } from 'antd';
 import { useEffect,useMemo,useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -33,59 +33,25 @@ const makeSelector=()=>{
     });
 }
 
-export default function Number({dataPath,control,field}){
-    const dispatch=useDispatch();
-    const inputRef = useRef(null);
-        
+export default function ValueLabel({dataPath,control,field}){    
     const selectValue=useMemo(makeSelector,[dataPath,control,field]);
     const {updatedValue,valueError}=useSelector(state=>selectValue(state.data,dataPath,field.field));
-
-    const onChange=(value)=>{
-        dispatch(modiData({
-            dataPath:dataPath,
-            field:field.field,
-            updated:value,
-            update:value}));
-        
-        if(valueError){
-            const errFieldPath=dataPath.join('.')+'.'+field.field;
-            dispatch(removeErrorField(errFieldPath));
-        }
-    }
-
-    useEffect(()=>{
-        if(inputRef.current&&valueError){
-            inputRef.current.focus({
-                cursor: 'end',
-            });
-        }
-    },[valueError,inputRef]);
 
     //获取文本输入框的标签，如果form控件配置了label属性则直接使用，
     //如果控件没有配置label属性，则取字段配置的字段name
     const label=control.label?control.label:(field?field.name:"");
     
-    let inputControl=(
-        <InputNumber  
-            style={{width:'100%'}}
-            placeholder={control.placeholder?control.placeholder:""} 
-            value={updatedValue} 
-            allowClear
-            disabled={control.disabled} 
-            onChange={onChange}
-            ref={inputRef}
-            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            parser={(value) => value.replace(/\s?|(,*)/g, '')}
-            status={valueError?'error':null}
-        />);
+    let labelControl=(
+        <div>{updatedValue}</div>
+    );
 
-    inputControl=valueError?(
+    labelControl=valueError?(
         <Tooltip title={<I18nLabel label={valueError.message}/>}>
-            {inputControl}
-        </Tooltip>):inputControl
+            {labelControl}
+        </Tooltip>):labelControl
 
     if(control.inline){
-        return inputControl;
+        return labelControl;
     }
 
     const className=valueError?'control-text-error':'control-text-normal';
@@ -96,7 +62,7 @@ export default function Number({dataPath,control,field}){
                     {control.required?(<span style={{color:'red'}}>*</span>):null}
                     <I18nLabel label={label}/>
                 </div>
-                {inputControl}
+                {labelControl}
             </Space>
         </div>
     );

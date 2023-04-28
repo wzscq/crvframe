@@ -1,5 +1,6 @@
 .control-edittable {
     width: 100%;
+    overflow: auto;
 }
 
 .control-edittable-header-wrapper {
@@ -7,10 +8,11 @@
     border-right: 1px solid #d9d9d9;
     max-width: 100%;
     width: fit-content;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .control-edittable-body-wrapper {
+    border-top: 1px solid #d9d9d9;
     border-right: 1px solid #d9d9d9;
     max-width: 100%;
     width: fit-content;

@@ -87,7 +87,7 @@ export default function ListTable({sendMessageToParent}){
         let columns=[];
         if(viewConf){
             const rowToolbar=viewConf.toolbar?.rowToolbar;
-            if(rowToolbar){
+            if(rowToolbar?.buttons?.length>0){
                 console.log('rowToolbar',rowToolbar);
                 columns.push(getOperationColumn(rowToolbar));
             }

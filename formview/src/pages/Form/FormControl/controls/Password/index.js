@@ -74,7 +74,7 @@ export default function Password({dataPath,control,field}){
     );
 
     useEffect(()=>{
-        if(inputRef.current){
+        if(inputRef.current&&valueError){
             inputRef.current.focus({
                 cursor: 'end',
             });

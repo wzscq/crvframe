@@ -4,11 +4,14 @@ import { useMemo } from 'react';
 import {getControl} from '../../index';
 
 export default function TableCell(props){
-    const {colNo,dataPath,field,disabled,sendMessageToParent}=props;
+    const {colNo,dataPath,field,disabled,sendMessageToParent,setCurrentRow,isCurrent,rowKey}=props;
 
     const component=useMemo(()=>{
-        return getControl({...field,inline:true,disabled:disabled},field,sendMessageToParent,dataPath);
-    },[field,dataPath,sendMessageToParent,disabled]);
+        if(isCurrent===true){
+            return getControl({...field,inline:true,disabled:disabled},field,sendMessageToParent,dataPath);
+        }
+        return getControl({...field,inline:true,disabled:disabled,controlType:'ValueLabel'},field,sendMessageToParent,dataPath);
+    },[isCurrent,field,dataPath,sendMessageToParent,disabled]);
 
     const wrapperStyle=useMemo(()=>{
         return {
@@ -21,8 +24,15 @@ export default function TableCell(props){
             borderLeft:'1px solid #d9d9d9',
             padding:1
         }},[colNo]);
+
+    const ondblclick=()=>{
+        setCurrentRow(rowKey);
+    }
+
+
+
     return (
-        <div style={wrapperStyle} >
+        <div onDoubleClick={ondblclick} style={wrapperStyle} >
             {component}
         </div>
     );
