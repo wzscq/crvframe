@@ -10,7 +10,7 @@ export default function TableCell(props){
         if(isCurrent===true){
             return getControl({...field,inline:true,disabled:disabled},field,sendMessageToParent,dataPath);
         }
-        return getControl({...field,inline:true,disabled:disabled,controlType:'ValueLabel'},field,sendMessageToParent,dataPath);
+        return getControl({...field,inline:true,disabled:true},field,sendMessageToParent,dataPath);
     },[isCurrent,field,dataPath,sendMessageToParent,disabled]);
 
     const wrapperStyle=useMemo(()=>{
@@ -28,8 +28,6 @@ export default function TableCell(props){
     const ondblclick=()=>{
         setCurrentRow(rowKey);
     }
-
-
 
     return (
         <div onDoubleClick={ondblclick} style={wrapperStyle} >

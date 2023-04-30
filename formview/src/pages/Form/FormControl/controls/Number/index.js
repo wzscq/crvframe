@@ -65,7 +65,9 @@ export default function Number({dataPath,control,field}){
     //如果控件没有配置label属性，则取字段配置的字段name
     const label=control.label?control.label:(field?field.name:"");
     
-    let inputControl=(
+    let inputControl=control.disabled===true?(
+        <div style={{width:"100%",textAlign:'right'}}>{`${updatedValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</div>
+    ):(
         <InputNumber  
             style={{width:'100%'}}
             placeholder={control.placeholder?control.placeholder:""} 

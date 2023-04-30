@@ -55,6 +55,7 @@ type buttonConf struct {
 	OperationID string `json:"operationID"`
 	Name *interface{} `json:"name,omitempty"`
 	Prompt *interface{} `json:"prompt,omitempty"`
+	SelectedRows *interface{} `json:"selectedRows,omitempty"`
 }
 
 type toolbarConf struct {

@@ -108,7 +108,23 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
                 }
             }
             const operationData=getOperationData(update);
-            let input={...operation.input,...operationData};
+
+            console.log('operationData',JSON.stringify(operationData));
+            console.log('operation.input',JSON.stringify(operation.input));
+            console.log('item.input',JSON.stringify(item.input));
+            //如果请求操作中传递了输入参数，将输入参数和表单数据合并在一起提交
+            let input=operationData;
+            if(operation?.input?.list?.length>0){
+                const initRowData=operation.input.list[0];
+                if(input?.list?.length>0){
+                    input.list=input.list.map(row=>{
+                        return {...row,...initRowData}
+                    });
+                }
+            }
+
+            //调用流的操作数据是通过input传递的
+            input={...operation.input,...input};
             if(item.input&&item.input!=={}){
                 //if(formType===FORM_TYPE.UPDATE){
                     //这里的item是打开表单时在前一个页面操作中选择的数据或者前一个操作的输出
@@ -127,6 +143,7 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
 
                 }*/
             }
+            console.log('input',JSON.stringify(input));
             const message={
                 type:FRAME_MESSAGE_TYPE.DO_OPERATION,
                 data:{

@@ -72,8 +72,22 @@ export default function DatePickerControl({dataPath,control,field}){
     if(value&&value.length>0){
         value=moment(value);
     }
+
+    const getValueLabel=(value)=>{
+        if(!value){
+            return "";
+        }
+
+        if(control.showTime){
+            return value.format('YYYY-MM-DD HH:mm:ss');
+        }else{
+            return value.format('YYYY-MM-DD');
+        }
+    }
     
-    let datePickerControl=(
+    let datePickerControl=control.disabled===true?(
+        <span>{getValueLabel(value)}</span>
+    ):(
         <DatePicker  
             value={value} 
             disabled={control.disabled} 

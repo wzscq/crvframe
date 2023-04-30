@@ -1,15 +1,17 @@
 import {useCallback} from 'react';
-import { Space } from "antd";
+import { Space,message } from "antd";
 import { useMemo } from "react";
-import { useSelector } from "react-redux"
+import { useSelector } from "react-redux";
 
 import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 import OperationButton from '../../../components/OperationButton';
+import useI18n from '../../../hooks/useI18n';
 
 import './index.css';
 
 export default function ListOperationBar({sendMessageToParent}){
     const {currentView} = useSelector(state=>state.data);
+    const {getLocaleLabel}=useI18n();
     const {fields,views,modelID,operations}=useSelector(state=>state.definition);
     const {selectedRowKeys,filter,pagination,sorter}=useSelector(state=>state.data.views[state.data.currentView].data);
 
@@ -38,6 +40,18 @@ export default function ListOperationBar({sendMessageToParent}){
     },[fields,currentView,views]);
 
     const doOperation=useCallback((opItem)=>{
+        if(opItem.selectedRows){
+            if(opItem.selectedRows?.min>selectedRowKeys.length){
+                message.info(getLocaleLabel(opItem.selectedRows.prompt));
+                return;
+            }
+
+            if(opItem.selectedRows?.max<selectedRowKeys.length){
+                message.info(getLocaleLabel(opItem.selectedRows.prompt));
+                return;
+            }
+        }
+        
         const operation=operations.find(element=>element.id===opItem.operationID);
         if(operation){
             let queryFilter=filter;

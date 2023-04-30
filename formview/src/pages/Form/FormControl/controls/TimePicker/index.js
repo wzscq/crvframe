@@ -74,7 +74,9 @@ export default function TimePickerControl({dataPath,control,field}){
         value=moment(value,'HH:mm:ss');
     }
     
-    let datePickerControl=(
+    let datePickerControl=control.disabled===true?(
+        <span>{value?value.format('HH:mm:ss'):""}</span>
+    ):(
         <TimePicker  
             value={value} 
             disabled={control.disabled} 

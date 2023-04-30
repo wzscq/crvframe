@@ -1,10 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit';
-import {Input,Space,Tooltip } from 'antd';
-import { useEffect,useMemo,useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {Space,Tooltip } from 'antd';
+import {useMemo} from 'react';
+import {useSelector } from 'react-redux';
 
 import I18nLabel from '../../../../../component/I18nLabel';
-import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
 
 const selectUpdatedValue=(data,dataPath,field)=>{
     let updatedNode=data.updated;
@@ -42,7 +41,7 @@ export default function ValueLabel({dataPath,control,field}){
     const label=control.label?control.label:(field?field.name:"");
     
     let labelControl=(
-        <div>{updatedValue}</div>
+        <div>{JSON.stringify(updatedValue)}</div>
     );
 
     labelControl=valueError?(

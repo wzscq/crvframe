@@ -43,7 +43,7 @@ const makeSelector=()=>{
 export default function RichText({dataPath,control,field,sendMessageToParent}){
     const {origin,item:frameItem}=useSelector(state=>state.frame);
     const dispatch=useDispatch();
-    
+    const refDisabled=useRef();
     const selectValue=useMemo(makeSelector,[dataPath,control,field]);
     const {originValue,valueError}=useSelector(state=>selectValue(state.data,dataPath,field.field));
 
@@ -97,6 +97,13 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
         }
     },[originValue,getOriginImage]);
 
+    useEffect(()=>{
+        if(control.disabled&&refDisabled.current){
+            const disabledNode=refDisabled.current;
+            disabledNode.innerHTML=originContent;
+        }
+    },[control,originContent,refDisabled]);
+
 
     const className=valueError?'control-singlefile control-singlefile-error':'control-singlefile control-singlefile-normal';
     
@@ -146,7 +153,9 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
 
     console.log('TINYMCE_URL:',process.env.REACT_APP_TINYMCE_URL);
 
-    let fileControl=(
+    let fileControl=control.disabled?(
+        <div style={{width:'100%',height:control.height,overflow:'auto',border:'1px solid #d9d9d9',borderRadius:5,padding:5}} ref={refDisabled}/>
+    ):(
         <Editor
             tinymceScriptSrc={process.env.REACT_APP_TINYMCE_URL}
             onInit={(evt, editor) => {

@@ -310,7 +310,16 @@ export default function TransferControl({dataPath,control,field,sendMessageToPar
     }));
 
     const filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1;
-    let transferControl=(
+    const getValueItem=(dataSource,targetKeys)=>{
+        return targetKeys.map(key=>{
+            const item=dataSource.find(item=>item.key===key);
+            return (<div>{item?item.title:key}</div>)
+        });
+    }
+    
+    let transferControl=control.disabled===true?(
+        <div style={{maxHeight:control.maxHeight?control.maxHeight:"100%",overflow:'auto'}}>{getValueItem(dataSource,targetKeys)}</div>
+    ):(
         <Transfer
             style={{maxHeight:control.maxHeight?control.maxHeight:"100%"}}
             dataSource={dataSource}

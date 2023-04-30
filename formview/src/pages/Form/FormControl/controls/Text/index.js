@@ -65,7 +65,9 @@ export default function Text({dataPath,control,field}){
     //如果控件没有配置label属性，则取字段配置的字段name
     const label=control.label?control.label:(field?field.name:"");
     
-    let inputControl=(
+    let inputControl=control.disabled===true?(
+        <span>{updatedValue}</span>        
+    ):(
         <Input  
             placeholder={control.placeholder?control.placeholder:""} 
             value={updatedValue} 

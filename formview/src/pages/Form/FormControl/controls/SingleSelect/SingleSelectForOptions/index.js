@@ -69,8 +69,15 @@ export default function SingleSelectForOptions({dataPath,control,field}){
     (<Option key={index} value={item.value}>
         <I18nLabel label={item.label}/>
     </Option>));
+
+    const getValueLabel=(value)=>{
+        const item=control.options.find(item=>item.value===value);
+        return item?item.label:value;
+    }
     
-    let selectControl= (<Select  
+    let selectControl= control.disabled===true?(
+        <div>{getValueLabel(updatedValue)}</div>
+    ):(<Select  
         style={{width:'100%'}}  
         placeholder={control.placeholder?<I18nLabel label={control.placeholder}/>:""} 
         value={updatedValue} 

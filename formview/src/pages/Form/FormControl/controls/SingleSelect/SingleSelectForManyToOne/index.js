@@ -341,16 +341,26 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
         return (<Option key={item.id} value={item.id}>{label}</Option>);
     }):[];
 
-    if(hasOriginValue===false&&updatedValue&&updatedValue.list&&updatedValue.list.length>0){
+    const getValueLabel=(updatedValue)=>{
         const item=updatedValue.list[0];
         let label=item[optionLabel];
         if(label===undefined){
             label=getManyToOneValueFunc(optionLabel)(item);
         }
+        return label;
+    }
+
+    if(hasOriginValue===false&&updatedValue&&updatedValue.list&&updatedValue.list.length>0){
+        const item=updatedValue.list[0];
+        const label=getValueLabel(updatedValue);
         optionControls.push(<Option key={'origin'} value={item.id}>{label}</Option>);
     }
 
-    let selectControl= (<Select
+    console.log('singleSelectControl',updatedValue,optionControls);
+
+    let selectControl=control.disabled===true?(
+        <div>{updatedValue?.list?.length>0?getValueLabel(updatedValue):""}</div>
+    ):(<Select
         style={{width:'100%'}}  
         placeholder={control.placeholder?control.placeholder:""} 
         value={updatedValue?updatedValue.value:updatedValue} 
