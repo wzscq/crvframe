@@ -1,7 +1,7 @@
 import AddRowButton from "./AddRowButton";
 import I18nLabel from "../../../../../component/I18nLabel";
 
-export default function Header({control,onAddNewRow}){
+export default function Header({control,onAddNewRow,fixed}){
     let gridTemplateColumns='30px ';
     const columns=control.controls
         .filter(item=>item.visible)
@@ -26,7 +26,7 @@ export default function Header({control,onAddNewRow}){
     });
 
     return (
-        <div style={{display:'grid',gridTemplateColumns:gridTemplateColumns,gridAutoRows:'minmax(20px, auto)'}}>
+        <div style={{position:fixed?'fixed':'',top:0,display:'grid',gridTemplateColumns:gridTemplateColumns,gridAutoRows:'minmax(20px, auto)'}}>
             <AddRowButton label={control.addButtonLable} disabled={control.disabled} colNo={0} onAddNewRow={onAddNewRow}/>
             {columns}
         </div>

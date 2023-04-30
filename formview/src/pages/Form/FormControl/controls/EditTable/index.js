@@ -62,24 +62,23 @@ export default function EditTable({dataPath,control,field,sendMessageToParent}){
 
     const label=control.label?control.label:(field?field.name:"");
     const header=(<Header control={control} onAddNewRow={onAddNewRow}/>);
+    
     return (
-        <div className='control-edittable'>
+        <div className='control-edittable-main'>
             <Space size={2} direction="vertical" style={{width:'100%'}}>
                 <div style={{width:'100%',textAlign:'left'}}>
                     {control.required?(<span style={{color:'red'}}>*</span>):null}
                     <I18nLabel label={label}/>
                 </div>
-                <div className='control-edittable'>
-                    <div className='control-edittable-body-wrapper' style={{maxHeight:control.maxHeight}}>
-                        <Body 
-                            dataPath={[...dataPath,field.field,'list']}
-                            sendMessageToParent={sendMessageToParent} 
-                            control={control} 
-                            rowKeys={rowKeys} 
-                            onDeleteRow={onDeleteRow} 
-                            header={header}
-                        />
-                    </div>
+                <div className='control-edittable-body-wrapper' style={{maxHeight:control.maxHeight}}>
+                    <Body 
+                        dataPath={[...dataPath,field.field,'list']}
+                        sendMessageToParent={sendMessageToParent} 
+                        control={control} 
+                        rowKeys={rowKeys} 
+                        onDeleteRow={onDeleteRow} 
+                        header={header}
+                    />
                 </div>
             </Space>
         </div>

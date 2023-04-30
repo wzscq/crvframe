@@ -2,7 +2,7 @@ import {useState} from "react";
 
 import Row from "./Row";
 
-export default function Body({dataPath,control,rowKeys,onDeleteRow,sendMessageToParent,header}){
+export default function Body({dataPath,control,rowKeys,onDeleteRow,sendMessageToParent,header,headerFixed}){
     const [currentRow,setCurrentRow]=useState(undefined);
     
     const rows=rowKeys.map((rowKey,index)=>{
@@ -24,6 +24,7 @@ export default function Body({dataPath,control,rowKeys,onDeleteRow,sendMessageTo
         <>
             {header}
             {rows}
+            {headerFixed}
         </>
     );
 }

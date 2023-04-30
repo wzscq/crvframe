@@ -114,15 +114,17 @@ export const dataSlice = createSlice({
             updatedNode[field]=updated;
         },
         createRow:(state,action)=>{
-            const rowKey='__c__'+gRowIdx++;
             const {dataPath,initData}=action.payload;
-            if(dataPath.length>0){
-                const {updateNode,updatedNode}=getUpdateNodes(state,dataPath);
-                updateNode[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
-                updatedNode[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
-            } else {
-                state.update[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
-                state.updated[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
+            for(let i=0;i<1;i++){
+                const rowKey='__c__'+gRowIdx++;
+                if(dataPath.length>0){
+                    const {updateNode,updatedNode}=getUpdateNodes(state,dataPath);
+                    updateNode[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
+                    updatedNode[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
+                } else {
+                    state.update[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
+                    state.updated[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
+                }
             }
         },
         deleteRow:(state,action)=>{
