@@ -54,6 +54,7 @@ func (controller *RedirectController)redirect(c *gin.Context){
 	userID:= c.MustGet("userID").(string)
 	userRoles:= c.MustGet("userRoles").(string)
 	appDB:= c.MustGet("appDB").(string)
+	token:=c.MustGet("userToken").(string)
 
 	bodyCopy:=new(bytes.Buffer)
 	_,err:=io.Copy(bodyCopy,c.Request.Body)
@@ -108,7 +109,8 @@ func (controller *RedirectController)redirect(c *gin.Context){
 		req.Header.Set("userID",userID)
 		req.Header.Set("appDB",appDB)
 		req.Header.Set("userRoles",userRoles)
-
+		req.Header.Set("token",token)
+		
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host

@@ -36,6 +36,8 @@ export const loginSlice = createSlice({
         message.error(getLocaleErrorMessage(action.payload));
       } else {
         const loginApiResponse=action.payload.result;
+        //解析token
+        //loginApiResponse.token=decodeToken(loginApiResponse.token);
         state.userName=loginApiResponse.userName;
         state.token=loginApiResponse.token;
         state.appID=loginApiResponse.appID;

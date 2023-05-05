@@ -99,7 +99,7 @@ func (controller *UserController)login(c *gin.Context) {
 		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end user login with error")
 		return 
-    }
+  }
 		
 	log.Println(rep)
 	var appDB string
@@ -135,7 +135,7 @@ func (controller *UserController)login(c *gin.Context) {
 		result=&LoginResult{
 			UserID:user.UserID,
 			UserName:user.UserNameZh,
-			Token:token,
+			Token:common.EncodeToken(token),
 			AppID:rep.AppID,
 		}
 	}

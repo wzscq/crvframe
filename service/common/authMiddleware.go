@@ -33,8 +33,17 @@ func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 			if err := c.ShouldBindHeader(&header); err != nil {
 				log.Println(err)
 				errorCode=ResultWrongRequest
+
 			} else {
 				userID,err:=loginCache.GetUserID(header.Token)
+				if err !=nil {
+					log.Println(err)
+					token,paramSum:=DecodeToken(header.Token)
+					errorCode=CheckBody(c,paramSum)
+					header.Token=token
+					userID,err=loginCache.GetUserID(header.Token)
+				}
+				
 				if err != nil {
 					log.Println(err)
 					errorCode=ResultTokenExpired

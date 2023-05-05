@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { message } from 'antd';
+import { sha256 } from 'js-sha256';
 
 import {parseUrl} from '../utils/urlParser';
 import {userInfoStorage} from '../utils/sessionStorage';
@@ -8,6 +9,39 @@ import {
   FRAME_MESSAGE_TYPE
 } from "../operation/constant";
 import {getLocaleLabel} from '../utils/localeResources';
+
+const decodeToken=(token)=>{
+  //从token中获取偶数位字符组成新的字符串
+  let decodedToken="";
+  for(var i=0; i<token.length; i++) {
+    if(i%2 === 0) {
+      // 当前字符为奇数维，跳过
+      continue;
+    }
+    decodedToken += token[i];
+  }
+  return decodedToken;
+}
+
+const encodeToken=(token,data)=>{
+  token=decodeToken(token);
+
+  let dataStr="";
+  if(typeof data === "object" ){
+    dataStr=JSON.stringify(data)
+  }
+
+  const sum=sha256(dataStr);
+
+  // 新字符串
+  let newToken = "";
+  // 遍历字符串2，将字符串1的字符插入偶数位
+  for(var i = 0; i < sum.length; i++) {
+      newToken += sum.charAt(i);
+      newToken += token.charAt(i);
+  }
+  return newToken;
+}
 
 export const getHost=()=>{
     const rootElement=document.getElementById('root');
@@ -85,7 +119,7 @@ export const logoutApi = createAsyncThunk(
     const config={
       url:host+"/user/logout",
       method:'post',
-      headers:{token:token}
+      headers:{token:encodeToken(token,"")}
     }
     const reponse= await axios(config);
     return reponse.data;
@@ -102,7 +136,7 @@ export const requestAction = createAsyncThunk(
       url:host+url,
       method,
       data:{...data},
-      headers:{token:token},
+      headers:{token:encodeToken(token,data)},
       responseType:responseType
     }
     const response =await axios(config);
@@ -129,7 +163,7 @@ export const downloadAction = createAsyncThunk(
       url:host+DOWNLOAD_FILE_URL,
       method:'post',
       data:{...data},
-      headers:{token:token},
+      headers:{token:encodeToken(token,data)},
       responseType:'blob'
     }
     const response =await axios(config);
@@ -145,7 +179,7 @@ export const getImage = ({frameParams,queryParams},errorCallback)=>{
     url:host+GET_IMAGE_URL,
     method:'post',
     data:{...queryParams},
-    headers:{token:token}
+    headers:{token:encodeToken(token,queryParams)}
   }
   axios(config).then(function (response) {
     console.log(response);
@@ -177,7 +211,7 @@ export const queryData = ({frameParams,queryParams},errorCallback)=>{
     url:host+DATA_QUERY_URL,
     method:'post',
     data:{...queryParams},
-    headers:{token:token}
+    headers:{token:encodeToken(token,queryParams)}
   }
   axios(config).then(function (response) {
     console.log(response);
@@ -210,7 +244,7 @@ export const queryReportData = ({frameParams,queryParams},errorCallback)=>{
     url:host+REPORT_QUERY_URL,
     method:'post',
     data:{...queryParams},
-    headers:{token:token}
+    headers:{token:encodeToken(token,queryParams)}
   }
   axios(config).then(function (response) {
     console.log(response);
@@ -256,7 +290,7 @@ export const getUserMenus = createAsyncThunk(
     const reponse= await axios({
       url:host+DEF_GETUSERMENU_URL,
       method:"post",
-      headers:{token:token}
+      headers:{token:encodeToken(token,"")}
     });
     console.log('getUserMenus reponse',reponse);
     return reponse.data;
