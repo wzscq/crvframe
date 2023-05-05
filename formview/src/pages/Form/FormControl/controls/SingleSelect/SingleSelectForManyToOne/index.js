@@ -8,6 +8,7 @@ import { modiData,removeErrorField } from '../../../../../../redux/dataSlice';
 import {FRAME_MESSAGE_TYPE,CASCADE_TYPE} from '../../../../../../utils/constant';
 import { getManyToOneValueFunc } from '../../../../../../utils/functions';
 import I18nLabel from '../../../../../../component/I18nLabel';
+import DisabledControl from '../../DisabledControl';
 
 import './index.css';
 
@@ -359,7 +360,7 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
     console.log('singleSelectControl',updatedValue,optionControls);
 
     let selectControl=control.disabled===true?(
-        <div>{updatedValue?.list?.length>0?getValueLabel(updatedValue):""}</div>
+        <DisabledControl inline={control.inline} value={updatedValue?.list?.length>0?getValueLabel(updatedValue):""} />
     ):(<Select
         style={{width:'100%'}}  
         placeholder={control.placeholder?control.placeholder:""} 

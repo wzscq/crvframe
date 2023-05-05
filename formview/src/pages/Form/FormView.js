@@ -113,7 +113,7 @@ export default function FormView({fromTitle,formType,sendMessageToParent}){
                 <div className='form-header'>
                     <FormHeader sendMessageToParent={sendMessageToParent} form={form} label={headerLabel} operations={headerOperations} />
                 </div>
-                <div className='form-content'>
+                <div className='form-content' style={{height:form.footer?'calc(100vh - 87px)':'calc(100vh - 45px)'}}>
                     <div className='form-grid' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
                         {controls}
                     </div>

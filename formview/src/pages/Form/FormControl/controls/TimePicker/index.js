@@ -6,6 +6,7 @@ import moment from 'moment';
 
 import I18nLabel from '../../../../../component/I18nLabel';
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
+import DisabledControl from '../DisabledControl';
 //import './index.css';
 
 const selectUpdatedValue=(data,dataPath,field)=>{
@@ -75,7 +76,7 @@ export default function TimePickerControl({dataPath,control,field}){
     }
     
     let datePickerControl=control.disabled===true?(
-        <span>{value?value.format('HH:mm:ss'):""}</span>
+        <DisabledControl inline={control.inline} value={value?value.format('HH:mm:ss'):""} />
     ):(
         <TimePicker  
             value={value} 

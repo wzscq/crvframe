@@ -15,44 +15,43 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
     const data=useSelector(state=>state.report.chart[id]);
     const dispatch=useDispatch();
 
-    console.log('Chart refresh');
+    console.log('Chart refresh',filterData);
 
     useEffect(()=>{
-        if(data===undefined){
-            dispatch(setDataLoaded({controlID:id,loaded:false}));
+        dispatch(setDataLoaded({controlID:id,loaded:false}));
 
-            const parsedSQLParameters={};
-            if(sqlParameters){
-                Object.keys(sqlParameters).forEach(key=>{
-                    const funStr='"use strict";'+
-                        'return (function(moment,filterData){ '+
-                            'try {'+
-                                sqlParameters[key]+
-                            '} catch(e) {'+
-                            '   console.error(e);'+
-                            '   return undefined;'+
-                            '}'+
-                        '})';
-                    parsedSQLParameters[key]=Function(funStr)()(moment,filterData);
-                });
-            }
-
-            //查询数据请求
-            const keyFrameParams={
-                ...frameParams,
-                dataKey:id
-            };
-
-            const message={
-                type:FRAME_MESSAGE_TYPE.REPORT_QUERY,
-                data:{
-                    frameParams:keyFrameParams,
-                    queryParams:{reportID,controlID:id,sqlParameters:parsedSQLParameters}
-                }
-            }
-            sendMessageToParent(message);
+        const parsedSQLParameters={};
+        if(sqlParameters){
+            Object.keys(sqlParameters).forEach(key=>{
+                const funStr='"use strict";'+
+                    'return (function(moment,filterData){ '+
+                        'try {'+
+                            sqlParameters[key]+
+                        '} catch(e) {'+
+                        '   console.error(e);'+
+                        '   return undefined;'+
+                        '}'+
+                    '})';
+                parsedSQLParameters[key]=Function(funStr)()(moment,filterData);
+            });
         }
-    },[data,id,frameParams,reportID,sqlParameters,filterData,sendMessageToParent,dispatch]);
+
+        //查询数据请求
+        const keyFrameParams={
+            ...frameParams,
+            dataKey:id
+        };
+
+        const message={
+            type:FRAME_MESSAGE_TYPE.REPORT_QUERY,
+            data:{
+                frameParams:keyFrameParams,
+                queryParams:{reportID,controlID:id,sqlParameters:parsedSQLParameters}
+            }
+        }
+        sendMessageToParent(message);
+        
+    },[id,frameParams,reportID,sqlParameters,filterData,sendMessageToParent,dispatch]);
 
     const chartOption=useMemo(()=>{
         if(data?.loaded===true){

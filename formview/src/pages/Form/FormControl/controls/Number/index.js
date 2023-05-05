@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import I18nLabel from '../../../../../component/I18nLabel';
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
+import DisabledControl from '../DisabledControl';
 
 const selectUpdatedValue=(data,dataPath,field)=>{
     let updatedNode=data.updated;
@@ -66,7 +67,7 @@ export default function Number({dataPath,control,field}){
     const label=control.label?control.label:(field?field.name:"");
     
     let inputControl=control.disabled===true?(
-        <div style={{width:"100%",textAlign:'right'}}>{`${updatedValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</div>
+        <DisabledControl inline={control.inline} value={updatedValue?`${updatedValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ','):""} style={{textAlign:'right'}}  />
     ):(
         <InputNumber  
             style={{width:'100%'}}

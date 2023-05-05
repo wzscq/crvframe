@@ -295,15 +295,17 @@ func convertMany2manyValue(modelID string,field *Field,value interface{})(string
 
 func convertFieldOpIn(op string,field string,value interface{},fields *[]Field,modelID string)(string,int){
     //查看当前字段是否是many2many字段
-    for _,fieldItem:=range *fields {
-        if fieldItem.Field==field && fieldItem.FieldType !=nil && *fieldItem.FieldType == FIELDTYPE_MANY2MANY {
-            //对字段的值做转换，改为一个子查询字符串
-            var err int
-            value,err=convertMany2manyValue(modelID,&fieldItem,value)
-            if err != common.ResultSuccess {
-                return "",err
+    if fields!=nil {
+        for _,fieldItem:=range *fields {
+            if fieldItem.Field==field && fieldItem.FieldType !=nil && *fieldItem.FieldType == FIELDTYPE_MANY2MANY {
+                //对字段的值做转换，改为一个子查询字符串
+                var err int
+                value,err=convertMany2manyValue(modelID,&fieldItem,value)
+                if err != common.ResultSuccess {
+                    return "",err
+                }
+                field="id"
             }
-            field="id"
         }
     }
 

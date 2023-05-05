@@ -6,6 +6,7 @@ import moment from 'moment';
 
 import I18nLabel from '../../../../../component/I18nLabel';
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
+import DisabledControl from '../DisabledControl';
 //import './index.css';
 
 const selectUpdatedValue=(data,dataPath,field)=>{
@@ -86,7 +87,7 @@ export default function DatePickerControl({dataPath,control,field}){
     }
     
     let datePickerControl=control.disabled===true?(
-        <span>{getValueLabel(value)}</span>
+        <DisabledControl inline={control.inline} value={getValueLabel(value)} />
     ):(
         <DatePicker  
             value={value} 
@@ -102,6 +103,10 @@ export default function DatePickerControl({dataPath,control,field}){
         <Tooltip title={<I18nLabel label={valueError.message}/>}>
             {datePickerControl}
         </Tooltip>):datePickerControl;
+
+    if(control.inline){
+        return datePickerControl;
+    }
 
     //(modifiedValue!==undefined)?'control-text-modified':
     const className=valueError?'control-text-error':'control-text-normal';

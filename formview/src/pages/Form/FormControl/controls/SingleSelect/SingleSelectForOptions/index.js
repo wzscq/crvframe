@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { modiData,removeErrorField } from '../../../../../../redux/dataSlice';
 import I18nLabel from '../../../../../../component/I18nLabel';
+import DisabledControl from '../../DisabledControl';
 
 import './index.css';
 import { useMemo } from 'react';
@@ -76,7 +77,7 @@ export default function SingleSelectForOptions({dataPath,control,field}){
     }
     
     let selectControl= control.disabled===true?(
-        <div>{getValueLabel(updatedValue)}</div>
+        <DisabledControl inline={control.inline} value={getValueLabel(updatedValue)}  />
     ):(<Select  
         style={{width:'100%'}}  
         placeholder={control.placeholder?<I18nLabel label={control.placeholder}/>:""} 
