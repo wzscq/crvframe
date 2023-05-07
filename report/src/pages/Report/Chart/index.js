@@ -54,6 +54,7 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
     },[id,frameParams,reportID,sqlParameters,filterData,sendMessageToParent,dispatch]);
 
     const chartOption=useMemo(()=>{
+        console.log(data);
         if(data?.loaded===true){
             //根据配置和数据生成系列参数
             if(data.list&&data.list.length>0){
