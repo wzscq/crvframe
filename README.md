@@ -125,7 +125,7 @@ Use MySQL client to connect to the MySQL server, use the database **demodb** cre
 Run this init script in **demodb** database.
 
 ## Create app configuration
-In the directory of application conifiguration files,create the a sub directory for the app. 
+In the directory of application conifiguration files,create a sub directory for the app. 
 
 The directory name must be the same as the app database name. 
 
@@ -136,7 +136,7 @@ For this guid, we create a sub directory named demodb in /root/crvframe/apps:
 From this code repository,find the folder /initapp/init_app_conf, copy all of the files and sub folders in the folder to the app configuration directory /root/crvframe/apps/demodb.
 
 ## Register your app in redis app cache DB
-Use redis clinet tool to connect to the redis server. Choose the app cache DB which setted with conf.json.Add following key values to the DB.
+Use redis client tool to connect to the redis server. Choose the app cache DB which setted with conf.json.Add following key values to the DB.
 
 **key**：
     
@@ -219,7 +219,7 @@ The content of menus.json is a JSON array, each item of the array is a menu item
 
 
 ## Config Models
-A model is a entity of the app, it typically has a corresponding table in the app's database. An app often has multiple models. The models of the app has multiple relationships to each other. The crvframe use model configuration files to configure the application's models, through which the crvframe service knows how to show and manipulate the data in the database.
+A model is a entity of the app, it typically has a corresponding table in the app's database. An app often has multiple models. The models of the app has multiple relationships to each other. The crvframe use model configuration files to configure the application's models, through which the crvframe service knows how to manipulate the data in the database.
 
 In the root directory of the crvframe configuration created at deployment time, locate the subdirectory apps/your_app_id/models folder. There should already have some sub folders. Each folder is a model, the
  folder name is the model name. Attention the folders with the name start with core_, these folders are initial models of the app used by the crvframe itsself, and you must be carefully when modifying these model configuration files. 
@@ -256,9 +256,9 @@ This example is the configuration of the core_user model, and there should be a 
 
     * **field** The name of the field.
 
-    * **name** The label of the field on the web.
+    * **name** The label of the field when displayed on web page.
 
-    * **dataType** The value type of the field, currently, the crvframe support these types: varchar、int、datetime、decimal.
+    * **dataType** The value type of the field, currently, the types crvframe supported are varchar、int、datetime、decimal.
 
     * **fieldType** Applies only to relationship fields and represents the relationship type. If the field is referenced to another model or by annother model, the field is the relationship field.crvframe support three relationship types: one2many、many2one、many2many.
 
@@ -303,7 +303,7 @@ Each model folder contains a subfolder called operations that contains JSON file
 
   * **input** The optional input data of the operation，normally you need not to set this attribute，in a series of operations，crvframe use the result the previous oeration as the input data of the next one.  
 
-  * **input** The description of the operation，which will be dispalyed in the operation dialog.
+  * **description** The description of the operation，which will be dispalyed in the operation dialog.
 
   * **successOperation** If the operation succeeds, the successOperation is executed. The successOperation is a operation itself and has also the successOperation attribute. With this attribute, you can configue a sequeence of operations.
 
@@ -325,7 +325,7 @@ Each model folder contains a subfolder called operations that contains JSON file
         },
       }
       ```
-      * **url** URL of the page to open. crvframe supplies three basic pages to used to present the data. 
+      * **url** URL of the page to open. crvframe supplies three basic pages that can be used to present the data. 
         * **listview**  The listview present data in a table and are used to explore or search for data in the model. The URL of a listview page begins with /listview/#/ followed by the id of the model. The example above opens a listview of the model with id core_user.
         * **formview** The formview used to create、edit or view a single record of a model. The URL of a formview page begins with /formview/#/ followed by the id of the model and the id of the form and the type of the form。 
           ```          
