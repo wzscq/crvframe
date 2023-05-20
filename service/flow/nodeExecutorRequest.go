@@ -80,6 +80,7 @@ func (nodeExecutor *nodeExecutorRequest)sendRequest(
 		log.Println(err)
 		return nil,common.ResultPostExternalApiError
 	}
+	log.Println("userToken:",userToken)
 	postReq.Header.Set("token", userToken)
 	postReq.Header.Set("userID", userID)
 	postReq.Header.Set("appDB", appDB)

@@ -412,12 +412,36 @@ Each model folder contains a subfolder called operations that contains JSON file
         **note** You can set other keys and values in input, before sending the http request crvframe will merge the value of input and the value of the page,so these values will send to the api.If the key of the input value is the same as the key of the page value,thie value of input will be overwritten by the value of the page.
       
   * **reloadFrameData**
+      * **description**: notifies the page to reload its data.
+      * **parameters**:
+        ```
+          "params":{
+            "location":"tab",
+            "key":"/model/core_user"
+          },
+        ```
+        * **location**: the location of the page when it was opened.
+        * **key**: the key of the page, which identifies the page to be notified. 
 
   * **logout**
+    * **description**: logout.
+    * **parameters**:none.
 
   * **message**
+    * **description**: display a message to the user.
+    * **parameters**:
+      ```
+      "params":{
+        "type":"success",
+        "content":"删除记录成功!",
+        "duration":"2"
+      }
+      ```
+      * **type** the message type, its value can be success、error or warning.
+      * **content** the content of the message.
+      * **duration** how many seconds before the message disappears.
+  
 
-  * **downloadFile**
 
 
 

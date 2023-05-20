@@ -304,7 +304,7 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
 
 **Operation Types:**
   * **open**
-    * **description**: open a web page.
+    * **description**: 打开一个页面。
     * **parameters**: 
       ```
       {
@@ -318,31 +318,31 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
         },
       }
       ```
-      * **url** URL of the page to open. crvframe supplies three basic pages that can be used to present or edit data. 
-        * **listview**  The listview present data in a table and are used to explore or search for data in the model. The URL of a listview page begins with /listview/#/ followed by the id of the model. The example above opens a listview of the model with id core_user.
-        * **formview** The formview used to create、edit or view a single record of a model. The URL of a formview page begins with /formview/#/ followed by the id of the model and the id of the form and the type of the form。 
+      * **url** 页面的URL。crvframe提供了三个基础的页面用于展示和编辑数据。 
+        * **listview**  用于列表数据的展示，对于一个数据模型的访问，通常首先是通过菜单打开模型对应的列表数据，用户可以在列表中对数据进行过滤，也可以在列表中勾选数据进行进一步的操作处理。listview页面的URL以/listview/#/开始，后面跟上模型的ID。上面的例子中的url表示在listview中展示模型core_user的数据。
+        * **formview** formview用于创建或编辑模型的数据，也可以用于展示模型数据的详情，formview一次仅能显示或编辑模型的单个记录。 formview页面的URL以/formview/#/开始，后面依次跟上模型ID、表单ID、操作类型。 
           ```          
-          //this url is used to open a formview of the model core_user. the id of the form is form1 and the type of the form is create. 
+          //下面这个url用于打开一个formview用于创建模型core_user的记录，创建记录时将使用的表单ID为form1，操作类型create表示用于创建记录。 
           /formview/#/core_user/form1/create
           ```
-          crvframe support three form types:
-          * **create** Used to input new record of a model.
-          * **edit** Used to edit the existed record of a model.
-          * **detail** Used to view the detail of a record of a model.You can not edit any data in this type of forms.
-        * **report** The report used to view statistical charts.The URL of a report page begins with /report/#/ followd by the id the the report. 
+          crvframe支持三种表单操作类型:
+          * **create** 用于创建新的模型记录。
+          * **edit** 用于编辑一个已经存在的记录。
+          * **detail** 用于查看一个记录的详细信息，详情页面中不能对数据做任何修改。
+        * **report** 报表页面使用图表形式展示统计数据。报表页面的URL以/report/#/开头，后面跟上报表的ID。
           ```          
-          //this url is used to open a report page. the id of the report is dashboard. 
+          //下面这个URL用于打开ID为dashboard的报表页面。 
           /report/#/dashboard
           ```
-      * **location** Where to open the page. crvframe support two locations to show the page:
-        * **tab** Open the page in the tab content area below the header bar of the main window.
-        * **modal** Open a modal window to show the page. 
-      * **title** The tile of the page.
-      * **key** The key of the page, which other operations can use to refer to the page.
-      * **view** Each model in a crvframe can have multiple views, and when you use a listview to display the model's data, the first view is displayed by default.You can use this parameter to set the default view that is displayed.The value of this parameter is the id of the view. This parameter is optional and valid only for listview.
-      * **filter** Used to set the initial filter of the listview.This parameter is optional and valid only for listview.
-    * **input** When the operation is invoked through a button on a crvframe page, the input is populated by the page.In some cases,you can set the input in operation configuations.
-      * When open a formview with the type of create to create a record of the model, you can set the input value as the initial value of the new record.
+      * **location** 指定页面打开的位置。crvframe中目前有两个位置可以打开页面：
+        * **tab** 在位于标题栏下方的内容展示区中创建一个新的tab页来打开页面。
+        * **modal** 在弹出的模态框中打开页面。 
+      * **title** 打开页面的标题栏上的文字。
+      * **key** 页面的唯一标识。在操作中可以通过这个标识来引用页面，比如要刷新一个页面的数据。
+      * **view** 在crvframe中一个模型允许包含多个视图，当使用listview展示一个模型的数据时，将默认先显示第一个视图的数据，通过这个参数，可以指定默认显示其它视图的数据。这个参数的值对应一个视图的ID。这个参数是可选的，目前仅在打开listview时有效。
+      * **filter** 用于指定打开模型的列表页时使用的默认过滤条件。这个参数是可选的，目前仅在打开listview时有效。
+    * **input** 当通过crvframe的页面上的按钮调用一个operation时，input的值都是根据用户在页面的选择或录入生成的。在一些特定的场景中，可以通过指定input参数来配置操作的输入数据。
+      * 例如在打开一个create类型的formview用于创建模型的数据时，可以通过设置input参数来指定新创建的记录的初始值。
         ```
         {
           "input":{
@@ -350,10 +350,10 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
           },
         }
         ```
-        **note** The input value must be placed in an array called list.The input value is an object, each key is a field of the model, and the value is the value to update.The example above set the default value of the gender field to female.    
+        **note** 这里注意input参数的格式，之所以要采用这样看上去比骄复杂的格式是为了保持程序整体数据格式的一致性。输入的初始值必须放在名称为list的array中，输入参数是一个对象，对象的属性对应模型的字段。上面的示例展示了如何将gender字段的值设置为female。    
 
   * **close**
-    * **description**: close a web page.
+    * **description**: 关闭一个已经打开的页面。
     * **parameters**: 
       ```
       {
@@ -362,9 +362,9 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
         },
       }
       ```
-      * **location** Now，crvframe can only close the top most modal window，so the location must be modal.
+      * **location** 目前，crvframe仅允许关闭一个位于最顶层的模态对话框。所以ocation参数必须是modal。
   * **request**
-    * **description**: send a http request.
+    * **description**: 发起http调用。
     * **parameters**:
       ```
       {
@@ -374,16 +374,16 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
         },
       }
       ```
-      * **url** The destination url of the the http request.crvframe supplies following interfaces for operation on the model's data. 
-        * **/data/query** Query data from the database.crvframe's listview use this interface to retrieve data.This interface use post method.
-        * **/data/save** Save the model's data into the database.This interface use post method.
-        * **/data/delete** Delete the records of models from the database by conditions.This interface use post method.
-        * **/data/update** Update values of records of models to the database by conditions.This interface use post method.
-        * **/redirect** To invoke the external api，you can use redirect interface.
-      * **method** The method of the http request.
-    * **input** When the operation is invoked through a button on a crvframe page, the input is populated by the page.In some cases,you can set the input in operation configuations.   
-      * When you want to use /data/update interface to update the values of some records to fixed values,you can set input in configuration to the fixed values. 
-        The belowing example updates the value of the gender field to female.
+      * **url** 调用的目标地址。crvframe提供了以下标准调用用于操作位于数据库中的模型数据。 
+        * **/data/query** 查询数据。crvframe中的listview使用这个接口来进行模型数据的过滤查找。
+        * **/data/save** 保存模型数据到数据，保存接口集成了新增、删除、更新数据的功能，根据数据中携带的标识进行实际的操作，一次可以操作多个相关联的模型的数据。
+        * **/data/delete** 基于给定条件，对符合条件的数据做删除处理。
+        * **/data/update** 基于给定条件，对符合条件的数据将指定字段值统一更新为给定的值。
+        * **/redirect** 如果要调用第三方的API或定制接口，则可以使用redirect。这个方式避免了前端页面直接调用第三方接口的情况。
+      * **method** 调用请求的http method。目前crvframe提供的接口均采用post方式。
+    * **input** 在调用接口时，可以通过input参数提供一些固定的数据。以下是目前crvframe提供的接口中使用input的场景： 
+        当使用/data/update接口更新数据时，如果希望将选定的记录的字段更改为固定的值，则可以通过设置input参数来实现。 
+        下面的例子将所有选定记录的gender字段的值修改为female。
         ```
         {
           "input":{
@@ -391,9 +391,9 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
           },
         }
         ```
-        **note** The input value must be placed in an array called list.The input value is an object, each key is a field of the model, and the value is the value to update.
+        **note** 这里允许同时修改多个字段的值。
       
-      * When you use redirect interface to invoke the external api,you can supply the id of the external api in input with the key of to.
+      * 当使用redirect接口调用外部的API接口时，需要通过input参数提供外部接口的标识，外部接口通过inut参数中的to属性指定。
         ```
           {
             "input":{
@@ -402,15 +402,39 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
             },
           }
         ```
-        **note** You can set other keys and values in input, before sending the http request crvframe will merge the value of input and the value of the page,so these values will send to the api.If the key of the input value is the same as the key of the page value,thie value of input will be overwritten by the value of the page.
+        **note** 在input参数中也可以设置其它的键值属性，当crvframe发送http请求之前会将用户在页面上的输入数据和这些数据进行合并，这些属性值也将被传递给对应的API，这里需要注意的是如果用户在页面上录入的数据的键名称和input参数中的键名一致时，用户在页面录入的数据会覆盖input中设置的数据。
       
   * **reloadFrameData**
+    * **description**: 通知指定的页面重新加载数据。
+    * **parameters**:
+      ```
+        "params":{
+          "location":"tab",
+          "key":"/model/core_user"
+        },
+      ```
+      * **location**: 要刷新的页面的打开位置，tab、modal。
+      * **key**: 要刷新的页面的标识，这个值对应在open操作中指定的key。 
 
   * **logout**
+    * **description**: 登出系统。
+    * **parameters**:无参数
 
   * **message**
+    * **description**: 向用户显示提示信息。
+    * **parameters**:
+      ```
+      "params":{
+        "type":"success",
+        "content":"删除记录成功!",
+        "duration":"2"
+      }
+      ```
+      * **type** 提示信息的类型，取值包括：success、error、warning
+      * **content** 提示信息的内容。
+      * **duration** 提示信息显示几秒后自动消失。
+ 
 
-  * **downloadFile**
 
 
 

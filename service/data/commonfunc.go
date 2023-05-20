@@ -2,12 +2,12 @@ package data
 
 import (
 	"strings"
-	"log"
+	//"log"
 )
 
 func replaceApostrophe(str string)string{
-	log.Println(str)
+	//log.Println(str)
 	replacedStr:=strings.ReplaceAll(str,"'","''")
-	log.Println(replacedStr)
+	//log.Println(replacedStr)
 	return replacedStr
 }

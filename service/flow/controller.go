@@ -41,6 +41,7 @@ func (controller *FlowController)start(c *gin.Context){
 	userRoles:= c.MustGet("userRoles").(string)
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
+	token:=c.MustGet("userToken").(string)
 
 	var result *flowReqRsp
 	var header repHeader
@@ -77,8 +78,9 @@ func (controller *FlowController)start(c *gin.Context){
 		log.Println("end FlowController start")
 		return
 	}
+	log.Println("userToken:",token)
 	//执行流
-	result,err:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles,header.Token)
+	result,err:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles,token)
 
 	//如果流中存在待执行的节点，则保存流实例到缓存
 	if !flowInstance.Completed {
@@ -107,6 +109,9 @@ func (controller *FlowController)push(c *gin.Context){
 	//要推动一个流，需要至少提供一个流实例的ID，对于某些节点还需要提供stage
 	userRoles:= c.MustGet("userRoles").(string)
 	userID:= c.MustGet("userID").(string)
+	token:=c.MustGet("userToken").(string)
+
+	log.Println("userToken:",token)
 	//appDB:= c.MustGet("appDB").(string)
 	var result *flowReqRsp
 	var header repHeader
@@ -145,7 +150,7 @@ func (controller *FlowController)push(c *gin.Context){
 	}
 
 	//执行流
-	result,commonErr:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles,header.Token)
+	result,commonErr:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles,token)
 
 	//如果流中存在待执行的节点，则保存流实例到缓存
 	if !flowInstance.Completed {
