@@ -553,8 +553,99 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
           ]
         }
         ```
+    * **filter** 可以为视图指定一个数据的过滤条件，当用户通过listview查看模型的数据时，可以通过不同的视图来查看不同的数据子集，通过过滤可以方便用户查看不同的状态的数据，减少复杂查询条件的录入。过滤条件是一个对象，具体参数格式可参考以下示例：
+      ```
+      //以下过滤条件的配置对应的SQL过滤条件为：  where field1=value1 and field2 in (val1,val2) and (field3=val3 or field4=val4) 
+      {
+        "filter":{
+          "field1":"value1",
+          "field2":{"Op.in":["val1","val2"]},
+          "Op.or":[
+            {"field3":"val3"},
+            {"field4":"val4"},
+          ]
+        }
+      }
+      ```
+      在filter中允许使用一些全局系统变量来过滤数据，包括：当前登录用户ID，当前登录用户角色。
+      ```
+      //以下示例中演示了使用当前登录用户ID(**%{userID}**)和用户的角色(%{userRoles})过滤数据，这里需要注意的是因为一个用户一般是可以有多个对应的角色，所以当使用用户的角色来过滤数据时，应该使用Op.in。 
+      {
+        "filter":{
+          "create_user":"",
+          "field2":{"Op.in":["val1","val2"]},
+          "Op.or":[
+            {"create_user":"%{userID}"},
+            {"user_role":{"Op.in":[%{userRoles}]}},
+          ]
+        }
+      }
+      ```
       
-    
+    * **filterData**  举一个实际场景的例子，如果当前模型对应的是文档资料，每个文档上有一个字段标识了这个文档归属的部门，系统仅允许当前登录用户查询所在部门的文档，因此这里需要先根据当前用户ID查找到他所在的部门，然后再用查找的结果去过滤文档资料。filterData参数用于配置需要的filter执行前查询的其它参数。下面是和我们这个场景对应的filterData和filter的配置：
+      ```
+      {
+        "filterData":[
+          {
+              "modelID":"model_staff",
+              "filter":{"login_id":"%{userID}"},
+              "fields":[
+                  {
+                      "field":"departments",
+                      "fieldType":"many2many",
+                      "relatedModelID":"model_department",
+                      "fields":[
+                          {"field":"id"}
+                      ]
+                  }
+              ]
+          }
+        ],
+        "filter": {
+          "department_id":{
+            "Op.in":["%{model_staff.departments.id}"]
+            }
+          }, 
+      }
+      ```
+      filterData参数是一个数组，因此我们可以配置多个查询，这些查询都可以在filter中被引用。这里在filter中使用了filterData的查询结果，和使用全局变量一样，对filterData的引用需要放在%{}中。
+      filterData中的查询可以通过关联字段实现多层级的数据关联查询，目前没有层级数量显示，但层架较多可能会影响查询速度。
+      filterData中的filter格式和视图中的filter配置形式一致，允许使用全局参数，但不允许使用filterData的结果。
+      在视图的filter中引用filterData的结果时，可以根据查询的层级使用点号实现多层级数据的引用。注意这里的多层级引用时，第一个层级的名称取的是modelID，后续层级的名称按照引用的字段名称来引用。不如上面的样例中filter中引用了filterData中的model_staff.departments.id的值，其中model_staff是第一层的modelID，departments、id分别是第二、第三层级中的字段ID。
+      因为查询结果通常是一个列表，所以这里的过滤条件一般采用Op.in的形式。对于多层级的字段值，crvframe会将所有数据展开成一个数组放入Op.in对应的值数据中。
+
+    * **sorter** 这个参数用于指定查询数据时默认的数据排序，sorter参数是一个数组，允许指定多个字段进行排序，数组中的一个项目对应一个字段，crvframe会按照字段在数据中的先后顺序作为优先级来对数据进行排序处理。以下是一个配置样例：
+      ```
+      //这个例子指定按照update_time字段对数据进行降序排列
+      {
+        "sorter":[
+          {"field":"update_time","order":"desc"}
+        ]
+      }
+      ```
+
+    * **toolbar** 这个参数用于配置视图上的按钮，通过这些按钮用户可以调用后端服务对数据执行操作，或者打开编辑表单页面让用户对数据进行编辑操作。toolbar参数是一个对象，包含两属性，分别对应了视图右上角的操作栏和数据行上的操作栏。两个属性的说明如下：
+      * **listToolbar** 位于listview页面右上角的工具栏，用于配置工具栏上的按钮，具体配置格式示例如下：
+        ```
+        "listToolbar": {
+            "showCount": 3, 
+            "buttons": [
+              {
+                "operationID": "create",
+                "name":"新增"
+              },
+              {
+                "operationID": "submmit",
+                "name":"提交"
+              }
+            ]
+        }
+        ```
+
+      * **rowToolbar**
+
+
+
 
 
 
