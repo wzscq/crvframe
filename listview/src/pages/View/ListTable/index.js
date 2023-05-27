@@ -14,6 +14,7 @@ import RowOperationBar from '../RowOperationBar';
 import ColumnControl from "./ColumnControl";
 import I18nLabel from "../../../components/I18nLabel";
 import './index.css';
+import { formatStringNumber } from "../../../utils/functions";
 //import { FIELD_TYPE } from "../../../utils/constant";
 
 export default function ListTable({sendMessageToParent}){
@@ -270,7 +271,7 @@ export default function ListTable({sendMessageToParent}){
                             viewConf.fields.map((field,index)=>{
                                 if(field.summarize&&summaries[field.field]){
                                     let value=summaries[field.field];
-                                    value=value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                                    value=formatStringNumber(value); //value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
                                     return (
                                         <Table.Summary.Cell index={index+commonColCount}>{value}</Table.Summary.Cell>
                                     );

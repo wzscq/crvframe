@@ -1,12 +1,20 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
+import {ConfigProvider} from 'antd';
+import zh_CN from 'antd/lib/locale/zh_CN';
+import en_US from 'antd/lib/locale/en_US';
 
 import { FORM_TYPE } from "../../utils/constant";
 import FormControl from './FormControl';
 
 import './index.css';
 
-export default function EditForm({formConf,sendMessageToParent,fields,formType}){
+const locales={
+  zh_CN:zh_CN,
+  en_US:en_US
+}
+
+export default function EditForm({locale,formConf,sendMessageToParent,fields,formType}){
   const rowKey = useSelector(state=>{
     return Object.keys(state.data.updated)[0]
   });
@@ -40,8 +48,10 @@ export default function EditForm({formConf,sendMessageToParent,fields,formType})
   },[formConf,fields,formType,dataPath,sendMessageToParent]);
 
   return (
-    <div className='edit-form' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
-        {controls}
-    </div>
+    <ConfigProvider locale={locales[locale]}>
+      <div className='edit-form' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
+          {controls}
+      </div>
+    </ConfigProvider>
   );
 }

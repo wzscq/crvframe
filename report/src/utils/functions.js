@@ -34,3 +34,7 @@ export function utf8_to_b64(str) {
 export function b64_to_utf8(str) {
     return decodeURIComponent(escape(window.atob(str)));
 }
+
+export function formatStringNumber(numStr,locale='en-US'){
+    return numStr?.length>0?parseFloat(numStr).toLocaleString(locale, {minimumFractionDigits: 0,maximumFractionDigits: 20}):'';
+}

@@ -3,6 +3,7 @@ import {useEffect, useMemo } from 'react';
 import {useSelector} from 'react-redux';
 
 import useFrame from "../../hook/useFrame";
+import useI18n from '../../hook/useI18n';
 import {createGetReportConfMessage} from '../../utils/normalOperations';
 import PageLoading from '../../components/PageLoading';
 import {getControl}  from './controls';
@@ -11,6 +12,7 @@ import Header from './Header';
 import './index.css';
 
 export default function Report(){
+    const {locale}=useI18n();
     const {reportID}=useParams();
     const {origin,item}=useSelector(state=>state.frame);
     const {loaded,reportConf} = useSelector(state=>state.definition);
@@ -54,7 +56,7 @@ export default function Report(){
 
     return (
         <>
-        <Header filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
+        <Header locale={locale}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
         <div className='layout-grid' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
             {controls}
         </div>

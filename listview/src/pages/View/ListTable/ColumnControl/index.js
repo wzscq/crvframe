@@ -3,7 +3,10 @@ import { Tooltip } from 'antd';
 import moment from 'moment';
 
 import { FIELD_TYPE } from "../../../../utils/constant";
-import {getManyToOneValueFunc} from "../../../../utils/functions";
+import {
+    getManyToOneValueFunc,
+    formatStringNumber
+} from "../../../../utils/functions";
 import useI18n from '../../../../hooks/useI18n';
 
 import './index.css';
@@ -31,7 +34,7 @@ export default function ColumnControl({text,field, record, index}){
             value=getLocaleLabel(option.label);
         }
     } else if(text&&(field.dataType==='decimal'||field.dataType==='int')){
-        value=text.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        value=formatStringNumber(text); //.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         className='listtable-column-number';
     } else if(text&&field.dataType==='datetime'&&field.format){
         value=moment(text).format(field.format);

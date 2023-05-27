@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import I18nLabel from '../../../../../component/I18nLabel';
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
 import DisabledControl from '../DisabledControl';
+import {formatStringNumber} from '../../../../../utils/functions';
 
 const selectUpdatedValue=(data,dataPath,field)=>{
     let updatedNode=data.updated;
@@ -65,9 +66,9 @@ export default function Number({dataPath,control,field}){
     //获取文本输入框的标签，如果form控件配置了label属性则直接使用，
     //如果控件没有配置label属性，则取字段配置的字段name
     const label=control.label?control.label:(field?field.name:"");
-    
+
     let inputControl=control.disabled===true?(
-        <DisabledControl inline={control.inline} value={updatedValue?`${updatedValue}`.replace(/\B(?=(\d{3})+(?!\d))/g, ','):""} style={{textAlign:'right'}}  />
+        <DisabledControl inline={control.inline} value={formatStringNumber(updatedValue,'en-US')} style={{textAlign:'right'}}  />
     ):(
         <InputNumber  
             style={{width:'100%'}}
@@ -77,8 +78,8 @@ export default function Number({dataPath,control,field}){
             disabled={control.disabled} 
             onChange={onChange}
             ref={inputRef}
-            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            parser={(value) => value.replace(/\s?|(,*)/g, '')}
+            formatter={(value) =>formatStringNumber(value,'en-US')}
+            parser={(value) => value.replace(/,/g, '')}
             status={valueError?'error':null}
         />);
 

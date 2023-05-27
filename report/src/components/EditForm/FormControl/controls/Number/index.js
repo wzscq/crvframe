@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import I18nLabel from '../../../../I18nLabel';
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
+import {formatStringNumber} from '../../../../../utils/functions';
 
 const selectUpdatedValue=(data,dataPath,field)=>{
     let updatedNode=data.updated;
@@ -74,8 +75,8 @@ export default function Number({dataPath,control,field}){
             disabled={control.disabled} 
             onChange={onChange}
             ref={inputRef}
-            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-            parser={(value) => value.replace(/\s?|(,*)/g, '')}
+            formatter={(value) =>formatStringNumber(value)}
+            parser={(value) => value.replace(/,/g, '')}
             status={valueError?'error':null}
         />);
 
