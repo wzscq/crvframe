@@ -13,8 +13,14 @@ export default function useI18n(){
                 return resources[key];
             }
         }
-        return item.message+' '+item.errorCode;
-    },[resources]);
+
+        let message = item.message;
+        if(message[locale]){
+            return message[locale]
+        }
+
+        return message+' '+item.errorCode;
+    },[resources,locale]);
 
     const getLocaleLabel=useCallback((title)=>{
         if(title.key&&resources[title.key]){

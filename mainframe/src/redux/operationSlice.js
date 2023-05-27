@@ -15,6 +15,21 @@ const initialState = {
     needConfirm:false
 }
 
+const inputValidation=(input,inputValidation)=>{
+    //inputValidate是一个JS脚本，用于对输入进行校验和转换
+    //创建一个函数，用于执行inputValidate脚本
+    const funStr='"use strict";'+
+            'return (function(input){ '+
+                'try {'+
+                inputValidation+
+                '} catch(e) {'+
+                '   console.error(e);'+
+                '   return undefined;'+
+                '}'+
+            '})';
+    return Function(funStr)()(input);
+}
+
 export const operationSlice = createSlice({
     name: 'operation',
     initialState,
@@ -66,6 +81,23 @@ export const operationSlice = createSlice({
                             }
                         }
                     }
+
+                    //对操作的输入进行校验何转换处理
+                    if(state.current?.inputValidation){
+                        const {error,errorCode,message,result}=inputValidation(state.current.input,state.current.inputValidation);
+                        if(error===true){
+                            console.log("输入校验失败:"+JSON.stringify({error,errorCode,message,result}));
+                            state.current.message=message;
+                            state.current.errorCode="";
+                            state.current.result=OP_RESULT.ERROR;
+                            state.current=state.current.errorOperation;
+                            //执行失败，但是没有失败的后续操作，则需要用户确认后关闭操作信息对话框 
+                            state.needConfirm=!(state.current);
+                        } else {
+                            state.current.input=result;
+                        }    
+                    }
+
                 } else {
                     console.log("operationDone",errorCode)
                     //执行失败

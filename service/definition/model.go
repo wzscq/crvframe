@@ -45,6 +45,7 @@ type operationConf struct {
 	Type string `json:"type"`
 	Params map[string]interface{} `json:"params"`
 	Input map[string]interface{} `json:"input"`
+	InputValidation *string `json:"inputValidation,omitempty"`
 	Description interface{} `json:"description"`
 	SuccessOperation *operationConf `json:"successOperation,omitempty"`
 	ErrorOperation *operationConf `json:"errorOperation,omitempty"`

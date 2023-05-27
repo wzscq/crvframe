@@ -211,11 +211,7 @@ func (controller *DataController)download(c *gin.Context) {
 		List:rep.List,
 	}
 
-	c.Header("Content-Type", "application/octet-stream")
-    c.Header("Content-Disposition", "attachment; filename=downloadFile")
-    c.Header("Content-Transfer-Encoding", "binary")
-
-	errorCode=download.Execute(c.Writer)
+	errorCode=download.Execute(c)
 	if errorCode!=common.ResultSuccess {
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusInternalServerError, rsp)
