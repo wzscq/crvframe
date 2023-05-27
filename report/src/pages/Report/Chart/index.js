@@ -7,7 +7,12 @@ import moment from 'moment';
 import {setDataLoaded} from '../../../redux/reportSlice';
 import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 
-export default function Chart({controlConf,reportID,sendMessageToParent,frameParams}){
+const locales={
+    zh_CN:'ZH',
+    en_US:'EN'
+}
+
+export default function Chart({controlConf,reportID,sendMessageToParent,frameParams,locale}){
     const refChart=useRef();
     const { width,ref,height } = useResizeDetector();
     const {id,option,minHeight,row,col,colSpan,rowSpan,sqlParameters}=controlConf;
@@ -69,14 +74,16 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
     
     useEffect(()=>{
         if(refChart&&refChart.current&&chartOption!==null){
+            console.log('Chart render',locale);
             let chart=echarts.getInstanceByDom(refChart.current);        
-            if(!chart){
-                chart=echarts.init(refChart.current);
+            if(chart){
+                chart.dispose();
             }
+            chart=echarts.init(refChart.current,'light', {locale:locales[locale]});
             chart.setOption(chartOption);
         }
     },
-    [refChart,chartOption]);
+    [refChart,chartOption,locale]);
 
     useEffect(()=>{
         if(refChart&&refChart.current){

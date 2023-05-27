@@ -17,10 +17,10 @@ const controls={
   [CONTROL_TYPE.TABLE]:Table
 }
 
-export const getControl=(control,frameParams,reportID,sendMessageToParent)=>{
+export const getControl=(control,frameParams,reportID,sendMessageToParent,locale)=>{
   const Component=controls[control.controlType];
   if(Component){
-      return <Component key={control.id} frameParams={frameParams} controlConf={control} reportID={reportID} sendMessageToParent={sendMessageToParent} />;
+      return <Component locale={locale} key={control.id} frameParams={frameParams} controlConf={control} reportID={reportID} sendMessageToParent={sendMessageToParent} />;
   }
   return (<div>{"unkown control:"+control.controlType}</div>);
 }

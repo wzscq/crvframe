@@ -12,7 +12,7 @@ import Header from './Header';
 import './index.css';
 
 export default function Report(){
-    const {locale}=useI18n();
+    const {locale,getLocaleLabel}=useI18n();
     const {reportID}=useParams();
     const {origin,item}=useSelector(state=>state.frame);
     const {loaded,reportConf} = useSelector(state=>state.definition);
@@ -48,7 +48,7 @@ export default function Report(){
     const {colCount,rowHeight}=reportConf;
     const controls=reportConf.controls.map(item=>{
         console.log('control:',item);
-        return getControl(item,frameParams,reportID,sendMessageToParent);
+        return getControl(item,frameParams,reportID,sendMessageToParent,locale);
         /*if(item.controlType==='EChart'){
             return (<Chart key={item.id} frameParams={frameParams} controlConf={item} reportID={reportID} sendMessageToParent={sendMessageToParent} />);
         }*/
@@ -56,7 +56,7 @@ export default function Report(){
 
     return (
         <>
-        <Header locale={locale}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
+        <Header locale={locale} getLocaleLabel={getLocaleLabel}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
         <div className='layout-grid' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
             {controls}
         </div>
