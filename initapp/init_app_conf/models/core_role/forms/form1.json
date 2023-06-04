@@ -7,7 +7,7 @@
       "label":"创建角色"
   },
   "footer":{
-      "operations":[
+      "buttons":[
           {
               "operationID":"save",
               "name":"保存"

@@ -7,7 +7,7 @@
       "label":"任务详情"
   },
   "footer":{
-      "operations":[
+      "buttons":[
           {
               "name":"关闭",
               "type":"close",

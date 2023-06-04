@@ -64,7 +64,7 @@ export default function FormView({fromTitle,formType,sendMessageToParent}){
         let headerOperations=[];
         if(form&&form.header){
             headerLabel=fromTitle?fromTitle:form.header.label;
-            const formOperations=form.header.operations;
+            const formOperations=form.header.buttons?form.header.buttons:form.header.operations;
             if(Array.isArray(formOperations)){
                 headerOperations=formOperations.map(element=>{
                     if(element.operationID){
@@ -88,7 +88,7 @@ export default function FormView({fromTitle,formType,sendMessageToParent}){
         let footOperations=[];
         if(form&&form.footer){
             footLabel=form.footer.label;
-            const formOperations=form.footer.operations;
+            const formOperations=form.footer.buttons?form.footer.buttons:form.footer.operations;
             if(Array.isArray(formOperations)){
                 footOperations=formOperations.map(element=>{
                     if(element.operationID){

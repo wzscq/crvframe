@@ -7,7 +7,7 @@
       "label":"创建用户"
   },
   "footer":{
-      "operations":[
+      "buttons":[
           {
               "operationID":"save",
               "name":"保存"
