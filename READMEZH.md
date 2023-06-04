@@ -766,6 +766,8 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
     * **rowSpan** 组件高度占用的行数。
     * **colSpan** 组件宽度占用的列数。
     * **label** 组件的标题，这个参数是可选的，如果不设置则取对应field的name属性。
+    * **disabled** 组件是否可编辑，true/false。
+    * **required** 编辑或创建数据时，组件的值是否必须填写，true/false。
     * **validation** 用于配置字段值有效性的校验逻辑，validation是一个对象，包含以下属性：
       * **func** js函数脚本，参数record表示表单的数据，函数应返回一个bool值，true表示校验通过，false表示校验失败。
       * **message** 当校验失败时提示用户的信息。
@@ -777,7 +779,70 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
         }
       ``` 
 #### 表单中支持的组件
-#####     
+##### Text 文本录入框
+  * **controlType**：Text
+  * **说明**：用于文本数据的显示和编辑。
+  * **附加参数**
+    * **placeholder** 文本编辑框的提示信息。
+
+##### TextArea 多行文本编辑框
+  * **controlType**：TextArea
+  * **说明**：用于长文本数据的显示和编辑。
+  * **附加参数**
+    * **placeholder** 文本编辑框的提示信息。
+    * **textRowCount** 组件可直接显示的文本行数，超过这个行数需要通过滚动条拖动显示，这个行数将改变组件在页面显示的高度，可能对布局产生影响。
+
+##### DatePicker 日期选择框
+  * **controlType**：DatePicker
+  * **说明**：用于日期选择和输入。
+  * **附加参数**
+    * **showTime** 是否包含时间，组件默认仅显示日期，如果需要同时显示时间，则需要将showTime设置为true。
+
+##### TimePicker 时间选择
+  * **controlType**：TimePicker
+  * **说明**：用于时间选择和输入。
+  * **附加参数**
+    无
+
+##### Password 密码输入控件
+  * **controlType**：Password
+  * **说明**：用于密码的输入。
+  * **附加参数**
+    无
+
+##### Transfer 穿梭框控件
+  * **controlType**：Transfer
+  * **说明**：穿梭框一般用于从备选数据中选取多个，通常对应many2many字段的录入。
+  * **附加参数**
+    * **maxHeight** 控件在页面显示的最大高度。
+    * **fields** 穿梭框组件的field属性对应的模型字段通常是一个many2many字段，穿梭框中的备选数据需要从many2many字段对应的关联表中查询获取，fields用于指定查询关联表中的哪些字段，fields是一个数组，数组中的每个项目对应关联表中的一个字段，这里注意字段中必须包含id字段，每个字段的属性如下：
+      * **field** 需要查询的字段名称。
+    * **optionLabel** 这个参数和fields参数配合使用，用于指定在选择列表中显示的字段，如果不指定这个参数，crvframe会默认显示id字段的值。  
+    * **cascade** 在有些应用场景中，一个字段的数据的备选项需要依赖于其它字段已经选择的值，cascade参数用于配置当前字段的备选项依赖于其它哪些字段的取值，cascade可以是一个对象，也可以是一个数组，如果当前字段依赖的字段仅有一个则可以使用对象进行配置，如果依赖于多个字段的值，则需要使用数组形式对多个依赖字段进行配置。cascade包含的属性如下：
+      * **parentField** 指定当前字段依赖的模型中的另一个字段id。
+      * **type** 这里指定parentField的字段类型，目前仅支持many2one关联字段类型。
+
+##### SingleSelect 单选下拉框
+  * **controlType**：SingleSelect
+  * **说明**：单选下拉框组件一般用于枚举选项的选择，也可以用于many2one字段的下拉选择。
+  * **附加参数**
+    * **fields** 如果单选下拉组件对应的模型字段是一个many2one字段，下拉框中的备选项需要从关联表中查询获取，fields用于指定查询关联表中的哪些字段，fields是一个数组，数组中的每个项目对应关联表中的一个字段，这里注意字段中必须包含id字段，每个字段的属性如下：
+      * **field** 需要查询的字段名称。  
+    * **optionLabel** 这个参数和fields参数配合使用，用于指定在选择列表中显示的字段，如果不指定这个参数，crvframe会默认显示id字段的值。
+
+
+##### File 文件选择
+  * **controlType**：File
+  * **说明**：文件选择组件用于在表单中选择文件，一般用于数据导入或附件上传，文件选择组件对应的模型字段的fieldType应该是file类型。
+  * **附加参数**
+    * **maxCount** 允许选择的文件最大数量。
+    * **selectButtonLabel** 组件按钮上显示的文字，如果不指定，crvframe默认显示为**选择文件**
+
+##### EditTable 表格编辑控件
+##### FunctionTextArea 函数计算文本控件
+##### ImageList 图片文件列表
+##### Number 数值录入
+##### RichText 富文本   
 
 
 

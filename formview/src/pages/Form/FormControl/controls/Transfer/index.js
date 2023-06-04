@@ -135,9 +135,9 @@ export default function TransferControl({dataPath,control,field,sendMessageToPar
 
     const getCascadeItemFilter=(cascade,cascadeParentValue)=>{
         if(cascade.type===CASCADE_TYPE.MANY2ONE){
-            if(cascadeParentValue&&cascade.relatedField&&
-               cascadeParentValue[cascade.relatedField]){
-                return ({[cascade.relatedField]:cascadeParentValue[cascade.relatedField]});        
+            if(cascadeParentValue&&cascade.parentField&&
+               cascadeParentValue[cascade.parentField]){
+                return ({[cascade.relatedField]:cascadeParentValue[cascade.parentField]});        
             }
         } else {
             console.error('not supported cascade type:',cascade.type);
