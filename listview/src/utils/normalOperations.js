@@ -11,6 +11,7 @@ const opUpdateModelConf={
 
 const opGetModelConf={
     type:OP_TYPE.REQUEST,
+    queenable:true,
     params:{
         url:GET_MODEL_CONF_URL,
         method:"post"
@@ -42,6 +43,7 @@ const opUpdateData={
 
 const opQueryData={
     type:OP_TYPE.REQUEST,
+    queenable:true,
     params:{
         url:DATA_QUERY_URL,
         method:"post"
@@ -54,10 +56,11 @@ const opQueryData={
  * 查询参数如下
  queryParams={modelID,viewID,filter,pagination,sorter,fields}
  */
-export function createQueryDataMessage(frameParams,queryParams){
+export function createQueryDataMessage(frameParams,queryParams,queenable){
     opUpdateData.params={...opUpdateData.params,...frameParams};
     opQueryData.input=queryParams;
     opQueryData.successOperation=opUpdateData;
+    opQueryData.queenable=queenable;
     return {
         type:FRAME_MESSAGE_TYPE.DO_OPERATION,
         data:{

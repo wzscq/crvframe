@@ -9,8 +9,6 @@ export default function ChildFrame({item,locale,resources,inResize}){
     const refFrame=useRef();
     const [lastLocale,setLastLocale]=useState(undefined);
 
-    console.log('ChildFrame',lastLocale,locale,item);
-
     //注意这里的处理逻辑，当locale=undefined时表示语言资源尚未加载，这时暂不渲染iframe，
     //当locale!=undefined而lastLocale=undefined时表示iframe第一次渲染，这时触发子页的INIT
     //当locale!=undefined且lastLocale！=undefined表示iframe已经初始化了，只是语言项更新
@@ -66,11 +64,11 @@ export default function ChildFrame({item,locale,resources,inResize}){
             const onFrameLoad=()=>{
                 console.log('onFrameLoad',item.params.key);
                 const receiveMessageFromSubFrame=(event)=>{
-                    console.log("receiveMessageFromSubFrame",event);
                     const {type}=event.data;
                     if(type===FRAME_MESSAGE_TYPE.INIT){
                         window.removeEventListener('message',receiveMessageFromSubFrame);
                         const url=parseUrl(item.params.url);
+                        console.log("receiveMessageFromSubFrame1",event,item,url);
                         refFrame.current.contentWindow.postMessage({
                             type:FRAME_MESSAGE_TYPE.INIT,
                             i18n:{locale,resources},

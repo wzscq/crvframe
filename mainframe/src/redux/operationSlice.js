@@ -12,7 +12,9 @@ const initialState = {
     doneList:[],   
     //当前正执行的操作
     current:null,
-    needConfirm:false
+    needConfirm:false,
+    //允许多个不同的操作放入队列按顺序执行
+    queen:[]
 }
 
 const inputValidation=(input,inputValidation)=>{
@@ -42,11 +44,24 @@ export const operationSlice = createSlice({
         setOperation: (state,action) => {
             //如果当前操作未完成则不允许设置新的操作
             if(state.current){
-                console.log('hasOperationWhenSet:',action.payload);
+                //如果当前操作允许排队，则将当前操作放入队列
+                if(action.payload.queenable===true){
+                    state.queen=[...state.queen,action.payload];
+                } else {
+                    console.log('hasOperationWhenSet:',action.payload);
+                }
                 //message.warning('当前操作尚未执行完成，请稍后再试！');
                 //message.warning(getLocaleLabel({key:'message.main.hasOperationWhenSet',default:'当前操作尚未执行完成，请稍后再试！'}));
             } else {
                 state.current=action.payload;
+                state.doneList=[];
+            }
+        },
+        doNextOperation:(state,action) => {
+            //从队列中取出下一个操作执行
+            if(state.queen.length>0){
+                state.current=state.queen[0];
+                state.queen=state.queen.slice(1);
                 state.doneList=[];
             }
         },
@@ -119,6 +134,6 @@ export const operationSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setOperation,operationDone,operationPending,confirm} = operationSlice.actions
+export const { setOperation,operationDone,doNextOperation,operationPending,confirm} = operationSlice.actions
 
 export default operationSlice.reducer

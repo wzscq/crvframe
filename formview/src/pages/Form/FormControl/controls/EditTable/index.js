@@ -24,7 +24,6 @@ const selectUpdatedValue=(data,dataPath,field)=>{
 };
 
 const resultEqualityCheck=(a,b)=>{
-    console.log('resultEqualityCheck',a,b);
     return (JSON.stringify(a)===JSON.stringify(b));
 }
 

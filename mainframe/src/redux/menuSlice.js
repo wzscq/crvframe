@@ -24,6 +24,7 @@ export const menuSlice = createSlice({
       state.loaded=initialState.loaded;
       state.pending=initialState.pending;
       state.inlineCollapsed=initialState.inlineCollapsed;
+      state.errorCode=initialState.errorCode;
     }
   },
   extraReducers: (builder) => {

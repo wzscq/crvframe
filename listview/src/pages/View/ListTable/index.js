@@ -23,6 +23,7 @@ export default function ListTable({sendMessageToParent}){
     const {origin,item}=useSelector(state=>state.frame);
     const {currentView} = useSelector(state=>state.data);
     const {fields,views,modelID}=useSelector(state=>state.definition);
+    const {queryQueenable}=useSelector(state=>state.data);
     const {selectedRowKeys,list,summaries,fixedColumn,filter,pagination,sorter}=useSelector(state=>state.data.views[state.data.currentView].data);
 
     const viewConf=useMemo(()=>{
@@ -89,7 +90,6 @@ export default function ListTable({sendMessageToParent}){
         if(viewConf){
             const rowToolbar=viewConf.toolbar?.rowToolbar;
             if(rowToolbar?.buttons?.length>0){
-                console.log('rowToolbar',rowToolbar);
                 columns.push(getOperationColumn(rowToolbar));
             }
             if(viewConf.fields){
@@ -213,7 +213,7 @@ export default function ListTable({sendMessageToParent}){
 
             const frameParams={frameType:item.frameType,frameID:item.params.key,origin:origin};
             const queryParams={modelID,viewID:currentView,filterData:viewConf.filterData,filter:queryFilter,pagination,sorter:querySorter,fields:searchFields};
-            sendMessageToParent(createQueryDataMessage(frameParams,queryParams));
+            sendMessageToParent(createQueryDataMessage(frameParams,queryParams,queryQueenable));
         }
     },[viewConf,fields,searchFields,filter,pagination,sorter,sendMessageToParent,origin,item,currentView,modelID]);
 
@@ -230,7 +230,7 @@ export default function ListTable({sendMessageToParent}){
 
     //可以通过公式控制row的背景色
     const onRow=useCallback((record, rowIndex)=>{
-        console.log('onRow',viewConf.rowStyle);
+        
         if(viewConf.rowStyle){
             const getRowStyleFunc=()=>{
                 const funStr='"use strict";'+
@@ -246,7 +246,7 @@ export default function ListTable({sendMessageToParent}){
             };
 
             const rst=getRowStyleFunc()(record, rowIndex);
-            console.log('rowStyle:',rst);
+            
             const rowStyle={
                 style:{backgroundColor:'white',...rst}
             };

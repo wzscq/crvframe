@@ -11,7 +11,6 @@ export const frameSlice = createSlice({
     initialState,
     reducers: {
         setParam: (state,action) => {
-            console.log('frameSlice setParam',action.payload);
             state.origin=action.payload.origin;
             state.item=action.payload.item;
         }

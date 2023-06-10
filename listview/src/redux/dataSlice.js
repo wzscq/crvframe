@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // Define the initial state using that type
 const initialState = {
     currentView:null,
+    queryQueenable:true,
     views:{
         /*view1:{
             data:{
@@ -147,6 +148,9 @@ export const dataSlice = createSlice({
             state.views[state.currentView].data.list=action.payload.list;
             state.views[state.currentView].data.selectedRowKeys=[];
             state.views[state.currentView].data.summaries=action.payload.summaries;
+            if(state.queryQueenable===true){
+                state.queryQueenable=false;
+            }
         },
         refreshData:(state,action) => {
             const pagination=state.views[state.currentView].data.pagination;
