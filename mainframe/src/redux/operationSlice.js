@@ -105,6 +105,7 @@ export const operationSlice = createSlice({
                             state.current.message=message;
                             state.current.errorCode="";
                             state.current.result=OP_RESULT.ERROR;
+                            state.doneList.push({...state.current});
                             state.current=state.current.errorOperation;
                             //执行失败，但是没有失败的后续操作，则需要用户确认后关闭操作信息对话框 
                             state.needConfirm=!(state.current);
