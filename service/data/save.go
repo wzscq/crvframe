@@ -119,6 +119,10 @@ func (save *Save)getRowUpdateColumnValues(row map[string]interface{},permissionF
 		case string:
 			sVal, _ := value.(string)
 			values=values+key+"='"+replaceApostrophe(sVal)+"',"
+		case float64:
+			fVal, _ := value.(float64)
+			sVal:=fmt.Sprintf("%f",fVal) 
+			values=values+key+"='"+replaceApostrophe(sVal)+"',"
 		case map[string]interface{}:
 			releatedField,ok:=value.(map[string]interface{})
 			if !ok {
@@ -136,7 +140,7 @@ func (save *Save)getRowUpdateColumnValues(row map[string]interface{},permissionF
 		case nil:
 			values=values+key+"=null,"
 		default:
-			log.Println("getRowUpdateColumnValues not supported value type %T!\n", v)
+			log.Printf("getRowUpdateColumnValues not supported value type %T!\n", value)
 			return "","",version,common.ResultNotSupportedValueType
 		}
 	}

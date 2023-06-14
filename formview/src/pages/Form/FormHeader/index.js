@@ -72,13 +72,13 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
                 list=getDetailRequestData(origin);
             }*/
             return {
-                modelid:modelID,
+                modelID:modelID,
                 list:list
             };
         } else if(formType===FORM_TYPE.DETAIL){
             const list=getDetailRequestData(origin);
             return {
-                modelid:modelID,
+                modelID:modelID,
                 list:list
             };
         }
