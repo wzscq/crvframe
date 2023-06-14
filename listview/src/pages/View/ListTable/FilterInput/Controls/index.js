@@ -23,8 +23,8 @@ export const controlRegister={
 }
 
 export const getControl=(field,sendMessageToParent,filterValue,onFilterChange)=>{
-    const filterControlType=field.filterControlType?field.filterControlType:CONTROL_TYPE.Text;
-    const Component=controlRegister[filterControlType];
+    const filterControl=field.filterControl?field.filterControl:(field.filterControlType?field.filterControlType:CONTROL_TYPE.Text);
+    const Component=controlRegister[filterControl];
     if(Component){
         return <Component 
                 filterValue={filterValue} 
@@ -32,5 +32,5 @@ export const getControl=(field,sendMessageToParent,filterValue,onFilterChange)=>
                 sendMessageToParent={sendMessageToParent} 
                 field={field}/>;
     }
-    return (<div>{"unkown control:"+field.filterControlType}</div>);
+    return (<div>{"unkown control:"+filterControl}</div>);
 }
