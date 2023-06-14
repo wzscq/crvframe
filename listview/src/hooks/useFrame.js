@@ -28,7 +28,7 @@ export default function useFrame(){
 
     //这里在主框架窗口中挂载事件监听函数，负责和子窗口之间的操作交互
     const receiveMessageFromMainFrame=useCallback((event)=>{
-        //console.log("receiveMessageFromMainFrame:",event);
+        console.log("receiveMessageFromMainFrame:",event);
         const {type,dataType,data}=event.data;
         if(type===FRAME_MESSAGE_TYPE.INIT){
             dispatch(setParam({origin:event.origin,item:data}));
@@ -48,7 +48,6 @@ export default function useFrame(){
         }  else if (type===FRAME_MESSAGE_TYPE.RELOAD_DATA){
             dispatch(refreshData());
         } else if (type===FRAME_MESSAGE_TYPE.UPDATE_LOCALE){
-            console.log("UPDATE_LOCALE",event.data)
             dispatch(setLocale(event.data.i18n));
         }
     },[dispatch]);

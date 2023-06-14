@@ -65,7 +65,6 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
                 }
             }
         }
-        console.log('ImageList send getImage message',message);
         sendMessageToParent(message);
     },[sendMessageToParent,field,origin,frameItem]);
 
@@ -77,9 +76,7 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
                 data.list&&data.list.length>0){
                 const file=data.list[0];
                 const contentBase64=file.url;
-                console.log('contentBase64:'+contentBase64);
                 const content=b64_to_utf8(contentBase64);
-                console.log('content:'+content);
                 setOriginContent(content);
             }
         }
@@ -113,7 +110,6 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
 
     const editorRef = useRef(null);
     const onContentChange=()=>{
-        console.log('richtext content changed');
         const content=editorRef.current.getContent();
         const base64Content=utf8_to_b64(content);
         //这里仿照文件控件的结构来处理，仅保留当前内容
@@ -130,7 +126,7 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
         }):[];
 
         const list = addList.concat(delList);
-        console.log(addList);
+    
         if(list.length>0){
             dispatch(modiData({
                 dataPath:dataPath,
@@ -150,8 +146,6 @@ export default function RichText({dataPath,control,field,sendMessageToParent}){
             dispatch(removeErrorField(errFieldPath));
         }
     }
-
-    console.log('TINYMCE_URL:',process.env.REACT_APP_TINYMCE_URL);
 
     let fileControl=control.disabled?(
         <div style={{width:'100%',height:control.height,overflow:'auto',border:'1px solid #d9d9d9',borderRadius:5,padding:5}} ref={refDisabled}/>

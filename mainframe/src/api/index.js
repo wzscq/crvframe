@@ -46,7 +46,6 @@ const encodeToken=(token,data)=>{
 export const getHost=()=>{
     const rootElement=document.getElementById('root');
     const host=rootElement?.getAttribute("host");
-    console.log("host:"+host);
     return host;
 }
   

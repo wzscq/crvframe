@@ -2,9 +2,7 @@ import {FIELD_TYPE} from  '../../utils/constant';
 
 const validateField=(dataPath,control,rowValue,errorField)=>{
     const {required,field,validation}=control;
-    console.log('validation',validation);    
     if(required){
-        console.log('validateField',dataPath,field,rowValue);
         if(rowValue[field]){
             if(rowValue[field].fieldType){
                 if(rowValue[field].fieldType===FIELD_TYPE.MANY2MANY||
@@ -43,7 +41,6 @@ const validateField=(dataPath,control,rowValue,errorField)=>{
             const validateFunc=Function(funStr)();
             if(!validateFunc(rowValue)){
                 errorField.errorField[dataPath+'.'+field]={message:message};
-                console.log(errorField);
             }
         }
     }

@@ -80,7 +80,6 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
                 }
             }
         }
-        console.log('ImageList send getImage message',message);
         sendMessageToParent(message);
     },[sendMessageToParent,field,origin,frameItem]);
 

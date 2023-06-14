@@ -15,7 +15,12 @@ import {
 
 import {createLogoutOperation} from './operationItemFactory';
 import {open,close} from '../redux/dialogSlice';
-import {setOperation,operationDone,operationPending,confirm} from '../redux/operationSlice';
+import {
+    setOperation,
+    operationDone,
+    operationPending,
+    doNextOperation,
+    confirm} from '../redux/operationSlice';
 import {openTab,closeAllTab,setActiveTab} from '../redux/tabSlice';
 import {resetMenu} from '../redux/menuSlice';
 import OpertaionItem from './OpertaionItem';
@@ -38,7 +43,7 @@ export default function OperationDialog(){
     const {getLocaleLabel,getLocaleErrorMessage}=useI18n();
     const dispatch=useDispatch();
     const navigate=useNavigate();
-    const {doneList,current,needConfirm}=useSelector(state=>state.operation);
+    const {doneList,current,needConfirm,queen}=useSelector(state=>state.operation);
     const {pending,error,result:requestResult,message:resultMessage,errorCode}=useSelector(state=>state.request);
     const {current:currentTab,items:tabItems}=useSelector(state=>state.tab);
 
@@ -278,14 +283,20 @@ export default function OperationDialog(){
     
         //这里在主框架窗口中挂载事件监听函数，负责和子窗口之间的操作交互
         const receiveMessageFromSubFrame=(event)=>{
-            if(runing===true){
-                message.warning(getLocaleLabel({key:'message.main.hasOperationWhenSet',default:'当前操作尚未执行完成，请稍后再试！'}));
-                return;
-            }
-            dispatch(logInfo('receiveMessageFromSubFrame:'+JSON.stringify(event.data)));
+            console.log('data.operationItem:'+JSON.stringify(event.data));
             const {type,data}=event.data;
+            
+            dispatch(logInfo('receiveMessageFromSubFrame:'+JSON.stringify(event.data)));
+           
             if(type===FRAME_MESSAGE_TYPE.DO_OPERATION){
-                dispatch(logInfo('do_operation:'+JSON.stringify(event.data.data.operationItem)));
+                if(runing===true){
+                    if(data.operationItem.queenable!==true){
+                        console.log('data.operationItem',data?.operationItem)
+                        message.warning(getLocaleLabel({key:'message.main.hasOperationWhenSet',default:'当前操作尚未执行完成，请稍后再试！'}));
+                        return;
+                    }
+                }
+                dispatch(logInfo('do_operation:'+JSON.stringify(data.operationItem)));
                 dispatch(setOperation(data.operationItem));
             } else if (type===FRAME_MESSAGE_TYPE.QUERY_REQUEST) {
                 queryData(data,errorCallback);
@@ -304,6 +315,16 @@ export default function OperationDialog(){
             window.removeEventListener('message',receiveMessageFromSubFrame);
         }
     },[runing,dispatch,getLocaleLabel]);
+
+
+    //这里处理队列中的操作
+    useEffect(()=>{
+        //如果当前没有正在执行的操作
+        console.log("wzstest",queen,needConfirm,current);
+        if(queen.length>0&&needConfirm===false&&current===undefined){
+            dispatch(doNextOperation());
+        }   
+    },[queen,needConfirm,current,dispatch]);
 
     return (
         needConfirm?(<Modal 

@@ -22,8 +22,6 @@ export default function useFrame(){
     const {origin}=useSelector(state=>state.frame);
     const {forms} = useSelector(state=>state.definition);
 
-    console.log("formview useframe",origin);
-
     const sendMessageToParent=useCallback((message)=>{
         if(origin){
             window.parent.postMessage(message,origin);
@@ -42,7 +40,6 @@ export default function useFrame(){
                 dispatch(setLocale(event.data.i18n));
             }
         } else if (type===FRAME_MESSAGE_TYPE.UPDATE_DATA){
-            console.log("UPDATE_DATA",event.data)
             if(dataType===DATA_TYPE.MODEL_CONF){
                 dispatch(setDefinition(data));
             } else if (dataType===DATA_TYPE.QUERY_RESULT){
@@ -51,10 +48,9 @@ export default function useFrame(){
                 console.log("update data with wrong data type:",dataType);
             }
         } else if (type===FRAME_MESSAGE_TYPE.RELOAD_DATA){
-            console.log("reload data");
             dispatch(refreshData());
         } else if (type===FRAME_MESSAGE_TYPE.UPDATE_LOCALE){
-            console.log("UPDATE_LOCALE",event.data)
+            //console.log("UPDATE_LOCALE",event.data)
             //dispatch(setLocale(event.data.i18n));
         }
     },[dispatch,forms]);

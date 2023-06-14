@@ -102,7 +102,6 @@ const makeSelector=()=>{
 }
 
 const resultEqualityCheck=(a,b)=>{
-    console.log('resultEqualityCheck',a,b);
     return (JSON.stringify(a)===JSON.stringify(b));
 }
 
@@ -145,7 +144,6 @@ export default function TransferControl({dataPath,control,field,sendMessageToPar
     }
     
     const getQueryParams=useCallback((field,control)=>{
-        console.log('getQueryParams',control,cascadeParentValue);
         let filter=[];
         if(control.cascade){
             if(Array.isArray(control.cascade)){
@@ -263,7 +261,6 @@ export default function TransferControl({dataPath,control,field,sendMessageToPar
             if(type===FRAME_MESSAGE_TYPE.QUERY_RESPONSE&&
                 dataKey===field.field){
                 if(data.list&&data.list.length>0){    
-                    console.log('validKeys data.list',data.list);
                     setOptions({loaded:true,options:data.list});   
                 } else {
                     setOptions({loaded:true,options:[]});   
@@ -285,7 +282,7 @@ export default function TransferControl({dataPath,control,field,sendMessageToPar
                 }
                 return false;
             }).map(item=>item.id);
-            console.log('validKeys',validKeys,targetKeys,options,loaded);
+            
             if(validKeys.length!==targetKeys.length){
                 handleChange(validKeys);
             }

@@ -42,6 +42,7 @@ const opUpdateData={
 
 const opQueryData={
     type:OP_TYPE.REQUEST,
+    queenable:true,
     params:{
         url:REPORT_QUERY_URL,
         method:"post"

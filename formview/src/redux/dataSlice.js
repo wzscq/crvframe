@@ -44,7 +44,7 @@ const convertListToMap=(row,controls)=>{
 const getUpdateNodes=(state,dataPath)=>{
     let updateNode=state.update;
     let updatedNode=state.updated;
-    console.log('getUpdateNodes',dataPath);
+    
     for(let i=0;i<dataPath.length;++i){
         const key=dataPath[i];
         if(!updateNode[key]){
@@ -82,8 +82,6 @@ const getUpdateNodes=(state,dataPath)=>{
                 state.update=updatedNode;
             }
         }
-
-        console.log('getUpdateNodes',updateNode,updatedNode);
 
         updateNode=updateNode[key];
         updatedNode=updatedNode[key];

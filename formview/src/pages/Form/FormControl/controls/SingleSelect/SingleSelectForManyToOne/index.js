@@ -90,12 +90,10 @@ const makeSelector=()=>{
 }
 
 const resultEqualityCheck=(a,b)=>{
-    console.log('resultEqualityCheck',a,b);
     return (JSON.stringify(a)===JSON.stringify(b));
 }
 
 const makeCascadeSelector=()=>{
-    console.log('makeCascadeSelector');
     return createSelector(
         selectCascadeParentValue,
         (cascadeParentValue)=>{
@@ -224,7 +222,6 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
          * 对于这种情况需要将查询c表的操作转换为查询d表的操作，在查询d表时按照p_id=cascadeParentValue过滤d表数据
          * 同时以c_id字段查询过滤c表数据。这种情况需要前端再做一次数据过滤。目前程序暂时不实现这个逻辑。
          */
-        console.log('getQueryParams',control);
         const filter=getFilter(control,value);
         if(control.cascade){
             const filterCascade=[filter];
