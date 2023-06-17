@@ -3,7 +3,7 @@ import { Popconfirm,Button } from "antd";
 
 import I18nLabel from "../I18nLabel";
 
-export default function OperationButton({type,operation,doOperation}){
+export default function OperationButton({type,operation,doOperation,disabled}){
     const [promptVisible,setPromptVisible]=useState(false);
 
     const handleOk=()=>{
@@ -25,6 +25,7 @@ export default function OperationButton({type,operation,doOperation}){
             cancelText={<I18nLabel label={{key:'page.crvlistview.opreationPrompt.cancel',default:'取消'}}/>}
         >
             <Button 
+                disabled={disabled}
                 onClick={()=>operation.prompt?setPromptVisible(true):doOperation(operation)} 
                 type={type}>
                 <I18nLabel label={operation.name}/>

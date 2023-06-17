@@ -16,6 +16,7 @@ export default function DatePickerFilter({field,filterValue,onFilterChange}){
 
         if(filter['Op.lte']){
             label=label+','+getLocaleLabel({key:'page.crvlistview.to',default:'到:'})+filter['Op.lte'];
+            filter['Op.lte']=filter['Op.lte']+' 23:59:59';
         }
         
         onFilterChange(filter,label);

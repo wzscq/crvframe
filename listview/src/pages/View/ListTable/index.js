@@ -65,7 +65,7 @@ export default function ListTable({sendMessageToParent}){
                 }        
             },
             render:(text, record, index)=>{
-                return <ColumnControl text={text} field={field} record={record} index={index} />;
+                return <ColumnControl sendMessageToParent={sendMessageToParent} text={text} field={field} record={record} index={index} />;
             }
         }
     },[sendMessageToParent]);
@@ -290,7 +290,6 @@ export default function ListTable({sendMessageToParent}){
     },[summaries,viewConf]);
 
     const scrollY=summaries?height-102:height-72;
-
     return (
         <div className="list-table">
             <Table 

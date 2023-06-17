@@ -1,25 +1,24 @@
-import { Space } from "antd"
+import { Space } from 'antd';
 import { useCallback,useMemo } from "react"
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
+import OperationButton from '../../../../../components/OperationButton';
+import {FRAME_MESSAGE_TYPE} from '../../../../../utils/constant';
 import {
-    getRowButtonDisabledFunc,
-    getOperationPreporcessFunc
-} from '../../../utils/functions';
-
-import OperationButton from '../../../components/OperationButton';
+    getOperationPreporcessFunc,
+    getRowButtonDisabledFunc
+} from '../../../../../utils/functions';
 
 import './index.css';
 
-export default function RowOperationBar({sendMessageToParent,record,showCount,buttons}){
-    const {modelID}=useParams();
+export default function CellOperationBar({sendMessageToParent,cellPopMenu, record, index}){
+
+  const {modelID}=useParams();
     const {operations} = useSelector(state=>state.definition);
 
     const doOperation=useCallback((opItem)=>{
         let operation=operations.find(element=>element.id===opItem.operationID);
-
         //对operation做预处理，一般是基于数据行为operaiton增加过滤条件
         if(operation&&opItem.preprocessing){
             console.log('preprocessing',opItem.preprocessing);
@@ -47,27 +46,26 @@ export default function RowOperationBar({sendMessageToParent,record,showCount,bu
     const buttonControls=useMemo(()=>{
         let buttonControls=[];
         
-        for(let i=0;i<buttons.length&&i<showCount;++i){
-            const item=buttons[i];
+        for(let i=0;i<cellPopMenu.buttons.length;++i){
+            const item=cellPopMenu.buttons[i];
             const operation=operations.find(element=>element.id===item.operationID);
             if(operation){
                 let disabled=false;
                 if(item.disabled){
                     disabled=getRowButtonDisabledFunc(item.disabled)(record);
                 }
-
                 buttonControls.push(
-                    <OperationButton disabled={disabled} key={item.operationID} type='link' doOperation={doOperation} operation={{name:operation.name,...item}}/>
+                    <OperationButton disabled={disabled}  key={item.operationID} type='link' doOperation={doOperation} operation={{name:operation.name,...item}}/>
                 );
             }
         }
             
         return buttonControls;
-    },[buttons,operations,showCount,doOperation]);
-    
-    return (
-        <Space className="row-operation-bar" size={5}>
-        {buttonControls}
-        </Space>
-    )
+    },[cellPopMenu,operations,doOperation]);
+
+  return (
+    <Space className='cell-pop-menu'  direction="vertical" size="small" style={{ display: 'flex' }}>
+      {buttonControls}
+    </Space>
+  );
 }

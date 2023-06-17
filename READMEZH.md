@@ -540,7 +540,10 @@ menus.json文件的内容是一个JSON数组, 数组的每个项目对应一个�
           ...
         }
         ```
-
+    * **summarize** crvframe的listview可以在表格下方的最后一行数据上显示一个汇总数据行，如果需要在某个列的最后一行显示一个汇总数据，就可以通过summarize配置项来实现，summarize的值是一个基于sql的字段汇总方法，在mysql查询语句中支持的汇总函数和计算符都可以使用。以下示例对adjusted_amount不为空值进行汇总：
+      ```
+      sum(if(adjusted_amount is null,0,adjusted_amount))
+      ```
     * **aggregateFunction** 如果字段类型是many2many，可以通过aggregateFunction指定一个js函数用于聚合多个数据行的数据。函数的输入参数record是一个数组，对应了关联表中相应的多条记录。aggregateFunction用于在表格的单元格中显示数据，这里不能和optionLabel的配置放在一起，因为optionLabel需要同时用于过滤条件的录入组件。
         ```
         //下面这个示例展示了一个many2many字段，关联到一个包含ID和name的字典表，在页面上显示数据时，将多个记录的name字段用逗号分隔后展示在一个字段中。
