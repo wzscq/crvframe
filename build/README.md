@@ -82,4 +82,16 @@ docker load -i crvframe.tar
 https://quilljs.com/docs/api/
 https://github.com/microsoft/monaco-editor
 
+# docker镜像加速
+创建或修改/etc/docker/daemon.json文件
+默认没有daemon文件，先创建。
+vim /etc/docker/daemon.json
+内容如下：
+{
+  "registry-mirrors":[
+      "https://ung2thfc.mirror.aliyuncs.com",
+      "https://registry.docker-cn.com",
+      "https://hub-mirror.c.163.com"
+   ]
+}
 
