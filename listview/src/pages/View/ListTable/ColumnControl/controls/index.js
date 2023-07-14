@@ -17,7 +17,6 @@ export const controlRegister={
   [CONTROL_TYPE.DefaultColumnControl]:DefaultColumnControl
 }
 
-
 export function getControl(text,field, record, index){
   const controlType=field.columnControl?field.columnControl:CONTROL_TYPE.DefaultColumnControl;
   const Component=controlRegister[controlType];
