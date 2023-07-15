@@ -65,7 +65,7 @@ func (controller *UserController)getUserRoles(userID string,dbName string)(strin
 }
 
 func (controller *UserController)cacheLoginToken(userID string,token string,appDB string,userRoles string)(int){
-	controller.LoginCache.RemoveUser(userID)
+	controller.LoginCache.RemoveUser(appDB,userID)
 			
 	err:=controller.LoginCache.SetCache(userID,token,appDB,userRoles)
 	if err != nil {
@@ -148,7 +148,8 @@ func (controller *UserController)login(c *gin.Context) {
 func (controller *UserController) logout(c *gin.Context) {
 	log.Println("start user logout")
 	userID:= c.MustGet("userID").(string)
-	controller.LoginCache.RemoveUser(userID)
+	appDB:= c.MustGet("appDB").(string)
+	controller.LoginCache.RemoveUser(appDB,userID)
 	errorCode:=common.ResultSuccess
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 	c.IndentedJSON(http.StatusOK, rsp)

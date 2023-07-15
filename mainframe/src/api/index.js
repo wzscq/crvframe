@@ -141,6 +141,19 @@ export const requestAction = createAsyncThunk(
     const response =await axios(config);
     //判断一下返回的类型，如果是文件流则做一个转换，用来实现文件下载
     if(responseType==='blob'){
+      //判断返回类型中是否包含application/json，如果包含则说明是一个错误的返回
+      if (response.headers["content-type"].includes("application/json")) {
+        const text = await response.data.text();
+        try {
+          const parsedJSON = JSON.parse(text);
+          // 您可以在这里处理 JSON 错误代码，或者直接返回到外部调用
+          return parsedJSON;
+        } catch (e) {
+          console.error("Invalid JSON data");
+          throw e;
+        }
+      }
+
       let fileName=response.headers['content-disposition'];
       if(fileName){
         fileName=fileName.substring("attachment; filename=".length);

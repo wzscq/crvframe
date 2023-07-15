@@ -33,7 +33,7 @@ CREATE TABLE `core_file`  (
   `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
   `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `version` int(11) NULL DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -47,7 +47,7 @@ CREATE TABLE `core_role`  (
   `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
   `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `version` int(11) NULL DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT 0,
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -69,14 +69,14 @@ CREATE TABLE `core_role_core_user`  (
   `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
   `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `version` int(11) NULL DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of core_role_core_user
 -- ----------------------------
-INSERT INTO `core_role_core_user` VALUES ('admin', 'admin', 1, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `core_role_core_user` VALUES ('admin', 'admin', 1, NULL, NULL, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for core_task
@@ -133,7 +133,7 @@ CREATE TABLE `core_user`  (
   `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
   `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `version` int(11) NULL DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT 0,
   `remark` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;

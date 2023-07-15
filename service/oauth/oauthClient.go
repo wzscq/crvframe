@@ -122,7 +122,7 @@ func localLogin(
 
 	//获取本地token
 	token:=user.GetLoginToken()
-	loginCache.RemoveUser(userID)
+	loginCache.RemoveUser(appDB,userID)
 	err=loginCache.SetCache(userID,token,appDB,userRoles)
 	if err != nil {
 		log.Println(err)

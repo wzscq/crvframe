@@ -47,28 +47,45 @@ export default function Form(){
     //加载数据
     useEffect(()=>{
         const getFormFields=(form,modelFields)=>{
-            const fields=[{field:'id'},{field:'version'}];
+            const fields=[];
+            let hasID=false;
+            let hasVersion=false;
             if(form&&form.controls){
                 form.controls.forEach(element=>{
-                    if(element.field !== 'id'&&element.field !== 'version'){
-                        const modelField=modelFields.find(item=>item.field===element.field);
-                        if(modelField){
-                            if(modelField.fieldType){
-                                fields.push({
-                                    field:element.field,
-                                    fieldType:modelField.fieldType,
-                                    relatedModelID:modelField.relatedModelID,
-                                    relatedField:modelField.relatedField,
-                                    associationModelID:modelField.associationModelID,
-                                    fields:getControlFields(element)
-                                });
-                            } else {
-                                fields.push({field:element.field});
-                            }
+                    if(element.field === 'id'){
+                        hasID=true;
+                    }
+
+                    if(element.field === 'version'){
+                        hasVersion=true;
+                    }
+
+                    const modelField=modelFields.find(item=>item.field===element.field);
+                    if(modelField){
+                        if(modelField.fieldType){
+                            fields.push({
+                                field:element.field,
+                                fieldType:modelField.fieldType,
+                                relatedModelID:modelField.relatedModelID,
+                                relatedField:modelField.relatedField,
+                                associationModelID:modelField.associationModelID,
+                                fields:getControlFields(element)
+                            });
+                        } else {
+                            fields.push({field:element.field});
                         }
                     }
                 });
             }
+
+            if(hasID===false){
+                fields.push({field:'id'});
+            }
+
+            if(hasVersion===false){
+                fields.push({field:'version'});
+            }
+
             return fields;
         }
         

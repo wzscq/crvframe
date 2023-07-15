@@ -27,6 +27,11 @@ export default function RowOperationBar({sendMessageToParent,record,showCount,bu
         }
 
         if(operation){
+            //这里的ID也有可能是一个关联字段，所以要判断一下
+            let id=record['id'];
+            if(id.value){
+                id=id.value;
+            }
             const message={
                 type:FRAME_MESSAGE_TYPE.DO_OPERATION,
                 data:{
@@ -34,7 +39,7 @@ export default function RowOperationBar({sendMessageToParent,record,showCount,bu
                         ...operation,
                         input:{
                             modelID:modelID,
-                            selectedRowKeys:[record['id']],
+                            selectedRowKeys:[id],
                             ...operation.input
                         }
                     }
