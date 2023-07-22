@@ -115,7 +115,7 @@ export const operationSlice = createSlice({
                     }
 
                 } else {
-                    console.log("operationDone",errorCode)
+                    console.log("operationDone",errorCode);
                     //执行失败
                     //如果是因为账号过期失败，则自动登出系统
                     if(errorCode===ERROR_CODE.TOKEN_EXPIRED){

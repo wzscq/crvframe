@@ -11,6 +11,7 @@ import {
     CASCADE_TYPE
 } from '../../../../../utils/constant';
 import I18nLabel from '../../../../../component/I18nLabel';
+import { getManyToOneValueFunc } from '../../../../../utils/functions';
 
 import './index.css';
 
@@ -132,7 +133,7 @@ export default function TransferControl({dataPath,control,field,sendMessageToPar
     const [targetKeys,setTargetKeys]=useState(updatedValue?updatedValue.list.map(item=>item.id):[]);
     const [{loaded,options},setOptions]=useState({loaded:false,options:[]});
 
-    const getCascadeItemFilter=(cascade,cascadeParentValue)=>{
+    /*const getCascadeItemFilter=(cascade,cascadeParentValue)=>{
         if(cascade.type===CASCADE_TYPE.MANY2ONE){
             if(cascadeParentValue&&cascade.parentField&&
                cascadeParentValue[cascade.parentField]){
@@ -141,28 +142,77 @@ export default function TransferControl({dataPath,control,field,sendMessageToPar
         } else {
             console.error('not supported cascade type:',cascade.type);
         }
+    }*/
+
+    const getCascadeItemFilter=(cascade,cascadeParentValue,field)=>{
+        let res={};
+        if(cascade.type===CASCADE_TYPE.MANY2ONE){
+            //父级字段和当前字段之前有一个many2one的关系，这个关系是维护在当前字段的关联表中的，也就是说当前字段的关联表中有一个字段指向父级字段
+            //这个的relatedField就是在关联表中对应父级字段的字段，如果没有指定，则默认和父级字段(parentField)同名
+            //这里的filterbyParent是指在当前字段的关联表中，根据父级字段的值来筛选出对应的记录
+            if(cascade.parentField&&cascadeParentValue[cascade.parentField]){
+                const relatedField=cascade.relatedField?cascade.relatedField:cascade.parentField;
+                res= {filterbyParent:{[relatedField]:cascadeParentValue[cascade.parentField]}};        
+            }
+        } else if(cascade.type===CASCADE_TYPE.MANY2MANY){
+            //父级字段和当前字段之间有一个many2many的关系，这个关系是维护在中间表中的，中间表中有两个字段分别指向父级字段和当前字段
+            //这里的过滤需要分两步，先从中间表中筛选出对应当前父级字段值的字字段的ID，
+            //然后再根据这些ID，从当前字段对应的关联表中筛选出对应的记录
+            if(cascade.parentField&&cascadeParentValue[cascade.parentField]){
+                //根据中间表先筛选出对应本表关联表的ID
+                const relatedField=cascade.relatedField?cascade.relatedField:field.field;
+                const parentRelatedField=cascade.parentRelatedField?cascade.parentRelatedField:cascade.parentField;
+                const filterDataItem={
+                    modelID:cascade.middleModelID,
+                    filter:{[parentRelatedField]:cascadeParentValue[cascade.parentField]},
+                    fields:[
+                        {field:relatedField}
+                    ]
+                }
+                //需要拿到父字段的关联表
+                const filterbyParent={id:{'Op.in':['%{'+cascade.middleModelID+'.'+relatedField+'}']}};
+                res={filterbyParent,filterDataItem};
+            }
+        } else {
+            console.error('not supported cascade type:',cascade.type);
+        }
+        return res;
     }
     
     const getQueryParams=useCallback((field,control)=>{
         let filter=[];
+        const filterData=control.filterData?control.filterData:[];
         if(control.cascade){
             if(Array.isArray(control.cascade)){
                 control.cascade.forEach(cascadeItem=>{
-                    const filterbyParent=getCascadeItemFilter(cascadeItem,cascadeParentValue);
+                    const {filterbyParent,filterDataItem}=getCascadeItemFilter(cascadeItem,cascadeParentValue);
                     if(filterbyParent){
                         filter.push(filterbyParent);
                     }
+
+                    if(filterDataItem){
+                        filterData.push(filterDataItem);
+                    }
                 });
             } else {
-                const filterbyParent=getCascadeItemFilter(control.cascade,cascadeParentValue);
+                const {filterbyParent,filterDataItem}=getCascadeItemFilter(control.cascade,cascadeParentValue);
                 if(filterbyParent){
                     filter.push(filterbyParent);
+                }
+
+                if(filterDataItem){
+                    filterData.push(filterDataItem);
                 }
             }
         }
 
+        //relatedFilter是原有的名字，为了兼容，暂时保留，后续会改成filter
         if(control.relatedFilter){
             filter.push(control.relatedFilter);
+        }
+
+        if(control.filter){
+            filter.push(control.filter);
         }
 
         if(filter.length===0){
@@ -182,6 +232,7 @@ export default function TransferControl({dataPath,control,field,sendMessageToPar
             modelID:field.relatedModelID,
             fields:control.fields,
             filter:filter,
+            filterData:filterData.length>0?filterData:undefined,
             pagination:{current:1,pageSize:pageSize}
         }
     },[cascadeParentValue]);
@@ -294,15 +345,25 @@ export default function TransferControl({dataPath,control,field,sendMessageToPar
         loadOptions();
     },[loadOptions]);
 
+    const getValueLabel=(item)=>{
+        let label=item[optionLabel];
+        if(label===undefined){
+            label=getManyToOneValueFunc(optionLabel)(item);
+        }
+        return label;
+    }
+
     //获取文本输入框的标签，如果form控件配置了label属性则直接使用，
     //如果控件没有配置label属性，则取字段配置的字段name
     const label=control.label?control.label:(field?field.name:"");
     const optionLabel=control.optionLabel?control.optionLabel:'id';
 
-    const dataSource=options.map(item=>({
+    const dataSource=options.map(item=>(
+        
+        {
         key:item.id,
-        title:item[optionLabel],
-        description: item[optionLabel],
+        title:getValueLabel(item),
+        description: getValueLabel(item),
         chosen:true
     }));
 
