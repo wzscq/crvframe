@@ -1,11 +1,13 @@
 import DefaultColumnControl from "./DefaultColumnControl";
 import Progress from "./Progress";
+import FileControl from "./FileControl";
 
 /**
  * 以下为控件类型枚举常量定义
  */
  export const CONTROL_TYPE={
   Progress:'Progress',  //单选下拉框
+  File:'File',  //文件显示
   DefaultColumnControl:'DefaultColumnControl',  //多选下拉框
 }
 
@@ -14,7 +16,8 @@ import Progress from "./Progress";
 */
 export const controlRegister={
   [CONTROL_TYPE.Progress]:Progress,
-  [CONTROL_TYPE.DefaultColumnControl]:DefaultColumnControl
+  [CONTROL_TYPE.DefaultColumnControl]:DefaultColumnControl,
+  [CONTROL_TYPE.File]:FileControl
 }
 
 export function getControl(text,field, record, index){

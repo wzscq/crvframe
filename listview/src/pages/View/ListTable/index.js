@@ -15,7 +15,7 @@ import ColumnControl from "./ColumnControl";
 import I18nLabel from "../../../components/I18nLabel";
 import './index.css';
 import { formatStringNumber } from "../../../utils/functions";
-//import { FIELD_TYPE } from "../../../utils/constant";
+import { FIELD_TYPE } from "../../../utils/constant";
 
 export default function ListTable({sendMessageToParent}){
     const dispatch=useDispatch();
@@ -126,6 +126,9 @@ export default function ListTable({sendMessageToParent}){
                             associationModelID:fieldConf.associationModelID,
                             fields:fieldItem.fields
                         }
+                    }
+                    if(fieldConf.fieldType===FIELD_TYPE.FILE){
+                        searchField.fieldType=FIELD_TYPE.FILE;
                     }
                     searchFields.push(searchField);
                 }
