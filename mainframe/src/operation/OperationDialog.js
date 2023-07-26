@@ -44,7 +44,7 @@ export default function OperationDialog(){
     const dispatch=useDispatch();
     const navigate=useNavigate();
     const {doneList,current,needConfirm,queen}=useSelector(state=>state.operation);
-    const {pending,error,result:requestResult,message:resultMessage,errorCode}=useSelector(state=>state.request);
+    const {pending,error,result:requestResult,message:resultMessage,params:resultParams,errorCode}=useSelector(state=>state.request);
     const {current:currentTab,items:tabItems}=useSelector(state=>state.tab);
 
     //已完成操作列表
@@ -140,13 +140,14 @@ export default function OperationDialog(){
                 dispatch(operationPending(true));
             } else {
                 //执行完成
-                dispatch(logInfo("下载完成:"+JSON.stringify({error,errorCode,resultMessage,requestResult})));
+                dispatch(logInfo("下载完成:"+JSON.stringify({error,errorCode,resultMessage,requestResult,resultParams})));
                 const payload={
                     result:error?OP_RESULT.ERROR:OP_RESULT.SUCCESS,
                     output:requestResult,
                     error:error,
                     errorCode:errorCode,
-                    message:resultMessage
+                    message:resultMessage,
+                    resultParams:resultParams
                 }
                 dispatch(operationDone(payload));
             }
@@ -171,13 +172,14 @@ export default function OperationDialog(){
                 dispatch(operationPending(true));
             } else {
                 //执行完成
-                dispatch(logInfo("请求执行完成:"+JSON.stringify({error,errorCode,resultMessage,requestResult})));
+                dispatch(logInfo("请求执行完成:"+JSON.stringify({error,errorCode,resultMessage,requestResult,resultParams})));
                 const payload={
                     result:error?OP_RESULT.ERROR:OP_RESULT.SUCCESS,
                     output:requestResult,
                     error:error,
                     errorCode:errorCode,
-                    message:resultMessage
+                    message:resultMessage,
+                    resultParams:resultParams
                 }
                 dispatch(operationDone(payload));
             }

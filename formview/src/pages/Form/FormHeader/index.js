@@ -108,7 +108,7 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
                 }
             }
             const operationData=getOperationData(update);
-
+            console.log('operationData',operationData);
             //如果请求操作中传递了输入参数，将输入参数和表单数据合并在一起提交
             let input=operationData;
             if(operation?.input?.list?.length>0){

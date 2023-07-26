@@ -8,7 +8,8 @@ const initialState = {
     error:false,
     result:null,
     errorCode:"",
-    message:""
+    message:"",
+    params:undefined
 }
 
 const downloadFile=({data,fileName})=>{
@@ -33,6 +34,7 @@ export const requestSlice = createSlice({
             state.result=null;
             state.message="";
             state.errorCode=0;
+            state.params=undefined;
         });
         builder.addCase(requestAction.fulfilled, (state, action) => {
             console.log("requst fulfilled:",action);
@@ -46,6 +48,7 @@ export const requestSlice = createSlice({
                     state.error=true;
                     state.message=action.payload.message;
                     state.errorCode=action.payload.errorCode;
+                    state.params=action.payload.params;
                 }
             }
         });
@@ -65,6 +68,7 @@ export const requestSlice = createSlice({
             state.result=null;
             state.message="";
             state.errorCode=0;
+            state.params=undefined;
         });
         builder.addCase(downloadAction.fulfilled, (state, action) => {
             console.log("requst fulfilled:",action);

@@ -50,9 +50,12 @@ const getUpdateNodes=(state,dataPath)=>{
         if(!updateNode[key]){
             if(i%3===0){
                 //当前节点是一个rowKey，向修改缓存中放入一个新的数据修改行
+                //这里考虑ID字段可能是个引用字段，所以要判断一下ID字段的值是不是一个对象，如果是对象，取对象的value值
+                const idObj=updatedNode[key][CC_COLUMNS.CC_ID];
+                const idVal=idObj.value?idObj.value:idObj;
                 updateNode[key]={
                     [CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.UPDATE,
-                    [CC_COLUMNS.CC_ID]:updatedNode[key][CC_COLUMNS.CC_ID],
+                    [CC_COLUMNS.CC_ID]:idVal, //updatedNode[key][CC_COLUMNS.CC_ID],
                     [CC_COLUMNS.CC_VERSION]:updatedNode[key][CC_COLUMNS.CC_VERSION]
                 };
             } else {
@@ -68,9 +71,12 @@ const getUpdateNodes=(state,dataPath)=>{
         if(!updatedNode[key]){
             if(i%3===0){
                 //当前节点是一个rowKey，向已修改数据中放入一个新的数据修改行
+                //这里考虑ID字段可能是个引用字段，所以要判断一下ID字段的值是不是一个对象，如果是对象，取对象的value值
+                const idObj=updatedNode[key][CC_COLUMNS.CC_ID];
+                const idVal=idObj.value?idObj.value:idObj;
                 updatedNode[key]={
                     [CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.UPDATE,
-                    [CC_COLUMNS.CC_ID]:updatedNode[key][CC_COLUMNS.CC_ID],
+                    [CC_COLUMNS.CC_ID]:idVal, //updatedNode[key][CC_COLUMNS.CC_ID],
                     [CC_COLUMNS.CC_VERSION]:updatedNode[key][CC_COLUMNS.CC_VERSION]
                 };
             } else {
@@ -132,9 +138,12 @@ export const dataSlice = createSlice({
             if(updatedNode[rowKey][CC_COLUMNS.CC_SAVE_TYPE]===SAVE_TYPE.CREATE){
                 delete updateNode[rowKey];    
             } else {
+                //这里考虑ID字段可能是个引用字段，所以要判断一下ID字段的值是不是一个对象，如果是对象，取对象的value值
+                const idObj=updatedNode[rowKey][CC_COLUMNS.CC_ID];
+                const idVal=idObj.value?idObj.value:idObj;
                 updateNode[rowKey]={
                     [CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.DELETE,
-                    [CC_COLUMNS.CC_ID]:updatedNode[rowKey][CC_COLUMNS.CC_ID]
+                    [CC_COLUMNS.CC_ID]:idVal
                 };
             }
             delete updatedNode[rowKey];

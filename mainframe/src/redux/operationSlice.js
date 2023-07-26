@@ -71,7 +71,7 @@ export const operationSlice = createSlice({
         operationDone:(state,action) => {
             //如果当前操作未完成则不允许设置新的操作
             if(state.current){
-                let {result,message,output,errorCode}=action.payload;
+                let {result,message,output,errorCode,resultParams}=action.payload;
                 state.current.result=result;
                 if(state.current.params?.pending){
                     state.current.params.pending=false;
@@ -79,6 +79,7 @@ export const operationSlice = createSlice({
                 state.current.output=output;
                 state.current.message=message;
                 state.current.errorCode=errorCode;
+                state.current.resultParams=resultParams;  //执行失败时，返回的结果参数
                 state.doneList.push({...state.current});
                 if(result===OP_RESULT.SUCCESS){
                     //执行成功  

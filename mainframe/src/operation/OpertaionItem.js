@@ -6,7 +6,7 @@ import {
 export default function OpertaionItem({item,state,getLocaleLabel,getLocaleErrorMessage}){
     let icon=null;
   //getLocaleErrorMessage(item)
-    console.log("OpertaionItem",item);
+    //console.log("OpertaionItem",item);
     
     if(state===1){
         icon=<LoadingOutlined />
@@ -21,7 +21,7 @@ export default function OpertaionItem({item,state,getLocaleLabel,getLocaleErrorM
             {item.result===OP_RESULT.ERROR?
                 (<>
                     <br/>
-                    <span style={{color:"red"}}>{getLocaleLabel({key:'dialog.operation.hasErrors',default:'出错啦，'})}{getLocaleErrorMessage(item)}</span>
+                    <span style={{color:"red"}}>{getLocaleLabel({key:'dialog.operation.hasErrors',default:'出错啦，'})}{getLocaleErrorMessage(item)}{item.resultParams?JSON.stringify(item.resultParams):""}</span>
                 </>):null}
         </div>
     );
