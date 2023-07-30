@@ -20,6 +20,7 @@ export default function RowOperationBar({sendMessageToParent,record,showCount,bu
     const doOperation=useCallback((opItem)=>{
         let operation=operations.find(element=>element.id===opItem.operationID);
 
+        console.log('preprocessing',opItem);
         //对operation做预处理，一般是基于数据行为operaiton增加过滤条件
         if(operation&&opItem.preprocessing){
             console.log('preprocessing',opItem.preprocessing);
@@ -56,9 +57,12 @@ export default function RowOperationBar({sendMessageToParent,record,showCount,bu
             const item=buttons[i];
             const operation=operations.find(element=>element.id===item.operationID);
             if(operation){
+                console.log("operaitonitem:",item,item.disabled);
                 let disabled=false;
                 if(item.disabled){
                     disabled=getRowButtonDisabledFunc(item.disabled)(record);
+
+                    console.log("operaitonitem1:",item,disabled);
                 }
 
                 buttonControls.push(
