@@ -65,10 +65,18 @@ export default function ListOperationBar({sendMessageToParent}){
                 }
             }
 
+            //由于行的ID可能是一个引用字段，所以这里需要对selectedRowKeys做一个检查和变换
+            const selectedRowIDs=selectedRowKeys.map(item=>{
+                if(item.value){
+                    return item.value;
+                }
+                return item;
+            });
+
             const input={
                 modelID:modelID,
                 viewID:currentView,
-                selectedRowKeys:selectedRowKeys,
+                selectedRowKeys:selectedRowIDs,
                 filter:queryFilter,
                 filterData:filterData,
                 pagination:pagination,
