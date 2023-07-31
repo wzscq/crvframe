@@ -166,6 +166,25 @@ func (m *model)getUserViews(views []viewConf,userRoles string)([]viewConf){
 	return views
 }
 
+func (m *model)fitlerViews(views []viewConf,viewIDs []string)([]viewConf){
+	viewCount:=0
+	for vIndex:=range views {
+		hasView:=false
+		for _,viewID:=range viewIDs {
+			if views[vIndex].ViewID==viewID {
+				hasView=true
+				break
+			}
+		}
+		if hasView {
+			views[viewCount]=views[vIndex]
+			viewCount++
+		}
+	}	
+	views=views[:viewCount]
+	return views
+}
+
 func (m *model)getModelConf(modelID string)(*modelConf,int){
 	var mConf modelConf
 	modelFile := "apps/"+m.AppDB+"/models/"+modelID+"/model.json"
@@ -272,7 +291,7 @@ func (m *model)getModelOperations(modelID string,operations []permissionOperatio
 	return operationConfs,common.ResultSuccess
 }
 
-func (m *model)getModelViewConfV2(modelID,userRoles string)(modelViewConf,int){
+func (m *model)getModelViewConfV2(modelID string,views *[]string,userRoles string)(modelViewConf,int){
 	log.Println("getModelViewConfV2 start")
 	var mvConf modelViewConf
 	modelConf,err:=m.getModelConf(modelID)
@@ -294,17 +313,22 @@ func (m *model)getModelViewConfV2(modelID,userRoles string)(modelViewConf,int){
 	//获取视图配置
 	mvConf.Views,_=m.getModelViews(modelID,permisson.Views)
 
+	//根据传入的视图ID过滤视图
+	if views!=nil && len(*views)>0 {
+		mvConf.Views=m.fitlerViews(mvConf.Views,*views)
+	}
+
 	return mvConf,common.ResultSuccess
 }
 
-func (m *model)getModelViewConf(modelID,userRoles string)(modelViewConf,int){
+func (m *model)getModelViewConf(modelID string,views *[]string,userRoles string)(modelViewConf,int){
 	var mvConf modelViewConf
 	modelFile := "apps/"+m.AppDB+"/models/"+modelID+".json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
 		log.Println("Open file failed [Err:%s]", err.Error())
 		if os.IsNotExist(err) {
-			return m.getModelViewConfV2(modelID,userRoles)
+			return m.getModelViewConfV2(modelID,views,userRoles)
 		}
 		return mvConf,common.ResultOpenFileError
 	}
@@ -322,6 +346,11 @@ func (m *model)getModelViewConf(modelID,userRoles string)(modelViewConf,int){
 	
 	//根据用户角色过滤视图
 	mvConf.Views=m.getUserViews(mvConf.Views,userRoles)
+
+	//根据传入的视图ID过滤视图
+	if views!=nil && len(*views)>0 {
+		mvConf.Views=m.fitlerViews(mvConf.Views,*views)
+	}
 	return mvConf,common.ResultSuccess
 }
 

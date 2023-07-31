@@ -9,8 +9,8 @@ import (
 
 type menuItem struct {
 	ID string `json:"id"`
-    Name interface{} `json:"name"`
-    Description interface{} `json:"description"`
+  Name interface{} `json:"name"`
+  Description interface{} `json:"description"`
 	Operation *map[string]interface{} `json:"operation,omitempty"`
 	Icon *string `json:"icon,omitempty"`
 	Roles *interface{} `json:"roles"`

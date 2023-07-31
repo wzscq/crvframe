@@ -20,9 +20,9 @@ const opGetModelConf={
     description:{key:'page.crvlistview.getModelConf',default:'获取模型配置信息'}
 }
 
-export function createGetModelConfMessage(frameParams,modelID){
+export function createGetModelConfMessage(frameParams,modelID,views){
     opUpdateModelConf.params={...opUpdateModelConf.params,...frameParams};
-    opGetModelConf.input={modelID:modelID};
+    opGetModelConf.input={modelID:modelID,views:views};
     opGetModelConf.successOperation=opUpdateModelConf;
     return {
         type:FRAME_MESSAGE_TYPE.DO_OPERATION,

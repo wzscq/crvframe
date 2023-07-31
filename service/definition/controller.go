@@ -11,6 +11,7 @@ import (
 
 type getModelViewRep struct {
 	ModelID string `json:"modelID"`
+	Views *[]string `json:"views,omitempty"`
 }
 
 type getModelFormRep struct {
@@ -81,7 +82,7 @@ func (controller *DefinitionController)getModelViewConf(c *gin.Context){
 	}
 
 	var errorCode int
-	mvConf,errorCode=m.getModelViewConf(rep.ModelID,userRoles)
+	mvConf,errorCode=m.getModelViewConf(rep.ModelID,rep.Views,userRoles)
 
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),mvConf)
 	c.IndentedJSON(http.StatusOK, rsp)

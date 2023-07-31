@@ -30,7 +30,7 @@ export default function View(){
             if(loaded===false){
                 //加载配置
                 console.log('get model config ...');
-                sendMessageToParent(createGetModelConfMessage({frameType:item.frameType,frameID:item.params.key,origin:origin},modelID));
+                sendMessageToParent(createGetModelConfMessage({frameType:item.frameType,frameID:item.params.key,origin:origin},modelID,item.params.views));
             } else {
                 console.log("loaded views :",views);
                 dispatch(initDataView({views,currentView:item.params.view,filter:item.params.filter}));
