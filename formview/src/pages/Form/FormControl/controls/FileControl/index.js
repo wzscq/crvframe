@@ -159,7 +159,11 @@ export default function FileControl({dataPath,control,field,sendMessageToParent}
         <Tooltip title={<I18nLabel label={valueError.message}/>}>
             {fileControl}
         </Tooltip>):fileControl;
-    
+ 
+    if(control.inline){
+        return fileControl;
+    }
+ 
     return (
         <div className={className}>
             <Space size={2} direction="vertical" style={{}}>
