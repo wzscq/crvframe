@@ -20,11 +20,11 @@ export default function RowOperationBar({sendMessageToParent,record,showCount,bu
     const doOperation=useCallback((opItem)=>{
         let operation=operations.find(element=>element.id===opItem.operationID);
 
-        console.log('preprocessing',opItem);
         //对operation做预处理，一般是基于数据行为operaiton增加过滤条件
         if(operation&&opItem.preprocessing){
-            console.log('preprocessing',opItem.preprocessing);
+            //console.log('preprocessing',opItem.preprocessing);
             operation=getOperationPreporcessFunc(opItem.preprocessing)(operation,record);
+            //console.log('preprocessing',operation);
         }
 
         if(operation){

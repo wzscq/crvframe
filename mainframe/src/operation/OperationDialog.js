@@ -106,7 +106,7 @@ export default function OperationDialog(){
         dispatch(logInfo("打开Tab页:"+JSON.stringify(current)));
         let item=tabItems.find((item)=>item.params.key===current.params.key);
         if(!item){  //如果页面未打开则直接打开
-            dispatch(openTab({params:current.params}));
+            dispatch(openTab({params:current.params,input:current.input}));
         } else {
             //如果已经打开,但不是当前窗口，则将其设置为当前激活tab
             if(currentTab!==current.params.key){
@@ -119,7 +119,8 @@ export default function OperationDialog(){
                 const message={
                         type:FRAME_MESSAGE_TYPE.UPDATE_DATA,
                         dataType:DATA_TYPE.FRAME_PARAMS,
-                        data:current.params
+                        data:current.params,
+                        input:current.input
                     };
                 frameControl.contentWindow.postMessage(message,origin);
             }        

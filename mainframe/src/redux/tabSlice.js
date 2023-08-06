@@ -12,7 +12,8 @@ const initialState = {
             title:{key:'page.main.functionList',default:'功能列表'},
             key:'/functions',
             location:OPEN_LOCATION.TAB
-        }
+        },
+        input:{},   
     }*/],
     current:"/functions"
 }
