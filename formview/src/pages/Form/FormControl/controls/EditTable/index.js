@@ -1,12 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import { Space } from 'antd';
+import { Space,Tooltip } from 'antd';
 
 import Header from './Header';
 import Body from './Body';
 import { 
     createRow,
-    deleteRow
+    deleteRow,
+    removeErrorField
 } from '../../../../../redux/dataSlice';
 import I18nLabel from '../../../../../component/I18nLabel';
 import './index.css';
@@ -23,6 +24,11 @@ const selectUpdatedValue=(data,dataPath,field)=>{
     return updatedNode[field];
 };
 
+const selectValueError=(data,dataPath,field)=>{
+    const errFieldPath=dataPath.join('.')+'.'+field;
+    return data.errorField[errFieldPath];
+}
+
 const resultEqualityCheck=(a,b)=>{
     return (JSON.stringify(a)===JSON.stringify(b));
 }
@@ -30,9 +36,10 @@ const resultEqualityCheck=(a,b)=>{
 const makeSelector=()=>{
     return createSelector(
         selectUpdatedValue,
-        (updatedValue)=>{
+        selectValueError,
+        (updatedValue,valueError)=>{
             const rowKeys=updatedValue?.list?Object.keys(updatedValue.list):[];
-            return {rowKeys};
+            return {rowKeys,valueError};
         },
         {
             memoizeOptions:{
@@ -46,22 +53,55 @@ export default function EditTable({dataPath,control,field,sendMessageToParent}){
     const dispatch=useDispatch();
     
     const selectValue=useMemo(makeSelector,[dataPath,control,field]);
-    const {rowKeys}=useSelector(state=>selectValue(state.data,dataPath,field.field));
+    const {rowKeys,valueError}=useSelector(state=>selectValue(state.data,dataPath,field.field));
     
     const onAddNewRow=useCallback(()=>{
+
         dispatch(createRow({dataPath:[...dataPath,field.field,'list'],initData:{}}));
-    },[dispatch,dataPath,field]);
+        if(valueError){
+            const errFieldPath=dataPath.join('.')+'.'+field.field;
+            dispatch(removeErrorField(errFieldPath));
+        }
+    },[dispatch,dataPath,field,valueError]);
 
     const onDeleteRow=useCallback((rowKey)=>{
         //取出已经删除的数据
         dispatch(deleteRow({
             dataPath:[...dataPath,field.field,'list'],
             rowKey:rowKey}));
-    },[dispatch,dataPath,field]);
+
+        if(valueError){
+            const errFieldPath=dataPath.join('.')+'.'+field.field;
+            dispatch(removeErrorField(errFieldPath));
+        }
+    },[dispatch,dataPath,field,valueError]);
 
     const label=control.label?control.label:(field?field.name:"");
     const header=(<Header control={control} onAddNewRow={onAddNewRow}/>);
-    
+
+    let wrapperStyle={maxHeight:control.maxHeight};
+    if(valueError){
+        wrapperStyle={...wrapperStyle,border:'1px solid red'};
+    }
+
+    let tableControl=(
+        <div className='control-edittable-body-wrapper' style={wrapperStyle}>
+            <Body 
+                dataPath={[...dataPath,field.field,'list']}
+                sendMessageToParent={sendMessageToParent} 
+                control={control} 
+                rowKeys={rowKeys} 
+                onDeleteRow={onDeleteRow} 
+                header={header}
+            />
+        </div>
+    );
+
+    tableControl=valueError?(
+        <Tooltip title={<I18nLabel label={valueError.message}/>}>
+            {tableControl}
+        </Tooltip>):tableControl
+
     return (
         <div className='control-edittable-main'>
             <Space size={2} direction="vertical" style={{width:'100%'}}>
@@ -69,16 +109,7 @@ export default function EditTable({dataPath,control,field,sendMessageToParent}){
                     {control.required?(<span style={{color:'red'}}>*</span>):null}
                     <I18nLabel label={label}/>
                 </div>
-                <div className='control-edittable-body-wrapper' style={{maxHeight:control.maxHeight}}>
-                    <Body 
-                        dataPath={[...dataPath,field.field,'list']}
-                        sendMessageToParent={sendMessageToParent} 
-                        control={control} 
-                        rowKeys={rowKeys} 
-                        onDeleteRow={onDeleteRow} 
-                        header={header}
-                    />
-                </div>
+                {tableControl}
             </Space>
         </div>
     );

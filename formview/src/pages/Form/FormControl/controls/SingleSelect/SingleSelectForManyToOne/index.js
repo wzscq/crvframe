@@ -27,6 +27,9 @@ const selectUpdatedValue=(data,dataPath,field)=>{
 
 const selectValueError=(data,dataPath,field)=>{
     const errFieldPath=dataPath.join('.')+'.'+field;
+
+    console.log('singleSelect errFieldPath:',errFieldPath);
+
     return data.errorField[errFieldPath];
 };
 
@@ -354,8 +357,6 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
         optionControls.push(<Option key={'origin'} value={item.id}>{label}</Option>);
     }
 
-    console.log('singleSelectControl',updatedValue,optionControls);
-
     let selectControl=control.disabled===true?(
         <DisabledControl inline={control.inline} value={updatedValue?.list?.length>0?getValueLabel(updatedValue):""} />
     ):(<Select
@@ -376,6 +377,8 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
         >
         {optionControls}
     </Select>);
+
+    console.log('singleSelect valueError:',valueError);
 
     selectControl=valueError?(
         <Tooltip title={<I18nLabel label={valueError.message}/>}>

@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type filterDataItem struct {
+type FilterDataItem struct {
 	ModelID string `json:"modelID"`
 	Filter *map[string]interface{} `json:"filter"`
 	Fields *[]Field `json:"fields"`
@@ -16,7 +16,7 @@ type filterDataItem struct {
 type CommonReq struct {
 	ModelID string `json:"modelID"`
 	ViewID *string `json:"viewID"`
-	FilterData *[]filterDataItem `json:"filterData"`
+	FilterData *[]FilterDataItem `json:"filterData"`
 	Filter *map[string]interface{} `json:"filter"`
 	List *[]map[string]interface{} `json:"list"`
 	Fields *[]Field `json:"fields"`

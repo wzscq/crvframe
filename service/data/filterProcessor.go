@@ -15,7 +15,7 @@ import (
 */
 func processFilter(
 	filter *map[string]interface{},
-	filterData *[]filterDataItem,
+	filterData *[]FilterDataItem,
 	userID string,
 	userRoles string,
 	appDB string,
@@ -190,7 +190,7 @@ func getPathData(path []string,level int,data *map[string]interface{},values *[]
 }
 
 func getFilterData(
-	filterData *[]filterDataItem,
+	filterData *[]FilterDataItem,
 	userID ,userRoles,appDB string,
 	dataRepository DataRepository)(*map[string]interface{},int){
 

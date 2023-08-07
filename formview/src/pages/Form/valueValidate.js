@@ -4,19 +4,25 @@ const validateField=(dataPath,control,rowValue,errorField)=>{
     const {required,field,validation}=control;
     if(required){
         if(rowValue[field]){
-            if(rowValue[field].fieldType){
-                if(rowValue[field].fieldType===FIELD_TYPE.MANY2MANY||
-                   rowValue[field].fieldType===FIELD_TYPE.ONE2MANY||
-                   rowValue[field].fieldType===FIELD_TYPE.MANY2ONE||
-                   rowValue[field].fieldType===FIELD_TYPE.FILE){
-                    if(!(rowValue[field].list&&rowValue[field].list.length>0)){
+           
+            if(control.fieldType){
+                if(control.fieldType===FIELD_TYPE.MANY2MANY||
+                    control.fieldType===FIELD_TYPE.ONE2MANY||
+                    control.fieldType===FIELD_TYPE.MANY2ONE||
+                    control.fieldType===FIELD_TYPE.FILE){
+                    
+                    if(!(rowValue[field].list&&
+                        (rowValue[field].list.length>0||
+                        Object.keys(rowValue[field].list).length>0))){
                         errorField.errorField[dataPath+'.'+field]={message:{key:'page.crvformview.requiredField',default:'必填字段！'}};
+                       
                         return; 
                     }
                 }
             } else {
                 if(rowValue[field].length<=0){
                     errorField.errorField[dataPath+'.'+field]={message:{key:'page.crvformview.requiredField',default:'必填字段！'}};
+                    
                     return;
                 }
             }
@@ -51,10 +57,9 @@ const subValueValidate=(dataPath,controls,values,errorField)=>{
         if(control.field){
             for(const rowKey in values){
                 const row=values[rowKey];
+                validateField(dataPath+'.'+rowKey,control,row,errorField);
                 if(control.controls){
-                    subValueValidate(dataPath+'.'+rowKey+'.list',control.controls,row[control.field].list,errorField);
-                } else {
-                    validateField(dataPath+'.'+rowKey,control,row,errorField);
+                    subValueValidate(dataPath+'.'+rowKey+'.list',control.controls,row[control.field]?.list,errorField);
                 }
             }
         }
@@ -63,13 +68,13 @@ const subValueValidate=(dataPath,controls,values,errorField)=>{
 
 const valueValidate=(controls,values,errorField)=>{
     controls.forEach(control => {
+        console.log('valueValidate control:',control);
         if(control.field){
             for(const rowKey in values){
                 const row=values[rowKey];
+                validateField(rowKey,control,row,errorField);
                 if(control.controls){
-                    subValueValidate(rowKey+'.list',control.controls,row[control.field]?.list,errorField);
-                } else {
-                    validateField(rowKey,control,row,errorField);
+                    subValueValidate(rowKey+'.'+control.field+'.list',control.controls,row[control.field]?.list,errorField);
                 }
             }
         }

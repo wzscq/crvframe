@@ -70,6 +70,11 @@ export default function DatePickerControl({dataPath,control,field}){
     //如果控件没有配置label属性，则取字段配置的字段name
     const label=control.label?control.label:(field?field.name:"");
     let value=updatedValue;
+    //
+    /*if(value==='0000-00-00 00:00:00'){
+        value=undefined;
+    }*/
+
     if(value&&value.length>0){
         value=moment(value);
     }

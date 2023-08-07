@@ -22,14 +22,8 @@ const selectUpdatedValue=(data,dataPath,field)=>{
 };
 
 const selectValueError=(data,dataPath,field)=>{
-    let errNode=data.errorField;
-    for(let i=0;i<dataPath.length;++i){
-        errNode=errNode[dataPath[i]];
-        if(!errNode){
-            return undefined;
-        }
-    }
-    return errNode[field];
+    const errFieldPath=dataPath.join('.')+'.'+field;
+    return data.errorField[errFieldPath];
 }
 
 const makeSelector=()=>{
@@ -56,7 +50,8 @@ export default function TextAreaControl({dataPath,control,field}){
             update:e.target.value}));
         
         if(valueError){
-            dispatch(removeErrorField(field.field));
+            const errFieldPath=dataPath.join('.')+'.'+field.field;
+            dispatch(removeErrorField(errFieldPath));
         }
     }
 
@@ -71,7 +66,7 @@ export default function TextAreaControl({dataPath,control,field}){
     //获取文本输入框的标签，如果form控件配置了label属性则直接使用，
     //如果控件没有配置label属性，则取字段配置的字段name
     const label=control.label?control.label:(field?field.name:"");
-    
+
     let inputControl=(
         <TextArea  
             placeholder={control.placeholder?control.placeholder:""} 
