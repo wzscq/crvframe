@@ -36,11 +36,16 @@ type fileConf struct {
 	Root string `json:"root"`
 }
 
+type casConf struct {
+	Url string  `json:"url"`
+}
+
 type Config struct {
 	Redis  redisConf  `json:"redis"`
 	Mysql  mysqlConf  `json:"mysql"`
 	Service serviceConf `json:"service"`
 	File fileConf `json:"file"`
+	Cas casConf `json:"cas"`
 }
 
 var gConfig Config

@@ -19,7 +19,14 @@ func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 		log.Print(c.Request.URL.Path)
 		errorCode:=ResultSuccess
 		// Set example variable
-		if strings.Index(c.Request.URL.Path,"/appimages/") ==0 ||
+		if strings.Index(c.Request.URL.Path,"/cas/login/") == 0 {
+			params:=strings.Split(c.Request.URL.Path,"/")
+			if len(params)>3 {
+				appID:=params[3]
+				appDB,_:=appCache.GetAppDB(appID)
+				c.Set("appDB",appDB)
+			}
+		} else if strings.Index(c.Request.URL.Path,"/appimages/") ==0 ||
 		   strings.Index(c.Request.URL.Path,"/appI18n/") ==0 {
 			params:=strings.Split(c.Request.URL.Path,"/")
 			if len(params)>2 {

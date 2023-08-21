@@ -11,6 +11,7 @@ import (
     "crv/frame/redirect"
     "crv/frame/flow"
     "crv/frame/esi"
+    "crv/frame/cas"
     "crv/frame/report"
     "time"
     "log"
@@ -110,6 +111,12 @@ func main() {
         LoginCache:loginCache,
     }
     oauthController.Bind(router)
+
+    //cas 
+    casController:=&cas.CasController{
+        CasUrl:conf.Cas.Url,
+    }
+    casController.Bind(router)
 
     //esi
     esiController:=&esi.EsiController{
