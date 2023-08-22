@@ -27,7 +27,7 @@ export default function Row({dataPath,control,rowKey,onDeleteRow,sendMessageToPa
         return {templateColumns,columns};
     },[control,dataPath,sendMessageToParent,rowKey,setCurrentRow,isCurrent]);
 
-    const gridTemplateColumns='30px '+templateColumns;
+    const gridTemplateColumns='32px '+templateColumns;
 
     return (
         <div style={{display:'grid',gridTemplateColumns:gridTemplateColumns,gridAutoRows:'minmax(20px, auto)'}}>

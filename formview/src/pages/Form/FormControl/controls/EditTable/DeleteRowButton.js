@@ -12,7 +12,7 @@ export default function DeleteRowButton({label,disabled,rowKey,colNo,onDeleteRow
         borderBottom:'1px solid #d9d9d9',
         borderLeft:'1px solid #d9d9d9',
         textAlignment:'center',
-        padding:2};
+        padding:3};
 
     return (
         <div style={wrapperStyle}>

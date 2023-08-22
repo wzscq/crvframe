@@ -13,7 +13,7 @@ export default function AddRowButton({label,disabled,colNo,onAddNewRow}){
         borderBottom:'1px solid #d9d9d9',
         borderLeft:'1px solid #d9d9d9',
         textAlignment:'center',
-        padding:2}
+        padding:3}
 
     return (
         <div style={wrapperStyle}>

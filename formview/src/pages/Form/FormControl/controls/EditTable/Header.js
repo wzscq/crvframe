@@ -2,7 +2,7 @@ import AddRowButton from "./AddRowButton";
 import I18nLabel from "../../../../../component/I18nLabel";
 
 export default function Header({control,onAddNewRow,fixed}){
-    let gridTemplateColumns='30px ';
+    let gridTemplateColumns='32px ';
     const columns=control.controls
         .filter(item=>item.visible)
         .map((field,index)=>{
