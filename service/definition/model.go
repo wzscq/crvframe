@@ -83,6 +83,7 @@ type viewConf struct {
 	Toolbar *viewToolbarConf `json:"toolbar,omitempty"`
 	Roles *interface{} `json:"roles"`
 	RowStyle *string `json:"rowStyle,omitempty"`
+	Option map[string]interface{} `json:"option"`
 }
 
 type modelConf struct {

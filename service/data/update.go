@@ -51,7 +51,6 @@ func (update *Update)getUpdateFilter()(*map[string]interface{}){
 					},
 				}
 	}
-
 	return update.Filter
 }
 

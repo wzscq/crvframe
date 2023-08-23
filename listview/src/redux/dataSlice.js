@@ -9,6 +9,7 @@ const initialState = {
             data:{
                 modelid:"model1",
                 viewId:"view1",
+                selectedAll:false,
                 pagination:{
                     total:26,      //总记录数
                     current:1,      //当前页编号 
@@ -143,6 +144,9 @@ export const dataSlice = createSlice({
         setFixedColumn:(state,action) => {
             state.views[state.currentView].data.fixedColumn=action.payload;
         },
+        setSelectAll:(state,action) => {
+            state.views[state.currentView].data.selectAll=action.payload;
+        },
         setData:(state,action) => {
             state.views[state.currentView].data.total=action.payload.total;
             state.views[state.currentView].data.list=action.payload.list;
@@ -198,6 +202,7 @@ export const {
     setFixedColumn,
     setSelectedRowKeys,
     setSorter,
+    setSelectAll,
     setFieldFilter,
     resetFieldFilter,
     setPagination,

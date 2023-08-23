@@ -23,6 +23,7 @@ type CommonReq struct {
 	Sorter *[]Sorter `json:"sorter"`
 	SelectedRowKeys *[]string `json:"selectedRowKeys"`
 	Pagination *Pagination `json:"pagination"`
+	SelectAll bool `json:"selectAll"`
 }
 
 type DataController struct {
@@ -157,7 +158,15 @@ func (controller *DataController) update(c *gin.Context) {
 		c.IndentedJSON(http.StatusOK, rsp)
 		log.Println("end data update with error")
 		return
-    }
+  }
+
+	if (rep.SelectedRowKeys == nil || len(*rep.SelectedRowKeys)==0) && rep.SelectAll==false {
+		errorCode=common.ResultWrongRequest
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		c.IndentedJSON(http.StatusOK, rsp)
+		log.Println("end data update with error")
+		return
+	}
 
 	errorCode=processFilter(rep.Filter,rep.FilterData,userID,userRoles,appDB,controller.DataRepository)
 	if errorCode==common.ResultSuccess {

@@ -1,5 +1,5 @@
 import {useMemo} from 'react';
-import { Select } from 'antd';
+import { Select,Breadcrumb } from 'antd';
 import { useSelector,useDispatch } from 'react-redux';
 
 import {setCurrentView} from '../../../redux/dataSlice';
@@ -16,11 +16,18 @@ export default function ModelViewList(){
         dispatch(setCurrentView(value));
     }
 
-    const options=useMemo(()=>{
-        return views.map(item=>{
-            return (<Option value={item.viewID}>{getLocaleLabel(item.name)}</Option>)
-        });
-    },[views,getLocaleLabel]);
+    //如果只有一个视图，则不需要显示list
+    if(views.length===1){
+        return (
+            <Breadcrumb>
+              <Breadcrumb.Item>{getLocaleLabel(views[0].name)}</Breadcrumb.Item>
+            </Breadcrumb>
+        );
+    }
+
+    const options=views.map(item=>{
+        return (<Option value={item.viewID}>{getLocaleLabel(item.name)}</Option>);
+    });
 
     const filterOption=(input, option) =>{
         return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -29,7 +36,6 @@ export default function ModelViewList(){
     /*const filterSort=(optionA, optionB) => {
         return optionA.children.toLowerCase().localeCompare(optionB.children.toLowerCase())
     }*/
-
     return (
         <Select filterOption={filterOption} value={currentView} showSearch style={{ width: "100%"}} onChange={onViewChange}>
             {options}

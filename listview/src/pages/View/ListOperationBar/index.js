@@ -13,7 +13,7 @@ export default function ListOperationBar({sendMessageToParent}){
     const {currentView} = useSelector(state=>state.data);
     const {getLocaleLabel}=useI18n();
     const {fields,views,modelID,operations}=useSelector(state=>state.definition);
-    const {selectedRowKeys,filter,pagination,sorter}=useSelector(state=>state.data.views[state.data.currentView].data);
+    const {selectedRowKeys,filter,pagination,sorter,selectedAll}=useSelector(state=>state.data.views[state.data.currentView].data);
 
     const {searchFields,filterData,viewFilter}=useMemo(()=>{
         let searchFields=[];
@@ -81,7 +81,8 @@ export default function ListOperationBar({sendMessageToParent}){
                 filterData:filterData,
                 pagination:pagination,
                 sorter:sorter,
-                fields:searchFields
+                fields:searchFields,
+                selectedAll:selectedAll
             };
 
             const message={

@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Tag,Space } from 'antd';
+import { Tag,Space,Checkbox  } from 'antd';
 import {SortAscendingOutlined,SortDescendingOutlined  } from '@ant-design/icons';
-import { setSorter,resetFieldFilter,setFixedColumn } from "../../../redux/dataSlice";
+import { setSorter,resetFieldFilter,setFixedColumn,setSelectAll } from "../../../redux/dataSlice";
 import useI18n from "../../../hooks/useI18n";
 
 import './index.css';
@@ -11,7 +11,8 @@ export default function StatusBar(){
     const {getLocaleLabel}=useI18n();
     const dispatch=useDispatch();
     const {fields}=useSelector(state=>state.definition);
-    const {total,selectedRowKeys,sorter,filterValueLabel,fixedColumn}=useSelector(state=>state.data.views[state.data.currentView].data);
+    const currentView = useSelector(state=>state.definition.views.find(item=>item.viewID===state.data.currentView));
+    const {total,selectedRowKeys,sorter,filterValueLabel,fixedColumn,selectAll}=useSelector(state=>state.data.views[state.data.currentView].data);
     
     const resetFixedColumn=useCallback(()=>{
         dispatch(setFixedColumn(0));
@@ -27,6 +28,11 @@ export default function StatusBar(){
     const resetSorter=useCallback(()=>{
         dispatch(setSorter([]));
     },[dispatch]);
+
+    const onSelectAllChange=(e)=>{
+        //console.log(`onSelectAllChange = ${e.target.checked}`);
+        dispatch(setSelectAll(e.target.checked));
+    }
 
     const sorterTag=useMemo(()=>{
         if(sorter.length>0){
@@ -61,10 +67,17 @@ export default function StatusBar(){
                     selectedRowKeys.length+
                     getLocaleLabel({key:'page.crvlistview.item',default:' 条'});
 
+    let selectAllControl=null;
+    console.log('currentView:'+currentView?.option);
+    if(currentView?.option?.showSelectAll===true){
+        selectAllControl=(<Checkbox value={selectAll} onChange={onSelectAllChange}>{getLocaleLabel({key:'page.crvlistview.selectAll',default:'选择全部'})}</Checkbox>);                
+    }
+
     return (
         <div className="status-bar">
             <Space>
                 <Tag>{sumLabel}</Tag>
+                {selectAllControl}
                 {fixedTab}
                 {sorterTag}
                 {filterTags}
