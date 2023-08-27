@@ -7,9 +7,9 @@ export const userInfoStorage={
         if(userStr!=null&&userStr?.length>0){
             return JSON.parse(userStr);
         }
-        return {userName:"",token:"",appID:""};
+        return {userName:"",token:"",appID:"",initOperations:[]};
     },
     clear:()=>{
         sessionStorage.removeItem("userInfo");
     }
-} 
+}

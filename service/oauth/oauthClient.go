@@ -129,11 +129,17 @@ func localLogin(
 		return nil,common.CreateError(common.ResultCreateTokenError,nil)
 	}
 	
+	//获取当前用户的初始操作
+	initOperations:=definition.GetOperations(appDB,userRoles)
+	//获取应用配置信息
+	appConf,_:=definition.GetAPPConf(appDB)
 	result:=&user.LoginResult{
 		UserID:userInfo.UserID,
 		UserName:userInfo.UserNameZh,
-		Token:token,
+		Token:common.EncodeToken(token),
 		AppID:AppID,
+		InitOperations:initOperations,
+		AppConf:appConf,
 	}
 	return result,nil
 }

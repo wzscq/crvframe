@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 //import { useDispatch } from 'react-redux';
 
 import {
@@ -7,46 +8,11 @@ import {
 import {userInfoStorage} from '../../utils/sessionStorage';
 import Dialog from '../../dialog';
 import FrameContent from "./FrameContent";
+import OperationDialog from '../../operation';
 
 import './index.css';
 
 export default function MainFrame(){   
-    //const dispatch=useDispatch();
-
-    /*const errorCallback=(error)=>{
-        console.log('errorCallback:'+JSON.stringify(error));       
-        message.error(error.message);
-        if(error.errorCode===ERROR_CODE.TOKEN_EXPIRED){
-            setOperation(createLogoutOperation());
-        }
-    }
-
-    //这里在主框架窗口中挂载事件监听函数，负责和子窗口之间的操作交互
-    const receiveMessageFromSubFrame=(event)=>{
-        dispatch(logInfo('receiveMessageFromSubFrame:'+JSON.stringify(event.data)));
-        const {type,data}=event.data;
-        if(type===FRAME_MESSAGE_TYPE.DO_OPERATION){
-            dispatch(logInfo('do_operation:'+JSON.stringify(event.data.data.operationItem)));
-            setOperation(data.operationItem);
-        } else if (type===FRAME_MESSAGE_TYPE.QUERY_REQUEST) {
-            queryData(data,errorCallback);
-        } else if (type===FRAME_MESSAGE_TYPE.REPORT_QUERY){
-            queryReportData(data,errorCallback);
-        } else if (type===FRAME_MESSAGE_TYPE.GET_IMAGE) {
-            console.log('wzstest get image');
-            getImage(data,errorCallback);
-        } else {
-            console.log('not supported frame message type:'+type);
-        }
-    }
-
-    useEffect(()=>{
-        window.addEventListener('message',receiveMessageFromSubFrame);
-        return ()=>{
-            window.removeEventListener('message',receiveMessageFromSubFrame);
-        }
-    });*/
-
     useEffect(()=>{
         const {appID}=userInfoStorage.get();
         document.title=appID;
@@ -61,6 +27,7 @@ export default function MainFrame(){
         <div className="main-frame">
             <FrameContent/>
             <Dialog/>
+            <OperationDialog/>
         </div>
     );
 }

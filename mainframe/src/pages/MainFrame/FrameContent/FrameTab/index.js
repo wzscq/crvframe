@@ -50,7 +50,7 @@ export default function FrameTab({inResize}){
         }
 
         return items.map((item)=>{
-            const {key,title}=item.params;
+            const {key,title,closable}=item.params;
             
             const titleLabel=getTitleLable(title);
             
@@ -62,7 +62,7 @@ export default function FrameTab({inResize}){
             }
 
             return (
-                <TabPane tab={titleLabel} key={key} closable={true}>
+                <TabPane tab={titleLabel} key={key} closable={closable===false?false:true}>
                     <ChildFrame inResize={inResize} locale={locale}  resources={resources} item={item}/>
                 </TabPane>
             );

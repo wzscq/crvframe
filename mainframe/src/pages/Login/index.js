@@ -10,7 +10,7 @@ import "./index.css";
 
 export default function Login(){
     const navigate = useNavigate();
-    const token=useSelector(state=>state.login.token);
+    const {token}=useSelector(state=>state.login);
     const {appID}=useParams();
     const loginBackImg=getLoginImage(appID);
 

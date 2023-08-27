@@ -17,7 +17,9 @@ const logout=(state)=>{
   state.userName="";
   state.token="";
   state.appID="";
+  state.initOperations=[];
   state.pending=false;
+  state.appConf=undefined;
 }
 
 export const loginSlice = createSlice({
@@ -41,6 +43,8 @@ export const loginSlice = createSlice({
         state.userName=loginApiResponse.userName;
         state.token=loginApiResponse.token;
         state.appID=loginApiResponse.appID;
+        state.initOperations=loginApiResponse.initOperations;
+        state.appConf=loginApiResponse.appConf;
         userInfoStorage.set(loginApiResponse);
       }
     });
@@ -65,6 +69,8 @@ export const loginSlice = createSlice({
         state.userName=loginApiResponse.userName;
         state.token=loginApiResponse.token;
         state.appID=loginApiResponse.appID;
+        state.initOperations=loginApiResponse.initOperations;
+        state.appConf=loginApiResponse.appConf;
         userInfoStorage.set(loginApiResponse);
       }
     });

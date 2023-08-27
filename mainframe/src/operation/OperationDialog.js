@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector} from "react-redux";
 import { Modal,Button,message} from 'antd';
 import { useNavigate } from "react-router-dom";
-import { SyncOutlined } from '@ant-design/icons';
 
 import {
     requestAction,
@@ -337,6 +336,6 @@ export default function OperationDialog(){
             closable={false}
             footer={footer}>
             {operationList}
-        </Modal>):(<Button type="text" loading={runing} icon={<SyncOutlined/>}/>)
-    )
+        </Modal>):null
+    );
 }

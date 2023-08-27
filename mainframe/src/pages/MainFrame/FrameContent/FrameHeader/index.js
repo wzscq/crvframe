@@ -1,21 +1,26 @@
+import { useSelector} from "react-redux";
+import { SyncOutlined } from '@ant-design/icons';
+import { Button} from 'antd';
+
 import FunctionMenu from './FunctionMenu';
 import SystemMenu from './SystemMenu';
 
 import SelectLanguage from '../../../../component/SelectLanguage';
 import {userInfoStorage} from '../../../../utils/sessionStorage';
-import OperationDialog from '../../../../operation';
+
 import './index.css';
 
-export default function FrameHeader(){
+export default function FrameHeader({hideHeader}){
     const {appID}=userInfoStorage.get();
+    const {current}=useSelector(state=>state.operation);
 
     return (
-        <div className="frame-header">
+        <div className="frame-header" style={hideHeader===true?{height:0,overflow:'hidden'}:{}}>
             <div className="function-menu">
                 <FunctionMenu/>
             </div>
             <div className="system-operation-bar">
-                <OperationDialog/>
+                <Button type="text" loading={current?true:false} icon={<SyncOutlined/>}/>
             </div>
             <div className='locale-selector'>
                 <SelectLanguage appID={appID}/>

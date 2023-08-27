@@ -34,7 +34,7 @@ export default function MenuBar({collapsed}){
     [errorCode]);
 
     const onClick=({item})=>{
-        console.log(item.props.operation);
+        //console.log(item.props.operation);
         if(item.props.operation){
             setOperation(item.props.operation);
         }

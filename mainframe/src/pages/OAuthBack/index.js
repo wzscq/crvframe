@@ -10,7 +10,7 @@ export default function OAuthBack(){
     const navigate = useNavigate();
     const token=useSelector(state=>state.login.token);
     const {appID}=useParams();
-    const [search, ] = useSearchParams();
+    const [search,] = useSearchParams();
     const oauthCode=search.get('code');
     const loginBackImg=getLoginImage(appID);
  
@@ -18,7 +18,7 @@ export default function OAuthBack(){
         document.title=appID;
         let favicon = document.querySelector('link[rel="icon"]');
         if (favicon !== null) {
-            console.log("set app icon to:",getAppIcon(appID));
+            //console.log("set app icon to:",getAppIcon(appID));
             favicon.href = getAppIcon(appID);
         }
     },[appID]);
@@ -28,6 +28,7 @@ export default function OAuthBack(){
         if(token.length>0){
             navigate("/mainframe");
         } else {
+            console.log('oauth:',appID,oauthCode);
             dispatch(oauthBackApi({appID:appID,oauthCode:oauthCode}));
         }
     },[dispatch,navigate,token,appID,oauthCode]);

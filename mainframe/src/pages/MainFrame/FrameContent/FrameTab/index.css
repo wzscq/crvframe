@@ -1,7 +1,7 @@
 .frame-tab-main {
     width:100%;
     border-top: 1px solid gainsboro;
-    height: calc(100vh - 47px);
+    height: 100%;
 }
 
 .frame-tab-main .ant-tabs-top .ant-tabs-nav {
@@ -11,13 +11,13 @@
 
 .frame-tab-main iframe {
     width: 100%;
-    height: calc(100vh - 80px);
+    height: 100%;
     display: flex;
 }
 
 .frame-tab-main .log-tab {
     width: 100%;
-    height: calc(100vh - 88px);
+    height: 100%;
     overflow: scroll;
 }
 
@@ -31,6 +31,14 @@
     left: 0;
     top: 34px;
     width: 100%;
-    height: calc(100vh - 80px);
+    height: 100%;
     display: flex;
+}
+
+.frame-tab-main .ant-tabs {
+    height: 100%;
+}
+
+.frame-tab-main .ant-tabs-content {
+    height: 100%;
 }

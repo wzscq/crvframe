@@ -4,6 +4,7 @@ import (
 	"log"
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
+	"crv/frame/definition"
 	"database/sql"
 	"net/http"
 )
@@ -21,7 +22,7 @@ type repHeader struct {
 type loginRep struct {
     UserID     string  `json:"userID"`
     Password  string   `json:"password"`
-	AppID     string   `json:"appID"`
+		AppID     string   `json:"appID"`
 }
 
 type changePasswordRep struct {
@@ -32,8 +33,10 @@ type changePasswordRep struct {
 type LoginResult struct {
     UserID     string  `json:"userID"`
     UserName  *string  `json:"userName"`
-	Token     string  `json:"token"`
-	AppID     string  `json:"appID"`
+		Token     string  `json:"token"`
+		AppID     string  `json:"appID"`
+		InitOperations []definition.OperationConf `json:"initOperations"`
+		AppConf  map[string]interface{} `json:"appConf"`
 }
 
 func (controller *UserController)checkUserPassword(userID string,password string,dbName string)(*User,int){
@@ -132,11 +135,18 @@ func (controller *UserController)login(c *gin.Context) {
 	errorCode=controller.cacheLoginToken(rep.UserID,token,appDB,userRoles)
 	var result *LoginResult
 	if errorCode == common.ResultSuccess {
+		//获取当前用户的初始操作
+		initOperations:=definition.GetOperations(appDB,userRoles)
+		//获取应用配置信息
+		appConf,_:=definition.GetAPPConf(appDB)
+
 		result=&LoginResult{
 			UserID:user.UserID,
 			UserName:user.UserNameZh,
 			Token:common.EncodeToken(token),
 			AppID:rep.AppID,
+			InitOperations:initOperations,
+			AppConf:appConf,
 		}
 	}
 		

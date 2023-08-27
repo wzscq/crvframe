@@ -23,6 +23,10 @@ type getReportConfReq struct {
 	ReportID string  `json:"reportID"`
 }
 
+type getAPPConfReq struct {
+	AppID string  `json:"appID"`
+}
+
 type DefinitionController struct {
 	 
 }
@@ -172,6 +176,30 @@ func (controller *DefinitionController)getAppI18n(c *gin.Context){
 	log.Println("end definition getAppI18n")
 }
 
+func (controller *DefinitionController)getAPPConf(c *gin.Context){
+	log.Println("start definition getAPPConf")
+	appDB:= c.MustGet("appDB").(string)
+	
+	var req getAPPConfReq	
+	if err := c.BindJSON(&req); err != nil {
+		log.Println(err)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
+		log.Println("end definition getAPPConf with error")	
+	}
+
+	appConf,err:=GetAPPConf(appDB)
+	if err != nil {
+		rsp:=common.CreateResponse(err,nil)
+		c.IndentedJSON(http.StatusOK, rsp)
+		return
+	}
+
+	rsp:=common.CreateResponse(nil,appConf)
+	c.IndentedJSON(http.StatusOK, rsp)
+	log.Println("end definition getAPPConf")
+}
+
 func (controller *DefinitionController) Bind(router *gin.Engine) {
 	log.Println("Bind DefinitionController")
 	router.POST("/definition/getUserMenus", controller.getUserMenus)
@@ -179,6 +207,7 @@ func (controller *DefinitionController) Bind(router *gin.Engine) {
 	router.POST("/definition/getModelViewConf", controller.getModelViewConf)
 	router.POST("/definition/getModelFormConf", controller.getModelFormConf)
 	router.POST("/definition/getReportConf", controller.getReportConf)
+	router.POST("/definition/getAPPConf", controller.getAPPConf)
 	router.GET("/appimages/:appId/:image", controller.getAppImage)
 	router.GET("/appI18n/:appId/:locale", controller.getAppI18n)
 }

@@ -39,7 +39,7 @@ type fieldConf struct {
 	AssociationModelID *string `json:"associationModelID,omitempty"`
 }
 
-type operationConf struct {
+type OperationConf struct {
 	ID string `json:"id"`
 	Name interface{} `json:"name"`
 	Type string `json:"type"`
@@ -47,8 +47,8 @@ type operationConf struct {
 	Input map[string]interface{} `json:"input"`
 	InputValidation *string `json:"inputValidation,omitempty"`
 	Description interface{} `json:"description"`
-	SuccessOperation *operationConf `json:"successOperation,omitempty"`
-	ErrorOperation *operationConf `json:"errorOperation,omitempty"`
+	SuccessOperation *OperationConf `json:"successOperation,omitempty"`
+	ErrorOperation *OperationConf `json:"errorOperation,omitempty"`
 	Roles *interface{} `json:"roles"`
 }
 
@@ -94,7 +94,7 @@ type modelConf struct {
 type modelViewConf struct {
 	ModelID string `json:"modelID"`
 	Fields []fieldConf `json:"fields"`
-	Operations []operationConf `json:"operations"`
+	Operations []OperationConf `json:"operations"`
 	Views []viewConf `json:"views"`
 }
 
@@ -111,7 +111,7 @@ type formConf struct {
 type modelFormConf struct {
 	ModelID string `json:"modelID"`
 	Fields []fieldConf `json:"fields"`
-	Operations []operationConf `json:"operations"`
+	Operations []OperationConf `json:"operations"`
 	Forms []formConf `json:"forms"`
 }
 
@@ -143,7 +143,7 @@ func (m *model)getUserPermissonViews(views []permissionView,userRoles string)([]
 	return views
 }
 
-func (m *model)getUserOperations(operations []operationConf,userRoles string)([]operationConf){
+func GetUserOperations(operations []OperationConf,userRoles string)([]OperationConf){
 	operationCount:=0
 	for opIndex:=range operations {
 		if HasRight(operations[opIndex].Roles,userRoles) {
@@ -250,8 +250,8 @@ func (m *model)getModelView(modelID,viewID string)(*viewConf,int){
 	return &view,common.ResultSuccess
 }
 
-func (m *model)getModelOperation(modelID,operationID string)(*operationConf,int){
-	var op operationConf
+func (m *model)getModelOperation(modelID,operationID string)(*OperationConf,int){
+	var op OperationConf
 	operationFile := "apps/"+m.AppDB+"/models/"+modelID+"/operations/"+operationID+".json"
 	filePtr, err := os.Open(operationFile)
 	if err != nil {
@@ -281,8 +281,8 @@ func (m *model)getModelViews(modelID string,views []permissionView)([]viewConf,i
 	return viewConfs,common.ResultSuccess
 }
 
-func (m *model)getModelOperations(modelID string,operations []permissionOperation)([]operationConf,int){
-	operationConfs:=[]operationConf{}
+func (m *model)getModelOperations(modelID string,operations []permissionOperation)([]OperationConf,int){
+	operationConfs:=[]OperationConf{}
 	for _,operationItem:=range(operations) {
 		operation,err:=m.getModelOperation(modelID,operationItem.ID)
 		if err==common.ResultSuccess {
@@ -343,7 +343,7 @@ func (m *model)getModelViewConf(modelID string,views *[]string,userRoles string)
 	}
 
 	//根据用户角色过滤操作
-	mvConf.Operations=m.getUserOperations(mvConf.Operations,userRoles)
+	mvConf.Operations=GetUserOperations(mvConf.Operations,userRoles)
 	
 	//根据用户角色过滤视图
 	mvConf.Views=m.getUserViews(mvConf.Views,userRoles)
@@ -435,7 +435,7 @@ func (m *model)getModelFormConf(modelID,formID,userRoles string)(modelFormConf,i
 	}
 
 	//根据用户角色过滤操作
-	mfConf.Operations=m.getUserOperations(mfConf.Operations,userRoles)
+	mfConf.Operations=GetUserOperations(mfConf.Operations,userRoles)
 
 	//过滤对应的formID
 	mfConf.Forms=m.getModelForm(mfConf.Forms,formID)	
