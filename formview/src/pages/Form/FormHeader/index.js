@@ -8,6 +8,7 @@ import {
     FORM_TYPE,
     CC_COLUMNS
 } from '../../../utils/constant';
+import {getOperationPreporcessFunc} from '../../../utils/functions';
 import {setErrorField} from '../../../redux/dataSlice';
 import {valueValidate} from '../valueValidate';
 import useI18n from '../../../hook/useI18n';
@@ -60,7 +61,6 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
             }
             return list;
         }
-        
         
         if(formType===FORM_TYPE.CREATE||
            formType===FORM_TYPE.EDIT||
@@ -118,6 +118,20 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
                         return {...row,...initRowData}
                     });
                 }
+            }
+
+            if(operation.preprocessing){
+                console.log('preprocessing',operation.preprocessing,JSON.stringify(input));
+                const preporcessResult=getOperationPreporcessFunc(operation.preprocessing)(operation,input);
+                if(preporcessResult){
+                    if(preporcessResult.operation){
+                        operation=preporcessResult.operation;
+                    }
+                    if(preporcessResult.input){
+                        input=preporcessResult.input;
+                    }
+                }
+                console.log('preprocessing result',preporcessResult);
             }
 
             //调用流的操作数据是通过input传递的

@@ -32,3 +32,16 @@ export function b64_to_utf8(str) {
 export function formatStringNumber(numStr,locale='en-US'){
     return numStr?.length>0?parseFloat(numStr).toLocaleString(locale, {minimumFractionDigits: 0,maximumFractionDigits: 20}):'';
 }
+
+export const getOperationPreporcessFunc=(preporcess)=>{
+    const funStr='"use strict";'+
+                'return (function(operation,input){ '+
+                    'try {'+
+                        preporcess+
+                    '} catch(e) {'+
+                    '   console.error(e);'+
+                    '   return undefined;'+
+                    '}'+
+                '})';
+    return Function(funStr)();
+}
