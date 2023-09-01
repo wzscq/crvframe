@@ -42,6 +42,7 @@ export default function MultiSelectForRelatedField({field,filterValue,onFilterCh
         return {
             modelID:field.relatedModelID,
             fields:field.fields,
+            filterData:field.filterData,
             filter:getFilter(field,value),
             pagination:{current:1,pageSize:500}
         }

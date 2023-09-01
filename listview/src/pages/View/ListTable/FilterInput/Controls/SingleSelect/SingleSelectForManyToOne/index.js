@@ -37,6 +37,7 @@ export default function SingleSelectForManyToOne({field,filterValue,onFilterChan
         return {
             modelID:field.relatedModelID,
             fields:field.fields,
+            filterData:field.filterData,
             filter:getFilter(field,value),
             pagination:{current:1,pageSize:500}
         }
