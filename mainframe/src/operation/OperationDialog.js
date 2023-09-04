@@ -20,7 +20,7 @@ import {
     operationPending,
     doNextOperation,
     confirm} from '../redux/operationSlice';
-import {openTab,closeAllTab,setActiveTab} from '../redux/tabSlice';
+import {openTab,closeAllTab,setActiveTab, closeTab} from '../redux/tabSlice';
 import {resetMenu} from '../redux/menuSlice';
 import OpertaionItem from './OpertaionItem';
 import {info as logInfo} from '../redux/logSlice';
@@ -92,7 +92,18 @@ export default function OperationDialog(){
     const closeDialog=(current)=>{
         //关闭对话框，同时结束当前动作
         dispatch(logInfo("关闭对话框:"+JSON.stringify(current)));
-        dispatch(close());
+        dispatch(close(current));
+        const payload={
+            result:OP_RESULT.SUCCESS,
+            output:current.input,
+        }
+        dispatch(operationDone(payload));
+    }
+
+    const doCloseTab=(current)=>{
+        //关闭对话框，同时结束当前动作
+        dispatch(logInfo("关闭tab页:"+JSON.stringify(current)));
+        dispatch(closeTab(current));
         const payload={
             result:OP_RESULT.SUCCESS,
             output:current.input,
@@ -231,6 +242,8 @@ export default function OperationDialog(){
             } else if(current.type===OP_TYPE.CLOSE){
                 if(current.params.location===OPEN_LOCATION.MODAL){
                     closeDialog(current);
+                } else if(current.params.location===OPEN_LOCATION.TAB){
+                    doCloseTab(current);
                 } else {
                     dispatch(logInfo("关闭窗口的位置不正确:"+JSON.stringify(current)));
                 }
