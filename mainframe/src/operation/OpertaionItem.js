@@ -5,7 +5,7 @@ import {
 
 export default function OpertaionItem({item,state,getLocaleLabel,getLocaleErrorMessage}){
     let icon=null;
-  //getLocaleErrorMessage(item)
+    //getLocaleErrorMessage(item)
     //console.log("OpertaionItem",item);
     
     if(state===1){
