@@ -1,9 +1,9 @@
-import {useState,useRef,useEffect} from 'react';
-import { Tooltip } from 'antd';
+//import {useState,useRef,useEffect} from 'react';
+//import { Tooltip } from 'antd';
 
 const disabledControlStyle={
   width:'100%',
-  height:32,
+  height:'auto',
   border:'1px solid rgb(217, 217, 217)',
   borderRadius:2,
   padding:'4px 11px',
