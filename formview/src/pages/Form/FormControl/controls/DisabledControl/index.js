@@ -4,6 +4,7 @@
 const disabledControlStyle={
   width:'100%',
   height:'auto',
+  minHeight:32,
   border:'1px solid rgb(217, 217, 217)',
   borderRadius:2,
   padding:'4px 11px',
