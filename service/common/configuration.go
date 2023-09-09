@@ -58,7 +58,7 @@ func InitConfig(confFile string)(*Config){
 	fileName := confFile
 	filePtr, err := os.Open(fileName)
 	if err != nil {
-        log.Fatal("Open file failed [Err:%s]", err.Error())
+        log.Fatal("Open file failed [Err:"+err.Error()+"]")
     }
     defer filePtr.Close()
 
@@ -66,7 +66,7 @@ func InitConfig(confFile string)(*Config){
     decoder := json.NewDecoder(filePtr)
     err = decoder.Decode(&gConfig)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		log.Println("json file decode failed [Err:"+err.Error()+"]", )
 	}
 	log.Println("init configuation end")
 	return &gConfig

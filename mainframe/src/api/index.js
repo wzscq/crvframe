@@ -32,7 +32,7 @@ const encodeToken=(token,data)=>{
   }
 
   const sum=sha256(dataStr);
-
+  
   // 新字符串
   let newToken = "";
   // 遍历字符串2，将字符串1的字符插入偶数位

@@ -8,7 +8,8 @@ const disabledControlStyle={
   border:'1px solid rgb(217, 217, 217)',
   borderRadius:2,
   padding:'4px 11px',
-  backgroundColor:'#F5F5F5'
+  backgroundColor:'#F5F5F5',
+  lineBreak:'anywhere'
 }
 
 const inlineControlStyle={
@@ -19,7 +20,7 @@ const inlineControlStyle={
   borderRadius:0,
   padding:'3px 11px',
   backgroundColor:'#F5F5F5',
-  
+  lineBreak:'anywhere'
 }
 
 export default function DisabledControl({value,style,inline}){
