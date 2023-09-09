@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { message } from 'antd';
-import { sha256 } from 'js-sha256';
+import sha256 from 'crypto-js/sha256';
 
 import {parseUrl} from '../utils/urlParser';
 import {userInfoStorage} from '../utils/sessionStorage';
@@ -31,8 +31,8 @@ const encodeToken=(token,data)=>{
     dataStr=JSON.stringify(data)
   }
 
-  const sum=sha256(dataStr);
-  
+  const sum=sha256(dataStr).toString();
+
   // 新字符串
   let newToken = "";
   // 遍历字符串2，将字符串1的字符插入偶数位
