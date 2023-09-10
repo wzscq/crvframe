@@ -60,7 +60,7 @@ export default function ChildFrame({item,locale,resources,inResize}){
     },[refFrame,item,locale,lastLocale,resources,setLastLocale]);
 
     useEffect(()=>{
-        if(refFrame.current){
+        if(refFrame.current!==null&&refFrame.current!==undefined){
             const onFrameLoad=()=>{
                 console.log('onFrameLoad',item.params.key);
                 const receiveMessageFromSubFrame=(event)=>{
