@@ -61,19 +61,19 @@
             },
             {
                 "id":"4",
-                "name":"操作日志",
-                "description":"显示操作日志",
-                "icon":"UnorderedListOutlined",
+                "name":"用户操作日志",
+                "description":"用户操作日志",
+                "icon":"FormOutlined",
                 "operation":{
                     "type":"open",
                     "params":{
-                        "url":"",
+                        "url":"/listview/#/core_operation_log",
                         "location":"tab",
-                        "title":"操作日志",
-                        "key":"/log"
+                        "title":"用户操作日志",
+                        "key":"/model/core_operation_log"
                     },
                     "input":{},
-                    "description":"打开操作日志窗口"
+                    "description":"打开用户操作日志管理窗口"
                 },
                 "roles":"admin"
             },

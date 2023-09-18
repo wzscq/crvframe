@@ -1,0 +1,57 @@
+{
+  "modelID": "core_operation_log", 
+  "fields": [
+      {
+          "field": "id", 
+          "name": "ID", 
+          "dataType": "int"
+      }, 
+      {
+          "field": "operation_type", 
+          "name": "操作类型", 
+          "dataType": "varchar",
+          "quickSearch":true
+      }, 
+      {
+          "field": "source_type", 
+          "name": "操作来源", 
+          "dataType": "varchar",
+          "quickSearch":true
+      }, 
+      {
+          "field": "ip", 
+          "name": "来源IP", 
+          "dataType": "varchar"
+      },
+      {
+          "field": "result", 
+          "name": "结果", 
+          "dataType": "varchar"
+      },
+      {
+          "field": "create_time", 
+          "name": "创建时间", 
+          "dataType": "datetime"
+      }, 
+      {
+          "field": "create_user", 
+          "name": "创建人", 
+          "dataType": "varchar"
+      }, 
+      {
+          "field": "update_time", 
+          "name": "更新时间", 
+          "dataType": "datetime"
+      }, 
+      {
+          "field": "update_user", 
+          "name": "更新人", 
+          "dataType": "varchar"
+      }, 
+      {
+          "field": "version", 
+          "name": "数据版本", 
+          "dataType": "int"
+      }
+  ]
+}

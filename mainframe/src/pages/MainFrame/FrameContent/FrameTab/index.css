@@ -39,6 +39,10 @@
     height: 100%;
 }
 
+.frame-tab-main .ant-tabs-tabpane {
+    height: 100%;
+}
+
 .frame-tab-main .ant-tabs-content {
     height: 100%;
 }

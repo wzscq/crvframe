@@ -40,12 +40,17 @@ type casConf struct {
 	Url string  `json:"url"`
 }
 
+type OperationLogConf struct {
+	Apps []string `json:"apps"`
+}
+
 type Config struct {
 	Redis  redisConf  `json:"redis"`
 	Mysql  mysqlConf  `json:"mysql"`
 	Service serviceConf `json:"service"`
 	File fileConf `json:"file"`
 	Cas casConf `json:"cas"`
+	OperationLog OperationLogConf `json:"operationLog"`
 }
 
 var gConfig Config

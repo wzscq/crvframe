@@ -1,0 +1,14 @@
+{
+  "operations": [
+    {
+        "id": "delete", 
+        "roles":"admin"
+    }
+  ],
+  "views":[
+    {
+        "id": "all", 
+        "roles":"admin"
+    }
+  ]
+}

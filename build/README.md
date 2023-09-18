@@ -97,3 +97,10 @@ vim /etc/docker/daemon.json
 
 https://centos.pkgs.org/
 
+//mysql备份
+mysqldump -u [username] -p[password] [database] > backup.sql
+
+
+//前端编译报错需要执行这个
+export NODE_OPTIONS=--openssl-legacy-provider
+

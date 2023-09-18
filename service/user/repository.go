@@ -19,10 +19,22 @@ type User struct {
 	Remark *string
 }
 
+type OperationLog struct {
+	OperationType string
+	SourceType string
+	IP string
+	Result string
+	CreateTime string
+	CreateUser string
+	UpdateTime string
+	UpdateUser string
+}
+
 type UserRepository interface {
 	GetUser(userID string,dbName string)(*User,error)
 	updatePassword(userID string,password string,dbName string)(error)
 	GetUserRoles(userID string,dbName string)(string,error)
+	CreateOperationLog(dbName string,operationLog OperationLog)
 }
 
 type DefatultUserRepository struct {
@@ -54,6 +66,24 @@ func (repo *DefatultUserRepository)GetUserRoles(userID string,dbName string)(str
         return "", err
     }
 	return roles, nil
+}
+
+func (repo *DefatultUserRepository)CreateOperationLog(appDB string,operationLog OperationLog){
+	log.Println("CreateOperationLog",appDB,operationLog)
+	_, err :=repo.DB.Exec(
+		"insert into "+appDB+".core_operation_log(operation_type,source_type,ip,result,create_time,create_user,update_time,update_user) values(?,?,?,?,?,?,?,?)",
+		operationLog.OperationType,
+		operationLog.SourceType,
+		operationLog.IP,
+		operationLog.Result,
+		operationLog.CreateTime,
+		operationLog.CreateUser,
+		operationLog.UpdateTime,
+		operationLog.UpdateUser)
+	if err != nil {
+		log.Println("CreateOperationLog error")
+		log.Println(err)
+	}
 }
 
 func (repo *DefatultUserRepository)Connect(

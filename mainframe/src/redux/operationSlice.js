@@ -82,7 +82,7 @@ export const operationSlice = createSlice({
                 state.current.resultParams=resultParams;  //执行失败时，返回的结果参数
                 state.doneList.push({...state.current});
                 if(result===OP_RESULT.SUCCESS){
-                    //执行成功  
+                    //执行成功
                     //如果前一个操作操作返回了operation,则执行操作返回的operation，
                     //否则执行当前操作的successOperation  
                     if(output&&output.operation){
