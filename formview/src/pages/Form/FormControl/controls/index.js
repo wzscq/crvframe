@@ -12,6 +12,7 @@ import ImageList from './ImageList';
 import Number from './Number';
 import RichText from './RichText';
 import ValueLabel from './ValueLabel';
+import ColorPicker from './ColorPicker';
 /**
  * 以下为控件类型枚举常量定义
  */
@@ -29,7 +30,8 @@ import ValueLabel from './ValueLabel';
     IMAGELIST:'ImageList', //图片文件列表
     Number:'Number', //数值录入
     RichText:"RichText", //富文本
-    ValueLabel:"ValueLabel"  //用于显示不能修改的值
+    ValueLabel:"ValueLabel",  //用于显示不能修改的值
+    ColorPicker:"ColorPicker"  //颜色选择器
 }
 
 /**
@@ -49,7 +51,8 @@ export const controlRegister={
     [CONTROL_TYPE.IMAGELIST]:ImageList,
     [CONTROL_TYPE.Number]:Number,
     [CONTROL_TYPE.RichText]:RichText,
-    [CONTROL_TYPE.ValueLabel]:ValueLabel
+    [CONTROL_TYPE.ValueLabel]:ValueLabel,
+    [CONTROL_TYPE.ColorPicker]:ColorPicker
 }
 
 export const getControl=(control,field,sendMessageToParent,dataPath)=>{

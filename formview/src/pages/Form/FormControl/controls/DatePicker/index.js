@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import {DatePicker,Space,Tooltip } from 'antd';
 import { useEffect,useMemo,useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import I18nLabel from '../../../../../component/I18nLabel';
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
@@ -76,7 +76,7 @@ export default function DatePickerControl({dataPath,control,field}){
     }*/
 
     if(value&&value.length>0){
-        value=moment(value);
+        value=dayjs(value);
     }
 
     const getValueLabel=(value)=>{

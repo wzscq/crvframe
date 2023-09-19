@@ -118,6 +118,7 @@ export default function Form(){
         }
     },[loaded,dataLoaded,forms,fields,formType,item,origin,dispatch,sendMessageToParent]);
     const showForm=loaded===true&&(dataLoaded===true||formType===FORM_TYPE.CREATE||formType===FORM_TYPE.UPDATE);
+
     return (
         showForm?<FormView fromTitle={item.params.title} formType={formType} sendMessageToParent={sendMessageToParent}/>:<PageLoading/>
     );

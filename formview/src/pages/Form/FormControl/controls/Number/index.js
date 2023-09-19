@@ -68,7 +68,7 @@ export default function Number({dataPath,control,field}){
     const label=control.label?control.label:(field?field.name:"");
 
     let inputControl=control.disabled===true?(
-        <DisabledControl inline={control.inline} value={formatStringNumber(updatedValue,'en-US')} style={{textAlign:'right'}}  />
+        <DisabledControl inline={control.inline} value={updatedValue} style={{textAlign:'right'}}  />
     ):(
         <InputNumber  
             style={{width:'100%'}}

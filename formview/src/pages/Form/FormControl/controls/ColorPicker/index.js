@@ -1,8 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
-import {TimePicker,Space,Tooltip } from 'antd';
+import {ColorPicker ,Space,Tooltip } from 'antd';
 import { useEffect,useMemo,useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import dayjs from 'dayjs';
 
 import I18nLabel from '../../../../../component/I18nLabel';
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
@@ -36,15 +35,15 @@ const makeSelector=()=>{
     });
 }
 
-export default function TimePickerControl({dataPath,control,field}){
+export default function ColorPickerControl({dataPath,control,field}){
     const dispatch=useDispatch();
     const inputRef = useRef(null);
     
     const selectValue=useMemo(makeSelector,[dataPath,control,field]);
     const {updatedValue,valueError}=useSelector(state=>selectValue(state.data,dataPath,field.field));
 
-    const onChange=(time,timeString)=>{
-        const value=time?timeString:null;
+    const onChange=(_,hex)=>{
+        const value=hex;
 
         dispatch(modiData({
             dataPath:dataPath,
@@ -69,28 +68,27 @@ export default function TimePickerControl({dataPath,control,field}){
     //获取文本输入框的标签，如果form控件配置了label属性则直接使用，
     //如果控件没有配置label属性，则取字段配置的字段name
     const label=control.label?control.label:(field?field.name:"");
-
     let value=updatedValue;
-    if(value&&value.length>0){
-        value=dayjs(value,'HH:mm:ss');
-    }
-    
-    let datePickerControl=control.disabled===true?(
-        <DisabledControl inline={control.inline} value={value?value.format('HH:mm:ss'):""} />
-    ):(
-        <TimePicker  
+
+    let colorPickerControl=(
+        <ColorPicker  
             value={value} 
             disabled={control.disabled} 
             onChange={onChange}
+            allowClear={true}
             ref={inputRef}
             status={valueError?'error':null}
             />
     );
 
-    datePickerControl=valueError?(
+    colorPickerControl=valueError?(
         <Tooltip title={<I18nLabel label={valueError.message}/>}>
-            {datePickerControl}
-        </Tooltip>):datePickerControl;
+            {colorPickerControl}
+        </Tooltip>):colorPickerControl;
+
+    if(control.inline){
+        return colorPickerControl;
+    }
 
     //(modifiedValue!==undefined)?'control-text-modified':
     const className=valueError?'control-text-error':'control-text-normal';
@@ -102,7 +100,7 @@ export default function TimePickerControl({dataPath,control,field}){
                     {control.required?(<span style={{color:'red'}}>*</span>):null}
                     <I18nLabel label={label}/>
                 </div>
-                {datePickerControl}
+                {colorPickerControl}
             </Space>
         </div>
     );

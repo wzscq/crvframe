@@ -5,20 +5,21 @@ const disabledControlStyle={
   width:'100%',
   height:'auto',
   minHeight:32,
+  lineHeight:'32px',
   border:'1px solid rgb(217, 217, 217)',
-  borderRadius:2,
-  padding:'4px 11px',
+  borderRadius:6,
+  padding:'0px 5px',
   backgroundColor:'#F5F5F5',
   lineBreak:'anywhere'
 }
 
 const inlineControlStyle={
-  width:'100%',
+  width:'calc(100% - 10px)',
   height:'100%',
   minHeight:28  ,
   border:'0px solid rgb(217, 217, 217)',
   borderRadius:0,
-  padding:'3px 11px',
+  padding:'0px 5px',
   backgroundColor:'#F5F5F5',
   lineBreak:'anywhere'
 }
