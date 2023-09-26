@@ -318,7 +318,6 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
             setLastCascadeParentValue(cascadeParentValue);
             onChange();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     },[cascadeParentValue]);
 
     const onFocus=()=>{

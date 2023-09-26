@@ -1,3 +1,4 @@
+/* eslint-disable no-new-func */
 export const getManyToOneValueFunc=(optionLabel)=>{
     const funStr='"use strict";'+
                 'return (function(record){ '+

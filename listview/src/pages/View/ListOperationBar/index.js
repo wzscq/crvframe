@@ -123,7 +123,7 @@ export default function ListOperationBar({sendMessageToParent}){
 
     return (
         <div className="list-operation-bar">
-            <Space>
+            <Space >
                 {buttonControls}
             </Space>
         </div>

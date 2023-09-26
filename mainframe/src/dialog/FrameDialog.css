@@ -1,3 +1,7 @@
 .frame-dialog-modal .ant-modal-body{
     padding: 0;
 }
+
+.frame-dialog-modal  .ant-modal-content {
+    padding: 0;
+}

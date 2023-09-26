@@ -1,6 +1,6 @@
 import {useState,useEffect,useRef} from 'react';
 import { Tooltip } from 'antd';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import { FIELD_TYPE } from "../../../../../../utils/constant";
 import {
@@ -37,7 +37,7 @@ export default function DefaultColumnControl({text,field, record, index}){
         value=formatStringNumber(text); //.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         className='listtable-column-number';
     } else if(text&&field.dataType==='datetime'&&field.format){
-        value=moment(text).format(field.format);
+        value=dayjs(text).format(field.format);
     } else if(text&&field.fieldType===FIELD_TYPE.MANY2MANY){
         if(field.aggregateFunction&&text.list&&text.list.length>0){
             value=getManyToOneValueFunc(field.aggregateFunction)(text.list);

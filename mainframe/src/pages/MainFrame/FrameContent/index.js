@@ -48,11 +48,11 @@ export default function FrameContent(){
     
     const hooks={
         onDragStarted:()=>{
-            //console.log('onDragStarted...');
+            console.log('onDragStarted...');
             setInResize(true);
         },
         onSaveSizes:()=>{
-            //console.log('onSaveSizes...');
+            console.log('onSaveSizes...');
             setInResize(false);
         },
         onCollapse:(collapsedSizes)=>{
@@ -62,14 +62,12 @@ export default function FrameContent(){
                 setMenuCollapsed(false);
             }
         }
-    } 
+    }
 
     const collapseOptions={
         collapsedSize: 45,
         collapseTransitionTimeout:50
     }
-
-    console.log("appConf:",appConf);
 
     const hideMenu=appConf?.hideMenu;
     const hideHeader=appConf?.hideHeader;

@@ -16,6 +16,7 @@ import (
     //"crv/frame/operationlog"
     "time"
     "log"
+    "log/slog"
     "os"
 )
 
@@ -32,6 +33,8 @@ func main() {
         confFile=os.Args[1]
         log.Println(confFile)
     }
+
+    slog.Info("crvframe service start...")
 
     //初始化配置
     conf:=common.InitConfig(confFile)

@@ -153,7 +153,7 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
             };
             sendMessageToParent(message);
         }
-    },[item,formType,update,updated,getOperationData,sendMessageToParent,dispatch,form.controls]);
+    },[item,update,updated,getOperationData,sendMessageToParent,dispatch,form.controls]);
 
     return (
         <>

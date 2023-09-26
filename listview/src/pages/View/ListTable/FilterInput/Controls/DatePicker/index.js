@@ -1,5 +1,5 @@
 import { DatePicker } from "antd";
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import useI18n from '../../../../../../hooks/useI18n';
 
@@ -51,12 +51,12 @@ export default function DatePickerFilter({field,filterValue,onFilterChange}){
     //{op.gte:valueFrom,op.lte:valueTo}
     let valueFrom=filterValue?filterValue['Op.gte']:undefined;
     if(valueFrom&&valueFrom.length>0){
-        valueFrom=moment(valueFrom);
+        valueFrom=dayjs(valueFrom);
     }
     
     let valueTo=filterValue?filterValue['Op.lte']:undefined;
     if(valueTo&&valueTo.length>0){
-        valueTo=moment(valueTo);
+        valueTo=dayjs(valueTo);
     }
 
     return (

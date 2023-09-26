@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import I18nLabel from '../../../../../component/I18nLabel';
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
-import DisabledControl from '../DisabledControl';
+//import DisabledControl from '../DisabledControl';
 //import './index.css';
 
 const selectUpdatedValue=(data,dataPath,field)=>{

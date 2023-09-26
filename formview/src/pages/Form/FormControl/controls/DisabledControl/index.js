@@ -2,7 +2,6 @@
 //import { Tooltip } from 'antd';
 
 const disabledControlStyle={
-  width:'100%',
   height:'auto',
   minHeight:32,
   lineHeight:'32px',
