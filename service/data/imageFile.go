@@ -2,7 +2,7 @@ package data
 
 import (
 	"crv/frame/common"
-	"log"
+	"log/slog"
 	"io/ioutil"
 	"encoding/base64"
 	"net/http"
@@ -30,7 +30,7 @@ func (imgFile *ImageFile) getBase64String(item map[string]interface{})(string,in
 
 	bytes, err := ioutil.ReadFile(path+fileName)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return "",common.ResultOpenFileError
 	}
 	

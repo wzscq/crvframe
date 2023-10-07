@@ -3,7 +3,7 @@ package data
 import (
 	"crv/frame/common"
 	"crv/frame/definition"
-	"log"
+	"log/slog"
 	"database/sql"
 	"strings"
 	"os"
@@ -23,7 +23,7 @@ func (dr *DeleteReleated)deleteFile(dataRepository DataRepository,tx *sql.Tx)(in
 	//执行sql
 	_,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
-		log.Println("deleteFile ExecWithTx error:", err)
+		slog.Error(err.Error())
 		return common.ResultSQLError
 	}
 
@@ -31,7 +31,7 @@ func (dr *DeleteReleated)deleteFile(dataRepository DataRepository,tx *sql.Tx)(in
 	path:=common.GetConfig().File.Root+"/"+dr.AppDB+"/"+dr.ModelID+"/"
 	files, err := os.ReadDir(path)
 	if err!=nil {
-		log.Println("deleteFile ReadDir error:", err)
+		slog.Error(err.Error())
 		//return common.ResultReadDirError
 		//如果文件夹不存在说明没有对应的相关文件，不需要返回错误
 		return common.ResultSuccess
@@ -39,7 +39,7 @@ func (dr *DeleteReleated)deleteFile(dataRepository DataRepository,tx *sql.Tx)(in
 
 	for _, file := range files {
 		fileName:=file.Name()
-		log.Println(fileName)
+		slog.Debug(fileName)
 		for _,strID:=range *(dr.IdList) {
 			if strings.Index(fileName,"_row"+strID+"_")>0 {
 				os.Remove(path+fileName)
@@ -77,7 +77,7 @@ func (dr *DeleteReleated)getIds()(string){
 }
 
 func (dr *DeleteReleated)Execute(dataRepository DataRepository,tx *sql.Tx)(int) {
-	log.Println("DeleteReleated Execute")
+	slog.Debug("DeleteReleated Execute")
 	//加载当前模型配置
 	modelConfig,errorCode:=definition.GetModelConf(dr.AppDB,dr.ModelID)
 	if errorCode != common.ResultSuccess {

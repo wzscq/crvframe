@@ -3,12 +3,13 @@ package data
 import (
 	"crv/frame/common"
 	"crv/frame/definition"
-	"log"
+	"log/slog"
 	"database/sql"
 	"time"
 	"strings"
 	"strconv"
 	"fmt"
+	"reflect"
 )
 
 const (
@@ -126,12 +127,12 @@ func (save *Save)getRowUpdateColumnValues(row map[string]interface{},permissionF
 		case map[string]interface{}:
 			releatedField,ok:=value.(map[string]interface{})
 			if !ok {
-				log.Println("getRowUpdateColumnValues not supported value type %T!\n", v)
+				slog.Error("getRowUpdateColumnValues not supported value type ","val type",reflect.TypeOf(v))
 				return "","",version,common.ResultNotSupportedValueType	
 			}
 
 			fieldType:=releatedField["fieldType"].(string)
-			log.Println(fieldType)
+			slog.Debug("getRowUpdateColumnValues","fieldType",fieldType)
 			if fieldType!=FIELDTYPE_MANY2MANY&&
 			   fieldType!=FIELDTYPE_ONE2MANY&&
 			   fieldType!=FIELDTYPE_FILE {
@@ -140,7 +141,7 @@ func (save *Save)getRowUpdateColumnValues(row map[string]interface{},permissionF
 		case nil:
 			values=values+key+"=null,"
 		default:
-			log.Printf("getRowUpdateColumnValues not supported value type %T!\n", value)
+			slog.Error("getRowUpdateColumnValues not supported value type","val type",reflect.TypeOf(value))
 			return "","",version,common.ResultNotSupportedValueType
 		}
 	}
@@ -180,19 +181,19 @@ func (save *Save)getRowCreateColumnValues(row map[string]interface{})(string,str
 		case map[string]interface{}:
 			releatedField,ok:=value.(map[string]interface{})
 			if !ok {
-				log.Println("createRow not supported value type %T!\n", value)
+				slog.Error("createRow not supported value type","val type",reflect.TypeOf(value))
 				return "","","",common.ResultNotSupportedValueType	
 			}
 
 			fieldType:=releatedField["fieldType"].(string)
-			log.Println(fieldType)
+			slog.Debug("getRowCreateColumnValues","fieldType",fieldType)
 			if fieldType!=FIELDTYPE_MANY2MANY&&
 			   fieldType!=FIELDTYPE_ONE2MANY&&
 			   fieldType!=FIELDTYPE_FILE  {
 				return "","","",common.ResultNotSupportedValueType	
 			}
 		default:
-			log.Printf("createRow not supported value type %T!\n", value)
+			slog.Error("createRow not supported value type", "val type",reflect.TypeOf(value))
 			return "","","",common.ResultNotSupportedValueType
 		}
 	}
@@ -200,14 +201,14 @@ func (save *Save)getRowCreateColumnValues(row map[string]interface{})(string,str
 }
 
 func (save *Save)saveRelatedField(pID string,dataRepository DataRepository,tx *sql.Tx,modelID string,row map[string]interface{})(int){
-	log.Println("saveRelatedField ... ")
+	slog.Debug("saveRelatedField ... ")
 	for key, value := range row {
 		//根据不同值类型做处理，目前仅支持字符串
 		switch v := value.(type) {	
 		case map[string]interface{}:
 			releatedField,ok:=value.(map[string]interface{})
 			if !ok {
-				log.Println("createRow not supported value type %T!\n", v)
+				slog.Error("createRow not supported value type","val type",reflect.TypeOf(v))
 				return common.ResultNotSupportedValueType	
 			}
 
@@ -225,7 +226,7 @@ func (save *Save)saveRelatedField(pID string,dataRepository DataRepository,tx *s
 		default:
 		}
 	}
-	log.Println("saveRelatedField end ")
+	slog.Debug("saveRelatedField end ")
 	return common.ResultSuccess
 }
 
@@ -236,7 +237,7 @@ func (save *Save)createRow(
 	row map[string]interface{},
 	permissionDS *definition.Dataset)(map[string]interface{},int) {
 
-	log.Println("start data save createRow")
+	slog.Debug("start data save createRow")
 	columns,values,strID,errCode:=save.getRowCreateColumnValues(row)
 	if errCode!=common.ResultSuccess{
 		return nil,errCode
@@ -250,6 +251,7 @@ func (save *Save)createRow(
 	//执行sql
 	id,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
+		slog.Error(err.Error())
 		//判断，如果是Error 1062，则未主键冲突
 		if strings.Contains(err.Error(),"Error 1062") {
 			return nil,common.ResultDuplicatePrimaryKey
@@ -266,7 +268,7 @@ func (save *Save)createRow(
 	}
 
 	errorCode:=save.saveRelatedField(strID,dataRepository,tx,modelID,row)
-	log.Println("end data save createRow")
+	slog.Debug("end data save createRow")
 	return result,errorCode
 }
 
@@ -301,6 +303,7 @@ func (save *Save) deleteRow(
 	sql:="delete from "+save.AppDB+"."+modelID+" where id='"+replaceApostrophe(strID)+"'"+permissionWhere
 	_,rowCount,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
+		slog.Error(err.Error())
 		return nil,common.ResultSQLError
 	}
 
@@ -409,7 +412,7 @@ func (save *Save) saveRow(
 }
 
 func (save *Save) SaveList(dataRepository DataRepository,tx *sql.Tx)(*saveResult,int) {
-	log.Println("start data save SaveList")
+	slog.Debug("start data save SaveList")
 	//循环执行每个行
 	if len(*save.List) == 0 {
 		result:=&saveResult{
@@ -443,17 +446,17 @@ func (save *Save) SaveList(dataRepository DataRepository,tx *sql.Tx)(*saveResult
 		Total:total,
 		List:resList,
 	}
-	log.Println("end data save SaveList")
+	slog.Debug("end data save SaveList")
 	return result,common.ResultSuccess
 }
 
 func (save *Save) Execute(dataRepository DataRepository)(*saveResult,int) {
-	log.Println("start data save Execute")
+	slog.Debug("start data save Execute")
 	
 	//开启事务
 	tx,err:= dataRepository.Begin()
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return nil,common.ResultSQLError
 	}
 	//执行保存动作
@@ -461,13 +464,13 @@ func (save *Save) Execute(dataRepository DataRepository)(*saveResult,int) {
 	if errorCode == common.ResultSuccess {
 		//提交事务
 		if err := tx.Commit(); err != nil {
-			log.Println(err)
+			slog.Error(err.Error())
 			errorCode=common.ResultSQLError
 		}
 	} else {
 		tx.Rollback()
 	}
-	log.Println("end data save Execute")
+	slog.Debug("end data save Execute")
 	return result,errorCode
 }
 

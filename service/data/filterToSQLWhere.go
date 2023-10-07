@@ -1,10 +1,11 @@
 package data
 
 import (
-    "log"
+    "log/slog"
     "crv/frame/common"
     "strconv"
     "fmt"
+    "reflect"
 )
 
 /**
@@ -124,7 +125,7 @@ func convertObjectFilter(filter *map[string]interface{},fields *[]Field,modelID 
 
 func convertArrayFilter(logicOp string,value []interface{},fields *[]Field,modelID string)(string,int){
 
-    log.Println(value)
+    slog.Debug("convertArrayFilter","value",value)
     if len(value) == 0 {
 		return "",common.ResultQueryWrongFilter
 	}
@@ -171,7 +172,7 @@ func convertFieldFilter(field string,value interface{},fields *[]Field,modelID s
     case nil:
         return convertFieldValueNull(" is " ,field)
 	default:
-        log.Printf("convertFieldFilter not supported field filter type %T!\n", value)
+        slog.Error("convertFieldFilter not supported field filter type","type", reflect.TypeOf(value))
 		return "",common.ResultNotSupported
 	}
 }
@@ -185,7 +186,7 @@ func convertFieldValueString(op string,field string,value string)(string,int){
 }
 
 func convertFieldValueStringArray(op string,field string,sliceVal []string)(string,int){
-    log.Println("convertFieldValueStringArray",op,field,sliceVal)
+    slog.Debug("convertFieldValueStringArray","op",op,"field",field,"sliceVal",sliceVal)
     values:=""
     for _,sVal:=range sliceVal {
         values=values+"'"+replaceApostrophe(sVal)+"',"
@@ -197,7 +198,7 @@ func convertFieldValueStringArray(op string,field string,sliceVal []string)(stri
 func convertFieldValueArray(op string,field string,sliceVal []interface{})(string,int){
     values:=""
     for _,val:=range sliceVal {
-        log.Printf("convertFieldValueArray val type %T \n",val)
+        slog.Debug("convertFieldValueArray val type","val type",reflect.TypeOf(val))
         
         switch val.(type) {
         case string: 
@@ -219,7 +220,7 @@ func convertFieldValueArray(op string,field string,sliceVal []interface{})(strin
 func joinSlice(sliceVal []interface{},split string)(string){
     values:=""
     for _,val:=range sliceVal {
-        log.Printf("joinSlice val type %T \n",val)
+        slog.Debug("joinSlice val type","val type",reflect.TypeOf(val))
         
         switch val.(type) {
         case string: 
@@ -261,7 +262,7 @@ func convertFieldOpNormal(op string,field string,value interface{})(string,int){
     case nil:
         return convertFieldValueNull(op,field)   
     default:
-        log.Print("convertFieldOpNormal not supported operator %v with value type %T \n",op,value)
+        slog.Error("convertFieldOpNormal not supported operator with value type","op",op,"val type",reflect.TypeOf(value))
 		return "",common.ResultNotSupported
 	}
 }
@@ -272,7 +273,7 @@ func convertOpInString(op string,field string,value string)(string,int){
 
 func convertMany2manyValue(modelID string,field *Field,value interface{})(string,int){
     if field.RelatedModelID == nil {
-        log.Print("convertMany2manyValue the many2many field %s has not related model id \n",field.Field)
+        slog.Error("convertMany2manyValue the many2many field has not related model id","field",field.Field)
         return "",common.ResultNoRelatedModel
     }
     
@@ -283,7 +284,7 @@ func convertMany2manyValue(modelID string,field *Field,value interface{})(string
         sliceVal:=value.([]interface{})
         sVal=joinSlice(sliceVal,",")   
     default:
-        log.Print("convertMany2manyValue not supported value type %T \n",value)
+        slog.Error("convertMany2manyValue not supported value type","val type", reflect.TypeOf(value))
         return "",common.ResultNotSupported
     }
     
@@ -320,7 +321,7 @@ func convertFieldOpIn(op string,field string,value interface{},fields *[]Field,m
         sliceVal:=value.([]interface{})
         return convertFieldValueArray(op,field,sliceVal)   
     default:
-        log.Print("convertFieldOpIn not supported operator %v with value type %T \n",op,value)
+        slog.Error("convertFieldOpIn not supported operator with value type","op",op,"val type",reflect.TypeOf(value))
         return "",common.ResultNotSupported
     }
 }
@@ -354,7 +355,7 @@ func convertFieldValueMap(field string,value map[string]interface{},fields *[]Fi
             str,err=convertFieldOpNormal(" like ",field,value)
         default:
             //字段
-            log.Println("convertFieldValueMap not supported operator type %v \n", key)
+            slog.Error("convertFieldValueMap not supported operator type","operator type",key)
 		    return "",common.ResultNotSupported
         }
 

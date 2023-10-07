@@ -3,10 +3,11 @@ package data
 import (
 	"crv/frame/common"
 	"encoding/json"
-	"log"
+	"log/slog"
 	"regexp"
 	"strings"
 	"fmt"
+	"reflect"
 )
 
 /*
@@ -20,21 +21,21 @@ func processFilter(
 	userRoles string,
 	appDB string,
 	dataRepository DataRepository)(int){
-	log.Println("processFilter start")
+	slog.Debug("processFilter start")
 	var filterDataRes *map[string]interface{}
 	var errorCode int
 
 	if filterData!=nil && len(*filterData)>0 {
 		filterDataRes,errorCode=getFilterData(filterData,userID,userRoles,appDB,dataRepository)	
 		if errorCode!=common.ResultSuccess {
-			log.Println("processFilter end with error")
+			slog.Debug("processFilter end with error")
 			return errorCode
 		}		
 	}
 
 	replaceFilterVar(filter,filterDataRes,userID,userRoles)
 
-	log.Println("processFilter end")
+	slog.Debug("processFilter end")
 	return common.ResultSuccess
 }
 
@@ -44,45 +45,44 @@ func replaceFilterVar(
 	userID ,userRoles string){
 	//先将条件转换成json，然后再反序列化回对象
 	jsonStr, err := json.Marshal(filter)
-    if err != nil {
-		log.Println("replaceFilterVar Marshal filter error")
-        log.Println(err)
-    }
+	if err != nil {
+		slog.Debug("replaceFilterVar Marshal filter error")
+		slog.Error(err.Error())
+	}
 
 	filterStr,replaced:=replaceFilterString(string(jsonStr),filterData,userID,userRoles)
 	
 	if replaced==true {
 		if err := json.Unmarshal([]byte(filterStr), filter); err != nil {
-			log.Println("replaceFilterVar Unmarshal filter error")
-			log.Println(err)
+			slog.Debug("replaceFilterVar Unmarshal filter error")
+			slog.Error(err.Error())
 		}
 	}
 }
 
 func replaceFilterString(filter string,filterData *map[string]interface{},userID ,userRoles string)(string,bool){
 	//识别出过滤参数中的
-	log.Printf("replaceFilterString start\n")
-	log.Println(filter)
+	slog.Debug("replaceFilterString start","filter",filter)
+
 	re := regexp.MustCompile(`%{([A-Z|a-z|_|0-9|.]*)}`)
 	replaceItems:=re.FindAllStringSubmatch(filter,-1)
 	replaced:=false
 	if replaceItems!=nil {
 		for _,replaceItem:=range replaceItems {
-			log.Printf("replaceFilterString replaceItem:%s,%s \n",replaceItem[0],replaceItem[1])
+			slog.Debug("replaceFilterString replaceItem","item0",replaceItem[0],"item1",replaceItem[1])
 			repalceStr:=getReplaceString(replaceItem[1],filterData,userID ,userRoles)
 			filter=strings.Replace(filter,replaceItem[0],repalceStr,-1)
 		}
 		replaced=true
 	}
-	log.Printf("replaceFilterString end\n")
-	log.Println(filter)
+	slog.Debug("replaceFilterString end","filter",filter)
 	return filter,replaced
 }
 
 func getReplaceString(filterItem string,filterData *map[string]interface{},userID ,userRoles string)(string){
 	filterRoles:=userRoles;
 	filterRoles=strings.Replace(filterRoles,",","\",\"",-1)
-	log.Println(filterRoles)
+	slog.Debug("getReplaceString","filterRoles",filterRoles)
 
 	if filterItem=="userID" {
 		return userID
@@ -139,7 +139,7 @@ func getfilterDataString(path string,data *map[string]interface{})(string){
 	//将value转为豆号分割的字符串
 	if len(values)>0 {
 		valueStr:=strings.Join(values, "\",\"")
-		log.Println(valueStr)
+		slog.Debug("将value转为豆号分割的字符串","valueStr",valueStr)
 		return valueStr
 	}
 	return path
@@ -149,11 +149,11 @@ func getPathData(path []string,level int,data *map[string]interface{},values *[]
 	pathNode:=path[level]
 
 	dataStr, _ := json.Marshal(data)
-	log.Printf("getPathData pathNode:%s,level:%d,data:%s",pathNode,level,string(dataStr))
+	slog.Debug("getPathData","pathNode",pathNode,"level",level,"data",string(dataStr))
 
 	dataNode,ok:=(*data)[pathNode]
 	if !ok {
-		log.Println("getPathData no pathNode ",pathNode)
+		slog.Debug("getPathData no pathNode ","pathNode",pathNode)
 		return
 	}
 
@@ -168,20 +168,20 @@ func getPathData(path []string,level int,data *map[string]interface{},values *[]
 				sVal:=fmt.Sprintf("%d",iVal)
 				*values=append(*values,sVal) 
 			default:
-				log.Printf("getPathData not supported value type %T!\n", dataNode)
+				slog.Debug("getPathData not supported value type","dataNode type", reflect.TypeOf(dataNode))
 		}
 	} else {
 		//如果不是最后一级，则数据中应该存在list属性
-		log.Printf("dataNode type is %T",dataNode)
+		slog.Debug("getPathData","dataNode type is", reflect.TypeOf(dataNode))
 		result,ok:=dataNode.(*QueryResult)
 		if !ok {
-			log.Println("getPathData dataNode is not a QueryResult ")
+			slog.Debug("getPathData dataNode is not a QueryResult ")
 			return
 		}
 
 		for _,row:=range result.List {
 			if ok {
-				log.Println("getPathData dataNode list member is not a map ")
+				slog.Debug("getPathData dataNode list member is not a map ")
 				getPathData(path,level+1,&row,values)
 			}
 		}
@@ -194,7 +194,7 @@ func getFilterData(
 	userID ,userRoles,appDB string,
 	dataRepository DataRepository)(*map[string]interface{},int){
 
-	log.Printf("getFilterData start\n")
+	slog.Debug("getFilterData start")
 	
 	res:=map[string]interface{}{}
 	
@@ -218,13 +218,13 @@ func getFilterData(
 		res[item.ModelID]=result
 	}
 
-	log.Printf("getFilterData end\n")
+	slog.Debug("getFilterData end")
 	return &res,common.ResultSuccess
 }
 
 //替换查询条件中字段值为数组的情况，将数组转为Op.in查询条件
 func ReplaceArrayValue(filter *map[string]interface{},fields *[]Field){
-	log.Printf("ReplaceFilterArray start\n")
+	slog.Debug("ReplaceFilterArray start")
 	//遍历filter中的每个字段
 	for field,value:=range(*filter){
 		//如果字段值为数组，则将数组转为Op.in查询条件
@@ -240,7 +240,7 @@ func ReplaceArrayValue(filter *map[string]interface{},fields *[]Field){
 			default:
 		}			
 	}
-	log.Printf("ReplaceFilterArray end\n")
+	slog.Debug("ReplaceFilterArray end")
 }
 
 func arrayToOpin(value []interface{})(map[string]interface{}){

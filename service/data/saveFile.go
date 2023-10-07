@@ -3,7 +3,7 @@ package data
 import (
 	"crv/frame/common"
 	"database/sql"
-	"log"
+	"log/slog"
 	"encoding/base64"
 	"os"
 	"strings"
@@ -22,16 +22,16 @@ type SaveFile struct {
 }
 
 func (save *SaveFile)save(pID string,dataRepository DataRepository,tx *sql.Tx,modelID string,fieldValue map[string]interface{})(int){
-	log.Println("start SaveFile save ... ")
+	slog.Debug("start SaveFile save ... ")
 	mapList,ok:=fieldValue["list"]
 	if !ok {
-		log.Println("saveManyToManyField end ")
+		slog.Debug("saveManyToManyField end ")
 		return common.ResultSuccess
 	}
 
 	list,ok:=mapList.([]interface{})
 	if !ok || len(list)<=0 {
-		log.Println("saveManyToManyField end ")
+		slog.Debug("saveManyToManyField end ")
 		return common.ResultSuccess
 	}
 
@@ -46,7 +46,7 @@ func (save *SaveFile)save(pID string,dataRepository DataRepository,tx *sql.Tx,mo
 		}
 	}
 
-	log.Println("end SaveFile save")
+	slog.Debug("end SaveFile save")
 	return common.ResultSuccess
 }
 
@@ -66,7 +66,7 @@ func (save *SaveFile)saveFile(path,name,contentBase64 string)(int){
 	//判断并创建文件路径
 	err := os.MkdirAll(path, 0750)
 	if err != nil && !os.IsExist(err) {
-		log.Println("create dir error:", err)
+		slog.Error("create dir error:","error",err)
 		return common.ResultCreateDirError
 	}
 
@@ -80,7 +80,7 @@ func (save *SaveFile)saveFile(path,name,contentBase64 string)(int){
 	fileContent := make([]byte, base64.StdEncoding.DecodedLen(len(contentBase64)))
 	n, err := base64.StdEncoding.Decode(fileContent, []byte(contentBase64))
 	if err != nil {
-		log.Println("decode error:", err)
+		slog.Error("decode error","error",err)
 		return common.ResultBase64DecodeError
 	}
 	fileContent = fileContent[:n]
@@ -88,17 +88,17 @@ func (save *SaveFile)saveFile(path,name,contentBase64 string)(int){
 	//保存文件
 	file,err:=os.Create(path+name)
 	if err != nil {
-		log.Println("create file error:", err)
+		slog.Error("create file error","error",err)
 		return common.ResultCreateFileError
 	}
 
 	if _, err := file.Write(fileContent); err != nil {
-		log.Println("write file error:", err)
+		slog.Error("write file error","error",err)
 		return common.ResultCreateFileError
 	}
 
 	if err := file.Close(); err != nil {
-		log.Println("close file error:", err)
+		slog.Error("close file error","error",err)
 		return common.ResultCreateFileError
 	}
 
@@ -106,7 +106,7 @@ func (save *SaveFile)saveFile(path,name,contentBase64 string)(int){
 }
 
 func (save *SaveFile)createFileRow(dataRepository DataRepository,tx *sql.Tx,modelID,pID string,row map[string]interface{})(int){
-	log.Println("createFileRow ... ")
+	slog.Debug("createFileRow ... ")
 	nameCol:=row[CC_FILENAME]
 	if nameCol==nil {
 		return common.ResultNoFileNameWhenCreate
@@ -154,7 +154,7 @@ func (save *SaveFile)createFileRow(dataRepository DataRepository,tx *sql.Tx,mode
 		return errorCode
 	}
 
-	log.Println("createFileRow end ")
+	slog.Debug("createFileRow end ")
 	return common.ResultSuccess
 }
 

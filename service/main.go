@@ -13,31 +13,31 @@ import (
     "crv/frame/esi"
     "crv/frame/cas"
     "crv/frame/report"
+    crvlog "crv/frame/log"
     //"crv/frame/operationlog"
     "time"
-    "log"
     "log/slog"
     "os"
 )
 
 func main() {
+    confFile:="conf/conf.json"
+    if len(os.Args)>1 {
+        confFile=os.Args[1]
+        slog.Info(confFile)
+    }
+    //初始化配置
+    conf:=common.InitConfig(confFile)
+
+    crvlog.InitCRVLog(&conf.Log)
+    slog.Info("crvframe service start...")
+
     //设置log打印文件名和行号
-    log.SetFlags(log.Lshortfile | log.LstdFlags)
+    //log.SetFlags(log.Lshortfile | log.LstdFlags)
 
     //初始化时区
     var cstZone = time.FixedZone("CST", 8*3600) // 东八
 	time.Local = cstZone
-
-    confFile:="conf/conf.json"
-    if len(os.Args)>1 {
-        confFile=os.Args[1]
-        log.Println(confFile)
-    }
-
-    slog.Info("crvframe service start...")
-
-    //初始化配置
-    conf:=common.InitConfig(confFile)
 
     router := gin.Default()
 
@@ -147,5 +147,6 @@ func main() {
     }
     reportController.Bind(router)
 
+    slog.Info("crvframe service listening and serving HTTP on :"+conf.Service.Port)
     router.Run(conf.Service.Port)
 }

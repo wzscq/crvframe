@@ -3,10 +3,11 @@ package data
 import (
 	"crv/frame/common"
 	"crv/frame/definition"
-	"log"
+	"log/slog"
 	"time"
 	"database/sql"
 	"strings"
+	"reflect"
 )
 
 type Update struct {
@@ -105,12 +106,12 @@ func (update *Update)getUpdateFields(permissionFields string)(string,int){
 			//这里udpate的时候实际上只支持many2one字段，目前many2one字段提交的时候是直接使用string类型传递的，所以这里只是提供一个校验
 			releatedField,ok:=value.(map[string]interface{})
 			if !ok {
-				log.Println("getUpdateFields not supported value type %T!\n", v)
+				slog.Error("getUpdateFields not supported value type ","val type",reflect.TypeOf(v))
 				return "",common.ResultNotSupportedValueType	
 			}
 
 			fieldType:=releatedField["fieldType"].(string)
-			log.Println(fieldType)
+			slog.Debug("getUpdateFields","fieldType",fieldType)
 			if fieldType!=FIELDTYPE_MANY2MANY&&
 			   fieldType!=FIELDTYPE_ONE2MANY&&
 			   fieldType!=FIELDTYPE_FILE {
@@ -119,7 +120,7 @@ func (update *Update)getUpdateFields(permissionFields string)(string,int){
 		case nil:
 			updateFieldsStr=updateFieldsStr+key+"=null,"
 		default:
-			log.Println("getUpdateFields not supported value type %T!\n", v)
+			slog.Error("getUpdateFields not supported value type", "val type",reflect.TypeOf(v))
 			return "",common.ResultNotSupportedValueType
 		}
 	}
@@ -169,7 +170,7 @@ func (update *Update) Execute(dataRepository DataRepository)(*map[string]interfa
 	//开启事务
 	tx,err:= dataRepository.Begin()
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return nil,common.ResultSQLError
 	}
 	//执行数据更新操作
@@ -177,7 +178,7 @@ func (update *Update) Execute(dataRepository DataRepository)(*map[string]interfa
 	if errorCode == common.ResultSuccess {
 		//提交事务
 		if err := tx.Commit(); err != nil {
-			log.Println(err)
+			slog.Error(err.Error())
 			errorCode=common.ResultSQLError
 		}
 	} else {

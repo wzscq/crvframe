@@ -3,7 +3,7 @@ package data
 import (
 	"crv/frame/common"
 	"crv/frame/definition"
-	"log"
+	"log/slog"
 	"database/sql"
 )
 
@@ -16,7 +16,7 @@ type Delete struct {
 }
 
 func (delete *Delete)getPermissionIds(dataRepository DataRepository,idList *[]string)(string,int){
-	log.Println("start getPermissionIds")
+	slog.Debug("start getPermissionIds")
 	//根据用户权限，获取允许删除数据的id列表
 	permissionDataset,errorCode:=definition.GetUserDataset(delete.AppDB,delete.ModelID,delete.UserRoles,definition.DATA_OP_TYPE_MUTATION)
 	if errorCode != common.ResultSuccess {
@@ -24,7 +24,7 @@ func (delete *Delete)getPermissionIds(dataRepository DataRepository,idList *[]st
 	}
 
 	if permissionDataset.Filter ==  nil {
-		log.Println("end getPermissionIds with nil filter")
+		slog.Debug("end getPermissionIds with nil filter")
 		return delete.idListToString(idList)
 	}
 
@@ -52,7 +52,7 @@ func (delete *Delete)getPermissionIds(dataRepository DataRepository,idList *[]st
 	result,errorCode:=query.Execute(dataRepository,false)
 
 	if len(result.List) == 0 {
-		log.Println("end getPermissionIds with no permission")
+		slog.Debug("end getPermissionIds with no permission")
 		return "",common.ResultNoPermission
 	}
 	//循环结果的每行数据
@@ -62,7 +62,7 @@ func (delete *Delete)getPermissionIds(dataRepository DataRepository,idList *[]st
 	}
 	//去掉末尾的逗号
 	strIDs=strIDs[0:len(strIDs)-1]
-	log.Println("end getPermissionIds with id list : %s",strIDs)
+	slog.Debug("end getPermissionIds with id","list",strIDs)
 	return strIDs,common.ResultSuccess
 }
 
@@ -114,7 +114,7 @@ func (delete *Delete) Execute(dataRepository DataRepository)(*map[string]interfa
 	//开启事务
 	tx,err:= dataRepository.Begin()
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return nil,common.ResultSQLError
 	}
 	//执行删除动作
@@ -122,7 +122,7 @@ func (delete *Delete) Execute(dataRepository DataRepository)(*map[string]interfa
 	if errorCode == common.ResultSuccess {
 		//提交事务
 		if err := tx.Commit(); err != nil {
-			log.Println(err)
+			slog.Error(err.Error())
 			errorCode=common.ResultSQLError
 		}
 	} else {

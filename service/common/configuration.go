@@ -44,6 +44,12 @@ type OperationLogConf struct {
 	Apps []string `json:"apps"`
 }
 
+type LogConf struct {
+	Level string `json:"level"`
+	WriteFile bool `json:"writeFile"`
+	FilePath string `json:"filePath"`
+}
+
 type Config struct {
 	Redis  redisConf  `json:"redis"`
 	Mysql  mysqlConf  `json:"mysql"`
@@ -51,6 +57,7 @@ type Config struct {
 	File fileConf `json:"file"`
 	Cas casConf `json:"cas"`
 	OperationLog OperationLogConf `json:"operationLog"`
+	Log LogConf `json:"log"`
 }
 
 var gConfig Config

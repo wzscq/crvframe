@@ -3,7 +3,7 @@ package data
 import (
 	"crv/frame/common"
 	"database/sql"
-	"log"
+	"log/slog"
 )
 
 type SaveManyToMany struct {
@@ -12,7 +12,7 @@ type SaveManyToMany struct {
 }
 
 func (save *SaveManyToMany)save(pID string,dataRepository DataRepository,tx *sql.Tx,modelID string,fieldValue map[string]interface{})(int){
-	log.Println("start SaveManyToMany save ... ")
+	slog.Debug("start SaveManyToMany save ... ")
 	relatedModel,ok:=fieldValue["modelID"]
 	if !ok {
 		return common.ResultNoRelatedModel
@@ -20,13 +20,13 @@ func (save *SaveManyToMany)save(pID string,dataRepository DataRepository,tx *sql
 	relatedModelID:=relatedModel.(string)
 	mapList,ok:=fieldValue["list"]
 	if !ok {
-		log.Println("saveManyToManyField end ")
+		slog.Debug("saveManyToManyField end ")
 		return common.ResultSuccess
 	}
 
 	list,ok:=mapList.([]interface{})
 	if !ok || len(list)<=0 {
-		log.Println("saveManyToManyField end ")
+		slog.Debug("saveManyToManyField end ")
 		return common.ResultSuccess
 	}
 
@@ -51,7 +51,7 @@ func (save *SaveManyToMany)save(pID string,dataRepository DataRepository,tx *sql
 		}
 	}
 
-	log.Println("end SaveManyToMany save")
+	slog.Debug("end SaveManyToMany save")
 	return common.ResultSuccess
 }
 
@@ -89,7 +89,7 @@ func (save *SaveManyToMany)createManyToManyRow(
 	modelID,pID,relatedModelID,releatedID string,
 	associationModelID *string)(int){
 	
-	log.Println("createManyToManyRow ... ")
+	slog.Debug("createManyToManyRow ... ")
 	
 	midModelID:=getRelatedModelID(modelID,relatedModelID,associationModelID)
 	columns:=modelID+"_id,"+relatedModelID+"_id,"
@@ -103,7 +103,7 @@ func (save *SaveManyToMany)createManyToManyRow(
 	if err != nil {
 		return common.ResultSQLError
 	}
-	log.Println("createManyToManyRow end ")
+	slog.Debug("createManyToManyRow end ")
 	return common.ResultSuccess
 }
 
@@ -119,6 +119,7 @@ func (save *SaveManyToMany)deleteManyToManyRow(
 	//执行sql
 	_,_,err:=dataRepository.ExecWithTx(sql,tx)
 	if err != nil {
+		slog.Error(err.Error())
 		return common.ResultSQLError
 	}
 	return common.ResultSuccess

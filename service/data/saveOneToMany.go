@@ -3,7 +3,7 @@ package data
 import (
 	"crv/frame/common"
 	"database/sql"
-	"log"
+	"log/slog"
 )
 
 type SaveOneToMany struct {
@@ -13,7 +13,7 @@ type SaveOneToMany struct {
 }
 
 func (save *SaveOneToMany)save(pID string,dataRepository DataRepository,tx *sql.Tx,modelID string,fieldValue map[string]interface{})(int){
-	log.Println("start SaveOneToMany save ... ")
+	slog.Debug("start SaveOneToMany save ... ")
 	relatedModel,ok:=fieldValue["modelID"]
 	if !ok {
 		return common.ResultNoRelatedModel
@@ -28,13 +28,13 @@ func (save *SaveOneToMany)save(pID string,dataRepository DataRepository,tx *sql.
 
 	mapList,ok:=fieldValue["list"]
 	if !ok {
-		log.Println("SaveOneToMany end with error: no list field")
+		slog.Error("SaveOneToMany end with error: no list field")
 		return common.ResultSuccess
 	}
 
 	list,ok:=mapList.([]interface{})
 	if !ok || len(list)<=0 {
-		log.Println("SaveOneToMany end with error：empty list")
+		slog.Error("SaveOneToMany end with error：empty list")
 		return common.ResultSuccess
 	}
 
@@ -48,7 +48,7 @@ func (save *SaveOneToMany)save(pID string,dataRepository DataRepository,tx *sql.
 		rowList=append(rowList,mapRow)
 	}
 
-	log.Println(rowList)
+	slog.Debug("save","rowList",rowList)
 
 	//调用单表保存数据逻辑
 	saveRows:=&Save{
@@ -59,6 +59,6 @@ func (save *SaveOneToMany)save(pID string,dataRepository DataRepository,tx *sql.
 		UserRoles:save.UserRoles,
 	}
 	_,errorCode:=saveRows.SaveList(dataRepository,tx)
-	log.Println("end SaveOneToMany save")
+	slog.Debug("end SaveOneToMany save")
 	return errorCode
 }

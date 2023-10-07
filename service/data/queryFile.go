@@ -2,7 +2,7 @@ package data
 
 import (
 	"crv/frame/common"
-	"log"
+	"log/slog"
 )
 
 type QueryFile struct {
@@ -28,7 +28,7 @@ func (queryFile *QueryFile)mergeResult(res *QueryResult,relatedRes *QueryResult,
 				}
 				row[fieldName]=value
 			}
-			log.Println(row["id"],relatedRow[relatedFieldName])
+			slog.Debug("mergeResult","id",row["id"],"relatedFieldName",relatedRow[relatedFieldName])
 			//所以判断本表ID的值和关联表对应关联字段的值是否相等
 			if row["id"] == relatedRow[relatedFieldName] {
 				value.(*QueryResult).Total+=1

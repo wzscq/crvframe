@@ -3,7 +3,7 @@ package data
 import (
 	"database/sql"
 	"github.com/go-sql-driver/mysql"
-	"log"
+	"log/slog"
 	"time"
 )
 
@@ -22,23 +22,23 @@ func (repo *DefatultDataRepository)Begin()(*sql.Tx, error){
 }
 
 func (repo *DefatultDataRepository)ExecWithTx(sql string,tx *sql.Tx)(int64,int64, error){
-	log.Println(sql)
+	slog.Info(sql)
 	res,err:=tx.Exec(sql)
 	if err!=nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return 0,0,err
 	}
 
 	rowCount,err:=res.RowsAffected()
 	if err!=nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return 0,0,err 
 	}
 
 	//获取最后插入数据的ID	
 	id,err:=res.LastInsertId()
 	if err!=nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return 0,0,err 
 	}
 		
@@ -57,7 +57,7 @@ func (repo *DefatultDataRepository)rowsToMap(rows *sql.Rows)([]map[string]interf
 	for rows.Next() {
 		err:= rows.Scan(colPointers...)
 		if err != nil {
-			log.Println(err)
+			slog.Error(err.Error())
 			return nil,err
 		}
 		row:=make(map[string]interface{})
@@ -76,11 +76,10 @@ func (repo *DefatultDataRepository)rowsToMap(rows *sql.Rows)([]map[string]interf
 }
 
 func (repo *DefatultDataRepository)Query(sql string)([]map[string]interface{},error){
-	log.Println(sql)
+	slog.Info(sql)
 	rows, err := repo.DB.Query(sql)
 	if err != nil {
-		log.Println(err)
-		log.Println(sql)
+		slog.Error(err.Error())
 		return nil,err
 	}
 	defer rows.Close()
@@ -104,16 +103,16 @@ func (repo *DefatultDataRepository)Connect(
     var err error
     repo.DB, err = sql.Open("mysql", cfg.FormatDSN())
     if err != nil {
-        log.Fatal(err)
+			slog.Error(err.Error())
     }
 
     pingErr := repo.DB.Ping()
     if pingErr != nil {
-        log.Fatal(pingErr)
+				slog.Error(err.Error())
     }
 		repo.DB.SetConnMaxLifetime(time.Minute * time.Duration(connMaxLifetime))
 		repo.DB.SetMaxOpenConns(maxOpenConns)
 		repo.DB.SetMaxIdleConns(maxIdleConns)
-    log.Println("connect to mysql server "+server)
+    slog.Info("connect to mysql server "+server)
 }
 

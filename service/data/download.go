@@ -3,7 +3,7 @@ package data
 import (
 	"crv/frame/common"
 	"github.com/gin-gonic/gin"
-	"log"
+	"log/slog"
 	"os"
 	"io"
 	"net/url"
@@ -34,12 +34,12 @@ func (download *Download) Execute(c *gin.Context)(int) {
 
 	f,err:=os.Open(path+fileName)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return common.ResultOpenFileError
 	}
 	io.Copy(w,f)
 	if err := f.Close(); err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 	}
 	return common.ResultSuccess
 }

@@ -1,7 +1,7 @@
 package data
 
 import (
-	"log"
+	"log/slog"
 	"crv/frame/common"
 )
 
@@ -28,7 +28,7 @@ func (queryOneToMany *QueryOneToMany)mergeResult(res *QueryResult,relatedRes *Qu
 				}
 				row[fieldName]=value
 			}
-			log.Println(row["id"],relatedRow[relatedFieldName])
+			slog.Debug("mergeResult","id",row["id"],"relatedFieldName",relatedRow[relatedFieldName])
 			//所以判断本表ID的值和关联表对应关联字段的值是否相等
 			if row["id"] == relatedRow[relatedFieldName] {
 				value.(*QueryResult).Total+=1
@@ -40,7 +40,7 @@ func (queryOneToMany *QueryOneToMany)mergeResult(res *QueryResult,relatedRes *Qu
 
 func (queryOneToMany *QueryOneToMany)getFilter(parentList *QueryResult,refField *Field)(*map[string]interface{}){
 	//一对多字段本身是虚拟字段，需要取本表的ID字段到关联表中的关联字段查找和当前表ID字段值相同的记录
-	log.Println("getFilter refField.Filter",refField.Filter)
+	slog.Debug("getFilter","Filter",refField.Filter)
 	//首先获取用于过滤的ID列表
 	ids:=GetFieldValues(parentList,"id")
 	inCon:=map[string]interface{}{}
@@ -53,7 +53,7 @@ func (queryOneToMany *QueryOneToMany)getFilter(parentList *QueryResult,refField 
 	}
 	filter:= map[string]interface{}{}
 	filter[Op_and]=[]interface{}{inClause,*refField.Filter}
-	log.Println("getFilter filter",filter)
+	slog.Debug("getFilter","filter",filter)
 	return &filter
 }
 

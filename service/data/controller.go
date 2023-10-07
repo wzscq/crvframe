@@ -1,7 +1,7 @@
 package data
 
 import (
-	"log"
+	"log/slog"
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
 	"net/http"
@@ -31,7 +31,7 @@ type DataController struct {
 }
 
 func (controller *DataController) query(c *gin.Context) {
-	log.Println("start data query")
+	slog.Debug("start data query")
 	//获取用户账号
 	userRoles:= c.MustGet("userRoles").(string)
 	userID:= c.MustGet("userID").(string)
@@ -40,7 +40,7 @@ func (controller *DataController) query(c *gin.Context) {
 	var errorCode int
 	var result *QueryResult
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		errorCode=common.ResultWrongRequest
     } else {
 		errorCode=processFilter(rep.Filter,rep.FilterData,userID,userRoles,appDB,controller.DataRepository)
@@ -61,11 +61,11 @@ func (controller *DataController) query(c *gin.Context) {
 	}
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end data query")
+	slog.Debug("end data query")
 }
 
 func (controller *DataController) save(c *gin.Context) {
-	log.Println("start data save")
+	slog.Debug("start data save")
 	//获取用户账号
 	userRoles:= c.MustGet("userRoles").(string)
 	userID:= c.MustGet("userID").(string)
@@ -74,19 +74,19 @@ func (controller *DataController) save(c *gin.Context) {
 	var errorCode int
 	var result *saveResult
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end data save with error")
+		slog.Debug("end data save with error")
 		return
-    }
+  }
 		
 	if rep.List==nil{
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end data save with error")
+		slog.Debug("end data save with error")
 		return
 	}
 
@@ -100,11 +100,11 @@ func (controller *DataController) save(c *gin.Context) {
 	result,errorCode=save.Execute(controller.DataRepository)
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end data save success")
+	slog.Debug("end data save success")
 }
 
 func (controller *DataController) delete(c *gin.Context) {
-	log.Println("start data delete")
+	slog.Debug("start data delete")
 	//获取用户账号
 	userID:= c.MustGet("userID").(string)
 	userRoles:= c.MustGet("userRoles").(string)
@@ -113,19 +113,19 @@ func (controller *DataController) delete(c *gin.Context) {
 	var errorCode int
 	var result *map[string]interface {} = nil
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end data delete with error")
+		slog.Debug("end data delete with error")
 		return
-    }
+  }
 
 	if rep.SelectedRowKeys == nil {
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end data delete with error")
+		slog.Debug("end data delete with error")
 		return
 	}
 
@@ -139,11 +139,11 @@ func (controller *DataController) delete(c *gin.Context) {
 	result,errorCode=delete.Execute(controller.DataRepository)
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end data delete")
+	slog.Debug("end data delete")
 }
 
 func (controller *DataController) update(c *gin.Context) {
-	log.Println("start data update")
+	slog.Debug("start data update")
 	//获取用户账号
 	userID:= c.MustGet("userID").(string)
 	userRoles:= c.MustGet("userRoles").(string)
@@ -152,11 +152,11 @@ func (controller *DataController) update(c *gin.Context) {
 	var errorCode int
 	var result *map[string]interface {} = nil
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end data update with error")
+		slog.Debug("end data update with error")
 		return
   }
 
@@ -164,7 +164,7 @@ func (controller *DataController) update(c *gin.Context) {
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end data update with error")
+		slog.Debug("end data update with error")
 		return
 	}
 
@@ -185,11 +185,11 @@ func (controller *DataController) update(c *gin.Context) {
 	}
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end data update")
+	slog.Debug("end data update")
 }
 
 func (controller *DataController)download(c *gin.Context) {
-	log.Println("start data download")
+	slog.Debug("start data download")
 	//获取用户账号
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
@@ -197,11 +197,11 @@ func (controller *DataController)download(c *gin.Context) {
 	var errorCode int
 	var result *map[string]interface {} = nil
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusInternalServerError, rsp)
-		log.Println("end data download with error")
+		slog.Debug("end data download with error")
 		return
     }
 
@@ -209,7 +209,7 @@ func (controller *DataController)download(c *gin.Context) {
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusInternalServerError, rsp)
-		log.Println("end data download with error")
+		slog.Debug("end data download with error")
 		return
 	}
 
@@ -225,11 +225,11 @@ func (controller *DataController)download(c *gin.Context) {
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusInternalServerError, rsp)
 	}
-	log.Println("end data download")
+	slog.Debug("end data download")
 }
 
 func (controller *DataController)getImage(c *gin.Context) {
-	log.Println("start data getImage")
+	slog.Debug("start data getImage")
 	//获取用户账号
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
@@ -237,19 +237,19 @@ func (controller *DataController)getImage(c *gin.Context) {
 	var errorCode int
 	
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end data getImage with error")
+		slog.Debug("end data getImage with error")
 		return
-    }
+  }
 
 	if rep.List == nil || len(*(rep.List))<=0 {
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end data getImage with error")
+		slog.Debug("end data getImage with error")
 		return
 	}
 
@@ -264,11 +264,11 @@ func (controller *DataController)getImage(c *gin.Context) {
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 	c.IndentedJSON(http.StatusOK, rsp)
 	
-	log.Println("end getImage download")
+	slog.Debug("end getImage download")
 }
 
 func (controller *DataController) Bind(router *gin.Engine) {
-	log.Println("Bind DataController")
+	slog.Debug("Bind DataController")
 	router.POST("/data/query", controller.query)
 	router.POST("/data/save", controller.save)
 	router.POST("/data/delete", controller.delete)

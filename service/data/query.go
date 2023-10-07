@@ -3,7 +3,7 @@ package data
 import (
 	"crv/frame/common"
 	"crv/frame/definition"
-	"log"
+	"log/slog"
 	"strconv"
 	"strings"
 )
@@ -122,7 +122,7 @@ func (query *Query) getQueryLimit()(string,int) {
 	}
 
 	if query.Pagination.PageSize<=0 || query.Pagination.Current <= 0 {
-		log.Println(query.Pagination)
+		slog.Debug("getQueryLimit","Pagination",query.Pagination)
 		return "0,0",common.ResultQueryWrongPagination
 	}
 
@@ -158,7 +158,7 @@ func (query *Query) getData(sqlParam *sqlParam,dataRepository DataRepository)([]
 	if err!=nil {
 		return nil,common.ResultSQLError
 	}				
-	log.Println(res)
+	slog.Debug("getData","res",res)
 	return res,common.ResultSuccess
 }
 
@@ -186,12 +186,12 @@ func (query *Query) getCountAndSummaries(
 	if err!=nil {
 		return 0,nil,common.ResultSQLError
 	}
-	log.Println(res)
+	slog.Debug("getCountAndSummaries","res",res)
 	count,err:=strconv.Atoi(res[0]["__count"].(string))
 	if err!=nil {
 		return 0,nil,common.ResultSQLError
 	}
-	log.Println(count)
+	slog.Debug("getCountAndSummaries","count",count)
 
 	var summaries *map[string]interface{}
 	if len(summarizeFields)>0 {
