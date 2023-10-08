@@ -3,7 +3,7 @@ package esi
 import (
 	"crv/frame/common"
 	"crv/frame/data"
-	"log"
+	"log/slog"
 	"regexp"
 	"strings"
 )
@@ -27,7 +27,7 @@ type esiImport struct {
 }
 
 func (esi *esiImport)doImport()(interface{},*common.CommonError){
-	log.Println("esiImport doImport start")
+	slog.Debug("esiImport doImport start")
 	esiModelSpec,err:=esi.getEsiModelSpec()
 	if err!=nil {
 		return nil,err
@@ -64,12 +64,12 @@ func (esi *esiImport)doImport()(interface{},*common.CommonError){
 	result:=map[string]interface{}{
 		"count":dataRowHandler.Count,
 	}
-	log.Println("esiImport doImport end")
+	slog.Debug("esiImport doImport end")
 	return result,nil
 }
 
 func (esi *esiImport)getEsiModelSpec()(*esiModelSpec,*common.CommonError){
-	log.Println("esiImport getEsiModelSpec start")
+	slog.Debug("esiImport getEsiModelSpec start")
 	var modelSpec *esiModelSpec
 	var err *common.CommonError
 	if len(esi.Specific)>0 {
@@ -77,15 +77,13 @@ func (esi *esiImport)getEsiModelSpec()(*esiModelSpec,*common.CommonError){
 		specific,_:=esi.replaceSpecificVar(esi.Specific)
 		modelSpec,err=loadESIModelSpec(esi.AppDB,esi.ModelID,specific)
 		if err!=nil {
-			log.Println("esiImport getEsiModelSpec end with error:")
-			log.Println("loadESIModel error")
+			slog.Error("esiImport getEsiModelSpec end with error","error","loadESIModelSpec error")
 			return nil,err
 		}
 	} else {
 		esiModel,err:=loadESIModel(esi.AppDB,esi.ModelID)
 		if err!=nil {
-			log.Println("esiImport getEsiModelSpec end with error:")
-			log.Println("loadESIModelSpec error")
+			slog.Error("esiImport getEsiModelSpec end with error","error","loadESIModelSpec error")
 			return nil,err 
 		}
 		modelSpec=&esiModelSpec{
@@ -95,27 +93,24 @@ func (esi *esiImport)getEsiModelSpec()(*esiModelSpec,*common.CommonError){
 			SpecificID:"",
 		}
 	}
-	log.Println("esiImport getEsiModelSpec end")
+	slog.Debug("esiImport getEsiModelSpec end")
 	return modelSpec,nil
 }
 
 func (esi *esiImport)replaceSpecificVar(specific string)(string,bool){
 	//识别出过滤参数中的
-	log.Printf("replaceSpecificVar start\n")
-	log.Println(specific)
+	slog.Debug("replaceSpecificVar start","specific",specific)
 	re := regexp.MustCompile(`%{([A-Z|a-z|_|0-9|.]*)}`)
 	replaceItems:=re.FindAllStringSubmatch(specific,-1)
 	replaced:=false
 	if replaceItems!=nil {
 		for _,replaceItem:=range replaceItems {
-			log.Printf("replaceSpecificVar replaceItem:%s,%s \n",replaceItem[0],replaceItem[1])
 			repalceStr:=esi.getReplaceString(replaceItem[1])
 			specific=strings.Replace(specific,replaceItem[0],repalceStr,-1)
 		}
 		replaced=true
 	}
-	log.Printf("replaceSpecificVar end\n")
-	log.Println(specific)
+	slog.Debug("replaceSpecificVar end","specific",specific)
 	return specific,replaced
 }
 

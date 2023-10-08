@@ -1,7 +1,7 @@
 package definition
 
 import (
-	"log"
+	"log/slog"
 	"encoding/json"
 	"os"
 	"crv/frame/common"
@@ -32,7 +32,7 @@ type i18n struct {
 func (i18n *i18n)getLang(i18nDef *i18nDefinition)(string,int){
 	//如果指定的语言在配置中存在则返回指定的语言，否则返回Default对应的值，如果Default未定义则报错
 	if i18nDef.Locales == nil || len(*(i18nDef.Locales))==0 {
-		log.Println("getLang error no langList")
+		slog.Error("getLang error no langList")
 		return "",common.ResultI18nNoLangList
 	}
 
@@ -74,7 +74,7 @@ func (i18n *i18n)getAppI18n()(*appI18n,int){
 	modelFile := "apps/"+i18n.AppDB+"/i18n.json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		return nil,common.ResultOpenFileError
 	}
 	defer filePtr.Close()
@@ -82,7 +82,7 @@ func (i18n *i18n)getAppI18n()(*appI18n,int){
 	decoder := json.NewDecoder(filePtr)
 	err = decoder.Decode(&i18nDef)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return nil,common.ResultJsonDecodeError
 	}
 

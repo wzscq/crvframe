@@ -3,7 +3,7 @@ package esi
 import (
 	"crv/frame/data"
 	"crv/frame/common"
-	"log"
+	"log/slog"
 	"database/sql"
 	//"github.com/rs/xid"
 	"fmt"
@@ -53,8 +53,7 @@ func (saveHandler *saveDataRowHandler)onInit()(*common.CommonError){
 	var err error
 	saveHandler.Tx,err= saveHandler.DataRepository.Begin()
 	if err != nil {
-		log.Println("saveDataRowHandler begin transaction error：")
-		log.Println(err)
+		slog.Error("saveDataRowHandler begin transaction error","error",err)
 		return common.CreateError(common.ResultSQLError,nil)
 	}
 	saveHandler.BatchID=saveHandler.getBatchID()
@@ -65,8 +64,7 @@ func (saveHandler *saveDataRowHandler)onOver(commit bool)(*common.CommonError){
 	if saveHandler.Tx != nil {
 		if commit {
 			if err := saveHandler.Tx.Commit(); err != nil {
-				log.Println("saveDataRowHandler commit transaction error：")
-				log.Println(err)
+				slog.Error("saveDataRowHandler commit transaction error","error",err)
 				return common.CreateError(common.ResultSQLError,nil)
 			}
 		} else {
@@ -106,7 +104,7 @@ func (saveHandler *saveDataRowHandler)updateRowData(row *map[string]interface{},
 }
 
 func (saveHandler *saveDataRowHandler)handleRow(row map[string]interface{},sheetName string)(*common.CommonError){
-	log.Println("saveDataRowHandler handleRow start")
+	slog.Debug("saveDataRowHandler handleRow start")
 	saveHandler.Count++
 	saveHandler.updateRowData(&row,sheetName)
 	
@@ -120,10 +118,10 @@ func (saveHandler *saveDataRowHandler)handleRow(row map[string]interface{},sheet
 	//执行保存动作
 	result,errorCode:=save.SaveList(saveHandler.DataRepository,saveHandler.Tx)
 	if errorCode!=common.ResultSuccess {
-		log.Println("saveDataRowHandler handleRow save.Execute error.",result)
+		slog.Error("saveDataRowHandler handleRow save.Execute error.","error",result)
 		return common.CreateError(errorCode,nil)
 	}
-	log.Println("saveDataRowHandler handleRow end")
+	slog.Debug("saveDataRowHandler handleRow end")
 	return nil
 }
 

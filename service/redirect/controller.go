@@ -1,7 +1,7 @@
 package redirect
 
 import (
-	"log"
+	"log/slog"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"crv/frame/common"
@@ -49,7 +49,7 @@ func removeMultiCrosHeader(r *http.Response)(error){
 }
 
 func (controller *RedirectController)redirect(c *gin.Context){
-	log.Println("start redirect ")
+	slog.Debug("start redirect ")
 
 	userID:= c.MustGet("userID").(string)
 	userRoles:= c.MustGet("userRoles").(string)
@@ -59,10 +59,9 @@ func (controller *RedirectController)redirect(c *gin.Context){
 	bodyCopy:=new(bytes.Buffer)
 	_,err:=io.Copy(bodyCopy,c.Request.Body)
 	if err != nil {
-		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end redirect with error")
+		slog.Error("end redirect with error","error",err)
 		return
 	}
 
@@ -71,10 +70,9 @@ func (controller *RedirectController)redirect(c *gin.Context){
 
 	var rep commonRep
 	if err := c.ShouldBindBodyWith(&rep,binding.JSON); err != nil {
-		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end redirect with error")
+		slog.Error("end redirect with error","error",err)
 		return
     }
 
@@ -83,7 +81,7 @@ func (controller *RedirectController)redirect(c *gin.Context){
 	if rep.To==nil{
 		rsp:=common.CreateResponse(common.CreateError(common.ResultNoExternalApiId,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end redirect with error")
+		slog.Error("end redirect with error","errorCode",common.ResultNoExternalApiId,"message",rsp.Message)
 		return
 	}
 
@@ -92,13 +90,17 @@ func (controller *RedirectController)redirect(c *gin.Context){
 	if errorCode != common.ResultSuccess {
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
+		slog.Error("end redirect with error","errorCode",errorCode,"message",rsp.Message)
 		return 
 	}
 
 	//
 	remote, err := url.Parse(postUrl)
 	if err != nil {
-		panic(err)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultReadExternalApiResultError,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
+		slog.Error("end redirect with error","error",err)
+		return
 	}
 
 	proxy := httputil.NewSingleHostReverseProxy(remote)
@@ -155,6 +157,6 @@ func (controller *RedirectController)redirect(c *gin.Context){
 }
 
 func (controller *RedirectController) Bind(router *gin.Engine) {
-	log.Println("Bind RedirectController")
+	slog.Info("Bind RedirectController")
 	router.POST("/redirect", controller.redirect)
 }

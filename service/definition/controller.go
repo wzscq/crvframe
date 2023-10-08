@@ -1,7 +1,7 @@
 package definition
 
 import (
-	"log"
+	"log/slog"
 	"os"
 	"io"
 	"github.com/gin-gonic/gin"
@@ -32,7 +32,7 @@ type DefinitionController struct {
 }
 
 func (controller *DefinitionController)getUserFunction(c *gin.Context){
-	log.Println("start definition getUserFunction")
+	slog.Debug("start definition getUserFunction")
 	//获取用户角色
 	userRoles:= c.MustGet("userRoles").(string)
 	appDB:= c.MustGet("appDB").(string)
@@ -45,11 +45,11 @@ func (controller *DefinitionController)getUserFunction(c *gin.Context){
 	
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),functions)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end definition getUserFunction")
+	slog.Debug("end definition getUserFunction")
 }
 
 func (controller *DefinitionController)getUserMenus(c *gin.Context){
-	log.Println("start definition getUserMenus")
+	slog.Debug("start definition getUserMenus")
 	//获取用户角色
 	userRoles:= c.MustGet("userRoles").(string)
 	appDB:= c.MustGet("appDB").(string)
@@ -62,11 +62,11 @@ func (controller *DefinitionController)getUserMenus(c *gin.Context){
 	
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),menus)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end definition getUserMenus")
+	slog.Debug("end definition getUserMenus")
 }
 
 func (controller *DefinitionController)getModelViewConf(c *gin.Context){
-	log.Println("start definition getModelViewConf")
+	slog.Debug("start definition getModelViewConf")
 	//获取用户角色
 	userRoles:= c.MustGet("userRoles").(string)
 	appDB:= c.MustGet("appDB").(string)
@@ -74,10 +74,9 @@ func (controller *DefinitionController)getModelViewConf(c *gin.Context){
 	var mvConf modelViewConf
 	var rep getModelViewRep	
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
+		slog.Error("end definition getModelViewConf with error","error",err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),mvConf)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end definition getModelViewConf with error")
 		return
 	} 
 
@@ -90,11 +89,11 @@ func (controller *DefinitionController)getModelViewConf(c *gin.Context){
 
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),mvConf)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end definition getModelViewConf")
+	slog.Debug("end definition getModelViewConf")
 }
 
 func (controller *DefinitionController)getModelFormConf(c *gin.Context){
-	log.Println("start definition getModelFormConf")
+	slog.Debug("start definition getModelFormConf")
 	//获取用户角色
 	userRoles:= c.MustGet("userRoles").(string)
 	appDB:= c.MustGet("appDB").(string)
@@ -102,10 +101,10 @@ func (controller *DefinitionController)getModelFormConf(c *gin.Context){
 	var mvConf modelFormConf
 	var rep getModelFormRep	
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
+		slog.Error("end definition getModelFormConf with error","error",err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),mvConf)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end definition getModelFormConf with error")	
+		return
 	}
 
 	m:=model{
@@ -117,31 +116,31 @@ func (controller *DefinitionController)getModelFormConf(c *gin.Context){
 
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),mvConf)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end definition getModelFormConf")
+	slog.Debug("end definition getModelFormConf")
 }
 
 func (controller *DefinitionController)getReportConf(c *gin.Context){
-	log.Println("start definition getReportConf")
+	slog.Debug("start definition getReportConf")
 	//获取用户角色
 	appDB:= c.MustGet("appDB").(string)
 	
 	var req getReportConfReq	
 	if err := c.BindJSON(&req); err != nil {
-		log.Println(err)
+		slog.Error("end definition getReportConf with error","error",err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end definition getReportConf with error")	
+		return
 	}
 
 	reportConf,errorCode:=getReportConf(appDB,req.ReportID)
 
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),reportConf)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end definition getReportConf")
+	slog.Debug("end definition getReportConf")
 }
 
 func (controller *DefinitionController)getAppImage(c *gin.Context){
-	log.Println("start definition getAppImage")
+	slog.Debug("start definition getAppImage")
 
 	appDB:= c.MustGet("appDB").(string)
 	image := c.Param("image")
@@ -149,20 +148,19 @@ func (controller *DefinitionController)getAppImage(c *gin.Context){
 	
 	f,err:=os.Open(imageFile)
 	if err != nil {
-		log.Println(err)
-		log.Println("end definition getAppImage")	
+		slog.Error("end definition getAppImage with error","error",err)
 		return
 	}
 
 	io.Copy(c.Writer,f)
 	if err := f.Close(); err != nil {
-		log.Println(err)
+		slog.Error("end definition getAppImage with error","error",err)
 	}
-	log.Println("end definition getAppImage")
+	slog.Debug("end definition getAppImage")
 }
 
 func (controller *DefinitionController)getAppI18n(c *gin.Context){
-	log.Println("start definition getAppI18n")
+	slog.Debug("start definition getAppI18n")
 	appDB:= c.MustGet("appDB").(string)
 	locale := c.Param("locale")
 	
@@ -173,19 +171,19 @@ func (controller *DefinitionController)getAppI18n(c *gin.Context){
 	appI18n,errorCode:=i18n.getAppI18n()
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),appI18n)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end definition getAppI18n")
+	slog.Debug("end definition getAppI18n")
 }
 
 func (controller *DefinitionController)getAPPConf(c *gin.Context){
-	log.Println("start definition getAPPConf")
+	slog.Debug("start definition getAPPConf")
 	appDB:= c.MustGet("appDB").(string)
 	
 	var req getAPPConfReq	
 	if err := c.BindJSON(&req); err != nil {
-		log.Println(err)
+		slog.Error("end definition getAPPConf with error","error",err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end definition getAPPConf with error")	
+		return
 	}
 
 	appConf,err:=GetAPPConf(appDB)
@@ -197,11 +195,11 @@ func (controller *DefinitionController)getAPPConf(c *gin.Context){
 
 	rsp:=common.CreateResponse(nil,appConf)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end definition getAPPConf")
+	slog.Debug("end definition getAPPConf")
 }
 
 func (controller *DefinitionController) Bind(router *gin.Engine) {
-	log.Println("Bind DefinitionController")
+	slog.Info("Bind DefinitionController")
 	router.POST("/definition/getUserMenus", controller.getUserMenus)
 	router.POST("/definition/getUserFunction", controller.getUserFunction)
 	router.POST("/definition/getModelViewConf", controller.getModelViewConf)

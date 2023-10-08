@@ -1,7 +1,7 @@
 package esi
 
 import (
-	"log"
+	"log/slog"
 	"github.com/xuri/excelize/v2"
 	"crv/frame/common"
 	"strings"
@@ -37,7 +37,7 @@ func base64ToFileContent(contentBase64 string)(*[]byte,*common.CommonError){
 	fileContent := make([]byte, base64.StdEncoding.DecodedLen(len(contentBase64)))
 	n, err := base64.StdEncoding.Decode(fileContent, []byte(contentBase64))
 	if err != nil {
-		log.Println("decode error:", err)
+		slog.Error("decode error","error",err)
 		return nil,common.CreateError(common.ResultBase64DecodeError,nil)
 	}
 	fileContent = fileContent[:n]
@@ -49,12 +49,12 @@ func getSheetName(sheetNames []string,sheetSelector *SheetSelector)(string,*comm
 		return sheetNames[0],nil
 	}
 
-	log.Printf("getSheetName %s,%s",sheetSelector.Type,sheetSelector.Value)
+	slog.Debug("getSheetName","Type",sheetSelector.Type,"Value",sheetSelector.Value)
 	
 	if sheetSelector.Type == SHEETSELECTOR_TYPE_INDEX {
 		sheetIndex,err:=strconv.Atoi(sheetSelector.Value)
 		if err!=nil {
-			log.Println(err)
+			slog.Error(err.Error())
 			return "",common.CreateError(common.ResultExcelSheetNotExist,nil)
 		}
 
@@ -103,8 +103,7 @@ func parseSheet(
 	// Get all the rows in the Sheet1.
 	rows, err := f.GetRows(sheetName)
 	if err != nil {
-		log.Println("esiFile loadBase64String error:")
-		log.Println(err)
+		slog.Error("esiFile loadBase64String error","error",err)
 		return common.CreateError(common.ResultLoadExcelFileError,nil)
 	}
 
@@ -142,15 +141,13 @@ func parseBase64File(
 	reader := bytes.NewReader(*fileContent)
 	f, err := excelize.OpenReader(reader)
 	if err != nil {
-		log.Println("esiFile loadBase64String error:")
-    log.Println(err)
+		slog.Error("esiFile loadBase64String error","error",err)
     return common.CreateError(common.ResultLoadExcelFileError,nil)
   }
    
 	sheetNames:=f.GetSheetList()
 	if len(sheetNames)==0 {
-		log.Println("esiFile loadBase64String error:")
-		log.Println("no sheet")
+		slog.Error("esiFile loadBase64String error","error","no sheet")
 		return common.CreateError(common.ResultLoadExcelFileError,nil)
 	}
 
@@ -169,6 +166,6 @@ func parseBase64File(
 		}
 	}
 
-	log.Printf("esiFile loadBase64String end\n")
+	slog.Debug("esiFile loadBase64String end")
 	return nil
 }

@@ -1,7 +1,7 @@
 package definition
 
 import (
-	"log"
+	"log/slog"
 	"encoding/json"
 	"os"
 	"crv/frame/common"
@@ -43,7 +43,7 @@ func getReportConf(appDB,reportID string)(*ReportConf,int){
 	confFile := "apps/"+appDB+"/reports/"+reportID+".json"
 	filePtr, err := os.Open(confFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		return nil,common.ResultOpenFileError
 	}
 	defer filePtr.Close()
@@ -51,7 +51,7 @@ func getReportConf(appDB,reportID string)(*ReportConf,int){
 	decoder := json.NewDecoder(filePtr)
 	err = decoder.Decode(&reportConf)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return nil,common.ResultJsonDecodeError
 	}
 	
@@ -63,7 +63,7 @@ func GetReportQuery(appDB,reportID,controlID string)(interface{},*common.CommonE
 	confFile := "apps/"+appDB+"/reports/"+reportID+".json"
 	filePtr, err := os.Open(confFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed [Err:%s]", err.Error())
 		params:=map[string]interface{}{
 			"configure file:":confFile,
 		}
@@ -74,7 +74,7 @@ func GetReportQuery(appDB,reportID,controlID string)(interface{},*common.CommonE
 	decoder := json.NewDecoder(filePtr)
 	err = decoder.Decode(&reportConf)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		params:=map[string]interface{}{
 			"configure file:":confFile,
 		}

@@ -14,7 +14,6 @@ excel表格内容模式识别
 */
 
 import (
-	"log"
 	"regexp"
 	"strings"
 )
@@ -115,7 +114,6 @@ func (epr *patternContentHandler)addRecognizedLabelCell(
 		}
 
 		if diffNow<diffOrg {
-			log.Printf("row:%d,col:%d,data:%s,match the second field:%s,orignal field is %s\n",row,col,data,esiField.Field,recCell.Field.Field)
 			epr.RecognizedLabelCells[row][col].Field=esiField
 		}
 	}
@@ -242,8 +240,6 @@ func (epr *patternContentHandler)findRecognizedLabelCell(row,col int)(*recognize
 		}	
 	}
 
-	log.Printf("findRecognizedLabelCell 4 col:%d,row:%d\n",col,row)
-	
 	return nil
 }
 
@@ -254,7 +250,6 @@ func (epr *patternContentHandler)RecognizeFieldValueCell(
 	//获取对应label单元格
 	recLabelCell:=epr.findRecognizedLabelCell(row,col)
 	if recLabelCell == nil {
-		log.Printf("RecognizeFieldValueCell findRecognizedLabelCell nil col:%d,row:%d\n",col,row)
 		return false
 	}
 
@@ -294,7 +289,6 @@ func (epr *patternContentHandler)AddTempRowToModel()(map[string]interface{}){
 func (epr *patternContentHandler)setTempRowValue(
 	field *esiModelField,
 	cell string){
-	log.Printf("%s:%s",field.Field,cell)
 	epr.TempRow[field.Field]=cell
 }
 
@@ -417,7 +411,6 @@ func (epr *patternContentHandler)handleCell(lastRow,row,col int,content string)(
 	}
 
 	if reconLabelCell && epr.RecognizeFieldLabelCell(row,col,content) == true {
-		log.Printf("%s is a field label\n",content)
 		return nil
 	}
 	

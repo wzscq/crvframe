@@ -3,7 +3,7 @@ package flow
 import (
 	"github.com/go-redis/redis/v8"
 	"time"
-	"log"
+	"log/slog"
 	"encoding/json"
 )
 
@@ -31,7 +31,7 @@ func (repo *DefaultFlowInstanceRepository)saveInstance(instance *flowInstance)(e
 	// Create JSON from the instance data.
     bytes, err := json.Marshal(*instance)
 	if err!=nil {
-		log.Println("save flow instance error:",err.Error())
+		slog.Error("save flow instance error","error",err)
 		return err
 	}
     // Convert bytes to string.
@@ -42,7 +42,7 @@ func (repo *DefaultFlowInstanceRepository)saveInstance(instance *flowInstance)(e
 func (repo *DefaultFlowInstanceRepository)getInstance(instanceID string)(*flowInstance,error){
 	jsonStr,err:=repo.client.Get(repo.client.Context(), instanceID).Result()
 	if err!=nil {
-		log.Println("get flow instance error:",err.Error())
+		slog.Error("get flow instance error","error",err)
 		return nil,err
 	}
 	// Get byte slice from string.
@@ -50,7 +50,7 @@ func (repo *DefaultFlowInstanceRepository)getInstance(instanceID string)(*flowIn
 	instance:=&flowInstance{}
 	err = json.Unmarshal(bytes, instance)
 	if err!=nil {
-		log.Println("get flow instance error:",err.Error())
+		slog.Error("get flow instance error","error",err)
 		return nil,err
 	}
 	return instance,nil

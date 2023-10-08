@@ -2,7 +2,7 @@ package definition
 
 import (
 	"os"
-	"log"
+	"log/slog"
 	"encoding/json"
 	"crv/frame/common"
 )
@@ -11,7 +11,7 @@ func GetAPPConf(appDB string)(map[string]interface{},*common.CommonError){
 	confFile := "apps/"+appDB+"/app.json"
 	filePtr, err := os.Open(confFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		params:=map[string]interface{}{
 			"configure file:":confFile,
 		}
@@ -23,7 +23,7 @@ func GetAPPConf(appDB string)(map[string]interface{},*common.CommonError){
 	appConf:=map[string]interface{}{}
 	err = decoder.Decode(&appConf)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed", "error",err)
 		params:=map[string]interface{}{
 			"configure file:":confFile,
 		}
@@ -37,7 +37,7 @@ func GetOperations(appDB,userRoles string)([]OperationConf){
 	confFile := "apps/"+appDB+"/operations.json"
 	filePtr, err := os.Open(confFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		return nil
 	}
 	defer filePtr.Close()
@@ -47,7 +47,7 @@ func GetOperations(appDB,userRoles string)([]OperationConf){
 	operations:=[]OperationConf{}
 	err = decoder.Decode(&operations)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error", err)
 		return nil
 	}
 

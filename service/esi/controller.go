@@ -1,7 +1,7 @@
 package esi
 
 import (
-	"log"
+	"log/slog"
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
 	"crv/frame/data"
@@ -21,69 +21,69 @@ type EsiController struct {
 func (controller *EsiController)getImportFile(inputRowData *map[string]interface{})(string,string,int){
 	fileField,ok:=(*inputRowData)["esiFile"]
 	if !ok {
-		log.Println("EsiController getImportFile end with error:")
-		log.Println("the field esiFile is not found.")
+		slog.Error("EsiController getImportFile end with error:")
+		slog.Error("the field esiFile is not found.")
 		return "","",common.ResultWrongRequest
 	}
 
 	fileValueMap,ok:=fileField.(map[string]interface{})
 	if !ok {
-		log.Println("EsiController getImportFile end with error:")
-		log.Println("can not onvert esiFile value to map[stirng]interface{}.")
+		slog.Error("EsiController getImportFile end with error:")
+		slog.Error("can not onvert esiFile value to map[stirng]interface{}.")
 		return "","",common.ResultWrongRequest
 	}
 
 	listField,ok:=fileValueMap["list"]
 	if !ok {
-		log.Println("EsiController getImportFile end with error:")
-		log.Println("the field esiFile.list is not found.")
+		slog.Error("EsiController getImportFile end with error:")
+		slog.Error("the field esiFile.list is not found.")
 		return "","",common.ResultWrongRequest
 	}
 
 	esiFileList,ok:=listField.([]interface{})
 	if !ok {
-		log.Println("EsiController getImportFile end with error:")
-		log.Println("can not onvert esiFile.list to []interface{}.")
+		slog.Error("EsiController getImportFile end with error:")
+		slog.Error("can not onvert esiFile.list to []interface{}.")
 		return "","",common.ResultWrongRequest
 	}
 
 	if len(esiFileList)==0 {
-		log.Println("EsiController getImportFile end with error:")
-		log.Println("esiFile.list is empty.")
+		slog.Error("EsiController getImportFile end with error:")
+		slog.Error("esiFile.list is empty.")
 		return "","",common.ResultWrongRequest
 	}
 
 	esiFileRow,ok:=esiFileList[0].(map[string]interface{})
 	if !ok {
-		log.Println("EsiController getImportFile end with error:")
-		log.Println("can not onvert esiFile.list[0] to map[stirng]interface{}.")
+		slog.Error("EsiController getImportFile end with error:")
+		slog.Error("can not onvert esiFile.list[0] to map[stirng]interface{}.")
 		return "","",common.ResultWrongRequest
 	}
 
 	//拿到文件名和文件内容
 	fileNameIntreface,ok:=esiFileRow["name"]
 	if !ok {
-		log.Println("EsiController getImportFile end with error:")
-		log.Println("the field esiFile.list[0].name is not found.")
+		slog.Error("EsiController getImportFile end with error:")
+		slog.Error("the field esiFile.list[0].name is not found.")
 		return "","",common.ResultWrongRequest
 	}
 	fileName,ok:=fileNameIntreface.(string)
 	if !ok {
-		log.Println("EsiController getImportFile end with error:")
-		log.Println("can not onvert esiFile.list[0].name to string.")
+		slog.Error("EsiController getImportFile end with error:")
+		slog.Error("can not onvert esiFile.list[0].name to string.")
 		return "","",common.ResultWrongRequest
 	}
 
 	fileContentInterface,ok:=esiFileRow["contentBase64"]
 	if !ok {
-		log.Println("EsiController getImportFile end with error:")
-		log.Println("the field esiFile.list[0].contentBase64 is not found.")
+		slog.Error("EsiController getImportFile end with error:")
+		slog.Error("the field esiFile.list[0].contentBase64 is not found.")
 		return "","",common.ResultWrongRequest
 	}
 	fileContent,ok:=fileContentInterface.(string)
 	if !ok {
-		log.Println("EsiController getImportFile end with error:")
-		log.Println("can not onvert esiFile.list[0].contentBase64 to string.")
+		slog.Error("EsiController getImportFile end with error:")
+		slog.Error("can not onvert esiFile.list[0].contentBase64 to string.")
 		return "","",common.ResultWrongRequest
 	}
 
@@ -118,7 +118,7 @@ func (controller *EsiController)checkImportFile(appDB,modelID,fileName string)(i
 }
 
 func (controller *EsiController)esiImport(c *gin.Context){
-	log.Println("EsiController import start")
+	slog.Debug("EsiController import start")
 
 	//获取相关参数
 	userRoles:= c.MustGet("userRoles").(string)
@@ -131,19 +131,15 @@ func (controller *EsiController)esiImport(c *gin.Context){
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println(err)
+		slog.Error("EsiController import end with error","error",err)
 		return
-    }
-
-	log.Printf("loadESIModel model:%s,Specific:%s",req.ModelID,req.Specific)
+  }
 
 	if len(req.ModelID)==0 {
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("modelDI is nil")
+		slog.Error("EsiController import end with error","error","modelDI is nil")
 		return
 	}
 
@@ -151,8 +147,7 @@ func (controller *EsiController)esiImport(c *gin.Context){
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("list is empty")
+		slog.Error("EsiController import end with error","error","list is empty")
 		return
 	}
 
@@ -163,8 +158,7 @@ func (controller *EsiController)esiImport(c *gin.Context){
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("getImportFile error")
+		slog.Error("EsiController import end with error","error","getImportFile error")
 		return
 	}
 	//检查对应的文件名称如果已经导入过则不允许导入
@@ -172,8 +166,7 @@ func (controller *EsiController)esiImport(c *gin.Context){
 	if errorCode!=common.ResultSuccess {
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("EsiController import end with error:")
-		log.Println("checkImportFile error")
+		slog.Error("EsiController import end with error","error","checkImportFile error")
 		return
 	}
 
@@ -192,10 +185,10 @@ func (controller *EsiController)esiImport(c *gin.Context){
 	result,commonErr:=esiImport.doImport()
 	rsp:=common.CreateResponse(commonErr,result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("EsiController import end")
+	slog.Debug("EsiController import end")
 }
 
 func (controller *EsiController) Bind(router *gin.Engine) {
-	log.Println("Bind EsiController")
+	slog.Info("Bind EsiController")
 	router.POST("/esi/import", controller.esiImport)
 }

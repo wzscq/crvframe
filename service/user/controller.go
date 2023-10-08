@@ -1,7 +1,7 @@
 package user
 
 import (
-	"log"
+	"log/slog"
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
 	"crv/frame/definition"
@@ -73,7 +73,7 @@ func (controller *UserController)cacheLoginToken(userID string,token string,appD
 			
 	err:=controller.LoginCache.SetCache(userID,token,appDB,userRoles)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return common.ResultCreateTokenError
 	}
 		
@@ -81,37 +81,34 @@ func (controller *UserController)cacheLoginToken(userID string,token string,appD
 }
 
 func (controller *UserController)getAppDB(appID string)(string,int){
-	log.Println("start user getAppDB")
+	slog.Debug("start user getAppDB")
 	appDB,err:=controller.AppCache.GetAppDB(appID)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return "",common.ResultAppDBError
 	}
-	log.Println(appDB)
-	log.Println("end user getAppDB")
+	slog.Debug("end user getAppDB","appDB",appDB)
 	return appDB,common.ResultSuccess
 }
 
 func (controller *UserController)login(c *gin.Context) {
-	log.Println("start user login")
+	slog.Debug("start user login")
 	var rep loginRep
 	var errorCode int
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
-
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end user login with error")
+		slog.Error("end user login with error","error",err)
 		return 
   }
 		
-	log.Println(rep)
+	slog.Debug("request content","req",rep)
 	var appDB string
 	appDB,errorCode=controller.getAppDB(rep.AppID)
 	if(errorCode != common.ResultSuccess){
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end user login with error")
+		slog.Error("end user login with error","errorCode",errorCode,"message",rsp.Message)
 		return
 	}
 
@@ -121,7 +118,7 @@ func (controller *UserController)login(c *gin.Context) {
 	if(errorCode != common.ResultSuccess){
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end user login with error")
+		slog.Error("end user login with error","errorCode",errorCode,"message",rsp.Message)
 		WriteLoginLog(appDB,ip,rep.UserID,"fail",controller.UserRepository,controller.OperationLogApps)
 		return
 	}
@@ -130,7 +127,7 @@ func (controller *UserController)login(c *gin.Context) {
 	if(errorCode != common.ResultSuccess){
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end user login with error")
+		slog.Error("end user login with error","errorCode",errorCode,"message",rsp.Message)
 		WriteLoginLog(appDB,ip,rep.UserID,"fail",controller.UserRepository,controller.OperationLogApps)
 		return
 	}
@@ -159,11 +156,11 @@ func (controller *UserController)login(c *gin.Context) {
 
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end user login")
+	slog.Debug("end user login")
 }
 
 func (controller *UserController) logout(c *gin.Context) {
-	log.Println("start user logout")
+	slog.Debug("start user logout")
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
 	controller.LoginCache.RemoveUser(appDB,userID)
@@ -174,18 +171,18 @@ func (controller *UserController) logout(c *gin.Context) {
 	ip:=GetIP(c)
 	WriteLogoutLog(appDB,ip,userID,"success",controller.UserRepository,controller.OperationLogApps)
 
-	log.Println("end user logout")
+	slog.Debug("end user logout")
 }
 
 func (controller *UserController) changePassword(c *gin.Context) {
-	log.Println("start user changePassword")
+	slog.Debug("start user changePassword")
 	var errorCode int
 	var rep changePasswordRep	
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		errorCode=common.ResultWrongRequest
 	} else {
-		log.Println(rep)
+		slog.Debug("request conent","req",rep)
 		userID:= c.MustGet("userID").(string)
 		appDB:= c.MustGet("appDB").(string)
 		_,errorCode=controller.checkUserPassword(userID,rep.Password,appDB)
@@ -199,11 +196,11 @@ func (controller *UserController) changePassword(c *gin.Context) {
 	}
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end user changePassword")
+	slog.Debug("end user changePassword")
 }
 
 func (controller *UserController) Bind(router *gin.Engine) {
-	log.Println("Bind UserController")
+	slog.Info("Bind UserController")
 	router.POST("/user/login", controller.login)
 	router.POST("/user/logout", controller.logout)
 	router.POST("/user/changePassword", controller.changePassword)

@@ -1,7 +1,7 @@
 package flow
 
 import (
-	"log"
+	"log/slog"
 	"crv/frame/common"
 	"crv/frame/data"
 )
@@ -66,19 +66,19 @@ func (flow *flowInstance)runNode(dataRepo data.DataRepository,node *instanceNode
 	//根据节点类型，找到对应的节点，然后执行节点
 	nodeCfg:=flow.getNodeConfig(node.ID)
 	if nodeCfg==nil {
-		log.Println("can not find the node config with id: ",node.ID)		
+		slog.Error("can not find the node config with id","id",node.ID)		
 		return nil,common.CreateError(common.ResultNoNodeOfGivenID,nil)
 	}
 	executor:=getExecutor(nodeCfg,dataRepo)
 	if executor==nil {
-		log.Println("can not find the node executor with type: ",nodeCfg.Type)
+		slog.Error("can not find the node executor with type","type",nodeCfg.Type)
 		return nil,common.CreateError(common.ResultNoExecutorForNodeType,nil)
 	}
 	return executor.run(flow,node,req,userID,userRoles,userToken)
 }
 
 func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowReqRsp,userID,userRoles,userToken string)(*flowReqRsp,*common.CommonError){
-	log.Println("start flowInstance push")
+	slog.Debug("start flowInstance push")
 	//每个节点的执行都包含两个步骤，启动和结束，
 	//先判断当前正在执行的节点（ExecutedNodes中最后一个节点）是否存在，如果存在则加载这个节点并运行
 	//如果ExecutedNodes中没有节点，则从FlowConf中获取第一个节点（一般都应该是start节点）加载运行
@@ -111,6 +111,6 @@ func (flow *flowInstance)push(dataRepo data.DataRepository,flowRep* flowReqRsp,u
 		}
 	}
 	
-	log.Println("end flowInstance push")
+	slog.Debug("end flowInstance push")
 	return nil,nil
 }

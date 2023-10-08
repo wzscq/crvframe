@@ -1,7 +1,7 @@
 package report
 
 import (
-	"log"
+	"log/slog"
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
 	"crv/frame/definition"
@@ -26,13 +26,12 @@ type ReportController struct {
 }
 
 func (controller *ReportController) query(c *gin.Context) {
-	log.Println("start report query")
+	slog.Debug("start report query")
 	var req ReportReq
 	if err := c.BindJSON(&req); err != nil {
-		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end report query with error")
+		slog.Error("end report query with error","error",err)
 		return
   }
 
@@ -45,7 +44,7 @@ func (controller *ReportController) query(c *gin.Context) {
 	if err!=nil {
 		rsp:=common.CreateResponse(err,nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end report query with error")
+		slog.Error("end report query with error","error",err)
 		return
 	}
 
@@ -54,7 +53,7 @@ func (controller *ReportController) query(c *gin.Context) {
 	if commonErr!=nil {
 		rsp:=common.CreateResponse(commonErr,nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end report query with error")
+		slog.Error("end report query with error","error",commonErr)
 		return
 	}
 
@@ -66,10 +65,10 @@ func (controller *ReportController) query(c *gin.Context) {
 	
 	rsp:=common.CreateResponse(nil,result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end report query")
+	slog.Debug("end report query")
 }
 
 func (controller *ReportController) Bind(router *gin.Engine) {
-	log.Println("Bind ReportController")
+	slog.Info("Bind ReportController")
 	router.POST("/report/query", controller.query)
 }

@@ -1,7 +1,7 @@
 package definition
 
 import (
-	"log"
+	"log/slog"
 	"encoding/json"
 	"os"
 	"crv/frame/common"
@@ -191,7 +191,7 @@ func (m *model)getModelConf(modelID string)(*modelConf,int){
 	modelFile := "apps/"+m.AppDB+"/models/"+modelID+"/model.json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		return nil,common.ResultOpenFileError
 	}
 	defer filePtr.Close()
@@ -199,7 +199,7 @@ func (m *model)getModelConf(modelID string)(*modelConf,int){
 	decoder := json.NewDecoder(filePtr)
 	err = decoder.Decode(&mConf)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return nil,common.ResultJsonDecodeError
 	}
 
@@ -211,7 +211,7 @@ func (m *model)getPermissions(modelID,userRoles string)(*permissions,int){
 	modelFile := "apps/"+m.AppDB+"/models/"+modelID+"/permissions.json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		return nil,common.ResultOpenFileError
 	}
 	defer filePtr.Close()
@@ -219,7 +219,7 @@ func (m *model)getPermissions(modelID,userRoles string)(*permissions,int){
 	decoder := json.NewDecoder(filePtr)
 	err = decoder.Decode(&ps)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return nil,common.ResultJsonDecodeError
 	}
 
@@ -235,7 +235,7 @@ func (m *model)getModelView(modelID,viewID string)(*viewConf,int){
 	viewFile := "apps/"+m.AppDB+"/models/"+modelID+"/views/"+viewID+".json"
 	filePtr, err := os.Open(viewFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		return nil,common.ResultOpenFileError
 	}
 	defer filePtr.Close()
@@ -243,7 +243,7 @@ func (m *model)getModelView(modelID,viewID string)(*viewConf,int){
 	decoder := json.NewDecoder(filePtr)
 	err = decoder.Decode(&view)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return nil,common.ResultJsonDecodeError
 	}
 
@@ -255,7 +255,7 @@ func (m *model)getModelOperation(modelID,operationID string)(*OperationConf,int)
 	operationFile := "apps/"+m.AppDB+"/models/"+modelID+"/operations/"+operationID+".json"
 	filePtr, err := os.Open(operationFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		return nil,common.ResultOpenFileError
 	}
 	defer filePtr.Close()
@@ -263,7 +263,7 @@ func (m *model)getModelOperation(modelID,operationID string)(*OperationConf,int)
 	decoder := json.NewDecoder(filePtr)
 	err = decoder.Decode(&op)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return nil,common.ResultJsonDecodeError
 	}
 
@@ -293,7 +293,7 @@ func (m *model)getModelOperations(modelID string,operations []permissionOperatio
 }
 
 func (m *model)getModelViewConfV2(modelID string,views *[]string,userRoles string)(modelViewConf,int){
-	log.Println("getModelViewConfV2 start")
+	slog.Debug("getModelViewConfV2 start")
 	var mvConf modelViewConf
 	modelConf,err:=m.getModelConf(modelID)
 	if err!=common.ResultSuccess {
@@ -327,7 +327,7 @@ func (m *model)getModelViewConf(modelID string,views *[]string,userRoles string)
 	modelFile := "apps/"+m.AppDB+"/models/"+modelID+".json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		if os.IsNotExist(err) {
 			return m.getModelViewConfV2(modelID,views,userRoles)
 		}
@@ -338,7 +338,7 @@ func (m *model)getModelViewConf(modelID string,views *[]string,userRoles string)
 	decoder := json.NewDecoder(filePtr)
 	err = decoder.Decode(&mvConf)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return mvConf,common.ResultJsonDecodeError
 	}
 
@@ -370,7 +370,7 @@ func (m *model)loadModelForm(modelID,formID string)(formConf,int){
 	formFile := "apps/"+m.AppDB+"/models/"+modelID+"/forms/"+formID+".json"
 	filePtr, err := os.Open(formFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		return form,common.ResultOpenFileError
 	}
 	defer filePtr.Close()
@@ -378,7 +378,7 @@ func (m *model)loadModelForm(modelID,formID string)(formConf,int){
 	decoder := json.NewDecoder(filePtr)
 	err = decoder.Decode(&form)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return form,common.ResultJsonDecodeError
 	}
 
@@ -386,7 +386,7 @@ func (m *model)loadModelForm(modelID,formID string)(formConf,int){
 }
 
 func (m *model)getModelFormConfV2(modelID,formID,userRoles string)(modelFormConf,int){
-	log.Println("getModelFormConfV2 start")
+	slog.Debug("getModelFormConfV2 start")
 	var mfConf modelFormConf
 	modelConf,err:=m.getModelConf(modelID)
 	if err!=common.ResultSuccess {
@@ -419,7 +419,7 @@ func (m *model)getModelFormConf(modelID,formID,userRoles string)(modelFormConf,i
 	modelFile := "apps/"+m.AppDB+"/models/"+modelID+".json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		if os.IsNotExist(err) {
 			return m.getModelFormConfV2(modelID,formID,userRoles)
 		}
@@ -430,7 +430,7 @@ func (m *model)getModelFormConf(modelID,formID,userRoles string)(modelFormConf,i
 	decoder := json.NewDecoder(filePtr)
 	err = decoder.Decode(&mfConf)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return mfConf,common.ResultJsonDecodeError
 	}
 

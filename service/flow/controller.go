@@ -1,7 +1,7 @@
 package flow
 
 import (
-	"log"
+	"log/slog"
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
 	"crv/frame/data"
@@ -36,7 +36,7 @@ type repHeader struct {
 }
 
 func (controller *FlowController)start(c *gin.Context){
-	log.Println("start FlowController start")
+	slog.Debug("start FlowController start")
 	//获取相关参数
 	userRoles:= c.MustGet("userRoles").(string)
 	userID:= c.MustGet("userID").(string)
@@ -46,19 +46,17 @@ func (controller *FlowController)start(c *gin.Context){
 	var result *flowReqRsp
 	var header repHeader
 	if err := c.ShouldBindHeader(&header); err != nil {
-		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end FlowController start")
+		slog.Error("end FlowController start with error","error",err)
 		return
 	}
 
 	var rep flowReqRsp
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end FlowController start")
+		slog.Error("end FlowController start with error","error",err)
 		return
 	} 
 
@@ -66,7 +64,7 @@ func (controller *FlowController)start(c *gin.Context){
 	if rep.FlowID == nil || len(*(rep.FlowID))==0 {
 		rsp:=common.CreateResponse(common.CreateError(common.ResultStartFlowWithoutID,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end FlowController start")
+		slog.Debug("end FlowController start")
 		return
 	}
 
@@ -75,10 +73,10 @@ func (controller *FlowController)start(c *gin.Context){
 	if errorCode!=common.ResultSuccess {
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end FlowController start")
+		slog.Error("end FlowController start with error","error",errorCode)
 		return
 	}
-	log.Println("userToken:",token)
+	slog.Debug("FlowController start","userToken:",token)
 	//执行流
 	result,err:=flowInstance.push(controller.DataRepository,&rep,userID,userRoles,token)
 
@@ -88,14 +86,14 @@ func (controller *FlowController)start(c *gin.Context){
 		if err!=nil {
 			rsp:=common.CreateResponse(common.CreateError(common.ResultCacheFlowInstanceError,nil),result)
 			c.IndentedJSON(http.StatusOK, rsp)
-			log.Println("end FlowController start")
+			slog.Error("end FlowController start with error","error",err)
 			return
 		}
 	}
 	
 	rsp:=common.CreateResponse(err,result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end FlowController start")
+	slog.Debug("end FlowController start")
 }
 
 func (controller *FlowController)terminate(c *gin.Context){
@@ -103,7 +101,7 @@ func (controller *FlowController)terminate(c *gin.Context){
 }
 
 func (controller *FlowController)push(c *gin.Context){
-	log.Println("start FlowController push")
+	slog.Debug("start FlowController push")
 	//继续一个流的执行，这种情况一般时流的执行需要人为干预，填写一些数据
 	//也可以时流执行导某个步骤失败后，人工维护了数据后继续执行
 	//要推动一个流，需要至少提供一个流实例的ID，对于某些节点还需要提供stage
@@ -111,24 +109,22 @@ func (controller *FlowController)push(c *gin.Context){
 	userID:= c.MustGet("userID").(string)
 	token:=c.MustGet("userToken").(string)
 
-	log.Println("userToken:",token)
+	slog.Debug("FlowController push","userToken:",token)
 	//appDB:= c.MustGet("appDB").(string)
 	var result *flowReqRsp
 	var header repHeader
 	if err := c.ShouldBindHeader(&header); err != nil {
-		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end FlowController start")
+		slog.Error("end FlowController push with error","error",err)
 		return
 	}
 
 	var rep flowReqRsp
 	if err := c.BindJSON(&rep); err != nil {
-		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end FlowController push")
+		slog.Error("end FlowController push with error","error",err)
 		return
 	} 
 
@@ -136,7 +132,7 @@ func (controller *FlowController)push(c *gin.Context){
 	if rep.FlowInstanceID == nil || len(*(rep.FlowInstanceID))==0 {
 		rsp:=common.CreateResponse(common.CreateError(common.ResultPushFlowWithoutID,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end FlowController push")
+		slog.Error("end FlowController push with error","error",common.ResultPushFlowWithoutID)
 		return
 	}	
 
@@ -145,7 +141,7 @@ func (controller *FlowController)push(c *gin.Context){
 	if err!=nil {
 		rsp:=common.CreateResponse(common.CreateError(common.ResultLoadFlowInstanceError,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end FlowController push")
+		slog.Error("end FlowController push with error","error",err)
 		return
 	}
 
@@ -158,18 +154,18 @@ func (controller *FlowController)push(c *gin.Context){
 		if err!=nil {
 			rsp:=common.CreateResponse(common.CreateError(common.ResultCacheFlowInstanceError,nil),result)
 			c.IndentedJSON(http.StatusOK, rsp)
-			log.Println("end FlowController push")
+			slog.Error("end FlowController push with error","error",err)
 			return
 		}
 	}
 	
 	rsp:=common.CreateResponse(commonErr,result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end FlowController push")
+	slog.Debug("end FlowController push")
 }
 
 func (controller *FlowController) Bind(router *gin.Engine) {
-	log.Println("Bind FlowController")
+	slog.Info("Bind FlowController")
 	router.POST("/flow/start", controller.start)
 	router.POST("/flow/terminate", controller.terminate)
 	router.POST("/flow/push", controller.push)

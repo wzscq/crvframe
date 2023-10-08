@@ -4,7 +4,7 @@ import (
     "time"
 	"crv/frame/common"
 	"crv/frame/data"
-	"log"
+	"log/slog"
 	"encoding/json"
 )
 
@@ -32,13 +32,13 @@ func (nodeExecutor *nodeExecutorMerge)getNodeConf()(*mergeConf){
 	mapData,_:=nodeExecutor.NodeConf.Data.(map[string]interface{})
 	jsonStr, err := json.Marshal(mapData)
     if err != nil {
-        log.Println(err)
+			slog.Error(err.Error())
 		return nil
     }
-	log.Println(string(jsonStr))
+	slog.Debug(string(jsonStr))
 	conf:=&mergeConf{}
     if err := json.Unmarshal(jsonStr, conf); err != nil {
-        log.Println(err)
+			slog.Error(err.Error())
 		return nil
     }
 
@@ -47,7 +47,7 @@ func (nodeExecutor *nodeExecutorMerge)getNodeConf()(*mergeConf){
 
 func (nodeExecutor *nodeExecutorMerge)getValueOfSelectedRowKeys(nodeData *flowReqRsp)(*flowReqRsp){
 	if nodeData.SelectedRowKeys == nil || len(*nodeData.SelectedRowKeys)==0 {
-		log.Println("nodeExecutorMerge getValueOfSelectedRowKeys SelectedRowKeys is empty.")
+		slog.Error("nodeExecutorMerge getValueOfSelectedRowKeys SelectedRowKeys is empty.")
 		return nil
 	}
 
@@ -79,7 +79,7 @@ func (nodeExecutor *nodeExecutorMerge)getFieldValue(
 	instance *flowInstance)(interface{}){
 	fieldSource:=nodeExecutor.getFlowData(fieldConf.FieldSource,instance)
 	if fieldSource==nil {
-		log.Println("nodeExecutorMerge getFieldValue nil :"+fieldConf.FieldSource)
+		slog.Error("nodeExecutorMerge getFieldValue nil","FieldSource",fieldConf.FieldSource)
 		return nil
 	}
 
@@ -91,7 +91,7 @@ func (nodeExecutor *nodeExecutorMerge)getFieldValue(
 		return nodeExecutor.getValueOfSave(fieldSource)
 	}
 
-	log.Println("nodeExecutorMerge getFieldValue not supported ValueType:"+fieldConf.ValueType)
+	slog.Error("nodeExecutorMerge getFieldValue not supported ValueType:"+fieldConf.ValueType)
 	return nil
 }
 
@@ -146,7 +146,7 @@ func (nodeExecutor *nodeExecutorMerge)getFlowData(
 			if ok {
 				return nodeExecutor.getFlowDataFromMap(flowData)
 			}
-			log.Println("nodeExecutorMerge getFlowData cannot convert outdata to flowReqRsp source is "+source)
+			slog.Error("nodeExecutorMerge getFlowData cannot convert outdata to flowReqRsp ","source",source)
 			return nil
 		}
 	}

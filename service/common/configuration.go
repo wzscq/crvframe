@@ -44,10 +44,19 @@ type OperationLogConf struct {
 	Apps []string `json:"apps"`
 }
 
+type FileOptionConf struct {
+	MaxSize int `json:"maxSize"`
+	MaxBackups int `json:"maxBackups"`
+	MaxAge int `json:"maxAge"`
+	Compress bool `json:"compress"`
+	LocalTime bool `json:"localTime"`
+	Filename string `json:"filename"`
+}
+
 type LogConf struct {
 	Level string `json:"level"`
 	WriteFile bool `json:"writeFile"`
-	FilePath string `json:"filePath"`
+	FileOptions FileOptionConf `json:"fileOptions"`
 }
 
 type Config struct {

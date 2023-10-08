@@ -1,7 +1,7 @@
 package oauth
 
 import (
-	"log"
+	"log/slog"
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
 	"crv/frame/definition"
@@ -54,24 +54,23 @@ const (
 )
 
 func (controller *OAuthController) getLoginPage(c *gin.Context) {
-	log.Println("start OAuthController getLoginPage")
+	slog.Debug("start OAuthController getLoginPage")
 	var req getLoginPageReq
 	var errorCode int
 	if err := c.BindJSON(&req); err != nil {
-		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController getLoginPage with error")
+		slog.Error("end OAuthController getLoginPage with error","error",err)
 		return 
-    }
+  }
 		
-	log.Println(req)
+	slog.Debug("request content","req",req)
 	var appDB string
 	appDB,errorCode=getAppDB(controller.AppCache,req.AppID)
 	if(errorCode != common.ResultSuccess){
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController getLoginPage with error")
+		slog.Error("end OAuthController getLoginPage with error","errorCode",errorCode)
 		return
 	}
 
@@ -79,7 +78,7 @@ func (controller *OAuthController) getLoginPage(c *gin.Context) {
 	if(errorCode != common.ResultSuccess){
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController getLoginPage with error")
+		slog.Error("end OAuthController getLoginPage with error","errorCode",errorCode)
 		return
 	}
 
@@ -89,28 +88,27 @@ func (controller *OAuthController) getLoginPage(c *gin.Context) {
 
 	rsp:=common.CreateResponse(nil,result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end OAuthController getLoginPage")
+	slog.Debug("end OAuthController getLoginPage")
 }
 
 func (controller *OAuthController)login(c *gin.Context) {
-	log.Println("start OAuthController login")
+	slog.Debug("start OAuthController login")
 	var req oauthLoginReq
 	var errorCode int
 	if err := c.BindJSON(&req); err != nil {
-		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController login with error")
+		slog.Error("end OAuthController login with error","error",err)
 		return 
     }
 
-	log.Println(req)
+	slog.Debug("request content","req",req)
 	var appDB string
 	appDB,errorCode=getAppDB(controller.AppCache,req.AppID)
 	if(errorCode != common.ResultSuccess){
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController login with error")
+		slog.Error("end OAuthController login with error","errorCode",errorCode)
 		return
 	}
 	
@@ -121,33 +119,32 @@ func (controller *OAuthController)login(c *gin.Context) {
 	if(errorCode != common.ResultSuccess){
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController login with error")
+		slog.Error("end OAuthController login with error","errorCode",errorCode)
 		return
 	}
 
 	//重定向web到给定的回调地址
 	url:=req.RedirectUri+"?code="+token
 	c.Redirect(http.StatusMovedPermanently, url)
-	log.Println("end OAuthController login")
+	slog.Debug("end OAuthController login")
 }
 
 func (controller *OAuthController)back(c *gin.Context) {
-	log.Println("start OAuthController back")
+	slog.Debug("start OAuthController back")
 	var req oauthBackReq
 	if err := c.BindJSON(&req); err != nil {
-		log.Println(err)
 		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController back with error")
+		slog.Error("end OAuthController back with error","error",err)
 		return 
-    }
+  }
 		
-	log.Println(req)
+	slog.Debug("request content","req",req)
 	appDB,errorCode:=getAppDB(controller.AppCache,req.AppID)
 	if(errorCode != common.ResultSuccess){
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController back with error")
+		slog.Error("end OAuthController back with error","errorCode",errorCode)
 		return
 	}
 	
@@ -156,7 +153,7 @@ func (controller *OAuthController)back(c *gin.Context) {
 	if err!=nil {
 		rsp:=common.CreateResponse(err,nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController back with error")
+		slog.Error("end OAuthController back with error","error",err)
 		return
 	}
 
@@ -165,68 +162,64 @@ func (controller *OAuthController)back(c *gin.Context) {
 	if err!=nil {
 		rsp:=common.CreateResponse(err,nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController back with error")
+		slog.Error("end OAuthController back with error","error",err)
 		return
 	}
-	log.Println(userID)
+	slog.Debug("get userid","userid",userID)
 	//获取本地用户信息，生成本地token，
 	result,err:=localLogin(controller.UserRepository,controller.LoginCache,req.AppID,appDB,userID)
 	if err!=nil {
 		rsp:=common.CreateResponse(err,nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end OAuthController back with error")
+		slog.Error("end OAuthController back with error","error",err)
 		return
 	}
 	
 	rsp:=common.CreateResponse(nil,result)
 	c.IndentedJSON(http.StatusOK, rsp)
-	log.Println("end OAuthController back")
+	slog.Debug("end OAuthController back")
 }
 
 func (controller *OAuthController)accessToken(c *gin.Context){
 	//这里暂时不对client密码做校验
-	log.Println("start OAuthController accessToken")
+	slog.Debug("start OAuthController accessToken")
 	var req accessTokenReq
 	if err := c.ShouldBind(&req); err != nil {
-		log.Println(err)
 		c.IndentedJSON(http.StatusBadRequest, nil)
-		log.Println("end OAuthController accessToken with error")
+		slog.Error("end OAuthController accessToken with error","error",err)
 		return 
-    }	
-	log.Println(req)
+  }	
+	slog.Debug("request content","req",req)
 	//这里不做处理，直接将code作为token返回
 	token:=&OauthToken{
 		AccessToken:req.Code,
 	}
 	//rsp:=common.CreateResponse(nil,token)
 	c.IndentedJSON(http.StatusOK, token)
-	log.Println("end OAuthController accessToken")
+	slog.Debug("end OAuthController accessToken")
 }
 
 func (controller *OAuthController)userInfo(c *gin.Context){
-	log.Println("start OAuthController userInfo")
+	slog.Debug("start OAuthController userInfo")
 	var req userInfoReq
 	if err := c.ShouldBindHeader(&req); err != nil {
-		log.Println(err)
 		c.IndentedJSON(http.StatusBadRequest, nil)
-		log.Println("end OAuthController userInfo with error")
+		slog.Error("end OAuthController userInfo with error","error",err)
 		return 
-    }	
-	log.Println(req)
+  }	
+	slog.Debug("request content","req",req)
 	if len(req.Authorization)<7 {
-		log.Println("OAuthController userInfo request token is too short")
 		c.IndentedJSON(http.StatusBadRequest, nil)
-		log.Println("end OAuthController userInfo with error")
+		slog.Error("end OAuthController userInfo with error","error","OAuthController userInfo request token is too short")
 		return 
 	}
 	token:=req.Authorization[6:]
-	log.Println("token is:",token)
+	slog.Debug("token is","token",token)
 	
 	userID,err:=controller.OAuthCache.GetUserID(token)
 	if err!=nil {
-		log.Println("OAuthController userInfo GetUserID error",err)
+		slog.Error("OAuthController userInfo GetUserID error","error",err)
 		c.IndentedJSON(http.StatusBadRequest, nil)
-		log.Println("end OAuthController userInfo with error")
 		return 
 	}
 
@@ -235,11 +228,11 @@ func (controller *OAuthController)userInfo(c *gin.Context){
 	}
 	//rsp:=common.CreateResponse(nil,token)
 	c.IndentedJSON(http.StatusOK, result)
-	log.Println("end OAuthController userInfo")
+	slog.Debug("end OAuthController userInfo")
 }
 
 func (controller *OAuthController) Bind(router *gin.Engine) {
-	log.Println("Bind OAuthController")
+	slog.Info("Bind OAuthController")
 	router.POST("/oauth/getLoginPage", controller.getLoginPage)
 	router.POST("/oauth/login", controller.login)
 	router.POST("/oauth/back", controller.back)

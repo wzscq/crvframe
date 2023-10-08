@@ -3,7 +3,7 @@ package definition
 import (
 	"crv/frame/common"
 	"os"
-	"log"
+	"log/slog"
 	"encoding/json"
 )
 
@@ -53,7 +53,7 @@ func (f *function)getUserFunction(userRoles string)([]functionGroup,int){
 	formFile := "apps/"+f.AppDB+"/functions/function.json"
 	filePtr, err := os.Open(formFile)
 	if err != nil {
-        log.Println("Open file failed [Err:%s]", err.Error())
+        slog.Error("Open file failed","error", err)
         return nil,common.ResultOpenFileError
     }
     defer filePtr.Close()
@@ -63,7 +63,7 @@ func (f *function)getUserFunction(userRoles string)([]functionGroup,int){
     decoder := json.NewDecoder(filePtr)
     err = decoder.Decode(&fGroups)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return nil,common.ResultJsonDecodeError
 	}
 

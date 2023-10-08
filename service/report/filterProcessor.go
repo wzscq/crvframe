@@ -3,10 +3,11 @@ package report
 import (
 	"crv/frame/common"
 	"encoding/json"
-	"log"
+	"log/slog"
 	"regexp"
 	"strings"
 	"fmt"
+	"reflect"
 )
 
 /*
@@ -16,38 +17,34 @@ import (
 func processFilter(
 	sql,userID,userRoles string,
 	filterData *map[string]interface{})(string,int){
-	log.Println("processFilter start")
+	slog.Debug("processFilter start")
 	
 	replacedSql,_:=replaceFilterString(sql,filterData,userID,userRoles)
 
-	log.Println("processFilter end")
+	slog.Debug("processFilter end")
 	return replacedSql,common.ResultSuccess
 }
 
 func replaceFilterString(filter string,filterData *map[string]interface{},userID ,userRoles string)(string,bool){
 	//识别出过滤参数中的
-	log.Printf("replaceFilterString start\n")
-	log.Println(filter)
+	slog.Debug("replaceFilterString start","filter",filter)
 	re := regexp.MustCompile(`%{([A-Z|a-z|_|0-9|.]*)}`)
 	replaceItems:=re.FindAllStringSubmatch(filter,-1)
 	replaced:=false
 	if replaceItems!=nil {
 		for _,replaceItem:=range replaceItems {
-			log.Printf("replaceFilterString replaceItem:%s,%s \n",replaceItem[0],replaceItem[1])
 			repalceStr:=getReplaceString(replaceItem[1],filterData,userID ,userRoles)
 			filter=strings.Replace(filter,replaceItem[0],repalceStr,-1)
 		}
 		replaced=true
 	}
-	log.Printf("replaceFilterString end\n")
-	log.Println(filter)
+	slog.Debug("replaceFilterString end","filter",filter)
 	return filter,replaced
 }
 
 func getReplaceString(filterItem string,filterData *map[string]interface{},userID ,userRoles string)(string){
 	filterRoles:=userRoles;
 	filterRoles=strings.Replace(filterRoles,",","\",\"",-1)
-	log.Println(filterRoles)
 
 	if filterItem=="userID" {
 		return userID
@@ -100,7 +97,6 @@ func getfilterDataString(path string,data *map[string]interface{})(string){
 	//将value转为豆号分割的字符串
 	if len(values)>0 {
 		valueStr:=strings.Join(values, "\",\"")
-		log.Println(valueStr)
 		return valueStr
 	}
 	return path
@@ -110,11 +106,11 @@ func getPathData(path []string,level int,data *map[string]interface{},values *[]
 	pathNode:=path[level]
 
 	dataStr, _ := json.Marshal(data)
-	log.Printf("getPathData pathNode:%s,level:%d,data:%s",pathNode,level,string(dataStr))
+	slog.Debug("getPathData","pathNode",pathNode,"level",level,"dataStr",string(dataStr))
 
 	dataNode,ok:=(*data)[pathNode]
 	if !ok {
-		log.Println("getPathData no pathNode ",pathNode)
+		slog.Error("getPathData no pathNode ","pathNode",pathNode)
 		return
 	}
 
@@ -129,29 +125,26 @@ func getPathData(path []string,level int,data *map[string]interface{},values *[]
 				sVal:=fmt.Sprintf("%d",iVal)
 				*values=append(*values,sVal) 
 			default:
-				log.Printf("getPathData not supported value type %T!\n", dataNode)
+				slog.Error("getPathData not supported value type", "type",reflect.TypeOf(dataNode))
 		}
 	} else {
 		//如果不是最后一级，则数据中应该存在list属性
-		log.Printf("dataNode type is %T",dataNode)
+		slog.Debug("dataNode type","type",reflect.TypeOf(dataNode))
 		result,ok:=dataNode.(map[string]interface{})
 		if !ok {
-			log.Println("getPathData dataNode is not a map[string]interface{} ")
+			slog.Error("getPathData dataNode is not a map[string]interface{} ")
 			return
 		}
 
 		list,ok:=result["list"].([]interface{})
 		if !ok {
-			log.Println("getPathData dataNode do not contain the list eleemnt ")
+			slog.Error("getPathData dataNode do not contain the list element ")
 			return
 		}
 
 		for _,row:=range list {
-			if ok {
-				log.Println("getPathData dataNode list member is not a map ")
-				rowMap,_:=row.(map[string]interface{})
-				getPathData(path,level+1,&rowMap,values)
-			}
+			rowMap,_:=row.(map[string]interface{})
+			getPathData(path,level+1,&rowMap,values)
 		}
 		return
 	}

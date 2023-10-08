@@ -1,7 +1,7 @@
 package definition
 
 import (
-	"log"
+	"log/slog"
 	"encoding/json"
 	"os"
 	"crv/frame/common"
@@ -75,12 +75,12 @@ func MergeDatasets(datasets []Dataset)(*Dataset){
 }
 
 func GetUserDataset(appDB string,modelID string,userRoles string,opType string)(*Dataset,int){
-	log.Println("start GetUserDataset with parameters:",appDB,modelID,userRoles,opType)
+	slog.Debug("start GetUserDataset with parameters:","appDB",appDB,"modelID",modelID,"userRoles",userRoles,"opType",opType)
 
 	modelFile := "apps/"+appDB+"/models/"+modelID+".json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		if os.IsNotExist(err) {
 			modelFile = "apps/"+appDB+"/models/"+modelID+"/datasets.json"
 			filePtr, err = os.Open(modelFile)
@@ -97,14 +97,13 @@ func GetUserDataset(appDB string,modelID string,userRoles string,opType string)(
 	modelDataset:=ModelDataSet{}
 	err = decoder.Decode(&modelDataset)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error", err)
 		return nil,common.ResultJsonDecodeError
 	}
 
 	// 获取有权限的数据集
 	dsCount:=0
 	for dsIndex:=range modelDataset.Datasets {
-		log.Println(modelDataset.Datasets[dsIndex])
 		if HasRight(modelDataset.Datasets[dsIndex].MutationRoles,userRoles) || 
 		   (opType == DATA_OP_TYPE_QUERY && 
 		   HasRight(modelDataset.Datasets[dsIndex].QueryRoles,userRoles)) {
@@ -114,7 +113,7 @@ func GetUserDataset(appDB string,modelID string,userRoles string,opType string)(
 	}
 
 	if dsCount == 0 {
-		log.Println("end GetUserDataset no permission with parameters:",appDB,modelID,userRoles,opType)
+		slog.Error("end GetUserDataset no permission with parameters","appDB",appDB,"modelID",modelID,"userRoles",userRoles,"opType",opType)
 		return nil,common.ResultNoPermission
 	}
 
@@ -124,9 +123,9 @@ func GetUserDataset(appDB string,modelID string,userRoles string,opType string)(
 	dataset:=MergeDatasets(modelDataset.Datasets)
 
 	if dataset.Filter != nil {
-		log.Println("filter:", *dataset.Filter)	
+		slog.Debug("dataset.Filter","filter",dataset.Filter)	
 	}
-	log.Println("end GetUserDataset with result:", dataset)
+	slog.Debug("end GetUserDataset with result","result",dataset)
 
 	return dataset,common.ResultSuccess 
 }
@@ -135,7 +134,7 @@ func GetModelConf(appDB string,modelID string)(*ModelConf,int){
 	modelFile := "apps/"+appDB+"/models/"+modelID+".json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		if os.IsNotExist(err) {
 			modelFile = "apps/"+appDB+"/models/"+modelID+"/model.json"
 			filePtr, err = os.Open(modelFile)
@@ -152,7 +151,7 @@ func GetModelConf(appDB string,modelID string)(*ModelConf,int){
 	modelConf:=&ModelConf{}
 	err = decoder.Decode(modelConf)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return nil,common.ResultJsonDecodeError
 	}
 	
@@ -160,27 +159,23 @@ func GetModelConf(appDB string,modelID string)(*ModelConf,int){
 }
 
 func HasRight(roles *interface{},userRoles string)(bool){
-	log.Println("start HasRight with parameters:",roles,userRoles)
+	slog.Debug("start HasRight with parameters","roles",roles,"userRoles",userRoles)
 	
 	if roles == nil {
-		log.Println("end HasRight with nil roles")
+		slog.Debug("end HasRight with nil roles")
 		return false
 	}
-
-	log.Println("roels :",*roles)
 
 	userRoles=","+userRoles+","
 	rolesStr,ok:=(*roles).(string)
 	if ok {
 		if rolesStr == "*" {
-			log.Println("end HasRight with roles of *")
 			return true
 		}
 
 		if strings.Contains(userRoles,","+rolesStr+",") {
 			return true
 		}
-		log.Println("end HasRight with false")
 		return false
 	}
 
@@ -196,6 +191,6 @@ func HasRight(roles *interface{},userRoles string)(bool){
 		}
 	}
 
-	log.Println("end HasRight with false")
+	slog.Debug("end HasRight with false")
 	return false
 }

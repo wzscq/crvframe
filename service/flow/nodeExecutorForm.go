@@ -3,7 +3,7 @@ package flow
 import (
     "time"
 	"crv/frame/common"
-	"log"
+	"log/slog"
 	"encoding/json"
 )
 
@@ -24,13 +24,13 @@ func (nodeExecutor *nodeExecutorForm)getNodeConf()(*formParams){
 	mapData,_:=nodeExecutor.NodeConf.Data.(map[string]interface{})
 	jsonStr, err := json.Marshal(mapData)
     if err != nil {
-        log.Println(err)
+        slog.Error(err.Error())
 		return nil
     }
-	log.Println(string(jsonStr))
+	slog.Debug(string(jsonStr))
 	conf:=&formParams{}
     if err := json.Unmarshal(jsonStr, conf); err != nil {
-        log.Println(err)
+			slog.Error(err.Error())
 		return nil
     }
 

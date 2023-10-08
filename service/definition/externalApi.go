@@ -2,7 +2,7 @@ package definition
 
 import (
 	"os"
-	"log"
+	"log/slog"
 	"encoding/json"
 	"crv/frame/common"
 )
@@ -12,11 +12,11 @@ type apiItem struct {
 }
 
 func GetApiUrl(appDB,apiId string)(string,int){
-	log.Println("start getApiUrl ")
+	slog.Debug("start getApiUrl ")
 	apiConfigFile := "apps/"+appDB+"/external_api.json"
 	filePtr, err := os.Open(apiConfigFile)
 	if err != nil {
-		log.Println("Open file failed [Err:%s]", err.Error())
+		slog.Error("Open file failed","error",err)
 		return "",common.ResultOpenFileError
 	}
 	defer filePtr.Close()
@@ -25,14 +25,15 @@ func GetApiUrl(appDB,apiId string)(string,int){
 	apiConf:=map[string]apiItem{}
 	err = decoder.Decode(&apiConf)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return "",common.ResultJsonDecodeError
 	}
 
 	api,ok:=apiConf[apiId]
 	if !ok {
+		slog.Error("ResultNoExternalApiUrl")
 		return "",common.ResultNoExternalApiUrl
 	}
-	log.Println("end getApiUrl ",api.Url)
+	slog.Debug("end getApiUrl ","url",api.Url)
 	return api.Url,common.ResultSuccess
 }

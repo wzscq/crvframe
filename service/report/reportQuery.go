@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	"bytes"
-	"log"
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -69,11 +69,11 @@ func QueryByRequest(
 
 	postJson,_:=json.Marshal(req)
 	postBody:=bytes.NewBuffer(postJson)
-	log.Println("http.Post ",postUrl,string(postJson))
+	slog.Debug("http.Post ","postUrl",postUrl,"postJson",string(postJson))
 
 	httpRequest, err := http.NewRequest("POST",postUrl,postBody)
 	if err != nil {
-		log.Fatal("Error reading request. ", err)
+		slog.Error("Error reading request. ","error",err)
 		return nil,common.CreateError(common.ResultPostExternalApiError,nil)
 	}
 
@@ -88,17 +88,17 @@ func QueryByRequest(
 	resp, err := client.Do(httpRequest)
 
 	if err != nil || resp==nil || resp.StatusCode != 200 { 
-		log.Println(resp)
+		slog.Error("result post external api error","error",err,"resp",resp)
 		return nil,common.CreateError(common.ResultPostExternalApiError,nil)
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	log.Println("resp",string(body))
+	slog.Debug("resp","body",string(body))
 	
 	rsp:=&common.CommonRsp{}
 	if err := json.Unmarshal(body, rsp); err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return nil,common.CreateError(common.ResultReadExternalApiResultError,nil)
 	}
 

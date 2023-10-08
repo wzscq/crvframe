@@ -6,7 +6,7 @@ import (
 )
 
 func InitCRVLog(conf *common.LogConf){
-	logWriter:=&CRVLogWriter{WriteFile:conf.WriteFile}
+	logWriter:=&CRVLogWriter{WriteFile:conf.WriteFile,FileOptions:conf.FileOptions}
 	logger := slog.New(slog.NewJSONHandler(logWriter, &slog.HandlerOptions{Level:getLevel(conf.Level),AddSource:true}))
   slog.SetDefault(logger)
 }

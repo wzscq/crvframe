@@ -3,7 +3,7 @@ package oauth
 import (
 	"crv/frame/common"
 	"crv/frame/user"
-	"log"
+	"log/slog"
 	"database/sql"
 )
 
@@ -39,7 +39,7 @@ func cacheOAuthToken(
 	oauthCache *OAuthCache,userID,token,appDB,userRoles,clientID string)(int){
 	err:=oauthCache.SetCache(userID,token,appDB,userRoles,clientID)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return common.ResultCreateTokenError
 	}
 		
@@ -47,14 +47,13 @@ func cacheOAuthToken(
 }
 
 func getAppDB(appCache common.AppCache,appID string)(string,int){
-	log.Println("start OAuthController getAppDB")
+	slog.Debug("start OAuthController getAppDB")
 	appDB,err:=appCache.GetAppDB(appID)
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return "",common.ResultAppDBError
 	}
-	log.Println(appDB)
-	log.Println("end OAuthController getAppDB")
+	slog.Debug("end OAuthController getAppDB","appDB",appDB)
 	return appDB,common.ResultSuccess
 }
 

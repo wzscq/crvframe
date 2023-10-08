@@ -3,7 +3,7 @@ package flow
 import (
     "time"
 	"crv/frame/common"
-	"log"
+	"log/slog"
 	"encoding/json"
 	"net/http"
 	"bytes"
@@ -45,13 +45,13 @@ func (nodeExecutor *nodeExecutorRequest)getNodeConf()(*requestConf){
 	mapData,_:=nodeExecutor.NodeConf.Data.(map[string]interface{})
 	jsonStr, err := json.Marshal(mapData)
     if err != nil {
-        log.Println(err)
+        slog.Error(err.Error())
 		return nil
     }
-	log.Println(string(jsonStr))
+	slog.Debug(string(jsonStr))
 	conf:=&requestConf{}
     if err := json.Unmarshal(jsonStr, conf); err != nil {
-        log.Println(err)
+			slog.Error(err.Error())
 		return nil
     }
 
@@ -74,13 +74,13 @@ func (nodeExecutor *nodeExecutorRequest)sendRequest(
 	
 	postJson,_:=json.Marshal(reqBody)
 	postBody:=bytes.NewBuffer(postJson)
-	log.Println("http.Post ",nodeConf.Url,string(postJson))
+	slog.Debug("http.Post ","url",nodeConf.Url,"json",string(postJson))
 	postReq,err:=http.NewRequest("POST",nodeConf.Url,postBody)
 	if err != nil { 
-		log.Println(err)
+		slog.Error(err.Error())
 		return nil,common.ResultPostExternalApiError
 	}
-	log.Println("userToken:",userToken)
+	slog.Debug("userToken","token",userToken)
 	postReq.Header.Set("token", userToken)
 	postReq.Header.Set("userID", userID)
 	postReq.Header.Set("appDB", appDB)
@@ -89,19 +89,19 @@ func (nodeExecutor *nodeExecutorRequest)sendRequest(
 
 	resp, err := (&http.Client{}).Do(postReq)
 	if err != nil || resp==nil || resp.StatusCode != 200 { 
-		log.Println(resp)
+		slog.Error("post external api error","error",err,"resp",resp)
 		return nil,common.ResultPostExternalApiError
 	}
 
 	defer resp.Body.Close()
     body, err := ioutil.ReadAll(resp.Body)
     if err != nil {
-        log.Println(err)
+			slog.Error(err.Error())
     }
-    log.Println(string(body))
+    slog.Debug(string(body))
 	rsp:=&response{}
     if err := json.Unmarshal(body, rsp); err != nil {
-        log.Println(err)
+        slog.Error(err.Error())
 		return nil,common.ResultPostExternalApiError
     }
 

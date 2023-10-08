@@ -1,7 +1,7 @@
 package flow
 
 import (
-	"log"
+	"log/slog"
 	"os"
 	"crv/frame/common"
 	"encoding/json"
@@ -34,7 +34,7 @@ func loadFlowConf(appDB,flowID string)(*flowConf,int){
 	flowCfgFile:="apps/"+appDB+"/flows/"+flowID+".json"
 	filePtr, err := os.Open(flowCfgFile)
 	if err != nil {
-		log.Println("Open flow configuration file failed [Err:%s]", err.Error())
+		slog.Error("Open flow configuration file failed","error", err)
 		return nil,common.ResultOpenFileError
 	}
 	defer filePtr.Close()
@@ -43,7 +43,7 @@ func loadFlowConf(appDB,flowID string)(*flowConf,int){
 	flowConf:=&flowConf{}
 	err = decoder.Decode(flowConf)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return nil,common.ResultJsonDecodeError
 	}
 	return flowConf,common.ResultSuccess

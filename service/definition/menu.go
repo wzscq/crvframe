@@ -3,7 +3,7 @@ package definition
 import (
 	"crv/frame/common"
 	"os"
-	"log"
+	"log/slog"
 	"encoding/json"
 )
 
@@ -50,7 +50,7 @@ func (m *menu)getUserMenus(userRoles string)(*[]menuItem,int){
 	menuFile := "apps/"+m.AppDB+"/menus/menus.json"
 	filePtr, err := os.Open(menuFile)
 	if err != nil {
-        log.Println("Open file failed [Err:%s]", err.Error())
+        slog.Error("Open file failed","error",err)
         return nil,common.ResultOpenFileError
     }
     defer filePtr.Close()
@@ -60,7 +60,7 @@ func (m *menu)getUserMenus(userRoles string)(*[]menuItem,int){
     decoder := json.NewDecoder(filePtr)
     err = decoder.Decode(&fMenus)
 	if err != nil {
-		log.Println("json file decode failed [Err:%s]", err.Error())
+		slog.Error("json file decode failed","error",err)
 		return nil,common.ResultJsonDecodeError
 	}
 
