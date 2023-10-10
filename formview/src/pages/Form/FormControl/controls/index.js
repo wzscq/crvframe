@@ -13,6 +13,7 @@ import Number from './Number';
 import RichText from './RichText';
 import ValueLabel from './ValueLabel';
 import ColorPicker from './ColorPicker';
+import UploadControl from './UploadControl';
 /**
  * 以下为控件类型枚举常量定义
  */
@@ -23,7 +24,8 @@ import ColorPicker from './ColorPicker';
     TIMEPICKER:"TimePicker",  //时间选择
     PASSWORD:"Password",    //密码输入控件
     TRANSFER:"Transfer",    //穿梭框控件
-    FILE:"File", //文件选择
+    FILE:"File", //文件选择，转换为base64编码
+    UPLOAD:"Upload", //文件上传,选择文件后自动上传
     SINGLESELECT:'SingleSelect',  //单选下拉框
     EDITTABLE:'EditTable',  //表格编辑控件
     FUNCTIONTEXTAREA:'FunctionTextArea', //函数计算文本控件
@@ -42,6 +44,7 @@ export const controlRegister={
     [CONTROL_TYPE.PASSWORD]:Password,
     [CONTROL_TYPE.TRANSFER]:Transfer,
     [CONTROL_TYPE.FILE]:FileControl,
+    [CONTROL_TYPE.UPLOAD]:UploadControl,
     [CONTROL_TYPE.SINGLESELECT]:SingleSelect,
     [CONTROL_TYPE.DATEPICKER]:DatePicker,
     [CONTROL_TYPE.TIMEPICKER]:TimePicker,

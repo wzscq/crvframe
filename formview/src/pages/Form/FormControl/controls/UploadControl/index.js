@@ -40,7 +40,7 @@ const makeSelector=()=>{
     );
 }
 
-export default function FileControl({dataPath,control,field,sendMessageToParent}){
+export default function UploadControl({dataPath,control,field,sendMessageToParent}){
     const dispatch=useDispatch();
     
     const selectValue=useMemo(makeSelector,[dataPath,control,field]);
@@ -57,7 +57,19 @@ export default function FileControl({dataPath,control,field,sendMessageToParent}
                 }
             });
         }
-        return [];
+        return [/*{
+            "uid": "rc-upload-1696934440736-3",
+            "lastModified": 1566524493006,
+            "lastModifiedDate": "2019-08-23T01:41:33.006Z",
+            "name": "Docker for Windows Installer.exe",
+            "size": 875349208,
+            "type": "application/x-msdownload",
+            "percent": 49.10617523131574,
+            "originFileObj": {
+                "uid": "rc-upload-1696934440736-3"
+            },
+            "status": "uploading"
+        }*/];
     },[originValue]);
     
     const [fileList,setFileList]=useState(initFileList);
@@ -112,12 +124,15 @@ export default function FileControl({dataPath,control,field,sendMessageToParent}
         }
     },[fileList,dispatch,field,dataPath,originValue]);
 
+    const authorization="uuid";
+
     const props = {
-        accept:control.accept,
-        showUploadList:{
-            showDownloadIcon:true,
-            showRemoveIcon:control.disabled!==true,
+        name: 'file',
+        action: process.env.REACT_APP_SERVICE_API_PREFIX+"/data/upload",
+        headers: {
+            authorization: authorization,
         },
+        accept:control.accept,
         onDownload:file =>{
             sendMessageToParent(createDownloadFileMessage({list:[file]},file.name));
         },
@@ -127,24 +142,20 @@ export default function FileControl({dataPath,control,field,sendMessageToParent}
             newFileList.splice(index, 1);
             setFileList(newFileList);
         },
-        beforeUpload: file => {
-            const reader = new FileReader();
-            reader.onload=(e)=>{
-                console.log('beforeUpload',e);
-                const fileTmp={uid:file.uid,name:file.name,contentBase64:e.target.result};
-                setFileList([...fileList,fileTmp]);
-                if(valueError){
-                    const errFieldPath=dataPath.join('.')+'.'+field.field;
-                    dispatch(removeErrorField(errFieldPath));
-                }
-            };
-            reader.onerror = (err) =>{
-                console.log('beforeUpload',err);
-            };
-            reader.readAsDataURL(file);
-            return false;
+        onChange(info) {
+            console.log('onChange',info);
+            setFileList(info.fileList);
         },
-        fileList,
+        beforeUpload: file => {
+            console.log('beforeUpload',file);
+            setFileList([...fileList, file]);
+            if(valueError){
+                const errFieldPath=dataPath.join('.')+'.'+field.field;
+                dispatch(removeErrorField(errFieldPath));
+            }
+            return file;
+        },
+        fileList
     };
 
     let fileControl=(

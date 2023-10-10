@@ -4,7 +4,7 @@ import (
 	"crypto/md5"
 	"time"
 	"encoding/hex"
-	"log"
+	"log/slog"
 	"fmt"
 	"io/ioutil"
 	"github.com/gin-gonic/gin"
@@ -32,8 +32,6 @@ func EncodeToken(token string)(string){
 			result += string(token[i])
 		}
 	}
-	log.Println(token)
-	log.Println(result)
 	return result
 }
 
@@ -56,14 +54,14 @@ func DecodeToken(token string)(string,string){
 func CheckBody(c *gin.Context,checkSum string)(int){
 	reqBody, err := c.GetRawData()
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return ResultWrongRequest
 	}
 
 	bodyCopy := &bytes.Buffer{}
 	_, err = io.Copy(bodyCopy, bytes.NewReader(reqBody))
 	if err != nil {
-		log.Println(err)
+		slog.Error(err.Error())
 		return ResultWrongRequest
 	}
 
@@ -72,13 +70,12 @@ func CheckBody(c *gin.Context,checkSum string)(int){
 	if len(bodyCopy.Bytes())>0 {
 		bodyStr=string(bodyCopy.Bytes())
 	}
-	log.Println(bodyStr)
+	slog.Debug(bodyStr)
 	sha256Bytes := sha256.Sum256([]byte(bodyStr))
   sha256Str := fmt.Sprintf("%x", sha256Bytes)
 
 	if checkSum!=sha256Str {
-		log.Println(sha256Str)
-		log.Println(checkSum)
+		slog.Error("ResultWrongRequest","sha256Str",sha256Str,"","checkSum",checkSum)
 		return ResultWrongRequest
 	}
 

@@ -3,7 +3,7 @@ package common
 import (
 	"testing"
 	"crypto/sha256"
-	"log"
+	"log/slog"
 	"fmt"
 )
 
@@ -12,5 +12,5 @@ func TestStringSum(t *testing.T) {
 	//bodyStr:=`"billToName":"昂高化工（中国）有限公司","shipToName":"昂高化工（中国）有限公司"`
 	sha256Bytes := sha256.Sum256([]byte(bodyStr))
 	sha256Str := fmt.Sprintf("%x", sha256Bytes)
-	log.Println(string(sha256Str))
+	slog.Debug(string(sha256Str))
 }

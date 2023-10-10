@@ -5,6 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
 	"net/http"
+	"os"
+	"io"
 )
 
 type FilterDataItem struct {
@@ -267,6 +269,36 @@ func (controller *DataController)getImage(c *gin.Context) {
 	slog.Debug("end getImage download")
 }
 
+func (controller *DataController)upload(c *gin.Context) {
+
+
+	f, uploadedFile, err := c.Request.FormFile("file")
+	if err != nil {
+			slog.Error("uplaod file error","error",err)
+			c.IndentedJSON(http.StatusInternalServerError, nil)
+			return
+	} 
+
+	slog.Info("upload file","name",uploadedFile.Filename,"size",uploadedFile.Size,"header",uploadedFile.Header)
+						
+	out, err := os.Create(uploadedFile.Filename)
+	if err != nil {
+		slog.Error("uplaod file error","error",err)
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+	defer out.Close()
+		
+	_, err = io.Copy(out, f)
+	if err != nil {
+		slog.Error("uplaod file error","error",err)
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+		
+	c.String(http.StatusCreated, "file uploaded successfully")
+}
+
 func (controller *DataController) Bind(router *gin.Engine) {
 	slog.Debug("Bind DataController")
 	router.POST("/data/query", controller.query)
@@ -275,4 +307,5 @@ func (controller *DataController) Bind(router *gin.Engine) {
 	router.POST("/data/update", controller.update)
 	router.POST("/data/download", controller.download)
 	router.POST("/data/getImage", controller.getImage)
+	router.POST("/data/upload", controller.upload)
 }

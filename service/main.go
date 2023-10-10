@@ -3,6 +3,7 @@ package main
 import (
     "github.com/gin-gonic/gin"
     "github.com/gin-contrib/cors"
+    sloggin "github.com/samber/slog-gin"
 	"crv/frame/user"
     "crv/frame/definition"
     "crv/frame/data"
@@ -17,6 +18,7 @@ import (
     //"crv/frame/operationlog"
     "time"
     "log/slog"
+    "log"
     "os"
 )
 
@@ -33,13 +35,15 @@ func main() {
     slog.Info("crvframe service start...")
 
     //设置log打印文件名和行号
-    //log.SetFlags(log.Lshortfile | log.LstdFlags)
+    log.SetFlags(log.Lshortfile | log.LstdFlags)
 
     //初始化时区
     var cstZone = time.FixedZone("CST", 8*3600) // 东八
 	time.Local = cstZone
 
     router := gin.Default()
+
+    router.Use(sloggin.New(slog.Default()))
 
     //router.Use(cors.Default())
     router.Use(cors.New(cors.Config{

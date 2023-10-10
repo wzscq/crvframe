@@ -3,7 +3,7 @@ package common
 import (
   "github.com/gin-gonic/gin"
   "time"
-	"log"
+	"log/slog"
 	"strings"
 	"net/http"
 )
@@ -15,8 +15,8 @@ type repHeader struct {
 func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		t := time.Now()
-		log.Print("AuthMiddleware start")
-		log.Print(c.Request.URL.Path)
+		slog.Debug("AuthMiddleware start")
+		slog.Debug(c.Request.URL.Path)
 		errorCode:=ResultSuccess
 		// Set example variable
 		if strings.Index(c.Request.URL.Path,"/cas/login/") == 0 {
@@ -27,7 +27,8 @@ func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 				c.Set("appDB",appDB)
 			}
 		} else if strings.Index(c.Request.URL.Path,"/appimages/") ==0 ||
-		   strings.Index(c.Request.URL.Path,"/appI18n/") ==0 {
+		   strings.Index(c.Request.URL.Path,"/appI18n/") ==0 ||
+			 strings.Index(c.Request.URL.Path,"/data/upload") ==0 {
 			params:=strings.Split(c.Request.URL.Path,"/")
 			if len(params)>2 {
 				appID:=params[2]
@@ -38,13 +39,12 @@ func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 				  strings.HasPrefix(c.Request.URL.Path,"/oauth/") == false {
 			var header repHeader
 			if err := c.ShouldBindHeader(&header); err != nil {
-				log.Println(err)
+				slog.Error(err.Error())
 				errorCode=ResultWrongRequest
-
 			} else {
 				userID,err:=loginCache.GetUserID(header.Token)
 				if err !=nil {
-					log.Println(err)
+					slog.Error(err.Error())
 					token,paramSum:=DecodeToken(header.Token)
 					errorCode=CheckBody(c,paramSum)
 					header.Token=token
@@ -52,17 +52,17 @@ func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 				}
 				
 				if err != nil {
-					log.Println(err)
+					slog.Error(err.Error())
 					errorCode=ResultTokenExpired
 				} else {
 					appDB,err:=loginCache.GetAppDB(header.Token)
 					if err != nil {
-						log.Println(err)
+						slog.Error(err.Error())
 						errorCode=ResultTokenExpired
 					} else {
 						userRoles,err:=loginCache.GetUserRoles(header.Token)
 						if err != nil {
-							log.Println(err)
+							slog.Error(err.Error())
 							errorCode=ResultTokenExpired
 						} else {
 							//重新设置token是为了更新token的过期时间
@@ -81,7 +81,7 @@ func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 		}
 		// before request
 		if errorCode == ResultSuccess {
-			log.Print("into next")
+			slog.Debug("into next")
 			c.Next()
 		} else {
 			c.Abort()
@@ -90,12 +90,12 @@ func AuthMiddleware(loginCache LoginCache,appCache AppCache) gin.HandlerFunc {
 		}
 		// after request
 		latency := time.Since(t)
-		log.Print(latency)
+		slog.Debug("request response duration","latency",latency)
 
 		// access the status we are sending
 		status := c.Writer.Status()
-		log.Println(status)
+		slog.Debug("request response status","status",status)
 
-		log.Print("AuthMiddleware end")
+		slog.Debug("AuthMiddleware end")
 	}
 }

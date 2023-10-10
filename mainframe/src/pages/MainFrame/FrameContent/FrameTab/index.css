@@ -1,7 +1,7 @@
 .frame-tab-main {
     width:100%;
     border-top: 1px solid gainsboro;
-    height: 100%;
+    height: calc(100% - 1px);
 }
 
 .frame-tab-main .ant-tabs-top .ant-tabs-nav {

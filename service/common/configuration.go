@@ -1,7 +1,7 @@
 package common
 
 import (
-	"log"
+	"log/slog"
 	"os"
 	"encoding/json"
 )
@@ -72,24 +72,24 @@ type Config struct {
 var gConfig Config
 
 func InitConfig(confFile string)(*Config){
-	log.Println("init configuation start ...")
+	slog.Debug("init configuation start ...")
 	//获取用户账号
 	//获取用户角色信息
 	//根据角色过滤出功能列表
 	fileName := confFile
 	filePtr, err := os.Open(fileName)
 	if err != nil {
-        log.Fatal("Open file failed [Err:"+err.Error()+"]")
-    }
-    defer filePtr.Close()
+		slog.Error("Open file failed [Err:"+err.Error()+"]")
+  }
+  defer filePtr.Close()
 
-	// 创建json解码器
-    decoder := json.NewDecoder(filePtr)
-    err = decoder.Decode(&gConfig)
+	//创建json解码器
+  decoder := json.NewDecoder(filePtr)
+  err = decoder.Decode(&gConfig)
 	if err != nil {
-		log.Println("json file decode failed [Err:"+err.Error()+"]", )
+		slog.Error("json file decode failed [Err:"+err.Error()+"]", )
 	}
-	log.Println("init configuation end")
+	slog.Debug("init configuation end")
 	return &gConfig
 }
 
