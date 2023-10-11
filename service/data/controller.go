@@ -5,8 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
 	"net/http"
-	"os"
-	"io"
 )
 
 type FilterDataItem struct {
@@ -30,6 +28,7 @@ type CommonReq struct {
 
 type DataController struct {
 	DataRepository DataRepository
+	UploadHandler *UploadHandler
 }
 
 func (controller *DataController) query(c *gin.Context) {
@@ -269,33 +268,52 @@ func (controller *DataController)getImage(c *gin.Context) {
 	slog.Debug("end getImage download")
 }
 
+func (controller *DataController)getUploadKey(c *gin.Context) {
+	slog.Debug("start getUploadKey")
+	//获取用户账号
+	userID:= c.MustGet("userID").(string)
+	appDB:= c.MustGet("appDB").(string)
+	key,err :=  controller.UploadHandler.GetUploadKey(appDB,userID)
+	if err!=nil {
+		slog.Error("getUploadKey error","error",err)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultGetUploadKeyError,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
+		return
+	}
+
+	result:=make(map[string]interface{})
+	result["key"]=key
+	rsp:=common.CreateResponse(common.CreateError(common.ResultSuccess,nil),result)
+	c.IndentedJSON(http.StatusOK, rsp)
+	slog.Debug("end getUploadKey")
+}
+
 func (controller *DataController)upload(c *gin.Context) {
+	key := c.PostForm("key")
+	if len(key)==0 {
+		slog.Error("upload file error","error","key is empty")
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
 
-
-	f, uploadedFile, err := c.Request.FormFile("file")
+	uploadedFile, err := c.FormFile("file")
 	if err != nil {
 			slog.Error("uplaod file error","error",err)
 			c.IndentedJSON(http.StatusInternalServerError, nil)
 			return
-	} 
+	}
 
-	slog.Info("upload file","name",uploadedFile.Filename,"size",uploadedFile.Size,"header",uploadedFile.Header)
-						
-	out, err := os.Create(uploadedFile.Filename)
+	saveName,err:=controller.UploadHandler.GetSaveFileName(key,uploadedFile.Filename)
 	if err != nil {
 		slog.Error("uplaod file error","error",err)
 		c.IndentedJSON(http.StatusInternalServerError, nil)
 		return
 	}
-	defer out.Close()
-		
-	_, err = io.Copy(out, f)
-	if err != nil {
-		slog.Error("uplaod file error","error",err)
-		c.IndentedJSON(http.StatusInternalServerError, nil)
-		return
-	}
-		
+
+	slog.Info("upload file","key",key,"saveName",saveName,"name",uploadedFile.Filename,"size",uploadedFile.Size,"header",uploadedFile.Header)
+	
+	c.SaveUploadedFile(uploadedFile, saveName)
+	
 	c.String(http.StatusCreated, "file uploaded successfully")
 }
 
@@ -308,4 +326,5 @@ func (controller *DataController) Bind(router *gin.Engine) {
 	router.POST("/data/download", controller.download)
 	router.POST("/data/getImage", controller.getImage)
 	router.POST("/data/upload", controller.upload)
+	router.POST("/data/getUploadKey", controller.getUploadKey)
 }

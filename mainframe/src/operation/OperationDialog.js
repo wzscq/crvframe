@@ -8,6 +8,7 @@ import {
     downloadAction,
     logoutApi,
     queryData,
+    getUploadKey,
     queryReportData,
     getImage
 } from '../api';
@@ -320,6 +321,8 @@ export default function OperationDialog(){
             } else if (type===FRAME_MESSAGE_TYPE.GET_IMAGE) {
                 console.log('wzstest get image');
                 getImage(data,errorCallback);
+            } else if (type===FRAME_MESSAGE_TYPE.GET_UPLOAD_KEY){
+                getUploadKey(data,errorCallback);
             } else {
                 console.log('not supported frame message type:'+type);
             }

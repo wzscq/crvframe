@@ -15,6 +15,8 @@ type redisConf struct {
 	FlowInstanceDB int `json:"flowInstanceDB"`
 	FlowInstanceExpired string `json:"flowInstanceExpired"`
 	AppCacheDB int `json:"appCacheDB"`
+	UploadCacheDB int `json:"uploadCacheDB"`
+	UploadCacheExpired string `json:"uploadCacheExpired"`
 	Password string `json:"password"`
 }
 

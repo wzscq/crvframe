@@ -37,6 +37,8 @@ export const FRAME_MESSAGE_TYPE={
     QUERY_RESPONSE:'queryResponse',//"QUERY_RESPONSE",
     GET_IMAGE:'getImage',//"GET_IMAGE",
     UPDATE_LOCALE:'updateLocale',//"UPDATE_LOCALE"
+    GET_UPLOAD_KEY:'getUploadKey',//"GET_UPLOAD_KEY"
+    GET_UPLOAD_KEY_RESPONSE:'getUploadKeyResponse',//"GET_UPLOAD_KEY_RESPONSE"
 }
 
 export const DATA_TYPE={

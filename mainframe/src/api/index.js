@@ -248,6 +248,39 @@ export const queryData = ({frameParams,queryParams},errorCallback)=>{
   });;
 }
 
+//获取文件上传的key
+const GET_UPLOAD_KEY_URL="/data/getUploadKey";
+export const getUploadKey = ({frameParams,params},errorCallback)=>{
+  const {token}=userInfoStorage.get();
+  const config={
+    url:host+GET_UPLOAD_KEY_URL,
+    method:'post',
+    data:{...params},
+    headers:{token:encodeToken(token,params)}
+  }
+  axios(config).then(function (response) {
+    console.log(response);
+    if(response.data.error===true){
+      //message.error(response.data.message);
+      errorCallback(response.data);
+    } else {
+      const {frameID,frameType,dataKey}=frameParams;
+      const frameControl=document.getElementById(frameType+"_"+frameID);
+      if(frameControl){
+          const origin=parseUrl(frameControl.getAttribute("src")).origin;
+          frameControl.contentWindow.postMessage({
+            type:FRAME_MESSAGE_TYPE.GET_UPLOAD_KEY_RESPONSE,
+            dataKey:dataKey,
+            data:response.data.result},origin);
+      }
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+    message.error(getLocaleLabel({key:'message.main.queryDataError',default:'查询数据时发生错误'}));
+  });;
+}
+
 //通用的查询接口，用于报表数据查询
 const REPORT_QUERY_URL="/report/query";
 export const queryReportData = ({frameParams,queryParams},errorCallback)=>{

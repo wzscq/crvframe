@@ -54,7 +54,9 @@ export const FRAME_MESSAGE_TYPE={
     QUERY_REQUEST:'queryRequest',//"QUERY_REQUEST",
     QUERY_RESPONSE:'queryResponse',//"QUERY_RESPONSE",
     GET_IMAGE:'getImage', //"GET_IMAGE"
-    REPORT_QUERY:'queryReportData' 
+    REPORT_QUERY:'queryReportData',
+    GET_UPLOAD_KEY:'getUploadKey',//"GET_UPLOAD_KEY"
+    GET_UPLOAD_KEY_RESPONSE:'getUploadKeyResponse',//"GET_UPLOAD_KEY_RESPONSE"
 }
 
 export const DATA_TYPE={

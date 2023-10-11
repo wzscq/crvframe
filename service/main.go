@@ -104,8 +104,19 @@ func main() {
         conf.Mysql.ConnMaxLifetime,
         conf.Mysql.MaxOpenConns,
         conf.Mysql.MaxIdleConns)
+
+    //增加上传文件支持
+    uploadCacheExpired,_:=time.ParseDuration(conf.Redis.UploadCacheExpired)
+    uploadCache:=&data.DefatultUploadCache{}
+    uploadCache.Init(conf.Redis.Server,conf.Redis.UploadCacheDB,uploadCacheExpired, conf.Redis.Password)
+
+    uploadHandler := &data.UploadHandler{
+        UploadCache:uploadCache,
+    }
+
     dataController:=&data.DataController{
         DataRepository:dataRepo,
+        UploadHandler:uploadHandler,
     }
     dataController.Bind(router)
 

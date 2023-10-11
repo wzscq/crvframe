@@ -13,6 +13,7 @@ import (
 const (
 	CC_FILECONTENT = "contentBase64"
 	CC_FILENAME = "name"
+	CC_FILEKEY = "key"
 )
 
 type SaveFile struct {
@@ -62,7 +63,7 @@ func (save *SaveFile)saveFileRow(dataRepository DataRepository,tx *sql.Tx,modelI
 	}
 }
 
-func (save *SaveFile)saveFile(path,name,contentBase64 string)(int){
+func (save *SaveFile)saveFileWithBase64Content(path,name,contentBase64 string)(int){
 	//判断并创建文件路径
 	err := os.MkdirAll(path, 0750)
 	if err != nil && !os.IsExist(err) {
@@ -105,6 +106,29 @@ func (save *SaveFile)saveFile(path,name,contentBase64 string)(int){
 	return common.ResultSuccess
 }
 
+func (save *SaveFile)getUploadedFileName(orgFileName,fileKey string)(string){
+	return common.GetConfig().File.Root+"/upload/"+save.AppDB+"_"+save.UserID+"_"+fileKey+"_"+orgFileName
+}
+
+func (save *SaveFile)saveFileWithUploadKey(destPath,destName,orgFileName,fileKey string)(int){
+	uploadedFileName:=save.getUploadedFileName(orgFileName,fileKey)
+	destFileName:=destPath+destName
+	err := os.Rename(uploadedFileName, destFileName)
+	if err != nil {
+		slog.Error("move file error","error",err)
+		return common.ResultCreateFileError
+	}
+	return common.ResultSuccess
+}
+
+func (save *SaveFile)saveFile(destPath,destName,orgFileName,fileContent string,isBase64 bool)(int){
+	if isBase64 == true {
+		return save.saveFileWithBase64Content(destPath,destName,fileContent)
+	}
+	
+	return save.saveFileWithUploadKey(destPath,destName,orgFileName,fileContent)
+}
+
 func (save *SaveFile)createFileRow(dataRepository DataRepository,tx *sql.Tx,modelID,pID string,row map[string]interface{})(int){
 	slog.Debug("createFileRow ... ")
 	nameCol:=row[CC_FILENAME]
@@ -118,12 +142,21 @@ func (save *SaveFile)createFileRow(dataRepository DataRepository,tx *sql.Tx,mode
 	}
 
 	contentCol:=row[CC_FILECONTENT]
-	if contentCol==nil {
+	fileKey:=row[CC_FILEKEY]
+	if contentCol==nil && fileKey==nil {
 		return common.ResultNoFileContentWhenCreate
 	}
 
-	contentBase64, ok := contentCol.(string)
-	if !ok || len(contentBase64)<=0 {
+	var fileContent string
+	var isBase64 bool
+	if contentCol!=nil {
+		isBase64=true
+		fileContent, ok= contentCol.(string)
+	}	else {
+		fileContent, ok= fileKey.(string)
+	}
+
+	if !ok || len(fileContent)<=0 {
 		return common.ResultNoFileContentWhenCreate
 	}
 
@@ -149,7 +182,7 @@ func (save *SaveFile)createFileRow(dataRepository DataRepository,tx *sql.Tx,mode
 
 	strID:=strconv.FormatInt(id,10)
 	fileName:=save.FieldName+"_row"+pID+"_id"+strID+"_"+name
-	errorCode:=save.saveFile(path,fileName,contentBase64)
+	errorCode:=save.saveFile(path,fileName,name,fileContent,isBase64)
 	if errorCode!=common.ResultSuccess {
 		return errorCode
 	}

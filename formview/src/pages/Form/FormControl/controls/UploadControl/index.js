@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { Space,Button,Upload,Tooltip } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import axios from 'axios';
 
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
 import {
     CC_COLUMNS,
-    SAVE_TYPE
+    SAVE_TYPE,
+    FRAME_MESSAGE_TYPE
 } from '../../../../../utils/constant';
 import {createDownloadFileMessage} from '../../../../../utils/normalOperations';
 import I18nLabel from '../../../../../component/I18nLabel';
@@ -42,7 +44,7 @@ const makeSelector=()=>{
 
 export default function UploadControl({dataPath,control,field,sendMessageToParent}){
     const dispatch=useDispatch();
-    
+    const {origin,item:frameItem}=useSelector(state=>state.frame);
     const selectValue=useMemo(makeSelector,[dataPath,control,field]);
     const {originValue,valueError}=useSelector(state=>selectValue(state.data,dataPath,field.field));
 
@@ -92,7 +94,7 @@ export default function UploadControl({dataPath,control,field,sendMessageToParen
                 return {
                     id:selectedFile.uid,
                     name:selectedFile.name,
-                    contentBase64:selectedFile.contentBase64,
+                    key:selectedFile.key,
                     ...saveType
                 };
             }
@@ -126,13 +128,75 @@ export default function UploadControl({dataPath,control,field,sendMessageToParen
 
     const authorization="uuid";
 
+    console.log('fileList',fileList);
+
+    const getUploadKey=()=>{
+        return new Promise((resolve) => {
+            const getUploadKeyResponse=(event)=>{
+                const {type,dataKey,data}=event.data;
+                if(type===FRAME_MESSAGE_TYPE.GET_UPLOAD_KEY_RESPONSE&&
+                    dataKey===field.field){
+                    console.log('getUploadKey',data);
+                    resolve(data.key);
+                }
+                window.removeEventListener("message",getUploadKeyResponse);
+            }
+            window.addEventListener("message",getUploadKeyResponse);
+           
+            const frameParams={
+                frameType:frameItem.frameType,
+                frameID:frameItem.params.key,
+                dataKey:field.field,
+                origin:origin
+            };
+    
+            const message={
+                type:FRAME_MESSAGE_TYPE.GET_UPLOAD_KEY,
+                data:{
+                    frameParams:frameParams,
+                    params:{}
+                }
+            }
+            
+            sendMessageToParent(message);
+        });
+    }
+
+    const uploadFile=(fileList,file,key)=>{
+        //获取上传令牌
+        var data = new FormData();
+        data.append('file', file);
+        data.append('key', key);
+        axios({
+        method: 'post',
+        url: process.env.REACT_APP_SERVICE_API_PREFIX+"/data/upload",
+        data: data,
+        onUploadProgress: function(progressEvent) {
+            var percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+            //console.log(percentCompleted,file);
+            const newFile={uid:file.uid,key:key,name:file.name,status:'uploading',percent:percentCompleted}
+            console.log(percentCompleted,newFile);
+            setFileList([...fileList,newFile]);
+        }
+        })
+        .then(function (response) {
+            console.log('Success:', response);
+            const newFile={uid:file.uid,key:key,name:file.name,status:'done',percent:100}
+            setFileList([...fileList, newFile]);
+        })
+        .catch(function (error) {
+            console.log('Error:', error);
+            const newFile={uid:file.uid,key:key,name:file.name,status:'error',percent:100}
+            setFileList([...fileList,newFile]);
+        });
+    }
+
     const props = {
-        name: 'file',
-        action: process.env.REACT_APP_SERVICE_API_PREFIX+"/data/upload",
-        headers: {
-            authorization: authorization,
-        },
         accept:control.accept,
+        showUploadList:{
+            showDownloadIcon:true,
+            showRemoveIcon:control.disabled!==true,
+        },
         onDownload:file =>{
             sendMessageToParent(createDownloadFileMessage({list:[file]},file.name));
         },
@@ -142,18 +206,17 @@ export default function UploadControl({dataPath,control,field,sendMessageToParen
             newFileList.splice(index, 1);
             setFileList(newFileList);
         },
-        onChange(info) {
-            console.log('onChange',info);
-            setFileList(info.fileList);
-        },
         beforeUpload: file => {
             console.log('beforeUpload',file);
-            setFileList([...fileList, file]);
+            //setFileList([...fileList, file]);
             if(valueError){
                 const errFieldPath=dataPath.join('.')+'.'+field.field;
                 dispatch(removeErrorField(errFieldPath));
             }
-            return file;
+            getUploadKey().then((key)=>{
+                uploadFile(fileList,file,key);
+            });
+            return false;
         },
         fileList
     };

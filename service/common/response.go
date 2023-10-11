@@ -62,6 +62,7 @@ const (
 	ResultNoReportControl=  10000044
 	ResultNotSupportedReportQuery=10000045
 	ResultReadExternalApiResultError=10000046
+	ResultGetUploadKeyError=10000047
 
 	ResultStartFlowWithoutID=20000001
 	ResultCacheFlowInstanceError=20000002
@@ -342,6 +343,11 @@ var errMsg = map[int]CommonRsp{
 	ResultLoadNodeConfError:CommonRsp{
 		ErrorCode:ResultLoadNodeConfError,
 		Message:"执行流时加载流节点配置失败，请与管理员联系处理",
+		Error:true,
+	},
+	ResultGetUploadKeyError:CommonRsp{
+		ErrorCode:ResultGetUploadKeyError,
+		Message:"获取上传文件Key失败，请与管理员联系处理",
 		Error:true,
 	},
 }
