@@ -126,8 +126,6 @@ export default function UploadControl({dataPath,control,field,sendMessageToParen
         }
     },[fileList,dispatch,field,dataPath,originValue]);
 
-    const authorization="uuid";
-
     console.log('fileList',fileList);
 
     const getUploadKey=()=>{
@@ -198,7 +196,7 @@ export default function UploadControl({dataPath,control,field,sendMessageToParen
             showRemoveIcon:control.disabled!==true,
         },
         onDownload:file =>{
-            sendMessageToParent(createDownloadFileMessage({list:[file]},file.name));
+            sendMessageToParent(createDownloadFileMessage({list:[file]},file.name,true));
         },
         onRemove: file => {
             const index = fileList.indexOf(file);

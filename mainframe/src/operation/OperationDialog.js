@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {
     requestAction,
     downloadAction,
+    downloadByKeyAction,
     logoutApi,
     queryData,
     getUploadKey,
@@ -148,7 +149,12 @@ export default function OperationDialog(){
                     data:current.input,
                     fileName:current.params.fileName
                 }
-                dispatch(downloadAction(params));
+                if(current.params.downloadByKey===true){
+                    dispatch(downloadByKeyAction(params));
+                } else {
+                    dispatch(downloadAction(params));
+                }
+
                 dispatch(operationPending(true));
             } else {
                 //执行完成

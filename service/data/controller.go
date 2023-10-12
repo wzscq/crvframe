@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"crv/frame/common"
 	"net/http"
+	"net/url"
 )
 
 type FilterDataItem struct {
@@ -29,6 +30,7 @@ type CommonReq struct {
 type DataController struct {
 	DataRepository DataRepository
 	UploadHandler *UploadHandler
+	DownloadHandler *DownloadHandler
 }
 
 func (controller *DataController) query(c *gin.Context) {
@@ -192,40 +194,37 @@ func (controller *DataController) update(c *gin.Context) {
 func (controller *DataController)download(c *gin.Context) {
 	slog.Debug("start data download")
 	//获取用户账号
-	userID:= c.MustGet("userID").(string)
-	appDB:= c.MustGet("appDB").(string)
+	//userID:= c.MustGet("userID").(string)
+	//appDB:= c.MustGet("appDB").(string)
 	var rep CommonReq
-	var errorCode int
-	var result *map[string]interface {} = nil
 	if err := c.BindJSON(&rep); err != nil {
 		slog.Error(err.Error())
-		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusInternalServerError, rsp)
 		slog.Debug("end data download with error")
 		return
-    }
+  }
 
 	if rep.List == nil || len(*(rep.List))<=0 {
-		errorCode=common.ResultWrongRequest
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultWrongRequest,nil),nil)
 		c.IndentedJSON(http.StatusInternalServerError, rsp)
 		slog.Debug("end data download with error")
 		return
 	}
 
-	download:=&Download{
-		ModelID:rep.ModelID,
-		AppDB:appDB,
-		UserID:userID,
-		List:rep.List,
-	}
+	name:=(*(rep.List))[0]["name"].(string)
+	path:=(*(rep.List))[0]["path"].(string)
+	fieldID:=(*(rep.List))[0]["field_id"].(string)
+	rowID:=(*(rep.List))[0]["row_id"].(string)
+	strID:=(*(rep.List))[0]["id"].(string)
 
-	errorCode=download.Execute(c)
-	if errorCode!=common.ResultSuccess {
-		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
-		c.IndentedJSON(http.StatusInternalServerError, rsp)
-	}
+	c.Header("Content-Type", "application/octet-stream")
+	fileName:=url.QueryEscape(name)
+  c.Header("Content-Disposition", "attachment; filename="+fileName)
+  c.Header("Content-Transfer-Encoding", "binary")
+
+	fileName=fieldID+"_row"+rowID+"_id"+strID+"_"+name
+	c.File(path+fileName)
 	slog.Debug("end data download")
 }
 
@@ -317,6 +316,73 @@ func (controller *DataController)upload(c *gin.Context) {
 	c.String(http.StatusCreated, "file uploaded successfully")
 }
 
+func (controller *DataController)getDownloadKey(c *gin.Context) {
+	slog.Debug("start data getDownloadKey")
+	//获取用户账号
+	//userID:= c.MustGet("userID").(string)
+	//appDB:= c.MustGet("appDB").(string)
+	var rep CommonReq
+	var errorCode int
+
+	if err := c.BindJSON(&rep); err != nil {
+		slog.Error(err.Error())
+		errorCode=common.ResultWrongRequest
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
+		c.IndentedJSON(http.StatusInternalServerError, rsp)
+		slog.Debug("end data download with error")
+		return
+    }
+
+	if rep.List == nil || len(*(rep.List))<=0 {
+		errorCode=common.ResultWrongRequest
+		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
+		c.IndentedJSON(http.StatusInternalServerError, rsp)
+		slog.Debug("end data download with error")
+		return
+	}
+
+	name:=(*(rep.List))[0]["name"].(string)
+	path:=(*(rep.List))[0]["path"].(string)
+	fieldID:=(*(rep.List))[0]["field_id"].(string)
+	rowID:=(*(rep.List))[0]["row_id"].(string)
+	strID:=(*(rep.List))[0]["id"].(string)
+
+	fileName:=fieldID+"_row"+rowID+"_id"+strID+"_"+name
+	downloadKey,err:=controller.DownloadHandler.GetDownloadKey(path+fileName,name)
+
+	if err!=nil {
+		slog.Error("getDownlaodKey error","error",err)
+		rsp:=common.CreateResponse(common.CreateError(common.ResultGetUploadKeyError,nil),nil)
+		c.IndentedJSON(http.StatusOK, rsp)
+		return
+	}
+
+	result:=make(map[string]interface{})
+	result["key"]=downloadKey
+	rsp:=common.CreateResponse(common.CreateError(common.ResultSuccess,nil),result)
+	c.IndentedJSON(http.StatusOK, rsp)
+	slog.Debug("end getDownlaodKey")
+}
+
+func (controller *DataController)downloadByKey(c *gin.Context) {
+	key:=c.Param("key")
+	if len(key)==0 {
+		slog.Error("downloadByKey error","error","key is empty")
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	fileName,orgName,err:=controller.DownloadHandler.GetDownloadFileName(key)
+	if err!=nil {
+		slog.Error("downloadByKey error","error",err)
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	c.Header("Content-Disposition", "attachment; filename="+orgName)
+	c.File(fileName)
+}
+
 func (controller *DataController) Bind(router *gin.Engine) {
 	slog.Debug("Bind DataController")
 	router.POST("/data/query", controller.query)
@@ -327,4 +393,6 @@ func (controller *DataController) Bind(router *gin.Engine) {
 	router.POST("/data/getImage", controller.getImage)
 	router.POST("/data/upload", controller.upload)
 	router.POST("/data/getUploadKey", controller.getUploadKey)
+	router.POST("/data/getDownloadKey", controller.getDownloadKey)
+	router.GET("/data/downloadByKey/:key", controller.downloadByKey)
 }

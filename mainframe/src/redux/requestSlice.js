@@ -1,6 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import {requestAction,downloadAction} from '../api';
+import {
+    requestAction,
+    downloadAction,
+    downloadByKeyAction
+} from '../api';
 
 // Define the initial state using that type
 const initialState = {
@@ -22,6 +26,19 @@ const downloadFile=({data,fileName})=>{
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
+}
+
+const downloadFileByKey=({data,fileName,url})=>{
+    console.log('downloadFileByKey',data,fileName,url)
+    const {result:{key}}=data;
+    let a = document.createElement('a');
+    a.href = url+key;
+    a.download = fileName;
+    a.target = '_blank';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 export const requestSlice = createSlice({
@@ -76,6 +93,37 @@ export const requestSlice = createSlice({
             downloadFile(action.payload);
         });
         builder.addCase(downloadAction.rejected , (state, action) => {
+            console.log("requst return error:",action);
+            state.pending=false;
+            state.error=true;
+            if(action.error&&action.error.message){
+                state.message=action.error.message;
+            } else {
+                state.message="未知错误";
+            }
+        });
+        builder.addCase(downloadByKeyAction.pending, (state, action) => {
+            state.pending=action.pending;
+            state.error=false;
+            state.result=null;
+            state.message="";
+            state.errorCode=0;
+            state.params=undefined;
+        });
+        builder.addCase(downloadByKeyAction.fulfilled, (state, action) => {
+            console.log("requst fulfilled:",action);
+            state.pending=false;
+
+            if(action.payload.data.error===false){
+                downloadFileByKey(action.payload);
+            } else {
+                state.error=true;
+                state.message=action.payload.data.message;
+                state.errorCode=action.payload.data.errorCode;
+                state.params=action.payload.data.params;
+            }
+        });
+        builder.addCase(downloadByKeyAction.rejected , (state, action) => {
             console.log("requst return error:",action);
             state.pending=false;
             state.error=true;

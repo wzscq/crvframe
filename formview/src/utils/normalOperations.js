@@ -75,9 +75,10 @@ const opDownloadFile={
     description:{key:'page.crvformview.downloadFile',default:'下载文件'}
 }
 
-export function createDownloadFileMessage(file,fileName){
+export function createDownloadFileMessage(file,fileName,downloadByKey){
     opDownloadFile.input=file;
     opDownloadFile.params.fileName=fileName;
+    opDownloadFile.params.downloadByKey=downloadByKey;
     return {
         type:FRAME_MESSAGE_TYPE.DO_OPERATION,
         data:{

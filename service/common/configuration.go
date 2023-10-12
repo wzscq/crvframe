@@ -18,6 +18,8 @@ type redisConf struct {
 	UploadCacheDB int `json:"uploadCacheDB"`
 	UploadCacheExpired string `json:"uploadCacheExpired"`
 	Password string `json:"password"`
+	DownloadCacheDB int `json:"downloadCacheDB"`
+	DownloadCacheExpired string `json:"downloadCacheExpired"`
 }
 
 type mysqlConf struct {

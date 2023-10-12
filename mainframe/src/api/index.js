@@ -183,6 +183,24 @@ export const downloadAction = createAsyncThunk(
   }
 );
 
+//大文件下载需要走临时key方式
+const GET_DOWN_KEY_URL="/data/getDownloadKey";
+const DOWNLOAD_BYKEY_URL="/data/downloadByKey/";
+export const downloadByKeyAction = createAsyncThunk(
+  'downloadByKey',
+  async ({data,fileName}, _) => {
+    const {token}=userInfoStorage.get();
+    const config={
+      url:host+GET_DOWN_KEY_URL,
+      method:'post',
+      data:{...data},
+      headers:{token:encodeToken(token,data)},
+    }
+    const response =await axios(config);
+    return {data:response.data,fileName,url:host+DOWNLOAD_BYKEY_URL};
+  }
+);
+
 //获取图片文件内容，base64格式，填充到文件的url中，用于图片预览
 const GET_IMAGE_URL="/data/getImage";
 export const getImage = ({frameParams,queryParams},errorCallback)=>{

@@ -105,6 +105,14 @@ func main() {
         conf.Mysql.MaxOpenConns,
         conf.Mysql.MaxIdleConns)
 
+    //增加大文件一步下载支持
+    downloadCacheExpired,_:=time.ParseDuration(conf.Redis.DownloadCacheExpired)
+    downloadCache:=&data.DefatultDownloadCache{}
+    downloadCache.Init(conf.Redis.Server,conf.Redis.DownloadCacheDB,downloadCacheExpired, conf.Redis.Password)
+    downloadHandler := &data.DownloadHandler{
+        DownloadCache:downloadCache,
+    }
+
     //增加上传文件支持
     uploadCacheExpired,_:=time.ParseDuration(conf.Redis.UploadCacheExpired)
     uploadCache:=&data.DefatultUploadCache{}
@@ -117,6 +125,7 @@ func main() {
     dataController:=&data.DataController{
         DataRepository:dataRepo,
         UploadHandler:uploadHandler,
+        DownloadHandler:downloadHandler,
     }
     dataController.Bind(router)
 

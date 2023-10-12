@@ -1,45 +1,37 @@
 package data
 
 import (
-	"crv/frame/common"
-	"github.com/gin-gonic/gin"
+	//"crv/frame/common"
 	"log/slog"
-	"os"
-	"io"
-	"net/url"
 )
 
-type Download struct {
-	ModelID string `json:"modelID"`
-	List *[]map[string]interface{} `json:"list"`
-	AppDB string `json:"appDB"`
-	UserID string `json:"userID"`
+type DownloadHandler struct {
+	DownloadCache DownloadCache
 }
 
-func (download *Download) Execute(c *gin.Context)(int) {
-	name:=(*(download.List))[0]["name"].(string)
-	path:=(*(download.List))[0]["path"].(string)
-	fieldID:=(*(download.List))[0]["field_id"].(string)
-	rowID:=(*(download.List))[0]["row_id"].(string)
-	strID:=(*(download.List))[0]["id"].(string)
-
-	c.Header("Content-Type", "application/octet-stream")
-	filename:=url.QueryEscape(name)
-    c.Header("Content-Disposition", "attachment; filename="+filename)
-    c.Header("Content-Transfer-Encoding", "binary")
-
-	w:=c.Writer
-
-	fileName:=fieldID+"_row"+rowID+"_id"+strID+"_"+name
-
-	f,err:=os.Open(path+fileName)
-	if err != nil {
+func (download *DownloadHandler) GetDownloadKey(fileName string,orgName string)(string,error) {
+	key:=GetBatchID()
+	err:=download.DownloadCache.SaveDownloadKey(key,fileName,orgName)
+	if err!=nil {
 		slog.Error(err.Error())
-		return common.ResultOpenFileError
+		return "",err
 	}
-	io.Copy(w,f)
-	if err := f.Close(); err != nil {
+	return key,nil
+}
+
+func (download *DownloadHandler) GetDownloadFileName(key string)(string,string,error) {
+	fileName,err:=download.DownloadCache.GetDownloadFileName(key)
+	if err!=nil {
 		slog.Error(err.Error())
+		return "","",err
 	}
-	return common.ResultSuccess
+
+	orgName,err:=download.DownloadCache.GetOrgFileName(key)
+	if err!=nil {
+		slog.Error(err.Error())
+		return "","",err
+	}
+
+	download.DownloadCache.RemoveDownloadKey(key)
+	return fileName,orgName,nil
 }
