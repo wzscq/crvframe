@@ -2,7 +2,7 @@ import {useEffect, useMemo, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
 import { Space,Button,Upload,Tooltip } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined,DownloadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
@@ -56,6 +56,7 @@ export default function UploadControl({dataPath,control,field,sendMessageToParen
                     ...item,
                     uid:item.id,
                     status: 'done',
+                    canDownload:true,
                 }
             });
         }
@@ -189,14 +190,22 @@ export default function UploadControl({dataPath,control,field,sendMessageToParen
         });
     }
 
+    const onDownload=(file) =>{
+        sendMessageToParent(createDownloadFileMessage({list:[file]},file.name,true));
+    }
+
     const props = {
         accept:control.accept,
         showUploadList:{
             showDownloadIcon:true,
             showRemoveIcon:control.disabled!==true,
-        },
-        onDownload:file =>{
-            sendMessageToParent(createDownloadFileMessage({list:[file]},file.name,true));
+            downloadIcon:(file)=>{
+                if(file.canDownload){
+                    return <DownloadOutlined onClick={()=>{onDownload(file)}}/>
+                } else {
+                    return <div style={{display:'none',width:0,height:0}}/>;
+                }
+            }
         },
         onRemove: file => {
             const index = fileList.indexOf(file);
