@@ -1,8 +1,8 @@
 package operationlog
 
 import (
-	"bytes"
 	"github.com/gin-gonic/gin"
+	"bytes"
 )
 
 type responseWriter struct {
@@ -10,11 +10,7 @@ type responseWriter struct {
 	body *bytes.Buffer
 }
 
-func newResponseWriter(w gin.ResponseWriter) *responseWriter {
-	return &responseWriter{body: bytes.NewBufferString(""), ResponseWriter: w}
-}
-
-func (r responseWriter) Write(b []byte) (int, error) {
-	r.body.Write(b)
-	return r.ResponseWriter.Write(b)
+func (w responseWriter) Write(b []byte) (int, error) {
+	w.body.Write(b)
+	return w.ResponseWriter.Write(b)
 }

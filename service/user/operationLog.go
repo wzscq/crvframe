@@ -5,17 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func WriteLoginLog(appDB,ip,userID,result string,repo UserRepository,apps []string){
-	writeLog:=false
-
-	for _,app:=range apps {
-		if app == appDB {
-			writeLog=true
-			break
-		}
-	}
-	
-	if writeLog==false {
+func WriteLoginLog(appDB,ip,userID,result string,repo UserRepository,appMap map[string]bool){
+	writeLog,exist:=appMap[appDB]
+	if exist==false || writeLog==false {
 		return
 	}
 
@@ -33,17 +25,9 @@ func WriteLoginLog(appDB,ip,userID,result string,repo UserRepository,apps []stri
 	repo.CreateOperationLog(appDB,opLog)
 }
 
-func WriteLogoutLog(appDB,ip,userID,result string,repo UserRepository,apps []string){
-	writeLog:=false
-
-	for _,app:=range apps {
-		if app == appDB {
-			writeLog=true
-			break
-		}
-	}
-	
-	if writeLog==false {
+func WriteLogoutLog(appDB,ip,userID,result string,repo UserRepository,appMap map[string]bool){
+	writeLog,exist:=appMap[appDB]
+	if exist==false || writeLog==false {
 		return
 	}
 

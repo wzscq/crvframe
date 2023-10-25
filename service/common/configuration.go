@@ -44,8 +44,13 @@ type casConf struct {
 	Url string  `json:"url"`
 }
 
+type LoginLog struct {
+	Apps map[string]bool `json:"apps"`
+}
+
 type OperationLogConf struct {
-	Apps []string `json:"apps"`
+	Apps map[string]bool `json:"apps"`
+	FileOptions FileOptionConf `json:"fileOptions"`
 }
 
 type FileOptionConf struct {
@@ -71,6 +76,7 @@ type Config struct {
 	Cas casConf `json:"cas"`
 	OperationLog OperationLogConf `json:"operationLog"`
 	Log LogConf `json:"log"`
+	LoginLog LoginLog `json:"loginLog"`
 }
 
 var gConfig Config

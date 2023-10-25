@@ -2,109 +2,93 @@ package operationlog
 
 import (
   "github.com/gin-gonic/gin"
-	"log"
-	"strings"
-	"encoding/json"
-	"time"
+	"gopkg.in/natefinch/lumberjack.v2"
+	//"fmt"
 	"crv/frame/common"
+	"bytes"
+	"log/slog"
+	"io/ioutil"
+	"time"
 )
 
-func OperationLogMiddleware(repo OperationLogRepository,apps []string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		log.Print("OperationLogMiddleware start")
-		appDB:= c.MustGet("appDB").(string)
-		writeLog:=false
+func Init(router *gin.Engine,fileOptions *common.FileOptionConf,appMap map[string]bool) {
+	if appMap!=nil {
+		opLog:=OperationLogMiddleware(fileOptions,appMap)
+		dataGroup := router.Group("/data/")
+		dataGroup.Use(opLog)
+		apiGroup:=router.Group("/redirect")
+		apiGroup.Use(opLog)
+		user:=router.Group("/user")
+		user.Use(opLog)
+	}
+}
 
-		if strings.Index(c.Request.URL.Path,"/user/login") ==0 || 
-		   strings.Index(c.Request.URL.Path,"/user/logout") ==0{
-			for _,app:=range apps {
-				if app == appDB {
-					writeLog=true
-					break
-				}
-			}
-		}
+func OperationLogMiddleware(fileOptions *common.FileOptionConf,appMap map[string]bool) gin.HandlerFunc {
+	opLog:=OperationLog{
+		FileOptions:fileOptions,
+		AppLogs:make(map[string]*lumberjack.Logger),
+	}
 
-		if writeLog==false {
+	opItem:=OplogItem{}
+
+	return func(c *gin.Context) {		
+		appDB,exist:=c.Get("appDB")
+		if exist==false {
 			c.Next()
-			log.Print("OperationLogMiddleware end without record log")
 			return
 		}
 
-		userID:= c.MustGet("userID").(string)
-		writer:= newResponseWriter(c.Writer)
-		c.Writer=writer
+		writeLog,exist:=appMap[appDB.(string)]
+		if exist==false || writeLog==false {
+			c.Next()
+			return
+		}
+
+		userID,exist:= c.Get("userID")
+		if exist==false {
+			c.Next()
+			return
+		}
+
+		opItem.AppDB=appDB.(string)
+		opItem.UserID=userID.(string)
+		opItem.RequestTime=time.Now().Format("2006-01-02 15:04:05")
+		opItem.Url=c.Request.URL.String()
+		opItem.RequestContentType = c.Request.Header.Get("Content-Type")
+
+		if opItem.RequestContentType=="application/json" {
+			// 请求数据
+			bodyBytes, err := ioutil.ReadAll(c.Request.Body)
+			if err != nil {
+				slog.Error("Error reading body: %!s","error",err)
+				c.Next()
+				return
+			}
+
+			// 把读出来的 body 写回去
+			c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+			// 输出请求数据和请求地址
+			//fmt.Println("[Request]", appDB,userID,c.Request.URL,bodyBytes)
+			opItem.RequestBody=string(bodyBytes)
+		}
+		
+		writer := &responseWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		c.Writer = writer
 		
 		c.Next()
+		
+		c.Writer = writer.ResponseWriter
 
-		if strings.Index(c.Request.URL.Path,"/user/login") ==0 {
-			
-			if(c.Writer.Written()){
-				contentType := c.Writer.Header().Get("Content-Type")
-				if contentType == "application/json" {
-					//获取当前时间
-					now:=time.Now().Format("2006-01-02 15:04:05")
+		status := c.Writer.Status()
+		opItem.ResponseStatus=status
+		opItem.ResponseTime=time.Now().Format("2006-01-02 15:04:05")
 
-					opLog:=OperationLog{
-						OperationType:"login",
-						SourceType:"login",
-						IP:"",
-						Result:"success", 
-						CreateTime:now,
-						CreateUser:userID,
-						UpdateTime:now,
-						UpdateUser:userID,
-					}
-
-					var rsp common.CommonRsp
-					if err := json.Unmarshal(writer.body.Bytes(), &rsp); err != nil {
-							log.Println(err)
-							opLog.Result="fail"
-					} else {
-							// Now you can use your data
-							if rsp.Error==true {
-								opLog.Result="fail"
-							}
-					}
-
-					repo.CreateOperationLog(appDB,opLog)
-				}
-			}
+		opItem.ResponseContentType = c.Writer.Header().Get("Content-Type")
+		if opItem.ResponseContentType=="application/json" {
+			opItem.ResponseBody=writer.body.String()
 		}
 
-		if strings.Index(c.Request.URL.Path,"/user/logout") ==0 {
-			if(c.Writer.Written()){
-				contentType := c.Writer.Header().Get("Content-Type")
-				if contentType == "application/json" {
-					//获取当前时间
-					now:=time.Now().Format("2006-01-02 15:04:05")
-
-					opLog:=OperationLog{
-						OperationType:"logout",
-						SourceType:"login",
-						IP:"",
-						Result:"success", 
-						CreateTime:now,
-						CreateUser:userID,
-						UpdateTime:now,
-						UpdateUser:userID,
-					}
-
-					var rsp common.CommonRsp
-					if err := json.Unmarshal(writer.body.Bytes(), &rsp); err != nil {
-							log.Println(err)
-							opLog.Result="fail"
-					} else {
-							if rsp.Error==true {
-								opLog.Result="fail"
-							}
-					}
-
-					repo.CreateOperationLog(appDB,opLog)
-				}
-			}
-		}
-
-		log.Print("OperationLogMiddleware end")
+		opLog.WriteLog(&opItem)
+		//fmt.Println("[Response]", status, writer.body.String())
 	}
 }

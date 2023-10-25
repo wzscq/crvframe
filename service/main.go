@@ -15,7 +15,7 @@ import (
     "crv/frame/cas"
     "crv/frame/report"
     crvlog "crv/frame/log"
-    //"crv/frame/operationlog"
+    "crv/frame/operationlog"
     "time"
     "log/slog"
     "log"
@@ -63,17 +63,8 @@ func main() {
     router.Use(common.AuthMiddleware(loginCache,appCache))
 
     //初始化operationlog相关配置
-    /*opLogRepo:=&operationlog.DefatultOperationLogRepository{}
-    opLogRepo.Connect(
-        conf.Mysql.Server,
-        conf.Mysql.User,
-        conf.Mysql.Password,
-        conf.Mysql.DBName,
-        conf.Mysql.ConnMaxLifetime,
-        conf.Mysql.MaxOpenConns,
-        conf.Mysql.MaxIdleConns)
-    router.Use(operationlog.OperationLogMiddleware(opLogRepo,conf.OperationLog.Apps))*/
-
+    operationlog.Init(router,&conf.OperationLog.FileOptions,conf.OperationLog.Apps)
+    
     userRepo:=&user.DefatultUserRepository{}
     userRepo.Connect(
         conf.Mysql.Server,
@@ -88,7 +79,7 @@ func main() {
         UserRepository:userRepo,
         LoginCache:loginCache,
         AppCache:appCache,
-        OperationLogApps:conf.OperationLog.Apps,
+        LoginLogApps:conf.LoginLog.Apps,
     }
     userController.Bind(router)
     

@@ -100,6 +100,7 @@ func (controller *DataController) save(c *gin.Context) {
 		List:rep.List,
 		UserRoles:userRoles,
 	}
+	
 	result,errorCode=save.Execute(controller.DataRepository)
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 	c.IndentedJSON(http.StatusOK, rsp)

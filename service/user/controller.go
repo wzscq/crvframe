@@ -13,7 +13,7 @@ type UserController struct {
 	UserRepository UserRepository
 	LoginCache common.LoginCache 
 	AppCache common.AppCache
-	OperationLogApps []string
+	LoginLogApps map[string]bool
 }
 
 type repHeader struct {
@@ -119,7 +119,7 @@ func (controller *UserController)login(c *gin.Context) {
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		slog.Error("end user login with error","errorCode",errorCode,"message",rsp.Message)
-		WriteLoginLog(appDB,ip,rep.UserID,"fail",controller.UserRepository,controller.OperationLogApps)
+		WriteLoginLog(appDB,ip,rep.UserID,"fail",controller.UserRepository,controller.LoginLogApps)
 		return
 	}
 
@@ -128,7 +128,7 @@ func (controller *UserController)login(c *gin.Context) {
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		slog.Error("end user login with error","errorCode",errorCode,"message",rsp.Message)
-		WriteLoginLog(appDB,ip,rep.UserID,"fail",controller.UserRepository,controller.OperationLogApps)
+		WriteLoginLog(appDB,ip,rep.UserID,"fail",controller.UserRepository,controller.LoginLogApps)
 		return
 	}
 	
@@ -149,9 +149,9 @@ func (controller *UserController)login(c *gin.Context) {
 			InitOperations:initOperations,
 			AppConf:appConf,
 		}
-		WriteLoginLog(appDB,ip,rep.UserID,"success",controller.UserRepository,controller.OperationLogApps)
+		WriteLoginLog(appDB,ip,rep.UserID,"success",controller.UserRepository,controller.LoginLogApps)
 	} else {
-		WriteLoginLog(appDB,ip,rep.UserID,"fail",controller.UserRepository,controller.OperationLogApps)
+		WriteLoginLog(appDB,ip,rep.UserID,"fail",controller.UserRepository,controller.LoginLogApps)
 	}
 
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
@@ -169,7 +169,7 @@ func (controller *UserController) logout(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, rsp)
 
 	ip:=GetIP(c)
-	WriteLogoutLog(appDB,ip,userID,"success",controller.UserRepository,controller.OperationLogApps)
+	WriteLogoutLog(appDB,ip,userID,"success",controller.UserRepository,controller.LoginLogApps)
 
 	slog.Debug("end user logout")
 }
