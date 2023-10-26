@@ -165,7 +165,7 @@ func (controller *OAuthController)back(c *gin.Context) {
 		slog.Error("end OAuthController back with error","error",err)
 		return
 	}
-	slog.Debug("get userid","userid",userID)
+	slog.Info("get userid","userid",userID)
 	//获取本地用户信息，生成本地token，
 	result,err:=localLogin(controller.UserRepository,controller.LoginCache,req.AppID,appDB,userID)
 	if err!=nil {

@@ -28,6 +28,7 @@ func getAccessToken(appDB,oauthCode string)(string,*common.CommonError){
 	}
 
 	accessTokenUrl=fmt.Sprintf(accessTokenUrl,oauthCode)
+	slog.Info("getAccessToken","accessTokenUrl",accessTokenUrl)
 	req, err := http.NewRequest(http.MethodPost, accessTokenUrl, nil)
 	if err != nil {
 		slog.Error("OAuthClient getAccessToken new request error","error",err)
@@ -43,10 +44,10 @@ func getAccessToken(appDB,oauthCode string)(string,*common.CommonError){
 	defer rsp.Body.Close()
 
 	if rsp.StatusCode != 200 { 
-		slog.Error("OAuthClient getAccessToken bad status","rsp",rsp)
+		slog.Error("OAuthClient getAccessToken bad status","StatusCode",rsp.StatusCode)
 		return "",common.CreateError(common.ResultPostExternalApiError,nil)
 	}
-
+	
 	decoder := json.NewDecoder(rsp.Body)
 	var oauthToken OauthToken
 	err = decoder.Decode(&oauthToken)

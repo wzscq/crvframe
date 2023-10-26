@@ -13,7 +13,7 @@ export default function ListOperationBar({sendMessageToParent}){
     const {currentView} = useSelector(state=>state.data);
     const {getLocaleLabel}=useI18n();
     const {fields,views,modelID,operations}=useSelector(state=>state.definition);
-    const {selectedRowKeys,filter,pagination,sorter,selectedAll}=useSelector(state=>state.data.views[state.data.currentView].data);
+    const {selectedRowKeys,filter,pagination,sorter,selectAll}=useSelector(state=>state.data.views[state.data.currentView].data);
 
     const {searchFields,filterData,viewFilter}=useMemo(()=>{
         let searchFields=[];
@@ -82,7 +82,7 @@ export default function ListOperationBar({sendMessageToParent}){
                 pagination:pagination,
                 sorter:sorter,
                 fields:searchFields,
-                selectedAll:selectedAll
+                selectedAll:selectAll
             };
 
             const message={
@@ -94,9 +94,10 @@ export default function ListOperationBar({sendMessageToParent}){
                     }
                 }
             };
+            
             sendMessageToParent(message);
         }
-    },[operations,currentView,modelID,viewFilter,selectedRowKeys,filter,filterData,pagination,sorter,searchFields,sendMessageToParent]);
+    },[operations,currentView,modelID,getLocaleLabel,viewFilter,selectAll,selectedRowKeys,filter,filterData,pagination,sorter,searchFields,sendMessageToParent]);
 
     const buttonControls=useMemo(()=>{
         let buttonControls=[];
