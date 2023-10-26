@@ -16,7 +16,7 @@ type OauthToken struct {
 }
 
 type OauthUser struct {
-	ID string `json:"id"`
+	LoginName string `json:"loginName"`
 }
 
 func getAccessToken(appDB,oauthCode string)(string,*common.CommonError){
@@ -59,13 +59,14 @@ func getAccessToken(appDB,oauthCode string)(string,*common.CommonError){
 }
 
 func getUserID(appDB,oauthToken string)(string,*common.CommonError){
-	//获取用户access_token
+	//获取用户ID
 	getUserInfoUrl,errorCode:=definition.GetApiUrl(appDB,API_OAUTH2_USERINFO)
 	if(errorCode != common.ResultSuccess){
 		slog.Error("OAuthClient getUserInfo get api url error","errorCode",errorCode)
 		return "",common.CreateError(errorCode,nil)
 	}
 
+	getUserInfoUrl=fmt.Sprintf(getUserInfoUrl,oauthToken)
 	req, err := http.NewRequest(http.MethodGet, getUserInfoUrl, nil)
 	if err != nil {
 		slog.Error("OAuthClient getUserInfo new request error","error",err)
@@ -95,7 +96,7 @@ func getUserID(appDB,oauthToken string)(string,*common.CommonError){
 		return "",common.CreateError(common.ResultPostExternalApiError,nil)
 	}
 
-	return user.ID,nil
+	return user.LoginName,nil
 }
 
 func localLogin(

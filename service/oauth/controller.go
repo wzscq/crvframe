@@ -224,7 +224,7 @@ func (controller *OAuthController)userInfo(c *gin.Context){
 	}
 
 	result:=map[string]string{
-		"id":userID,
+		"loginName":userID,
 	}
 	//rsp:=common.CreateResponse(nil,token)
 	c.IndentedJSON(http.StatusOK, result)
