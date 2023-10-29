@@ -18,7 +18,7 @@ export default function OperationButton({type,operation,doOperation,disabled}){
     return (
         <Popconfirm
             title={<I18nLabel label={operation.prompt}/>}
-            disabled={promptDisabled}
+            open={!promptDisabled}
             onConfirm={handleOk}
             onCancel={handleCancel}
             okText={<I18nLabel label={{key:'page.crvlistview.opreationPrompt.confirm',default:'确定'}}/>}

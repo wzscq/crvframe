@@ -53,10 +53,11 @@ export default function StatusBar(){
         fields.forEach(field => {
             if(filterValueLabel[field.field]){
                 filterTags.push(
-                    <Tag closable onClose={()=>deleteFilter(field.field)}><span style={{padding:5}}>{getLocaleLabel(field.name)}{":"}{filterValueLabel[field.field]}</span></Tag>
+                    <Tag key={field.field} closable onClose={()=>deleteFilter(field.field)}><span style={{padding:5}}>{getLocaleLabel(field.name)}{":"}{filterValueLabel[field.field]}</span></Tag>
                 );
             }
         });
+        console.log('filterTags:'+JSON.stringify(filterValueLabel));
         return filterTags;
     },[filterValueLabel,fields,deleteFilter,getLocaleLabel]);
 

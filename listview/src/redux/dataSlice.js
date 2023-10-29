@@ -159,6 +159,9 @@ export const dataSlice = createSlice({
         refreshData:(state,action) => {
             const pagination=state.views[state.currentView].data.pagination;
             state.views[state.currentView].data.pagination={...pagination}
+            if(action.payload?.queryQueenable===true){
+                state.queryQueenable=true;
+            }
         },
         initDataView:(state,action) => {
             const {views,currentView,filter}=action.payload;

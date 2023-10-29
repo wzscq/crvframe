@@ -6,6 +6,9 @@ import { useSelector } from "react-redux";
 import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 import OperationButton from '../../../components/OperationButton';
 import useI18n from '../../../hooks/useI18n';
+import {
+    getListOperationPreporcessFunc
+} from '../../../utils/functions';
 
 import './index.css';
 
@@ -84,6 +87,13 @@ export default function ListOperationBar({sendMessageToParent}){
                 fields:searchFields,
                 selectedAll:selectAll
             };
+
+            //对operation做预处理，一般是基于数据行为operaiton增加过滤条件
+            if(operation&&opItem.preprocessing){
+                //console.log('preprocessing',opItem.preprocessing);
+                operation=getListOperationPreporcessFunc(opItem.preprocessing)(operation,input);
+                //console.log('preprocessing',operation);
+            }
 
             const message={
                 type:FRAME_MESSAGE_TYPE.DO_OPERATION,

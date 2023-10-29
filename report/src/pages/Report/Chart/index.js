@@ -23,40 +23,42 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
     console.log('Chart refresh',filterData);
 
     useEffect(()=>{
-        dispatch(setDataLoaded({controlID:id,loaded:false}));
+        if(data===undefined){
+            dispatch(setDataLoaded({controlID:id,loaded:false}));
 
-        const parsedSQLParameters={};
-        if(sqlParameters){
-            Object.keys(sqlParameters).forEach(key=>{
-                const funStr='"use strict";'+
-                    'return (function(moment,filterData){ '+
-                        'try {'+
-                            sqlParameters[key]+
-                        '} catch(e) {'+
-                        '   console.error(e);'+
-                        '   return undefined;'+
-                        '}'+
-                    '})';
-                parsedSQLParameters[key]=Function(funStr)()(moment,filterData);
-            });
-        }
-
-        //查询数据请求
-        const keyFrameParams={
-            ...frameParams,
-            dataKey:id
-        };
-
-        const message={
-            type:FRAME_MESSAGE_TYPE.REPORT_QUERY,
-            data:{
-                frameParams:keyFrameParams,
-                queryParams:{reportID,controlID:id,sqlParameters:parsedSQLParameters}
+            const parsedSQLParameters={};
+            if(sqlParameters){
+                Object.keys(sqlParameters).forEach(key=>{
+                    const funStr='"use strict";'+
+                        'return (function(moment,filterData){ '+
+                            'try {'+
+                                sqlParameters[key]+
+                            '} catch(e) {'+
+                            '   console.error(e);'+
+                            '   return undefined;'+
+                            '}'+
+                        '})';
+                    parsedSQLParameters[key]=Function(funStr)()(moment,filterData);
+                });
             }
+
+            //查询数据请求
+            const keyFrameParams={
+                ...frameParams,
+                dataKey:id
+            };
+
+            const message={
+                type:FRAME_MESSAGE_TYPE.REPORT_QUERY,
+                data:{
+                    frameParams:keyFrameParams,
+                    queryParams:{reportID,controlID:id,sqlParameters:parsedSQLParameters}
+                }
+            }
+            sendMessageToParent(message);
         }
-        sendMessageToParent(message);
         
-    },[id,frameParams,reportID,sqlParameters,filterData,sendMessageToParent,dispatch]);
+    },[id,data,frameParams,reportID,sqlParameters,filterData,sendMessageToParent,dispatch]);
 
     const chartOption=useMemo(()=>{
         console.log(data);

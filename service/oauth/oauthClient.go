@@ -103,10 +103,11 @@ func getUserID(appDB,oauthToken string)(string,*common.CommonError){
 func localLogin(
 	userRepository user.UserRepository,
 	loginCache common.LoginCache,
-	AppID,appDB,userID string)(*user.LoginResult,*common.CommonError){
+	AppID,appDB,userID,ip string,loginLogApps map[string]bool)(*user.LoginResult,*common.CommonError){
 	//查询用户信息
 	userInfo,err:=userRepository.GetUser(userID,appDB)
 	if err != nil {
+		user.WriteLoginLog(appDB,ip,userID,"fail",userRepository,loginLogApps)
 		if err == sql.ErrNoRows {
 			return nil,common.CreateError(common.ResultWrongUserPassword,nil)
 		}
@@ -116,6 +117,7 @@ func localLogin(
 	//查询用户角色信息
 	userRoles,err:=userRepository.GetUserRoles(userID,appDB)
 	if err != nil {
+		user.WriteLoginLog(appDB,ip,userID,"fail",userRepository,loginLogApps)
 		if err == sql.ErrNoRows {
 			return nil,common.CreateError(common.ResultNoUserRole,nil)
 		}
@@ -128,6 +130,7 @@ func localLogin(
 	err=loginCache.SetCache(userID,token,appDB,userRoles)
 	if err != nil {
 		slog.Error(err.Error())
+		user.WriteLoginLog(appDB,ip,userID,"fail",userRepository,loginLogApps)
 		return nil,common.CreateError(common.ResultCreateTokenError,nil)
 	}
 	
@@ -143,5 +146,6 @@ func localLogin(
 		InitOperations:initOperations,
 		AppConf:appConf,
 	}
+	user.WriteLoginLog(appDB,ip,userID,"success",userRepository,loginLogApps)
 	return result,nil
 }

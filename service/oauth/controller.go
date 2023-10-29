@@ -45,6 +45,7 @@ type OAuthController struct {
 	UserRepository user.UserRepository
 	OAuthCache *OAuthCache
 	LoginCache common.LoginCache
+	LoginLogApps map[string]bool
 }
 
 const (
@@ -166,8 +167,9 @@ func (controller *OAuthController)back(c *gin.Context) {
 		return
 	}
 	slog.Info("get userid","userid",userID)
+	ip:=user.GetIP(c)
 	//获取本地用户信息，生成本地token，
-	result,err:=localLogin(controller.UserRepository,controller.LoginCache,req.AppID,appDB,userID)
+	result,err:=localLogin(controller.UserRepository,controller.LoginCache,req.AppID,appDB,userID,ip,controller.LoginLogApps)
 	if err!=nil {
 		rsp:=common.CreateResponse(err,nil)
 		c.IndentedJSON(http.StatusOK, rsp)

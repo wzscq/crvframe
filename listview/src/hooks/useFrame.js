@@ -46,7 +46,7 @@ export default function useFrame(){
                 console.log("update data with wrong data type:",dataType);
             }
         }  else if (type===FRAME_MESSAGE_TYPE.RELOAD_DATA){
-            dispatch(refreshData());
+            dispatch(refreshData({queryQueenable:true}));
         } else if (type===FRAME_MESSAGE_TYPE.UPDATE_LOCALE){
             dispatch(setLocale(event.data.i18n));
         }

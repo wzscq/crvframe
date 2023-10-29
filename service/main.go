@@ -141,6 +141,7 @@ func main() {
         UserRepository:userRepo,
         OAuthCache:oauthCache,
         LoginCache:loginCache,
+        LoginLogApps:conf.LoginLog.Apps,
     }
     oauthController.Bind(router)
 

@@ -28,6 +28,19 @@ export const getOperationPreporcessFunc=(preporcess)=>{
     return Function(funStr)();
 }
 
+export const getListOperationPreporcessFunc=(preporcess)=>{
+    const funStr='"use strict";'+
+                'return (function(operation,input){ '+
+                    'try {'+
+                        preporcess+
+                    '} catch(e) {'+
+                    '   console.error(e);'+
+                    '   return undefined;'+
+                    '}'+
+                '})';
+    return Function(funStr)();
+}
+
 export const getRowButtonDisabledFunc=(disabled)=>{
     const funStr='"use strict";'+
                 'return (function(record){ '+
