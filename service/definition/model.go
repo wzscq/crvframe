@@ -59,6 +59,7 @@ type buttonConf struct {
 	SelectedRows *interface{} `json:"selectedRows,omitempty"`
 	Disabled *string `json:"disabled,omitempty"`
 	Preprocessing *string `json:"preprocessing,omitempty"`
+	AutoRun *interface{} `json:"autoRun,omitempty"`
 }
 
 type toolbarConf struct {

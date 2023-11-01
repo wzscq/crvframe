@@ -1,19 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Popconfirm,Button } from "antd";
 
 import I18nLabel from "../I18nLabel";
 
 export default function OperationButton({type,operation,doOperation,disabled}){
     const [promptDisabled,setPromptDisabled]=useState(true);
-
+    const [running,setRunning]=useState(false);
+    const [count,setCount]=useState(0);
+    
     const handleOk=()=>{
-        doOperation(operation);
-        setPromptDisabled(true);
+        if(operation.autoRun){
+            setRunning(!running);
+            setCount(0);
+        } else {
+            doOperation(operation);
+            setPromptDisabled(true);
+        }
     }
 
     const handleCancel=()=>{
         setPromptDisabled(true);
     }
+
+    useEffect(()=>{
+        if(running===true){
+            setTimeout(()=>{
+                doOperation(operation);
+                setCount(count+1);
+            },operation.autoRun.interval);
+        }
+    },[running,count]);
 
     return (
         <Popconfirm
@@ -26,8 +42,8 @@ export default function OperationButton({type,operation,doOperation,disabled}){
         >
             <Button 
                 disabled={disabled}
-                onClick={()=>operation.prompt?setPromptDisabled(false):doOperation(operation)} 
-                type={type}>
+                onClick={()=>operation.prompt?setPromptDisabled(false):handleOk()} 
+                type={running?"":type}>
                 <I18nLabel label={operation.name}/>
             </Button>
         </Popconfirm>
