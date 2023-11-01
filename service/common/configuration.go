@@ -99,7 +99,17 @@ func InitConfig(confFile string)(*Config){
 	if err != nil {
 		slog.Error("json file decode failed [Err:"+err.Error()+"]", )
 	}
+
+	err=os.MkdirAll(gConfig.File.Root, 0755)
+	if err != nil {
+		// 打印错误和更多的调试信息
+		slog.Error("create file root failed [Err:"+err.Error()+"]", )
+ 	}
+
 	slog.Debug("init configuation end")
+
+	
+
 	return &gConfig
 }
 

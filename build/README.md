@@ -1,7 +1,7 @@
 # crv_frame_build
 
 #run crvframe in docker
-docker run -d --name crvframe -p8070:80 -v /root/crvframe/logs:/services/crvframe/logs -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf  wangzhsh/crvframe:0.1.0
+docker run -d --name crvframe -p80:80 -v /root/crvframe/logs:/services/crvframe/logs -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf  wangzhsh/crvframe:0.1.1
 
 install docker
 yum install -y yum-utils
