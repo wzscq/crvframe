@@ -13,6 +13,7 @@ import "./index.css";
 export default function FrameTab({inResize}){
     const dispatch=useDispatch();
     const {current,items}=useSelector(state=>state.tab);
+    const filterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
     const {getLocaleLabel,locale,resources}=useI18n();
     const { TabPane } = Tabs;
 
@@ -63,11 +64,11 @@ export default function FrameTab({inResize}){
 
             return (
                 <TabPane tab={titleLabel} key={key} closable={closable===false?false:true}>
-                    <ChildFrame inResize={inResize} locale={locale}  resources={resources} item={item}/>
+                    <ChildFrame inResize={inResize} filterData={filterData} locale={locale}  resources={resources} item={item}/>
                 </TabPane>
             );
         });
-    },[items,getLocaleLabel,locale,resources,inResize]);
+    },[items,getLocaleLabel,locale,resources,filterData,inResize]);
     
     //这里注意初始时由于locale是undefined，在刷新页面时会导致tab页多次刷新会造成多次触发子页面INIT的情况，这里暂时用locale是否未空做个临时处理
     return (

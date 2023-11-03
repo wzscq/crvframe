@@ -9,6 +9,8 @@ import logReducer from './logSlice';
 import i18nReducer from './i18nSlice';
 import oauthReducer from './oauthSlice';
 import menuReducer from './menuSlice';
+import dataReducer from './dataSlice';
+import frameReducer from './frameSlice';
 
 const store = configureStore({
   reducer: {
@@ -20,7 +22,9 @@ const store = configureStore({
     i18n:i18nReducer,
     operation:operationReducer,
     oauth:oauthReducer,
-    menu:menuReducer
+    menu:menuReducer,
+    data:dataReducer,
+    frame:frameReducer
   }
 });
 

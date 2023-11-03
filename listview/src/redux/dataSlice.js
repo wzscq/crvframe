@@ -107,6 +107,7 @@ export const dataSlice = createSlice({
         },
         setSelectedRowKeys: (state,action) => {
             state.views[state.currentView].data.selectedRowKeys=action.payload;
+            state.views[state.currentView].data.selectAll=false;
         },
         setSorter: (state,action) => {
             state.views[state.currentView].data.sorter=action.payload;
@@ -146,6 +147,7 @@ export const dataSlice = createSlice({
         },
         setSelectAll:(state,action) => {
             state.views[state.currentView].data.selectAll=action.payload;
+            state.views[state.currentView].data.selectedRowKeys=[];
         },
         setData:(state,action) => {
             state.views[state.currentView].data.total=action.payload.total;

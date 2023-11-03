@@ -18,6 +18,7 @@ type CommonReq struct {
 	ModelID string `json:"modelID"`
 	ViewID *string `json:"viewID"`
 	FilterData *[]FilterDataItem `json:"filterData"`
+	GlobalFilterData *map[string]interface{} `json:"globalFilterData"`
 	Filter *map[string]interface{} `json:"filter"`
 	List *[]map[string]interface{} `json:"list"`
 	Fields *[]Field `json:"fields"`
@@ -39,24 +40,32 @@ func (controller *DataController) query(c *gin.Context) {
 	userRoles:= c.MustGet("userRoles").(string)
 	userID:= c.MustGet("userID").(string)
 	appDB:= c.MustGet("appDB").(string)
-	var rep CommonReq
+	var req CommonReq
 	var errorCode int
 	var result *QueryResult
-	if err := c.BindJSON(&rep); err != nil {
+	if err := c.BindJSON(&req); err != nil {
 		slog.Error(err.Error())
 		errorCode=common.ResultWrongRequest
-    } else {
-		errorCode=processFilter(rep.Filter,rep.FilterData,userID,userRoles,appDB,controller.DataRepository)
+  } else {
+		errorCode=processFilter(
+			req.Filter,
+			req.FilterData,
+			req.GlobalFilterData,
+			userID,
+			userRoles,
+			appDB,
+			controller.DataRepository)
+
 		if errorCode==common.ResultSuccess {
 			//ReplaceArrayValue(rep.Filter,rep.Fields)
 			query:=&Query{
-				ModelID:rep.ModelID,
-				ViewID:rep.ViewID,
-				Pagination:rep.Pagination,
-				Filter:rep.Filter,
-				Fields:rep.Fields,
+				ModelID:req.ModelID,
+				ViewID:req.ViewID,
+				Pagination:req.Pagination,
+				Filter:req.Filter,
+				Fields:req.Fields,
 				AppDB:appDB,
-				Sorter:rep.Sorter,
+				Sorter:req.Sorter,
 				UserRoles:userRoles,
 			}
 			result,errorCode=query.Execute(controller.DataRepository,true)
@@ -152,10 +161,10 @@ func (controller *DataController) update(c *gin.Context) {
 	userID:= c.MustGet("userID").(string)
 	userRoles:= c.MustGet("userRoles").(string)
 	appDB:= c.MustGet("appDB").(string)
-	var rep CommonReq
+	var req CommonReq
 	var errorCode int
 	var result *map[string]interface {} = nil
-	if err := c.BindJSON(&rep); err != nil {
+	if err := c.BindJSON(&req); err != nil {
 		slog.Error(err.Error())
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
@@ -164,7 +173,7 @@ func (controller *DataController) update(c *gin.Context) {
 		return
   }
 
-	if (rep.SelectedRowKeys == nil || len(*rep.SelectedRowKeys)==0) && rep.SelectAll==false {
+	if (req.SelectedRowKeys == nil || len(*req.SelectedRowKeys)==0) && req.SelectAll==false {
 		errorCode=common.ResultWrongRequest
 		rsp:=common.CreateResponse(common.CreateError(errorCode,nil),result)
 		c.IndentedJSON(http.StatusOK, rsp)
@@ -172,18 +181,18 @@ func (controller *DataController) update(c *gin.Context) {
 		return
 	}
 
-	errorCode=processFilter(rep.Filter,rep.FilterData,userID,userRoles,appDB,controller.DataRepository)
+	errorCode=processFilter(req.Filter,req.FilterData,req.GlobalFilterData,userID,userRoles,appDB,controller.DataRepository)
 	if errorCode==common.ResultSuccess {
 		update:=&Update{
-			ModelID:rep.ModelID,
-			ViewID:rep.ViewID,
+			ModelID:req.ModelID,
+			ViewID:req.ViewID,
 			AppDB:appDB,
 			UserID:userID,
-			SelectedRowKeys:rep.SelectedRowKeys,
+			SelectedRowKeys:req.SelectedRowKeys,
 			UserRoles:userRoles,
-			List:rep.List,
-			Filter:rep.Filter,
-			Fields:rep.Fields,
+			List:req.List,
+			Filter:req.Filter,
+			Fields:req.Fields,
 		}
 		result,errorCode=update.Execute(controller.DataRepository)
 	}

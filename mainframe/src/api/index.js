@@ -250,13 +250,21 @@ export const queryData = ({frameParams,queryParams},errorCallback)=>{
       errorCallback(response.data);
     } else {
       const {frameID,frameType,dataKey}=frameParams;
-      const frameControl=document.getElementById(frameType+"_"+frameID);
-      if(frameControl){
-          const origin=parseUrl(frameControl.getAttribute("src")).origin;
-          frameControl.contentWindow.postMessage({
-            type:FRAME_MESSAGE_TYPE.QUERY_RESPONSE,
-            dataKey:dataKey,
-            data:response.data.result},origin);
+      console.log('queryData',frameID,frameType,dataKey);
+      if(frameType==='mainframe'){
+        window.postMessage({
+          type:FRAME_MESSAGE_TYPE.QUERY_RESPONSE,
+          dataKey:dataKey,
+          data:response.data.result});
+      } else {
+        const frameControl=document.getElementById(frameType+"_"+frameID);
+        if(frameControl){
+            const origin=parseUrl(frameControl.getAttribute("src")).origin;
+            frameControl.contentWindow.postMessage({
+              type:FRAME_MESSAGE_TYPE.QUERY_RESPONSE,
+              dataKey:dataKey,
+              data:response.data.result},origin);
+        }
       }
     }
   })

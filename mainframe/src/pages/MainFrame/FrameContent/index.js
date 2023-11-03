@@ -74,7 +74,7 @@ export default function FrameContent(){
 
     let frameContent=(
         <div style={{height:'100%'}}>
-            <FrameHeader/>
+            <FrameHeader filterFormConf={appConf?.filterForm}/>
             <div style={{width:'100%',height:'calc(100% - 45px)',position:'relative'}}>
                 <FrameTab inResize={inResize} />
             </div>

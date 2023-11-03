@@ -5,9 +5,10 @@ import {convertUrl, parseUrl} from '../../../../utils/urlParser';
 
 const frameType="tabframe";
 
-export default function ChildFrame({item,locale,resources,inResize}){
+export default function ChildFrame({item,locale,resources,inResize,filterData}){
     const refFrame=useRef();
     const [lastLocale,setLastLocale]=useState(undefined);
+    const [lastFilterData,setLastFilterData]=useState(undefined);
 
     //注意这里的处理逻辑，当locale=undefined时表示语言资源尚未加载，这时暂不渲染iframe，
     //当locale!=undefined而lastLocale=undefined时表示iframe第一次渲染，这时触发子页的INIT
@@ -58,6 +59,20 @@ export default function ChildFrame({item,locale,resources,inResize}){
             }
         }
     },[refFrame,item,locale,lastLocale,resources,setLastLocale]);
+
+
+    useEffect(()=>{
+        if(refFrame.current){
+            const filterStr=JSON.stringify(filterData);
+            if(filterStr!==lastFilterData&&lastFilterData!==undefined){
+                console.log('filterData', filterData,lastFilterData);
+                const url=parseUrl(item.params.url);
+                refFrame.current.contentWindow.postMessage({type:FRAME_MESSAGE_TYPE.RELOAD_DATA,data:{}},url.origin);
+            }
+            setLastFilterData(filterStr);
+        }
+    },[refFrame,filterData,item,lastFilterData,setLastFilterData]);
+
 
     useEffect(()=>{
         if(refFrame.current!==null&&refFrame.current!==undefined){

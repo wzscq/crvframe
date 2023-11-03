@@ -137,7 +137,7 @@ func localLogin(
 	//获取当前用户的初始操作
 	initOperations:=definition.GetOperations(appDB,userRoles)
 	//获取应用配置信息
-	appConf,_:=definition.GetAPPConf(appDB)
+	appConf,_:=definition.GetAPPConf(appDB,userID,userRoles)
 	result:=&user.LoginResult{
 		UserID:userInfo.UserID,
 		UserName:userInfo.UserNameZh,

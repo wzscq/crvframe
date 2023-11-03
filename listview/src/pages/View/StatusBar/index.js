@@ -69,9 +69,9 @@ export default function StatusBar(){
                     getLocaleLabel({key:'page.crvlistview.item',default:' 条'});
 
     let selectAllControl=null;
-    //console.log('currentView:'+currentView?.options);
+    console.log('currentView.selectAll',selectAll);
     if(currentView?.options?.showSelectAll===true){
-        selectAllControl=(<Checkbox value={selectAll} onChange={onSelectAllChange}>{getLocaleLabel({key:'page.crvlistview.selectAll',default:'选择全部'})}</Checkbox>);                
+        selectAllControl=(<Checkbox checked={selectAll} onChange={onSelectAllChange}>{getLocaleLabel({key:'page.crvlistview.selectAll',default:'选择全部'})}</Checkbox>);                
     }
 
     return (

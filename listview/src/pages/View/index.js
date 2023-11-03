@@ -39,24 +39,28 @@ export default function View(){
     },[loaded,origin,item,modelID,dispatch,sendMessageToParent,views]);
 
     if(loaded){
-        if(currentView){
-            return (
-                <div className='list_view_main'>
-                    <Row>
-                        <Col span={6}><ModelViewList/></Col>
-                        <Col span={18}><ListOperationBar sendMessageToParent={sendMessageToParent}/></Col>
-                    </Row>
-                    <Row>
-                        <Col span={18}><StatusBar/></Col>
-                        <Col span={6}><SearchBar/></Col>
-                    </Row>
-                    <Row>
-                        <Col span={24}><ListTable sendMessageToParent={sendMessageToParent} /></Col>                   
-                    </Row>
-                </div>
-            );
+        if(views?.length>0){            
+           if(currentView){
+                return (
+                    <div className='list_view_main'>
+                        <Row>
+                            <Col span={6}><ModelViewList/></Col>
+                            <Col span={18}><ListOperationBar sendMessageToParent={sendMessageToParent}/></Col>
+                        </Row>
+                        <Row>
+                            <Col span={18}><StatusBar/></Col>
+                            <Col span={6}><SearchBar/></Col>
+                        </Row>
+                        <Row>
+                            <Col span={24}><ListTable sendMessageToParent={sendMessageToParent} /></Col>                   
+                        </Row>
+                    </div>
+                );
+            } else {
+                return(<PageLoading/>);
+            }
         } else {
-            return <NoView/>
+            return(<NoView/>);
         }
     } else {
         return(<PageLoading/>);

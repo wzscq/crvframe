@@ -47,6 +47,7 @@ export default function OperationDialog(){
     const {doneList,current,needConfirm,queen}=useSelector(state=>state.operation);
     const {pending,error,result:requestResult,message:resultMessage,params:resultParams,errorCode}=useSelector(state=>state.request);
     const {current:currentTab,items:tabItems}=useSelector(state=>state.tab);
+    const globalFilterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
 
     //已完成操作列表
     const operationList=doneList.map((item,index)=>{
@@ -184,7 +185,7 @@ export default function OperationDialog(){
                     url:current.params.url,
                     method:current.params.method,
                     responseType:current.params.responseType,
-                    data:current.input
+                    data:{...current.input,globalFilterData}
                 }
                 dispatch(requestAction(params));
                 dispatch(operationPending(true));
@@ -321,11 +322,10 @@ export default function OperationDialog(){
                 dispatch(logInfo('do_operation:'+JSON.stringify(data.operationItem)));
                 dispatch(setOperation(data.operationItem));
             } else if (type===FRAME_MESSAGE_TYPE.QUERY_REQUEST) {
-                queryData(data,errorCallback);
+                queryData({...data,globalFilterData},errorCallback);
             } else if (type===FRAME_MESSAGE_TYPE.REPORT_QUERY){
                 queryReportData(data,errorCallback);
             } else if (type===FRAME_MESSAGE_TYPE.GET_IMAGE) {
-                console.log('wzstest get image');
                 getImage(data,errorCallback);
             } else if (type===FRAME_MESSAGE_TYPE.GET_UPLOAD_KEY){
                 getUploadKey(data,errorCallback);
@@ -338,7 +338,7 @@ export default function OperationDialog(){
         return ()=>{
             window.removeEventListener('message',receiveMessageFromSubFrame);
         }
-    },[runing,dispatch,getLocaleLabel]);
+    },[runing,dispatch,getLocaleLabel,globalFilterData]);
 
 
     //这里处理队列中的操作
