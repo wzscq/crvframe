@@ -14,6 +14,7 @@ import StatusBar from './StatusBar';
 import {createGetModelConfMessage} from '../../utils/normalOperations';
 import {initDataView} from '../../redux/dataSlice';
 import NoView from './NoView';
+import ColumnSettingDialog from './ColumnSettingDialog';
 
 import './index.css';
 
@@ -22,6 +23,7 @@ export default function View(){
     const {loaded,views} = useSelector(state=>state.definition);
     const {currentView} = useSelector(state=>state.data);
     const {origin,item}=useSelector(state=>state.frame);
+    const {showColumnSettingDialog}=useSelector(state=>state.definition);
     const sendMessageToParent=useFrame();
     const {modelID}=useParams();
 
@@ -42,6 +44,7 @@ export default function View(){
         if(views?.length>0){            
            if(currentView){
                 return (
+                    <>
                     <div className='list_view_main'>
                         <Row>
                             <Col span={6}><ModelViewList/></Col>
@@ -55,6 +58,8 @@ export default function View(){
                             <Col span={24}><ListTable sendMessageToParent={sendMessageToParent} /></Col>                   
                         </Row>
                     </div>
+                    {showColumnSettingDialog===true?<ColumnSettingDialog/>:null}
+                    </>
                 );
             } else {
                 return(<PageLoading/>);

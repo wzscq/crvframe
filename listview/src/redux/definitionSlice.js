@@ -7,6 +7,7 @@ const initialState = {
     fields:[],
     operations:[],
     views:[],
+    showColumnSettingDialog:false,
 }
 
 export const definitionSlice = createSlice({
@@ -19,11 +20,27 @@ export const definitionSlice = createSlice({
            state.operations=action.payload.operations;
            state.views=action.payload.views;
            state.loaded=true;
+        },
+        setViewFields: (state,action) => {
+            console.log('setViewFields:',action.payload);
+            state.views=state.views.map(item=>{
+                if(item.viewID===action.payload.viewID){
+                    return {...item,fields:action.payload.fields};
+                }
+                return item;
+            });
+        },
+        setShowColumnSettingDialog: (state,action) => {
+            state.showColumnSettingDialog=action.payload;
         }
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { setDefinition } = definitionSlice.actions
+export const { 
+    setDefinition,
+    setViewFields,
+    setShowColumnSettingDialog
+} = definitionSlice.actions
 
 export default definitionSlice.reducer

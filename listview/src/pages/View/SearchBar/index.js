@@ -1,8 +1,9 @@
 import {useMemo,useCallback} from 'react';
 import { Input, Space, Button,Tooltip } from 'antd';
-import { StopOutlined,SyncOutlined } from '@ant-design/icons';
+import { StopOutlined,SyncOutlined,SettingOutlined } from '@ant-design/icons';
 import { useDispatch,useSelector } from "react-redux";
 import { refreshData,setFilter } from '../../../redux/dataSlice';
+import {setShowColumnSettingDialog} from '../../../redux/definitionSlice';
 
 import './index.css';
 import useI18n from '../../../hooks/useI18n';
@@ -46,6 +47,10 @@ export default function SearchBar(){
         dispatch(refreshData());
     }
 
+    const columnSettings=()=>{
+        dispatch(setShowColumnSettingDialog(true));
+    }
+
     return (
         <div className='search-bar'>
             <Space>
@@ -64,6 +69,14 @@ export default function SearchBar(){
                         icon={<SyncOutlined />}
                         loading={false}
                         onClick={refresh}
+                    />
+                </Tooltip>
+                <Tooltip title={getLocaleLabel({key:'page.crvlistview.column',default:'列设置'})}>
+                    <Button
+                        type="primary"
+                        icon={<SettingOutlined />}
+                        loading={false}
+                        onClick={columnSettings}
                     />
                 </Tooltip>
             </Space>

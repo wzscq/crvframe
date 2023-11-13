@@ -13,16 +13,17 @@ import {createQueryDataMessage} from '../../../utils/normalOperations';
 import RowOperationBar from '../RowOperationBar';
 import ColumnControl from "./ColumnControl";
 import I18nLabel from "../../../components/I18nLabel";
-import './index.css';
 import { formatStringNumber } from "../../../utils/functions";
 import { FIELD_TYPE } from "../../../utils/constant";
+
+import './index.css';
 
 export default function ListTable({sendMessageToParent}){
     const dispatch=useDispatch();
     const { height,ref } = useResizeDetector();
     const {origin,item}=useSelector(state=>state.frame);
     const {currentView} = useSelector(state=>state.data);
-    const {fields,views,modelID}=useSelector(state=>state.definition);
+    const {fields,modelID,views}=useSelector(state=>state.definition);
     const {queryQueenable}=useSelector(state=>state.data);
     const {selectedRowKeys,list,summaries,fixedColumn,filter,pagination,sorter}=useSelector(state=>state.data.views[state.data.currentView].data);
 
@@ -94,9 +95,11 @@ export default function ListTable({sendMessageToParent}){
             }
             if(viewConf.fields){
                 viewConf.fields.forEach((fieldItem,index) => {
-                    const fieldConf=fields.find(item=>item.field===fieldItem.field);
-                    if(fieldConf){
-                        columns.push(getColumn({...fieldConf,...fieldItem},index,fixedColumn>index)); 
+                    if(fieldItem.visible!==false){
+                        const fieldConf=fields.find(item=>item.field===fieldItem.field);
+                        if(fieldConf){
+                            columns.push(getColumn({...fieldConf,...fieldItem},index,fixedColumn>index)); 
+                        }
                     }
                 });
             }
@@ -106,7 +109,7 @@ export default function ListTable({sendMessageToParent}){
 
     const searchFields=useMemo(()=>{
         let searchFields=[];
-        const viewConf=views.find(item=>item.viewID===currentView);
+        //const viewConf=views.find(item=>item.viewID===currentView);
         if(viewConf&&viewConf.fields){
             viewConf.fields.forEach((fieldItem,index) => {
                 const fieldConf=fields.find(item=>item.field===fieldItem.field);
@@ -135,7 +138,7 @@ export default function ListTable({sendMessageToParent}){
             });
         }
         return searchFields
-    },[fields,currentView,views]);
+    },[fields,currentView,viewConf]);
 
     useEffect(()=>{
         if(item&&origin&&searchFields.length>0){

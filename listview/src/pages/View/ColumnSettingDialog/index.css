@@ -1,0 +1,16 @@
+.column-setting-dialog .ant-transfer-list {
+  width: 100%;
+}
+
+.column-setting-dialog .ant-table-header {
+  display: none;
+}
+
+.column-setting-dialog .ant-table-cell {
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+}
+
+.column-setting-dialog .ant-empty-normal {
+  margin-block: 61px;
+}
