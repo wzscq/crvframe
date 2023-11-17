@@ -21,7 +21,7 @@ import './index.css';
 export default function View(){
     const dispatch= useDispatch();
     const {loaded,views} = useSelector(state=>state.definition);
-    const {currentView} = useSelector(state=>state.data);
+    const {initialized} = useSelector(state=>state.data);
     const {origin,item}=useSelector(state=>state.frame);
     const {showColumnSettingDialog}=useSelector(state=>state.definition);
     const sendMessageToParent=useFrame();
@@ -33,37 +33,33 @@ export default function View(){
                 //加载配置
                 console.log('get model config ...');
                 sendMessageToParent(createGetModelConfMessage({frameType:item.frameType,frameID:item.params.key,origin:origin},modelID,item.params.views));
-            } else {
+            } else if (initialized===false) {
                 console.log("loaded views :",views);
                 dispatch(initDataView({views,currentView:item.params.view,filter:item.params.filter}));
             }
         }
-    },[loaded,origin,item,modelID,dispatch,sendMessageToParent,views]);
+    },[loaded,origin,item,modelID,initialized,dispatch,sendMessageToParent,views]);
 
-    if(loaded){
+    if(loaded&&initialized){
         if(views?.length>0){            
-           if(currentView){
-                return (
-                    <>
-                    <div className='list_view_main'>
-                        <Row>
-                            <Col span={6}><ModelViewList/></Col>
-                            <Col span={18}><ListOperationBar sendMessageToParent={sendMessageToParent}/></Col>
-                        </Row>
-                        <Row>
-                            <Col span={18}><StatusBar/></Col>
-                            <Col span={6}><SearchBar/></Col>
-                        </Row>
-                        <Row>
-                            <Col span={24}><ListTable sendMessageToParent={sendMessageToParent} /></Col>                   
-                        </Row>
-                    </div>
-                    {showColumnSettingDialog===true?<ColumnSettingDialog/>:null}
-                    </>
-                );
-            } else {
-                return(<PageLoading/>);
-            }
+            return (
+                <>
+                <div className='list_view_main'>
+                    <Row>
+                        <Col span={6}><ModelViewList/></Col>
+                        <Col span={18}><ListOperationBar sendMessageToParent={sendMessageToParent}/></Col>
+                    </Row>
+                    <Row>
+                        <Col span={18}><StatusBar/></Col>
+                        <Col span={6}><SearchBar/></Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}><ListTable sendMessageToParent={sendMessageToParent} /></Col>                   
+                    </Row>
+                </div>
+                {showColumnSettingDialog===true?<ColumnSettingDialog/>:null}
+                </>
+            );
         } else {
             return(<NoView/>);
         }

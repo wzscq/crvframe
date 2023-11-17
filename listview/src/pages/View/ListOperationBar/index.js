@@ -40,7 +40,7 @@ export default function ListOperationBar({sendMessageToParent}){
         }
 
         return {searchFields,filterData:viewConf?.filterData,viewFilter:viewConf.filter}
-    },[fields,currentView,views]);
+    },[currentView]);
 
     const doOperation=useCallback((opItem)=>{
         if(opItem.selectedRows){
@@ -130,7 +130,7 @@ export default function ListOperationBar({sendMessageToParent}){
             }
         }
         return buttonControls;
-    },[currentView,operations,views,doOperation]);
+    },[currentView,operations,doOperation]);
 
     return (
         <div className="list-operation-bar">
@@ -138,5 +138,5 @@ export default function ListOperationBar({sendMessageToParent}){
                 {buttonControls}
             </Space>
         </div>
-    )
+    );
 }

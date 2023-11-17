@@ -25,7 +25,7 @@ export default function SearchBar(){
             ).map(field=>field.field)
         }
         return [];
-    },[fields,views,currentView]);
+    },[fields,currentView]);
 
     const onSearch=useCallback((value)=>{
         if(quickSearchFields.length>0){
@@ -36,6 +36,8 @@ export default function SearchBar(){
             });
             const op='Op.or';
             dispatch(setFilter({[op]:fieldsFilter}));
+        } else {
+            console.log('no quick search fields');
         }
     },[quickSearchFields,dispatch]);
 
@@ -54,15 +56,18 @@ export default function SearchBar(){
     return (
         <div className='search-bar'>
             <Space>
-                <Search placeholder={getLocaleLabel({key:'page.crvlistview.searchInputPlaceholder',default:'input search text'})} onSearch={onSearch}/>
-                <Tooltip title={getLocaleLabel({key:'page.crvlistview.resetFilter',default:'重置查询条件'})}>
-                    <Button
-                        type="primary"
-                        icon={<StopOutlined />}
-                        loading={false}
-                        onClick={reset}
-                    />
-                </Tooltip>
+                {quickSearchFields.length>0?<>
+                    <Search placeholder={getLocaleLabel({key:'page.crvlistview.searchInputPlaceholder',default:'input search text'})} onSearch={onSearch}/>
+                    <Tooltip title={getLocaleLabel({key:'page.crvlistview.resetFilter',default:'重置查询条件'})}>
+                        <Button
+                            type="primary"
+                            icon={<StopOutlined />}
+                            loading={false}
+                            onClick={reset}
+                        />
+                    </Tooltip>
+                </>:null
+                }
                 <Tooltip title={getLocaleLabel({key:'page.crvlistview.refresh',default:'刷新'})}>
                     <Button
                         type="primary"

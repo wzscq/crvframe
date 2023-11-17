@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     currentView:null,
     queryQueenable:true,
+    initialized:false,
     views:{
         /*view1:{
             data:{
@@ -183,6 +184,7 @@ export const dataSlice = createSlice({
                 const pagination=state.views[state.currentView].data.pagination;
                 state.views[state.currentView].data.pagination={...pagination,current:1}
             }
+            state.initialized=true;
         },
         setViewFilter:(state,action) => {
             const {view,filter}=action.payload;

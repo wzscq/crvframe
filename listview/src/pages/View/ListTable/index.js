@@ -5,6 +5,7 @@ import { useDispatch, useSelector, } from "react-redux";
 import { useResizeDetector } from 'react-resize-detector';
 
 import {setSelectedRowKeys} from '../../../redux/dataSlice';
+import {setViewFieldWidth} from '../../../redux/definitionSlice';
 import FilterDropdown from './FilterDropdown';
 import FilterIcon from './FilterIcon';
 import TableFooter from './TableFooter';
@@ -15,6 +16,8 @@ import ColumnControl from "./ColumnControl";
 import I18nLabel from "../../../components/I18nLabel";
 import { formatStringNumber } from "../../../utils/functions";
 import { FIELD_TYPE } from "../../../utils/constant";
+
+import ResizableTitle from './ResizableTitle';
 
 import './index.css';
 
@@ -32,7 +35,7 @@ export default function ListTable({sendMessageToParent}){
     },[currentView,views]);
 
     //根据视图列配置生成列
-    const getColumn=useCallback((field,index,isFixed)=>{
+    const getColumn=(sendMessageToParent,currentView,field,index,isFixed)=>{
         const getCellStyleFunc=(cellStyle)=>{
             const funStr='"use strict";'+
                         'return (function(record, rowIndex){ '+
@@ -67,11 +70,18 @@ export default function ListTable({sendMessageToParent}){
             },
             render:(text, record, index)=>{
                 return <ColumnControl sendMessageToParent={sendMessageToParent} text={text} field={field} record={record} index={index} />;
-            }
+            },
+            onHeaderCell: (column) => ({
+                width: column.width,
+                resizable:isFixed?false:true,
+                onColumnResize: (width) => {
+                    dispatch(setViewFieldWidth({viewID:currentView,field:field.field,width:width}));
+                }
+            })
         }
-    },[sendMessageToParent]);
+    };
 
-    const getOperationColumn=useCallback((rowToolbar)=>{
+    const getOperationColumn=(rowToolbar,sendMessageToParent)=>{
         const {showCount,buttons,width}=rowToolbar;
         return { 
             title: <I18nLabel label={{key:'page.crvlistview.operationColumnTitle',default:'操作'}}/>, 
@@ -83,29 +93,34 @@ export default function ListTable({sendMessageToParent}){
                                                 showCount={showCount} 
                                                 buttons={buttons} 
                                                 record={record}/>
+                                                ,
+            onHeaderCell: (column) => ({
+                width: column.width,
+                resizable:false,
+            })
         }
-    },[sendMessageToParent]);
+    };
     
     const columns=useMemo(()=>{
         let columns=[];
         if(viewConf){
             const rowToolbar=viewConf.toolbar?.rowToolbar;
             if(rowToolbar?.buttons?.length>0){
-                columns.push(getOperationColumn(rowToolbar));
+                columns.push(getOperationColumn(rowToolbar,sendMessageToParent));
             }
             if(viewConf.fields){
                 viewConf.fields.forEach((fieldItem,index) => {
                     if(fieldItem.visible!==false){
                         const fieldConf=fields.find(item=>item.field===fieldItem.field);
                         if(fieldConf){
-                            columns.push(getColumn({...fieldConf,...fieldItem},index,fixedColumn>index)); 
+                            columns.push(getColumn(sendMessageToParent,currentView,{...fieldConf,...fieldItem},index,fixedColumn>index)); 
                         }
                     }
                 });
             }
         }
         return columns
-    },[fields,viewConf,fixedColumn,getColumn,getOperationColumn]);
+    },[fields,viewConf,fixedColumn,currentView,sendMessageToParent]);
 
     const searchFields=useMemo(()=>{
         let searchFields=[];
@@ -138,7 +153,7 @@ export default function ListTable({sendMessageToParent}){
             });
         }
         return searchFields
-    },[fields,currentView,viewConf]);
+    },[fields,currentView]);
 
     useEffect(()=>{
         if(item&&origin&&searchFields.length>0){
@@ -221,7 +236,7 @@ export default function ListTable({sendMessageToParent}){
             const queryParams={modelID,viewID:currentView,filterData:viewConf.filterData,filter:queryFilter,pagination,sorter:querySorter,fields:searchFields};
             sendMessageToParent(createQueryDataMessage(frameParams,queryParams,queryQueenable));
         }
-    },[viewConf,fields,searchFields,filter,pagination,sorter,sendMessageToParent,origin,item,currentView,modelID]);
+    },[fields,searchFields,filter,pagination,sorter,sendMessageToParent,origin,item,currentView,modelID]);
 
     //处理行的选中
     const onSelectChange=selectedRowKeys => {
@@ -310,6 +325,7 @@ export default function ListTable({sendMessageToParent}){
                 scroll={{ y: scrollY }}
                 onRow={onRow}
                 summary={getSummary}
+                components={{ header: { cell: ResizableTitle } }}
             />
             <div ref={ref} style={{height:"100%",width:"100%"}}>{}</div>
         </div>

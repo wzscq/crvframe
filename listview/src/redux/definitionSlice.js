@@ -30,6 +30,20 @@ export const definitionSlice = createSlice({
                 return item;
             });
         },
+        setViewFieldWidth: (state,action) => {
+            console.log('setViewFieldWidth:',action.payload);
+            state.views=state.views.map(item=>{
+                if(item.viewID===action.payload.viewID){
+                    return {...item,fields:item.fields.map(f=>{
+                        if(f.field===action.payload.field){
+                            return {...f,width:action.payload.width};
+                        }
+                        return f;
+                    })};
+                }
+                return item;
+            });
+        },
         setShowColumnSettingDialog: (state,action) => {
             state.showColumnSettingDialog=action.payload;
         }
@@ -40,7 +54,8 @@ export const definitionSlice = createSlice({
 export const { 
     setDefinition,
     setViewFields,
-    setShowColumnSettingDialog
+    setShowColumnSettingDialog,
+    setViewFieldWidth
 } = definitionSlice.actions
 
 export default definitionSlice.reducer

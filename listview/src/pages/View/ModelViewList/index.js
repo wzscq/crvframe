@@ -1,4 +1,3 @@
-import {useMemo} from 'react';
 import { Select,Breadcrumb } from 'antd';
 import { useSelector,useDispatch } from 'react-redux';
 
@@ -26,7 +25,7 @@ export default function ModelViewList(){
     }
 
     const options=views.map(item=>{
-        return (<Option value={item.viewID}>{getLocaleLabel(item.name)}</Option>);
+        return (<Option key={item.viewID} value={item.viewID}>{getLocaleLabel(item.name)}</Option>);
     });
 
     const filterOption=(input, option) =>{
