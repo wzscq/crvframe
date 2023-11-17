@@ -16,15 +16,17 @@ export default function SearchBar(){
     const {currentView} = useSelector(state=>state.data);
     const dispatch=useDispatch();
 
-    const quickSearchFields=useMemo(()=>{
+    const {quickSearchFields,showColumnSettings}=useMemo(()=>{
         const viewConf=views.find(item=>item.viewID===currentView);
+        const showColumnSettings=viewConf?.options?.showColumnSettings;
+        let quickSearchFields=[];
         if(viewConf&&viewConf.fields){
-            return fields.filter(item=>
+            quickSearchFields= fields.filter(item=>
                 item.quickSearch&&
                 viewConf.fields.find(viewItem=>viewItem.field===item.field)
             ).map(field=>field.field)
         }
-        return [];
+        return {quickSearchFields,showColumnSettings};
     },[fields,currentView]);
 
     const onSearch=useCallback((value)=>{
@@ -76,6 +78,8 @@ export default function SearchBar(){
                         onClick={refresh}
                     />
                 </Tooltip>
+                {
+                showColumnSettings===true?(
                 <Tooltip title={getLocaleLabel({key:'page.crvlistview.column',default:'列设置'})}>
                     <Button
                         type="primary"
@@ -83,7 +87,8 @@ export default function SearchBar(){
                         loading={false}
                         onClick={columnSettings}
                     />
-                </Tooltip>
+                </Tooltip>):null
+                }
             </Space>
         </div>
     )

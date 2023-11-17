@@ -21,7 +21,7 @@ export default function OpertaionItem({item,state,getLocaleLabel,getLocaleErrorM
             {item.result===OP_RESULT.ERROR?
                 (<>
                     <br/>
-                    <span style={{color:"red"}}>{getLocaleLabel({key:'dialog.operation.hasErrors',default:'出错啦，'})}{getLocaleErrorMessage(item)}{item.resultParams?JSON.stringify(item.resultParams):""}</span>
+                    <span style={{color:"red"}}>{getLocaleLabel({key:'dialog.operation.hasErrors',default:'出错啦，'})}{getLocaleErrorMessage(item)}{item.resultParams!==undefined&&item.resultParams!==null?JSON.stringify(item.resultParams):""}</span>
                 </>):null}
         </div>
     );
