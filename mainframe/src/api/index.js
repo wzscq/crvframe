@@ -51,6 +51,10 @@ export const getHost=()=>{
   
 const host=getHost()+process.env.REACT_APP_SERVICE_API_PREFIX; //'/frameservice';
 
+export const getOAuthBackImage=(appID)=>{
+  return host+"/appimages/"+appID+"/oauthback.png";
+}
+
 export const getLoginImage=(appID)=>{
   return host+"/appimages/"+appID+"/login.png";
 }

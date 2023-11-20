@@ -1,7 +1,7 @@
 import {useEffect} from "react";
 import { useParams,useSearchParams,useNavigate } from "react-router-dom";
 import { useDispatch,useSelector } from 'react-redux';
-import {getLoginImage,getAppIcon,oauthBackApi} from '../../api';
+import {getOAuthBackImage,getAppIcon,oauthBackApi} from '../../api';
 
 import './index.css';
 
@@ -12,7 +12,7 @@ export default function OAuthBack(){
     const {appID}=useParams();
     const [search,] = useSearchParams();
     const oauthCode=search.get('code');
-    const loginBackImg=getLoginImage(appID);
+    const loginBackImg=getOAuthBackImage(appID);
  
     useEffect(()=>{
         document.title=appID;
