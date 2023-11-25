@@ -4,13 +4,11 @@ const validateField=(dataPath,control,rowValue,errorField)=>{
     const {required,field,validation}=control;
     if(required){
         if(rowValue[field]){
-           
             if(control.fieldType){
                 if(control.fieldType===FIELD_TYPE.MANY2MANY||
                     control.fieldType===FIELD_TYPE.ONE2MANY||
                     control.fieldType===FIELD_TYPE.MANY2ONE||
                     control.fieldType===FIELD_TYPE.FILE){
-                    
                     if(!(rowValue[field].list&&
                         (rowValue[field].list.length>0||
                         Object.keys(rowValue[field].list).length>0))){

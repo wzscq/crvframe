@@ -71,10 +71,11 @@ export default function FrameContent(){
 
     const hideMenu=appConf?.hideMenu;
     const hideHeader=appConf?.hideHeader;
+    const systemMenu=appConf?.systemMenu;
 
     let frameContent=(
         <div style={{height:'100%'}}>
-            <FrameHeader filterFormConf={appConf?.filterForm}/>
+            <FrameHeader filterFormConf={appConf?.filterForm} systemMenu={systemMenu}/>
             <div style={{width:'100%',height:'calc(100% - 45px)',position:'relative'}}>
                 <FrameTab inResize={inResize} />
             </div>

@@ -11,7 +11,7 @@ import {
 } from '../../../../operation';
 import useI18n from '../../../../hook/useI18n';
 
-export default function SystemMenu(){
+export default function SystemMenu({systemMenu}){
     const {getLocaleLabel}=useI18n();
     const userName=useSelector(state=>state.login.userName);
 
@@ -41,9 +41,14 @@ export default function SystemMenu(){
     }
 
     const menuItems=[
-        {key:'logout',label:getLocaleLabel({key:'page.main.logout',default:'退出登录'})},
-        {key:'changePassword',label:getLocaleLabel({key:'page.main.changePassword',default:'修改密码 ...'})}
+        {key:'logout',label:getLocaleLabel({key:'page.main.logout',default:'退出登录'})}
     ];
+
+    if(systemMenu?.hideChangePassword===true){
+        
+    } else {
+        menuItems.push({key:'changePassword',label:getLocaleLabel({key:'page.main.changePassword',default:'修改密码 ...'})});
+    }
 
     const menu = (
         <Menu onClick={handleClick} items={menuItems}/>

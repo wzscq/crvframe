@@ -11,7 +11,7 @@ import {userInfoStorage} from '../../../../utils/sessionStorage';
 
 import './index.css';
 
-export default function FrameHeader({hideHeader,filterFormConf}){
+export default function FrameHeader({hideHeader,filterFormConf,systemMenu}){
     const {appID}=userInfoStorage.get();
     const {current}=useSelector(state=>state.operation);
 
@@ -27,7 +27,7 @@ export default function FrameHeader({hideHeader,filterFormConf}){
                 <SelectLanguage appID={appID}/>
             </div>
             <div className="system-menu">
-                <SystemMenu/>
+                <SystemMenu systemMenu={systemMenu}/>
             </div>
             <div className="filter-form">
                 <FilterForm filterFormConf={filterFormConf}/>
