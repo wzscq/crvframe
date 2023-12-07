@@ -31,7 +31,7 @@ func (imgFile *ImageFile) getBase64String(item map[string]interface{})(string,in
 	bytes, err := ioutil.ReadFile(path+fileName)
 	if err != nil {
 		slog.Error(err.Error())
-		return "",common.ResultOpenFileError
+		return "",common.ResultOpenAppFileError
 	}
 	
 	mimeType := http.DetectContentType(bytes)

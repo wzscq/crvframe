@@ -21,7 +21,7 @@ function App() {
       return (
         <div style={{color:'red',textAlign:'center'}}>
           <h4>浏览器版本过低，请升级浏览器！</h4>
-          <h4>请使用Chrome浏览器或者Edge浏览器，版本号: <span style={{weight:700}}>110</span> 以上</h4>
+          <h4>请使用Chrome浏览器或者Edge浏览器，版本号: <span style={{weight:700}}>100</span> 以上</h4>
         </div>
       );
     }

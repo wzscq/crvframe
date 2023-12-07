@@ -97,7 +97,7 @@ func (repo *DefatultDataRepository)Connect(
         Net:    "tcp",
         Addr:   server,
         DBName: dbName,
-		AllowNativePasswords:true,
+				AllowNativePasswords:true,
     }
     // Get a database handle.
     var err error

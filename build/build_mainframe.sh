@@ -11,7 +11,7 @@ fi
 echo build the code ...
 cd ../mainframe
 npm install
-sed -i  's/host=\"*.*\"/host=\"\"/' ./public/index.html
+sed -i  's/host=\"[^\"]*\"/host=\"\"/' ./public/index.html
 npm run build
 cd ../build
 

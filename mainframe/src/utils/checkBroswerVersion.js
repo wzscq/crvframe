@@ -13,7 +13,7 @@ export function checkBrowserVersion() {
     const verNumber=verString.substring(0,verString.indexOf('.'));
     const verInt=parseInt(verNumber);
     console.log("verInt:",verInt);
-    if(verInt>=110){
+    if(verInt>=100){
       return true;
     }
   } else if (userAgent.includes('Chrome/')) {
@@ -23,7 +23,7 @@ export function checkBrowserVersion() {
     const verNumber=verString.substring(0,verString.indexOf('.'));
     const verInt=parseInt(verNumber);
     console.log("verInt:",verInt);
-    if(verInt>=110){
+    if(verInt>=100){
       return true;
     }
   } else if (userAgent.includes('Safari/')) {
@@ -36,7 +36,7 @@ export function checkBrowserVersion() {
 
 export const getCheckBrower=()=>{
   const rootElement=document.getElementById('root');
-  const checkBrower=rootElement.getAttribute("checkBrower");
-  console.log("checkBrower:"+checkBrower);
+  const checkBrower=rootElement.getAttribute("checkbroswer");
+  console.log("checkbroswer:"+checkBrower);
   return checkBrower;
 }

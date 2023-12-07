@@ -308,7 +308,7 @@ export const getUploadKey = ({frameParams,params},errorCallback)=>{
   .catch(function (error) {
     console.log(error);
     message.error(getLocaleLabel({key:'message.main.queryDataError',default:'查询数据时发生错误'}));
-  });;
+  });
 }
 
 //通用的查询接口，用于报表数据查询

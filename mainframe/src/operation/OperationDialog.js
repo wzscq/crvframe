@@ -45,6 +45,7 @@ export default function OperationDialog(){
     const dispatch=useDispatch();
     const navigate=useNavigate();
     const {doneList,current,needConfirm,queen}=useSelector(state=>state.operation);
+    const {appConf,oauthLogin}=useSelector(state=>state.login);
     const {pending,error,result:requestResult,message:resultMessage,params:resultParams,errorCode}=useSelector(state=>state.request);
     const {current:currentTab,items:tabItems}=useSelector(state=>state.tab);
     const globalFilterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
@@ -70,7 +71,12 @@ export default function OperationDialog(){
         dispatch(closeAllTab());
         dispatch(resetMenu());
         dispatch(close());
-        navigate('/login/'+appID);
+
+        if(oauthLogin===true&&appConf?.oauth?.logoutUrl!==undefined){
+            window.location.href = appConf.oauth.logoutUrl;
+        } else {
+            navigate('/login/'+appID);
+        }
     }
 
     const showMessage=()=>{
@@ -344,7 +350,7 @@ export default function OperationDialog(){
     //这里处理队列中的操作
     useEffect(()=>{
         //如果当前没有正在执行的操作
-        console.log("wzstest",queen,needConfirm,current);
+        //console.log("wzstest",queen,needConfirm,current);
         if(queen.length>0&&needConfirm===false&&current===undefined){
             dispatch(doNextOperation());
         }   

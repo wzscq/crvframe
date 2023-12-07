@@ -99,6 +99,7 @@ func (dr *DeleteReleated)Execute(dataRepository DataRepository,tx *sql.Tx)(int) 
 			}
 		} else if *(field.FieldType)==FIELDTYPE_ONE2MANY {
 			
+			
 		} else if *(field.FieldType)==FIELDTYPE_FILE {
 			errorCode:=dr.deleteFile(dataRepository,tx)
 			if errorCode!=common.ResultSuccess {

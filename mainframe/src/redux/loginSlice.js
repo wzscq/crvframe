@@ -20,6 +20,7 @@ const logout=(state)=>{
   state.initOperations=[];
   state.pending=false;
   state.appConf=undefined;
+  state.oauthLogin=true;
 }
 
 export const loginSlice = createSlice({
@@ -71,6 +72,7 @@ export const loginSlice = createSlice({
         state.appID=loginApiResponse.appID;
         state.initOperations=loginApiResponse.initOperations;
         state.appConf=loginApiResponse.appConf;
+        state.oauthLogin=true;
         userInfoStorage.set(loginApiResponse);
       }
     });

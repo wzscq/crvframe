@@ -63,6 +63,7 @@ const (
 	ResultNotSupportedReportQuery=10000045
 	ResultReadExternalApiResultError=10000046
 	ResultGetUploadKeyError=10000047
+	ResultOpenAppFileError = 10000048
 
 	ResultStartFlowWithoutID=20000001
 	ResultCacheFlowInstanceError=20000002
@@ -308,6 +309,11 @@ var errMsg = map[int]CommonRsp{
 	ResultI18nNoLang:CommonRsp{
 		ErrorCode:ResultI18nNoLang,
 		Message:"获取语言资源错误，未找到对应语言翻译",
+		Error:true,
+	},
+	ResultOpenAppFileError:CommonRsp{
+		ErrorCode:ResultOpenAppFileError,
+		Message:"读取文件失败，请与管理员联系处理",
 		Error:true,
 	},
 	ResultStartFlowWithoutID:CommonRsp{
