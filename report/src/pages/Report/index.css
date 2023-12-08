@@ -1,6 +1,6 @@
 .layout-grid {
-    width:100%;
-    max-height:calc(100vh - 35px);
+    width:auto;
+    max-height:calc(100vh - 55px);
     display:grid;
     gap: 10px;
     background-color: #f0f2f5;
