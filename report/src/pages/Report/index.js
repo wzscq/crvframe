@@ -56,10 +56,10 @@ export default function Report(){
 
     return (
         <>
-        <Header locale={locale} getLocaleLabel={getLocaleLabel}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
-        <div className='layout-grid' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
-            {controls}
-        </div>
+            <Header locale={locale} getLocaleLabel={getLocaleLabel}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
+            <div className='layout-grid' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
+                {controls}
+            </div>
         </>
     );
 }

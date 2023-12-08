@@ -2,7 +2,7 @@ import { useEffect, useRef,useMemo } from "react";
 import { useResizeDetector } from 'react-resize-detector';
 import * as echarts from 'echarts';
 import { useDispatch, useSelector } from "react-redux";
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import {setDataLoaded} from '../../../redux/reportSlice';
 import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
@@ -38,7 +38,7 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
                             '   return undefined;'+
                             '}'+
                         '})';
-                    parsedSQLParameters[key]=Function(funStr)()(moment,filterData);
+                    parsedSQLParameters[key]=Function(funStr)()(dayjs,filterData);
                 });
             }
 

@@ -11,6 +11,6 @@
 } 
 
 .header .filter-form {
-  width: calc(100% - 55px);
+  width: calc(100% - 60px);
   float: left;
 }

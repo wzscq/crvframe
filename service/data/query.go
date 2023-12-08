@@ -178,7 +178,7 @@ func (query *Query) getCountAndSummaries(
 
 	summarizeFields:=query.getSummarizeFields()
 
-	sql:="select "+summarizeFields+" count(id) as __count"+
+	sql:="select "+summarizeFields+" count(*) as __count"+
 		" from "+query.AppDB+"."+query.ModelID+
 		" where "+sqlParam.Where
 
