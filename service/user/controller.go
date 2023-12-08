@@ -24,6 +24,7 @@ type loginRep struct {
     UserID     string  `json:"userID"`
     Password  string   `json:"password"`
 		AppID     string   `json:"appID"`
+		External bool `json:"external"`
 }
 
 type changePasswordRep struct {
@@ -136,18 +137,26 @@ func (controller *UserController)login(c *gin.Context) {
 	errorCode=controller.cacheLoginToken(rep.UserID,token,appDB,userRoles)
 	var result *LoginResult
 	if errorCode == common.ResultSuccess {
-		//获取当前用户的初始操作
-		initOperations:=definition.GetOperations(appDB,userRoles)
-		//获取应用配置信息
-		appConf,_:=definition.GetAPPConf(appDB,rep.UserID,userRoles)
-
-		result=&LoginResult{
-			UserID:user.UserID,
-			UserName:user.UserNameZh,
-			Token:common.EncodeToken(token),
-			AppID:rep.AppID,
-			InitOperations:initOperations,
-			AppConf:appConf,
+		if rep.External == true {
+			result=&LoginResult{
+				UserID:user.UserID,
+				UserName:user.UserNameZh,
+				Token:token,
+				AppID:rep.AppID,
+			}
+		} else {
+			//获取当前用户的初始操作
+			initOperations:=definition.GetOperations(appDB,userRoles)
+			//获取应用配置信息
+			appConf,_:=definition.GetAPPConf(appDB,rep.UserID,userRoles)
+			result=&LoginResult{
+				UserID:user.UserID,
+				UserName:user.UserNameZh,
+				Token:common.EncodeToken(token),
+				AppID:rep.AppID,
+				InitOperations:initOperations,
+				AppConf:appConf,
+			}
 		}
 		WriteLoginLog(appDB,ip,rep.UserID,"success",controller.UserRepository,controller.LoginLogApps)
 	} else {
