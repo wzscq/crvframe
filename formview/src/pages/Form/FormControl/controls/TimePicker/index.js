@@ -3,6 +3,7 @@ import {TimePicker,Space,Tooltip } from 'antd';
 import { useEffect,useMemo,useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
 
 import I18nLabel from '../../../../../component/I18nLabel';
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';

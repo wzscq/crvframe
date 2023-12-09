@@ -1,5 +1,6 @@
 import { DatePicker } from "antd";
 import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
 
 import useI18n from '../../../../../../hooks/useI18n';
 
