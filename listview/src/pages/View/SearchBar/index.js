@@ -23,7 +23,7 @@ export default function SearchBar(){
         if(viewConf&&viewConf.fields){
             quickSearchFields= fields.filter(item=>
                 item.quickSearch&&
-                viewConf.fields.find(viewItem=>viewItem.field===item.field)
+                viewConf.fields.find(viewItem=>viewItem.field===item.field&&viewItem.visible!==false)
             ).map(field=>field.field)
         }
         return {quickSearchFields,showColumnSettings};
