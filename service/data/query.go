@@ -186,6 +186,12 @@ func (query *Query) getCountAndSummaries(
 	if err!=nil {
 		return 0,nil,common.ResultSQLError
 	}
+
+	if len(res)<=0 {
+		slog.Debug("getCountAndSummaries with empty result","res",res)
+		return 0,nil,common.ResultSQLError
+	}
+
 	slog.Debug("getCountAndSummaries","res",res)
 	count,err:=strconv.Atoi(res[0]["__count"].(string))
 	if err!=nil {
