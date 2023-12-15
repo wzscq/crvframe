@@ -20,6 +20,7 @@ import (
     "log/slog"
     "log"
     "os"
+    "runtime"
 )
 
 func main() {
@@ -30,6 +31,10 @@ func main() {
     }
     //初始化配置
     conf:=common.InitConfig(confFile)
+    //设置启动线程数量
+    if conf.Runtime.GoMaxProcs>0 {
+        runtime.GOMAXPROCS(conf.Runtime.GoMaxProcs)
+    }
 
     crvlog.InitCRVLog(&conf.Log)
     slog.Info("crvframe service start...")

@@ -6,6 +6,10 @@ import (
 	"encoding/json"
 )
 
+type runtimeConf struct {
+	GoMaxProcs int `json:"goMaxProcs"`
+}
+
 type redisConf struct {
 	Server string `json:"server"`
 	TokenExpired string `json:"tokenExpired"`
@@ -77,6 +81,7 @@ type Config struct {
 	OperationLog OperationLogConf `json:"operationLog"`
 	Log LogConf `json:"log"`
 	LoginLog LoginLog `json:"loginLog"`
+	Runtime runtimeConf `json:"runtime"`
 }
 
 var gConfig Config
