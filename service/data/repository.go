@@ -108,7 +108,7 @@ func (repo *DefatultDataRepository)Connect(
 
     pingErr := repo.DB.Ping()
     if pingErr != nil {
-				slog.Error(err.Error())
+				slog.Error(pingErr.Error())
     }
 		repo.DB.SetConnMaxLifetime(time.Minute * time.Duration(connMaxLifetime))
 		repo.DB.SetMaxOpenConns(maxOpenConns)

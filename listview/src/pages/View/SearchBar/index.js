@@ -58,18 +58,18 @@ export default function SearchBar(){
     return (
         <div className='search-bar'>
             <Space>
-                {quickSearchFields.length>0?<>
-                    <Search placeholder={getLocaleLabel({key:'page.crvlistview.searchInputPlaceholder',default:'input search text'})} onSearch={onSearch}/>
-                    <Tooltip title={getLocaleLabel({key:'page.crvlistview.resetFilter',default:'重置查询条件'})}>
-                        <Button
-                            type="primary"
-                            icon={<StopOutlined />}
-                            loading={false}
-                            onClick={reset}
-                        />
-                    </Tooltip>
-                </>:null
+                {
+                quickSearchFields.length>0?<Search placeholder={getLocaleLabel({key:'page.crvlistview.searchInputPlaceholder',default:'input search text'})} onSearch={onSearch}/>:null
                 }
+                <Tooltip title={getLocaleLabel({key:'page.crvlistview.resetFilter',default:'重置查询条件'})}>
+                    <Button
+                        type="primary"
+                        icon={<StopOutlined />}
+                        loading={false}
+                        onClick={reset}
+                    />
+                </Tooltip>
+                
                 <Tooltip title={getLocaleLabel({key:'page.crvlistview.refresh',default:'刷新'})}>
                     <Button
                         type="primary"

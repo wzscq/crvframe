@@ -20,7 +20,7 @@ const logout=(state)=>{
   state.initOperations=[];
   state.pending=false;
   state.appConf=undefined;
-  state.oauthLogin=true;
+  state.oauthLogin=false;
 }
 
 export const loginSlice = createSlice({

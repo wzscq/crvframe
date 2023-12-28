@@ -53,7 +53,7 @@ the configuration file of the crvframe itself is named conf.json. Its content is
         "password":"",
         "user":"",
         "dbName":"",
-        "connMaxLifetime":60,
+        "connMaxLifetime":10,
         "maxOpenConns":10,
         "maxIdleConns":10
     },

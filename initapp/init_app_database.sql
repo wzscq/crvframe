@@ -14,7 +14,7 @@
  Date: 23/02/2023 14:43:23
 */
 
-SET NAMES utf8mb4;
+SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
@@ -83,42 +83,42 @@ INSERT INTO `core_role_core_user` VALUES ('admin', 'admin', 1, NULL, NULL, NULL,
 -- ----------------------------
 DROP TABLE IF EXISTS `core_task`;
 CREATE TABLE `core_task`  (
-  `id` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `id` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `execution_status` int(11) NOT NULL DEFAULT 0,
   `execution_progress` int(11) NOT NULL DEFAULT 0,
   `result_status` int(11) NOT NULL DEFAULT 0,
-  `error_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
-  `message` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `error_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `message` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `create_time` datetime(0) NOT NULL,
-  `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `update_time` datetime(0) NOT NULL,
-  `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `version` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for core_task_step
 -- ----------------------------
 DROP TABLE IF EXISTS `core_task_step`;
 CREATE TABLE `core_task_step`  (
-  `id` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `task_id` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `id` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `task_id` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `step` int(11) NOT NULL DEFAULT 0,
-  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `execution_status` int(11) NOT NULL DEFAULT 0,
   `execution_progress` int(11) NOT NULL DEFAULT 0,
   `result_status` int(11) NOT NULL DEFAULT 0,
-  `error_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
-  `message` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `error_code` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `message` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `create_time` datetime(0) NOT NULL,
-  `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `update_time` datetime(0) NOT NULL,
-  `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `version` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 
 -- ----------------------------
@@ -132,12 +132,12 @@ CREATE TABLE `core_operation_log`  (
   `ip` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '操作来源IP地址',
   `result` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '结果',
   `create_time` datetime(0) NULL DEFAULT NULL COMMENT '创建时间',
-  `create_user` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_user` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建人',
   `update_time` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
-  `update_user` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新人',
+  `update_user` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '更新人',
   `version` int(11) NULL DEFAULT NULL COMMENT '数据版本',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin COMMENT = '操作日志' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '操作日志' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for core_user

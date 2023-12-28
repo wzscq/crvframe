@@ -1,6 +1,7 @@
 [mysqld]
 # performance_schema关闭
 performance_schema=off
+log-error=/var/log/mysql/error.log
 
 # sql_mode
 sql_mode='NO_UNSIGNED_SUBTRACTION,NO_ENGINE_SUBSTITUTION'

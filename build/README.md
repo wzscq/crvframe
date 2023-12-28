@@ -53,8 +53,9 @@ export PATH=$NODE_HOME/bin:$PATH
 让配置生效
 source /etc/profile
 
+
 install go
-wget https://golang.google.cn/dl/go1.18.3.linux-amd64.tar.gz
+wget https://golang.google.cn/dl/go1.21.3.linux-amd64.tar.gz
 tar -xzf go1.18.3.linux-amd64.tar.gz
 
 vi /etc/profile  增加以下内容
