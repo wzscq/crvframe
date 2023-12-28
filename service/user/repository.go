@@ -100,13 +100,11 @@ func (repo *DefatultUserRepository)Connect(
     repo.DB, err = sql.Open("mysql", cfg.FormatDSN())
     if err != nil {
       slog.Error(err.Error())
-			return
     }
 
     pingErr := repo.DB.Ping()
     if pingErr != nil {
       slog.Error(pingErr.Error())
-			return
     }
 
 		repo.DB.SetConnMaxLifetime(time.Minute * time.Duration(connMaxLifetime))
