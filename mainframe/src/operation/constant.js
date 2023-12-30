@@ -9,7 +9,7 @@ export const OP_TYPE={
     RELOAD_FRAME_DATA:'reloadFrameData',//"OP_TYPE_RELOAD_FRAME_DATA", //重新加载页面数据
     LOGOUT:'logout',//"OP_TYPE_LOGOUT",   //退出登录
     MESSAGE:'message',//"OP_TYPE_MESSAGE",  //弹出提示消息
-    DOWNLOAD_FILE:'downloadFile' //"OP_TYPE_DOWNLOAD_FILE", //下载文件
+    DOWNLOAD_FILE:'downloadFile', //"OP_TYPE_DOWNLOAD_FILE", //下载文件
 }
 
 /**

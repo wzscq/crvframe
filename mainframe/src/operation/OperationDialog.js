@@ -91,6 +91,20 @@ export default function OperationDialog(){
         dispatch(operationDone({result:OP_RESULT.SUCCESS}));
     }
 
+    const downloadFileByUrl=({url,fileName})=>{
+        console.log('downloadFileByUrl',url)
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.target = '_blank';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        dispatch(operationDone({result:OP_RESULT.SUCCESS}));
+    }
+
     const openDialog=()=>{
         dispatch(logInfo("打开对话框:"+JSON.stringify(current)));
         //打开对话框，同时结束当前动作
@@ -156,7 +170,10 @@ export default function OperationDialog(){
                     data:current.input,
                     fileName:current.params.fileName
                 }
-                if(current.params.downloadByKey===true){
+
+                if(current.params.downloadByUrl===true){
+                    downloadFileByUrl(params);
+                } else if(current.params.downloadByKey===true){
                     dispatch(downloadByKeyAction(params));
                 } else {
                     dispatch(downloadAction(params));
