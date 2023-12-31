@@ -110,7 +110,8 @@
             "error.10000045":"配置的报表查询语句配置错误，请与管理员联系处理",
             "error.10000046":"解析外部API返回结果失败，请与管理员联系处理",
             "error.10000047":"获取上传文件Key失败，请与管理员联系处理",
-            "error.10000048":"读取文件失败，请与管理员联系处理"
+            "error.10000048":"读取文件失败，请与管理员联系处理",
+            "error.10000049":"下载文件的URL地址为空，请与管理员联系处理"
         },
         "en_US":{
             "page.login.login":"Login",
@@ -217,7 +218,8 @@
             "error.10000045":"The query statement of the report control is wrong，contact the administrator for help.",
             "error.10000046":"error of parsing the result of external api ，contact the administrator for help.",
             "error.10000047":"Failed to obtain the upload file Key, please contact the administrator for help.",
-            "error.10000048":"Failed to read the file，please contact the administrator for help."
+            "error.10000048":"Failed to read the file，please contact the administrator for help.",
+            "error.10000049":"The URL of the download file is empty，please contact the administrator for help."
         }
     }
 }

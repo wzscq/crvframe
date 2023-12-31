@@ -5,7 +5,7 @@ export default function useI18n(){
     const {locale,resources}=useSelector(state=>state.i18n);
 
     const getLocaleLabel=useCallback((title)=>{
-        if(title.key){
+        if(title?.key){
             if(resources[title.key]){
                 return resources[title.key];
             } 
@@ -17,7 +17,7 @@ export default function useI18n(){
             return title.key;
         }
 
-        if(title[locale]){
+        if(title?.[locale]){
             return title[locale]
         }
         

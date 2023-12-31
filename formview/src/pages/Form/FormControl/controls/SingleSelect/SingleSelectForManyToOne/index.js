@@ -326,7 +326,7 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
 
     //获取文本输入框的标签，如果form控件配置了label属性则直接使用，
     //如果控件没有配置label属性，则取字段配置的字段name
-    const label=control.label?control.label:(field?field.name:"");
+    const label=control.label?control.label:(field?field.name:control.field);
     const optionLabel=control.optionLabel?control.optionLabel:'id';
     
     let hasOriginValue=false;
