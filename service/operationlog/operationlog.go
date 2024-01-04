@@ -26,6 +26,8 @@ type OperationLog struct {
 	FileOptions *common.FileOptionConf
 }
 
+var gLineSpliter="\n"
+
 func (opl *OperationLog)AddAppLogFile(appDB string)(*lumberjack.Logger){
 	opl.Mutex.Lock()
 	defer opl.Mutex.Unlock()
@@ -61,8 +63,9 @@ func (opl *OperationLog)WriteLog(item *OplogItem){
 	}
 
 	if appLog!= nil {
-		itemStr,_:=json.Marshal(item)
+		itemStr,_:=(json.Marshal(item))
 		appLog.Write(itemStr)
+		appLog.Write([]byte(gLineSpliter))
 	}
 }
 

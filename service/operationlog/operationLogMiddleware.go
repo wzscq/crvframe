@@ -9,17 +9,19 @@ import (
 	"log/slog"
 	"io/ioutil"
 	"time"
+	"strings"
 )
 
 func Init(router *gin.Engine,fileOptions *common.FileOptionConf,appMap map[string]bool) {
 	if appMap!=nil {
 		opLog:=OperationLogMiddleware(fileOptions,appMap)
-		dataGroup := router.Group("/data/")
-		dataGroup.Use(opLog)
-		apiGroup:=router.Group("/redirect")
+		//router.Group("/data/*",opLog)
+		//dataGroup.Use(opLog)
+		/*apiGroup:=router.Group("/redirect")
 		apiGroup.Use(opLog)
-		user:=router.Group("/user")
-		user.Use(opLog)
+		user:=router.Group("/user/*")
+		user.Use(opLog)*/
+		router.Use(opLog)
 	}
 }
 
@@ -31,7 +33,14 @@ func OperationLogMiddleware(fileOptions *common.FileOptionConf,appMap map[string
 
 	opItem:=OplogItem{}
 
-	return func(c *gin.Context) {		
+	return func(c *gin.Context) {	
+		if strings.HasPrefix(c.Request.URL.Path,"/data/") == false &&
+			 strings.HasPrefix(c.Request.URL.Path,"/user/") == false &&
+		   strings.HasPrefix(c.Request.URL.Path,"/redirect") == false {
+				c.Next()
+				return 
+		}
+
 		appDB,exist:=c.Get("appDB")
 		if exist==false {
 			c.Next()
@@ -39,6 +48,7 @@ func OperationLogMiddleware(fileOptions *common.FileOptionConf,appMap map[string
 		}
 
 		writeLog,exist:=appMap[appDB.(string)]
+
 		if exist==false || writeLog==false {
 			c.Next()
 			return
@@ -84,11 +94,11 @@ func OperationLogMiddleware(fileOptions *common.FileOptionConf,appMap map[string
 		opItem.ResponseTime=time.Now().Format("2006-01-02 15:04:05")
 
 		opItem.ResponseContentType = c.Writer.Header().Get("Content-Type")
-		if opItem.ResponseContentType=="application/json" {
+		
+		if strings.HasPrefix(opItem.ResponseContentType,"application/json") {
 			opItem.ResponseBody=writer.body.String()
 		}
 
 		opLog.WriteLog(&opItem)
-		//fmt.Println("[Response]", status, writer.body.String())
 	}
 }

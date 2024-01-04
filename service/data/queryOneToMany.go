@@ -28,7 +28,7 @@ func (queryOneToMany *QueryOneToMany)mergeResult(res *QueryResult,relatedRes *Qu
 				}
 				row[fieldName]=value
 			}
-			slog.Debug("mergeResult","id",row["id"],"relatedFieldName",relatedRow[relatedFieldName])
+			//slog.Debug("mergeResult","id",row["id"],"relatedFieldName",relatedRow[relatedFieldName])
 			//所以判断本表ID的值和关联表对应关联字段的值是否相等
 			if row["id"] == relatedRow[relatedFieldName] {
 				value.(*QueryResult).Total+=1
