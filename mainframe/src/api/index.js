@@ -275,7 +275,7 @@ export const queryData = ({frameParams,queryParams},errorCallback)=>{
   .catch(function (error) {
     console.log(error);
     message.error(getLocaleLabel({key:'message.main.queryDataError',default:'查询数据时发生错误'}));
-  });;
+  });
 }
 
 //获取文件上传的key

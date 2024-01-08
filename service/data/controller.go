@@ -341,7 +341,7 @@ func (controller *DataController)getDownloadKey(c *gin.Context) {
 		c.IndentedJSON(http.StatusInternalServerError, rsp)
 		slog.Debug("end data download with error")
 		return
-    }
+  }
 
 	if rep.List == nil || len(*(rep.List))<=0 {
 		errorCode=common.ResultWrongRequest

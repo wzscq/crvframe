@@ -73,10 +73,12 @@ export const requestSlice = createSlice({
             console.log("requst return error:",action);
             state.pending=false;
             state.error=true;
+            state.errorCode='10000050';
+            state.message="请求服务接口失败";
             if(action.error&&action.error.message){
-                state.message=action.error.message;
+                state.params={error:action.error.message};
             } else {
-                state.message="未知错误";
+                state.params={error:"未知错误"};
             }
         });
         builder.addCase(downloadAction.pending, (state, action) => {
@@ -96,10 +98,12 @@ export const requestSlice = createSlice({
             console.log("requst return error:",action);
             state.pending=false;
             state.error=true;
+            state.errorCode='10000050';
+            state.message="请求服务接口失败";
             if(action.error&&action.error.message){
-                state.message=action.error.message;
+                state.params={error:action.error.message};
             } else {
-                state.message="未知错误";
+                state.params={error:"未知错误"};
             }
         });
         builder.addCase(downloadByKeyAction.pending, (state, action) => {
@@ -127,10 +131,12 @@ export const requestSlice = createSlice({
             console.log("requst return error:",action);
             state.pending=false;
             state.error=true;
+            state.errorCode='10000050';
+            state.message="请求服务接口失败";
             if(action.error&&action.error.message){
-                state.message=action.error.message;
+                state.params={error:action.error.message};
             } else {
-                state.message="未知错误";
+                state.params={error:"未知错误"};
             }
         });
     },
