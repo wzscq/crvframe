@@ -379,7 +379,7 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
     }
 
     let selectControl= (<Select
-        style={{width:'100%',minWidth:100}}  
+        style={{width:'100%',minWidth:control.minWidth?control.minWidth:100}}
         placeholder={control.placeholder?control.placeholder:""} 
         value={updatedValue?updatedValue.value:updatedValue} 
         allowClear

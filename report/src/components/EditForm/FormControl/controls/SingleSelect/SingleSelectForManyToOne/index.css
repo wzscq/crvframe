@@ -1,5 +1,6 @@
 .control-select-normal .ant-select-single {
     width: 100%;
+    text-align: left;
 }
 
 .control-select-error .ant-select-single {
