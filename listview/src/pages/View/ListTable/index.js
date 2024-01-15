@@ -34,7 +34,7 @@ export default function ListTable({sendMessageToParent}){
         return views.find(item=>item.viewID===currentView);
     },[currentView,views]);
 
-    //根据视图列配置生成列
+    //根据视图列配置生成列s
     const getColumn=(sendMessageToParent,currentView,field,index,isFixed)=>{
         const getCellStyleFunc=(cellStyle)=>{
             const funStr='"use strict";'+

@@ -1,5 +1,5 @@
 .listtable-column-text {
-    display: inline-block;
+	display: inline-block;
 	max-width: 100%;
 	text-overflow: ellipsis;
 	white-space: nowrap;

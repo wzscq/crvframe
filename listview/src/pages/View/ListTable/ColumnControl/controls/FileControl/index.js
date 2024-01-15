@@ -8,7 +8,7 @@ import './index.css';
 export default function FileControl({text,field, record, index}){
     const [showTip,setShowTip]=useState(false);
     const ref=useRef();
-    let className='listtable-column-text';
+    let className='listtable-column-file';
     let value="";
  
     if(text&&field.fieldType===FIELD_TYPE.FILE&&text.list&&text.list.length>0){

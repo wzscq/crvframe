@@ -1,17 +1,8 @@
-.listtable-column-text {
-    display: inline-block;
+.listtable-column-file {
+  display: inline-block;
 	max-width: 100%;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
 	vertical-align: middle;
-}
-
-.listtable-column-number {
-	display: block;
-	max-width: 100%;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
-	float: right;
 }
