@@ -1,11 +1,15 @@
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useMemo,useEffect } from "react";
+import { useSelector,useDispatch } from "react-redux";
 import {ConfigProvider} from 'antd';
 import zh_CN from 'antd/locale/zh_CN';
 import en_US from 'antd/locale/en_US';
 
-import { FORM_TYPE } from "../../operation/constant";
+import { 
+  FORM_TYPE,
+  FRAME_MESSAGE_TYPE 
+} from "../../operation/constant";
 import FormControl from './FormControl';
+import {setData} from '../../redux/dataSlice';
 
 import './index.css';
 
@@ -15,6 +19,9 @@ const locales={
 }
 
 export default function EditForm({locale,formConf,sendMessageToParent,fields,formType}){
+  const disspatch=useDispatch();
+  const {origin,item:frameItem}=useSelector(state=>state.frame);
+  const {loaded} = useSelector(state=>state.data);
   const rowKey = useSelector(state=>{
     return Object.keys(state.data.updated)[0]
   });
@@ -46,6 +53,44 @@ export default function EditForm({locale,formConf,sendMessageToParent,fields,for
         return {controls:[],colCount:1,rowHeight:30}
     }
   },[formConf,fields,formType,dataPath,sendMessageToParent]);
+
+  useEffect(()=>{
+    if(loaded===false){
+      const queryResponse=(event)=>{
+          const {type,dataKey,data}=event.data;
+          if(type===FRAME_MESSAGE_TYPE.QUERY_RESPONSE&&
+              dataKey==="__editform_initData"){
+              disspatch(setData({data,controls:formConf.controls}));
+          }
+      }
+      window.addEventListener("message",queryResponse);
+      return ()=>{
+          window.removeEventListener("message",queryResponse);
+      }
+    }
+  },[loaded,formConf,disspatch]);
+
+  //加载初始化数据
+  useEffect(()=>{
+    const {initData}=formConf;
+    console.log("_____initData",initData);
+    if(initData!==undefined){
+      const frameParams={
+        frameType:frameItem.frameType,
+        frameID:frameItem.params.key,
+        dataKey:"__editform_initData",
+        origin:origin
+      };
+      const message={
+          type:FRAME_MESSAGE_TYPE.QUERY_REQUEST,
+          data:{
+              frameParams:frameParams,
+              queryParams:initData
+          }
+      }
+      sendMessageToParent(message);
+    }
+  },[formConf]);
 
   return (
     <ConfigProvider locale={locales[locale]}>

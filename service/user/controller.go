@@ -149,7 +149,7 @@ func (controller *UserController)login(c *gin.Context) {
 			//获取当前用户的初始操作
 			initOperations:=definition.GetOperations(appDB,userRoles)
 			//获取应用配置信息
-			appConf,_:=definition.GetAPPConf(appDB,rep.UserID,userRoles)
+			appConf,_:=definition.GetAPPConf(appDB)
 			//获取用户菜单组
 			menuGroups,_:=definition.GetUserMenuGroups(appDB,userRoles)
 

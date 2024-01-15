@@ -189,8 +189,8 @@ func (controller *DefinitionController)getAppI18n(c *gin.Context){
 func (controller *DefinitionController)getAPPConf(c *gin.Context){
 	slog.Debug("start definition getAPPConf")
 	appDB:= c.MustGet("appDB").(string)
-	userRoles:= c.MustGet("userRoles").(string)
-	userID:= c.MustGet("userID").(string)
+	//userRoles:= c.MustGet("userRoles").(string)
+	//userID:= c.MustGet("userID").(string)
 
 	var req getAPPConfReq	
 	if err := c.BindJSON(&req); err != nil {
@@ -200,7 +200,7 @@ func (controller *DefinitionController)getAPPConf(c *gin.Context){
 		return
 	}
 
-	appConf,err:=GetAPPConf(appDB,userID,userRoles)
+	appConf,err:=GetAPPConf(appDB)
 	if err != nil {
 		rsp:=common.CreateResponse(err,nil)
 		c.IndentedJSON(http.StatusOK, rsp)
