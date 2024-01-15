@@ -35,10 +35,11 @@ type changePasswordRep struct {
 type LoginResult struct {
     UserID     string  `json:"userID"`
     UserName  *string  `json:"userName"`
-		Token     string  `json:"token"`
-		AppID     string  `json:"appID"`
-		InitOperations []definition.OperationConf `json:"initOperations"`
-		AppConf  map[string]interface{} `json:"appConf"`
+	Token     string  `json:"token"`
+	AppID     string  `json:"appID"`
+	InitOperations []definition.OperationConf `json:"initOperations"`
+	AppConf  map[string]interface{} `json:"appConf"`
+	MenuGroups *[]definition.MenuGroupItem `json:"menuGroups,omitempty"`
 }
 
 func (controller *UserController)checkUserPassword(userID string,password string,dbName string)(*User,int){
@@ -149,6 +150,9 @@ func (controller *UserController)login(c *gin.Context) {
 			initOperations:=definition.GetOperations(appDB,userRoles)
 			//获取应用配置信息
 			appConf,_:=definition.GetAPPConf(appDB,rep.UserID,userRoles)
+			//获取用户菜单组
+			menuGroups,_:=definition.GetUserMenuGroups(appDB,userRoles)
+
 			result=&LoginResult{
 				UserID:user.UserID,
 				UserName:user.UserNameZh,
@@ -156,6 +160,7 @@ func (controller *UserController)login(c *gin.Context) {
 				AppID:rep.AppID,
 				InitOperations:initOperations,
 				AppConf:appConf,
+				MenuGroups:menuGroups,
 			}
 		}
 		WriteLoginLog(appDB,ip,rep.UserID,"success",controller.UserRepository,controller.LoginLogApps)

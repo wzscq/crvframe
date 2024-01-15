@@ -27,6 +27,10 @@ type getAPPConfReq struct {
 	AppID string  `json:"appID"`
 }
 
+type getUserMenusRep struct {
+	MenuGroup string `json:"menuGroup"`
+}
+
 type DefinitionController struct {
 	 
 }
@@ -54,11 +58,19 @@ func (controller *DefinitionController)getUserMenus(c *gin.Context){
 	userRoles:= c.MustGet("userRoles").(string)
 	appDB:= c.MustGet("appDB").(string)
 	
+	menuGroup:="menus"
+	var rep getUserMenusRep
+	err := c.ShouldBindJSON(&rep)
+
+	if err == nil {
+		menuGroup=rep.MenuGroup
+	}
+
 	m:=menu{
 		AppDB:appDB,
 	}
 
-	menus,errorCode:=m.getUserMenus(userRoles)
+	menus,errorCode:=m.getUserMenus(menuGroup,userRoles)
 	
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),menus)
 	c.IndentedJSON(http.StatusOK, rsp)
