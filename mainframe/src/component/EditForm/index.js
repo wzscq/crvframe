@@ -72,9 +72,10 @@ export default function EditForm({locale,formConf,sendMessageToParent,fields,for
 
   //加载初始化数据
   useEffect(()=>{
-    const {initData}=formConf;
-    console.log("_____initData",initData);
-    if(initData!==undefined){
+    if(formConf?.initData){
+      const {initData}=formConf;
+      console.log("_____initData",initData);
+    
       const frameParams={
         frameType:frameItem.frameType,
         frameID:frameItem.params.key,
