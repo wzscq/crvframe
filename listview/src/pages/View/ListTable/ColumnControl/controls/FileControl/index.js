@@ -19,9 +19,11 @@ export default function FileControl({text,field, record, index}){
         if(ref.current){
             if(ref.current.offsetWidth < ref.current.scrollWidth){
                 setShowTip(true);
+            } else {
+                setShowTip(false);
             }
         }
-    },[ref]);
+    });
     
     return showTip?(
             <Tooltip placement="bottomRight" title={value}>
