@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import OAuthLogin from './pages/OAuthLogin';
 import OAuthBack from './pages/OAuthBack';
 import MainFrame from './pages/MainFrame';
+import MenuGroup from './pages/MenuGroup';
 import RedirectToOAuthLogin from './pages/RedirectToOAuthLogin';
 import {
   checkBrowserVersion,
@@ -36,6 +37,7 @@ function App() {
           <Route path="/OAuthLogin/:appID" exact={true} element={<OAuthLogin/>} />
           <Route path="/OAuthBack/:appID" exact={true} element={<OAuthBack/>} />
           <Route path="/mainframe" exact={true} element={<MainFrame/>} />
+          <Route path="/menugroup" exact={true} element={<MenuGroup/>} />
         </Routes>
       </HashRouter>
     </Provider>

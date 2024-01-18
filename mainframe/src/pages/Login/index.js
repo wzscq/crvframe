@@ -10,7 +10,7 @@ import "./index.css";
 
 export default function Login(){
     const navigate = useNavigate();
-    const {token}=useSelector(state=>state.login);
+    const {token,menuGroups}=useSelector(state=>state.login);
     const {appID}=useParams();
     const loginBackImg=getLoginImage(appID);
 
@@ -25,9 +25,13 @@ export default function Login(){
 
     useEffect(()=>{
         if(token.length>0){
-            navigate("/mainframe");
+            if(menuGroups?.length>0){
+                navigate("/menugroup");
+            } else {
+                navigate("/mainframe");
+            }
         }
-    },[token,navigate]);
+    },[token,menuGroups,navigate]);
     
     return (
         <div className="login-page">

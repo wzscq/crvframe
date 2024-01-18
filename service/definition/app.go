@@ -7,7 +7,7 @@ import (
 	"crv/frame/common"
 )
 
-func GetAPPConf(appDB string)(map[string]interface{},*common.CommonError){
+func GetAPPConf(appDB string)(*map[string]interface{},*common.CommonError){
 	confFile := "apps/"+appDB+"/app.json"
 	filePtr, err := os.Open(confFile)
 	if err != nil {
@@ -30,7 +30,7 @@ func GetAPPConf(appDB string)(map[string]interface{},*common.CommonError){
 		return nil,common.CreateError(common.ResultJsonDecodeError,params)
 	}
 
-	return appConf,nil
+	return &appConf,nil
 }
 
 func GetOperations(appDB,userRoles string)([]OperationConf){

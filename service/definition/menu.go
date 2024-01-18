@@ -13,6 +13,7 @@ type MenuGroupItem struct {
 	Description interface{} `json:"description"`
 	Icon *string `json:"icon,omitempty"`
 	Children *[]MenuGroupItem `json:"children,omitempty"`	
+	Color string `json:"color,omitempty"`
 }
 
 type menuItem struct {

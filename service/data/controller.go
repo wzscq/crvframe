@@ -393,6 +393,25 @@ func (controller *DataController)downloadByKey(c *gin.Context) {
 	c.File(fileName)
 }
 
+func (controller *DataController)previewByKey(c *gin.Context) {
+	key:=c.Param("key")
+	if len(key)==0 {
+		slog.Error("previewByKey error","error","key is empty")
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	fileName,orgName,err:=controller.DownloadHandler.GetDownloadFileName(key)
+	if err!=nil {
+		slog.Error("previewByKey error","error",err)
+		c.IndentedJSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	c.Header("Content-Disposition", "inline; filename="+orgName)
+	c.File(fileName)
+}
+
 func (controller *DataController) Bind(router *gin.Engine) {
 	slog.Debug("Bind DataController")
 	router.POST("/data/query", controller.query)
@@ -405,4 +424,5 @@ func (controller *DataController) Bind(router *gin.Engine) {
 	router.POST("/data/getUploadKey", controller.getUploadKey)
 	router.POST("/data/getDownloadKey", controller.getDownloadKey)
 	router.GET("/data/downloadByKey/:key", controller.downloadByKey)
+	router.GET("/data/previewByKey/:key", controller.previewByKey)
 }

@@ -11,7 +11,6 @@ export const CONTROL_TYPE={
     SingleSelect:'SingleSelect',  //单选下拉框
     MultiSelect:'MultiSelect',  //多选下拉框
 }
-
 /**
  * 以下为控件注册表
  */

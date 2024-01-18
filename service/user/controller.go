@@ -33,12 +33,12 @@ type changePasswordRep struct {
 }
 
 type LoginResult struct {
-    UserID     string  `json:"userID"`
-    UserName  *string  `json:"userName"`
+  UserID     string  `json:"userID"`
+  UserName  *string  `json:"userName"`
 	Token     string  `json:"token"`
 	AppID     string  `json:"appID"`
-	InitOperations []definition.OperationConf `json:"initOperations"`
-	AppConf  map[string]interface{} `json:"appConf"`
+	InitOperations []definition.OperationConf `json:"initOperations,omitempty"`
+	AppConf  *map[string]interface{} `json:"appConf,omitempty"`
 	MenuGroups *[]definition.MenuGroupItem `json:"menuGroups,omitempty"`
 }
 
