@@ -2,6 +2,7 @@ import {useCallback} from 'react';
 import { Space,message } from "antd";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
+import dayjs from 'dayjs';
 
 import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 import OperationButton from '../../../components/OperationButton';
@@ -55,7 +56,7 @@ export default function ListOperationBar({sendMessageToParent}){
             }
         }
         
-        const operation=operations.find(element=>element.id===opItem.operationID);
+        let operation=operations.find(element=>element.id===opItem.operationID);
         if(operation){
             let queryFilter=filter;
             if(viewFilter&&Object.keys(viewFilter).length>0){
@@ -91,7 +92,7 @@ export default function ListOperationBar({sendMessageToParent}){
             //对operation做预处理，一般是基于数据行为operaiton增加过滤条件
             if(operation&&opItem.preprocessing){
                 //console.log('preprocessing',opItem.preprocessing);
-                operation=getListOperationPreporcessFunc(opItem.preprocessing)(operation,input);
+                operation=getListOperationPreporcessFunc(opItem.preprocessing)(operation,input,dayjs);
                 //console.log('preprocessing',operation);
             }
 
@@ -104,7 +105,7 @@ export default function ListOperationBar({sendMessageToParent}){
                     }
                 }
             };
-            
+
             sendMessageToParent(message);
         }
     },[operations,currentView,modelID,getLocaleLabel,viewFilter,selectAll,selectedRowKeys,filter,filterData,pagination,sorter,searchFields,sendMessageToParent]);

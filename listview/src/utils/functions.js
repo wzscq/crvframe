@@ -17,7 +17,7 @@ export function formatStringNumber(numStr,locale='en-US'){
 
 export const getOperationPreporcessFunc=(preporcess)=>{
     const funStr='"use strict";'+
-                'return (function(operation,record){ '+
+                'return (function(operation,record,moment){ '+
                     'try {'+
                         preporcess+
                     '} catch(e) {'+
@@ -30,7 +30,7 @@ export const getOperationPreporcessFunc=(preporcess)=>{
 
 export const getListOperationPreporcessFunc=(preporcess)=>{
     const funStr='"use strict";'+
-                'return (function(operation,input){ '+
+                'return (function(operation,input,moment){ '+
                     'try {'+
                         preporcess+
                     '} catch(e) {'+

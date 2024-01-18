@@ -2,6 +2,7 @@ import { Space } from "antd"
 import { useCallback,useMemo } from "react"
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import dayjs from 'dayjs';
 
 import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 import {
@@ -18,14 +19,17 @@ export default function RowOperationBar({sendMessageToParent,record,showCount,bu
     const {operations} = useSelector(state=>state.definition);
 
     const doOperation=useCallback((opItem)=>{
+        console.log('doOperation',opItem);
         let operation=operations.find(element=>element.id===opItem.operationID);
 
         //对operation做预处理，一般是基于数据行为operaiton增加过滤条件
         if(operation&&opItem.preprocessing){
             //console.log('preprocessing',opItem.preprocessing);
-            operation=getOperationPreporcessFunc(opItem.preprocessing)(operation,record);
+            operation=getOperationPreporcessFunc(opItem.preprocessing)(operation,record,dayjs);
             //console.log('preprocessing',operation);
         }
+
+        console.log('doOperation',operation);
 
         if(operation){
             //这里的ID也有可能是一个关联字段，所以要判断一下
