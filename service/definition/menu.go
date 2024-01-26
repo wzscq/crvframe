@@ -13,13 +13,13 @@ type MenuGroupItem struct {
 	Description interface{} `json:"description"`
 	Icon *string `json:"icon,omitempty"`
 	Children *[]MenuGroupItem `json:"children,omitempty"`	
-	Color string `json:"color,omitempty"`
+	BackgroundColor string `json:"backgroundColor,omitempty"`
 }
 
 type menuItem struct {
 	ID string `json:"id"`
-  	Name interface{} `json:"name"`
-  	Description interface{} `json:"description"`
+  Name interface{} `json:"name"`
+  Description interface{} `json:"description"`
 	Operation *map[string]interface{} `json:"operation,omitempty"`
 	Icon *string `json:"icon,omitempty"`
 	Roles *interface{} `json:"roles"`

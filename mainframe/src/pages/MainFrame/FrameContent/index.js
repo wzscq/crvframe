@@ -11,7 +11,7 @@ import {
     setOperation
 } from '../../../operation';
 
-export default function FrameContent(){   
+export default function FrameContent({menuGroup}){   
     const [menuCollapsed,setMenuCollapsed]=useState(false);
     const [inResize,setInResize]=useState(false);
     const {locale,loaded}=useSelector(state=>state.i18n);
@@ -96,7 +96,7 @@ export default function FrameContent(){
     return (
         <div className="content">
             <SplitPane collapse={collapseOptions} hooks={hooks} dir='ltr' minSizes={[45,200]} initialSizes={[15,85]} split="vertical" >
-                <MenuBar collapsed={menuCollapsed}/>
+                <MenuBar collapsed={menuCollapsed} menuGroup={menuGroup}/>
                 {frameContent}
             </SplitPane>
         </div>);

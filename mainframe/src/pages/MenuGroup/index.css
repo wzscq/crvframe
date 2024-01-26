@@ -1,0 +1,46 @@
+.menu-group-main {
+  width: 100%;
+  height: 100vh;
+}
+
+.menu-group-content {
+  width: calc(100% - 24px);
+  height: calc(100vh - 70px);
+  padding: 12px;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.menu-group-content .ant-collapse-content-box {
+  padding-left: 0px !important;
+}
+
+.menu-group-item-normal {
+  width: 100px;
+  height: 85px;
+  display: inline-block;
+  text-align: center;
+  margin: 10px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.menu-group-item-normal:hover {
+  opacity: 1;
+}
+
+.menu-group-item-normal:hover .ant-avatar{
+  box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.2);
+}
+
+.menu-group-item-super {
+  width: 100%;
+}
+
+.menu-group-item-normal .menu-group-item-name {
+  width: 100%;
+  overflow: hidden;
+  height: 22px;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

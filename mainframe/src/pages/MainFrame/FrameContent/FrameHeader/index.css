@@ -28,7 +28,7 @@
 }
 
 .frame-header .locale-selector {
-    width: 45px;
+    width: 30px;
     float: right;
     line-height: 45px;
     text-align: center;
@@ -40,6 +40,19 @@
     float: right;
     line-height: 45px;
     text-align: center;
+    color:#1890ff;
+}
+
+.frame-header .menu-group {
+    width: 30px;
+    height: 45px;
+    float: right;
+    line-height: 45px;
+    text-align: center;
+    color:#1890ff;
+}
+
+.frame-header .menu-group .ant-btn-text {
     color:#1890ff;
 }
 

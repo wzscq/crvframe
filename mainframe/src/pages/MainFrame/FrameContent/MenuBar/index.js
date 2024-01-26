@@ -13,7 +13,7 @@ import {
 
 import './index.css';
 
-export default function MenuBar({collapsed}){
+export default function MenuBar({collapsed,menuGroup}){
     const {menus,loaded,errorCode}=useSelector(state=>state.menu);
     const {getLocaleLabel}=useI18n();
 
@@ -21,7 +21,7 @@ export default function MenuBar({collapsed}){
 
     useEffect(()=>{
         if(loaded===false){
-            dispatch(getUserMenus());
+            dispatch(getUserMenus({menuGroup}));
         }
     },[loaded,dispatch]);
 

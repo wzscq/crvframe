@@ -360,12 +360,13 @@ export const getAppI18n = createAsyncThunk(
 const DEF_GETUSERMENU_URL="/definition/getUserMenus";
 export const getUserMenus = createAsyncThunk(
   'getUserMenus',
-  async () => {
+  async (params) => {
     const {token}=userInfoStorage.get();
     const reponse= await axios({
       url:host+DEF_GETUSERMENU_URL,
       method:"post",
-      headers:{token:encodeToken(token,"")}
+      data:params,
+      headers:{token:encodeToken(token,params)}
     });
     console.log('getUserMenus reponse',reponse);
     return reponse.data;

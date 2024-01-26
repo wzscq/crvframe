@@ -15,7 +15,6 @@ import {
 
 
 function App() {
-
   if(getCheckBrower()==='true'){
     const isSupport=checkBrowserVersion();
     if(!isSupport){
@@ -36,7 +35,7 @@ function App() {
           <Route path="/login/:appID" exact={true} element={<Login/>} />
           <Route path="/OAuthLogin/:appID" exact={true} element={<OAuthLogin/>} />
           <Route path="/OAuthBack/:appID" exact={true} element={<OAuthBack/>} />
-          <Route path="/mainframe" exact={true} element={<MainFrame/>} />
+          <Route path="/mainframe/:menuGroup" exact={true} element={<MainFrame/>} />
           <Route path="/menugroup" exact={true} element={<MenuGroup/>} />
         </Routes>
       </HashRouter>

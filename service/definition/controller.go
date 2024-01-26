@@ -69,7 +69,7 @@ func (controller *DefinitionController)getUserMenus(c *gin.Context){
 	m:=menu{
 		AppDB:appDB,
 	}
-
+	slog.Debug("definition getUserMenus","menuGroup",menuGroup,"userRoles",userRoles)
 	menus,errorCode:=m.getUserMenus(menuGroup,userRoles)
 	
 	rsp:=common.CreateResponse(common.CreateError(errorCode,nil),menus)

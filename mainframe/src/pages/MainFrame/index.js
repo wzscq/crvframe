@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-//import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 //import { useDispatch } from 'react-redux';
 
 import {
@@ -13,6 +13,8 @@ import OperationDialog from '../../operation';
 import './index.css';
 
 export default function MainFrame(){   
+    const {menuGroup}=useParams();
+
     useEffect(()=>{
         const {appID}=userInfoStorage.get();
         document.title=appID;
@@ -25,7 +27,7 @@ export default function MainFrame(){
 
     return (
         <div className="main-frame">
-            <FrameContent/>
+            <FrameContent menuGroup={menuGroup}/>
             <Dialog/>
             <OperationDialog/>
         </div>

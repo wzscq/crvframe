@@ -1,0 +1,49 @@
+.menugroup-frame-header {
+    width: 100%;
+    height: 45px;
+    background-color: white;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.menugroup-frame-header .ant-divider-vertical {
+    float: left;
+    margin: 5px;
+    top: auto;
+    height: 35px;
+}
+
+.menugroup-frame-header .function-menu {
+    width: calc(100% - 423px);
+    height: 45px;
+    float: left;
+    line-height: 45px;
+    display: none;
+}
+
+.menugroup-frame-header .system-menu {
+    width: 150px;
+    height: 45px;
+    float: right;
+    line-height: 42px;
+    text-align: center;
+}
+
+.menugroup-frame-header .locale-selector {
+    width: 46px;
+    float: right;
+    line-height: 45px;
+    text-align: center;
+}
+
+.menugroup-frame-header .system-operation-bar .ant-btn-text {
+    color:#1890ff;
+}
+
+.menugroup-frame-header .ant-dropdown-trigger {
+    display: inline-block;
+}
+
+.menugroup-frame-header .ant-menu-horizontal {
+    border: 0;
+}
+
