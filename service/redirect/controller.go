@@ -74,7 +74,7 @@ func (controller *RedirectController)redirect(c *gin.Context){
 		c.IndentedJSON(http.StatusOK, rsp)
 		slog.Error("end redirect with error","error",err)
 		return
-    }
+  }
 
 	c.Request.Body = ioutil.NopCloser(bytes.NewReader(bodyData))
 		

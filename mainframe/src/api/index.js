@@ -68,6 +68,11 @@ export const getLogoImage=()=>{
   return host+"/appimages/"+appID+"/logo.png";
 }
 
+export const getMenuGroupHeaderImage=()=>{
+  const {appID}=userInfoStorage.get();
+  return host+"/appimages/"+appID+"/menugroupheader.png";
+}
+
 export const getSmallLogoImage=()=>{
   const {appID}=userInfoStorage.get();
   return host+"/appimages/"+appID+"/logosmall.png";

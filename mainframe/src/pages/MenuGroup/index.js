@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 
 import {getAppI18n} from '../../api';
@@ -35,10 +35,16 @@ export default function MenuGroup() {
     }
   },[locale,loaded,dispatch]);
 
-  const groupsItems=menuGroups.map((item,index)=>{
-    return (<GroupItem item={item} key={item.id} index={index}/>);
-  });
-
+  const groupsItems=useMemo(()=>{
+    if(loaded===true&&locale){
+      return menuGroups.map((item,index)=>{
+        return (<GroupItem item={item} key={item.id} index={index}/>);
+      });
+    } else {
+      return [];
+    }
+  },[loaded,locale,menuGroups]);
+  
   return (
     <div className='menu-group-main'>
       <Header/>

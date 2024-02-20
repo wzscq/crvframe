@@ -195,6 +195,7 @@ func (query *Query) getCountAndSummaries(
 	slog.Debug("getCountAndSummaries","res",res)
 	count,err:=strconv.Atoi(res[0]["__count"].(string))
 	if err!=nil {
+		slog.Debug("getCountAndSummaries with wrong count","res",res)
 		return 0,nil,common.ResultSQLError
 	}
 	slog.Debug("getCountAndSummaries","count",count)
