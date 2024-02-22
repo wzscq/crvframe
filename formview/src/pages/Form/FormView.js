@@ -67,6 +67,19 @@ export default function FormView({fromTitle,formType,sendMessageToParent}){
             const formOperations=form.header.buttons?form.header.buttons:form.header.operations;
             if(Array.isArray(formOperations)){
                 headerOperations=formOperations.map(element=>{
+                    if(element.formType){
+                        //formType可能是一个数组，表示多个操作都可以执行
+                        if(Array.isArray(element.formType)){
+                            if(!element.formType.includes(formType)){
+                                return null;
+                            }
+                        } else {
+                            if(element.formType!==formType){
+                                return null;
+                            }
+                        }
+                    }
+
                     if(element.operationID){
                         const opItem=operations.find(item=>item.id===element.operationID);
                         if(opItem){
@@ -81,7 +94,7 @@ export default function FormView({fromTitle,formType,sendMessageToParent}){
             }
         }
         return {headerLabel,headerOperations}
-    },[form,operations,fromTitle]);
+    },[form,formType,operations,fromTitle]);
 
     const {footLabel,footOperations}=useMemo(()=>{
         let footLabel=null;
@@ -91,6 +104,19 @@ export default function FormView({fromTitle,formType,sendMessageToParent}){
             const formOperations=form.footer.buttons?form.footer.buttons:form.footer.operations;
             if(Array.isArray(formOperations)){
                 footOperations=formOperations.map(element=>{
+                    if(element.formType){
+                        //formType可能是一个数组，表示多个操作都可以执行
+                        if(Array.isArray(element.formType)){
+                            if(!element.formType.includes(formType)){
+                                return null;
+                            }
+                        } else {
+                            if(element.formType!==formType){
+                                return null;
+                            }
+                        }
+                    }
+
                     if(element.operationID){
                         const opItem=operations.find(item=>item.id===element.operationID);
                         if(opItem){
@@ -105,7 +131,7 @@ export default function FormView({fromTitle,formType,sendMessageToParent}){
             }
         }
         return {footLabel,footOperations}
-    },[form,operations]);
+    },[form,formType,operations]);
 
     return (
         <ConfigProvider locale={locales[locale]}>
