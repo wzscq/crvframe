@@ -80,11 +80,12 @@ func GetUserDataset(appDB string,modelID string,userRoles string,opType string)(
 	modelFile := "apps/"+appDB+"/models/"+modelID+".json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
-		slog.Error("Open file failed","error",err)
+		slog.Warn("Open file failed","error",err)
 		if os.IsNotExist(err) {
 			modelFile = "apps/"+appDB+"/models/"+modelID+"/datasets.json"
 			filePtr, err = os.Open(modelFile)
 			if err != nil {
+				slog.Error("Open file failed","error",err)
 				return nil,common.ResultOpenFileError
 			}
 		} else {

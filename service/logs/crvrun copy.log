@@ -1,0 +1,5 @@
+{"time":"2023-12-25T08:43:53.030502+08:00","level":"INFO","source":{"function":"crv/frame/flow.(*FlowController).Bind","file":"D:/self/crvframe/crvframe/service/flow/controller.go","line":168},"msg":"Bind FlowController"}
+{"time":"2023-12-25T08:43:53.0330905+08:00","level":"INFO","source":{"function":"crv/frame/oauth.(*OAuthController).Bind","file":"D:/self/crvframe/crvframe/service/oauth/controller.go","line":237},"msg":"Bind OAuthController"}
+{"time":"2023-12-25T08:43:53.0373274+08:00","level":"INFO","source":{"function":"crv/frame/esi.(*EsiController).Bind","file":"D:/self/crvframe/crvframe/service/esi/controller.go","line":192},"msg":"Bind EsiController"}
+{"time":"2023-12-25T08:43:53.0441399+08:00","level":"INFO","source":{"function":"crv/frame/report.(*ReportController).Bind","file":"D:/self/crvframe/crvframe/service/report/controller.go","line":72},"msg":"Bind ReportController"}
+{"time":"2023-12-25T08:43:53.0485956+08:00","level":"INFO","source":{"function":"main.main","file":"D:/self/crvframe/crvframe/service/main.go","line":171},"msg":"crvframe service listening and serving HTTP on :localhost:8200"}
