@@ -14,6 +14,13 @@ export default function FilterDropdown({ sendMessageToParent,field,index }){
     const ascActive=(sorter.length>0?sorter[0].field===field.field&&sorter[0].order==='asc':false);
     const descActive=(sorter.length>0?sorter[0].field===field.field&&sorter[0].order==='desc':false);
     const isFixed=(fixedColumn===index+1);
+
+    const filterControl=field.showFilter!==false?(
+        <>
+            <Divider/>
+            <FilterInput sendMessageToParent={sendMessageToParent} field={field} />
+        </>
+    ):null;
     
     return (
         <div className='filter-dropdown'>
@@ -55,8 +62,7 @@ export default function FilterDropdown({ sendMessageToParent,field,index }){
                     <I18nLabel label={{key:'page.crvlistview.fixTheColumn',default:'冻结列'}}/>
                 </Button>
             </Space>
-            <Divider/>
-            <FilterInput sendMessageToParent={sendMessageToParent} field={field} />
+            {filterControl}
         </div>
     );
 }

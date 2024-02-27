@@ -44,7 +44,13 @@ export default function DefaultColumnControl({text,field, record, index}){
         } else {
             value="";
         }
-    }
+    } else if(text&&field.fieldType===FIELD_TYPE.ONE2MANY){
+        if(field.aggregateFunction&&text.list&&text.list.length>0){
+            value=getManyToOneValueFunc(field.aggregateFunction)(text.list);
+        } else {
+            value="";
+        }
+    } 
     
     useEffect(()=>{
         if(ref.current){

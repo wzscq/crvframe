@@ -307,6 +307,12 @@ func convertFieldOpIn(op string,field string,value interface{},fields *[]Field,m
                 }
                 field="id"
             }
+
+            if fieldItem.Field==field && fieldItem.FieldType !=nil && *fieldItem.FieldType == FIELDTYPE_ONE2MANY {
+                //对字段的值做转换，改为一个in查询
+                //一对多虚拟字段，转换为对ID的过滤
+                field="id"
+            }
         }
     }
 
