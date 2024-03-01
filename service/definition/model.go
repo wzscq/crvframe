@@ -37,6 +37,7 @@ type fieldConf struct {
 	RelatedModelID *string `json:"relatedModelID,omitempty"`
 	RelatedField *string `json:"relatedField,omitempty"`
 	AssociationModelID *string `json:"associationModelID,omitempty"`
+	CascadeDelete *bool `json:"cascadeDelete,omitempty"`
 }
 
 type OperationConf struct {

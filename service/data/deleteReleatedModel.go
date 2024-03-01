@@ -67,6 +67,22 @@ func (dr *DeleteReleated)deleteManyToMany(
 	return common.ResultSuccess
 }
 
+func (dr *DeleteReleated)deleteOne2Many(
+	dataRepository DataRepository,
+	tx *sql.Tx,
+	relatedModelID string,
+	relatedField string)(int){
+		ids:=dr.getIds()
+		where:=relatedField+" in ("+ids+")"
+		sql:="delete from "+dr.AppDB+"."+relatedModelID+" where "+where
+		//执行sql
+		_,_,err:=dataRepository.ExecWithTx(sql,tx)
+		if err != nil {
+			return common.ResultSQLError
+		}
+		return common.ResultSuccess
+}
+
 func (dr *DeleteReleated)getIds()(string){
 	ids:=""
 	for _,strID:=range *(dr.IdList) {
@@ -98,8 +114,20 @@ func (dr *DeleteReleated)Execute(dataRepository DataRepository,tx *sql.Tx)(int) 
 				return errorCode
 			}
 		} else if *(field.FieldType)==FIELDTYPE_ONE2MANY {
-			
-			
+			if field.CascadeDelete!=nil && *(field.CascadeDelete)==true {
+				if field.RelatedModelID==nil {
+					return common.ResultNoRelatedModel
+				}
+
+				if field.RelatedField==nil {
+					return common.ResultNoRelatedField
+				}
+
+				errorCode:=dr.deleteOne2Many(dataRepository,tx,*(field.RelatedModelID),*(field.RelatedField))
+				if errorCode!=common.ResultSuccess {
+					return errorCode
+				}
+			}
 		} else if *(field.FieldType)==FIELDTYPE_FILE {
 			errorCode:=dr.deleteFile(dataRepository,tx)
 			if errorCode!=common.ResultSuccess {
