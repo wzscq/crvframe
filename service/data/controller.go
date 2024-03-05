@@ -25,7 +25,7 @@ type CommonReq struct {
 	Sorter *[]Sorter `json:"sorter"`
 	SelectedRowKeys *[]string `json:"selectedRowKeys"`
 	Pagination *Pagination `json:"pagination"`
-	SelectAll bool `json:"selectAll"`
+	SelectAll bool `json:"selectedAll"`
 }
 
 type DataController struct {
