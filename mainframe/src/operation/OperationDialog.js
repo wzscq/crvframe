@@ -50,6 +50,9 @@ export default function OperationDialog(){
     const {current:currentTab,items:tabItems}=useSelector(state=>state.tab);
     const globalFilterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
 
+
+    console.log('OperationDialog111:',doneList,current,needConfirm,queen);
+
     //已完成操作列表
     const operationList=doneList.map((item,index)=>{
         return <OpertaionItem
@@ -379,7 +382,7 @@ export default function OperationDialog(){
     useEffect(()=>{
         //如果当前没有正在执行的操作
         //console.log("wzstest",queen,needConfirm,current);
-        if(queen.length>0&&needConfirm===false&&current===undefined){
+        if(queen.length>0&&needConfirm===false&&current===null){
             dispatch(doNextOperation());
         }   
     },[queen,needConfirm,current,dispatch]);

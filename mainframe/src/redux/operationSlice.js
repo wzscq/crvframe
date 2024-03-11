@@ -62,6 +62,7 @@ export const operationSlice = createSlice({
             if(state.queen.length>0){
                 state.current=state.queen[0];
                 state.queen=state.queen.slice(1);
+                state.needConfirm=false;
                 state.doneList=[];
             }
         },

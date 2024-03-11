@@ -23,7 +23,7 @@ export default function useI18n(){
     },[resources,locale]);
 
     const getLocaleLabel=useCallback((title)=>{
-        if(title.key&&resources[title.key]){
+        if(title?.key&&resources[title.key]){
             return resources[title.key];
         }
 

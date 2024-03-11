@@ -17,7 +17,7 @@ export default function OpertaionItem({item,state,getLocaleLabel,getLocaleErrorM
     return (
         <div>
             {icon}
-            <span>{getLocaleLabel(item.description)}</span>
+            <span>{item?.description?getLocaleLabel(item.description):""}</span>
             {item.result===OP_RESULT.ERROR?
                 (<>
                     <br/>
