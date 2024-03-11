@@ -45,14 +45,22 @@ export default function ListOperationBar({sendMessageToParent}){
 
     const doOperation=useCallback((opItem)=>{
         if(opItem.selectedRows){
-            if(opItem.selectedRows?.min>selectedRowKeys.length){
-                message.info(getLocaleLabel(opItem.selectedRows.prompt));
-                return;
-            }
+            console.log('selectedRows',selectedRowKeys,opItem,selectAll)
+            if(selectedRowKeys.length>0){
+                if(opItem.selectedRows?.min>selectedRowKeys.length){
+                    message.info(getLocaleLabel(opItem.selectedRows.prompt));
+                    return;
+                }
 
-            if(opItem.selectedRows?.max<selectedRowKeys.length){
-                message.info(getLocaleLabel(opItem.selectedRows.prompt));
-                return;
+                if(opItem.selectedRows?.max<selectedRowKeys.length){
+                    message.info(getLocaleLabel(opItem.selectedRows.prompt));
+                    return;
+                }
+            } else {
+                if(opItem.selectedRows?.selectAll!==true||selectAll!==true){
+                    message.info(getLocaleLabel(opItem.selectedRows.prompt));
+                    return;
+                }
             }
         }
         
