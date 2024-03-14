@@ -8,14 +8,14 @@ type DefatultAppCache struct {
 	client *redis.Client
 }
 
-func (cache *DefatultAppCache)Init(url string,db int,password string){
-	cache.client=redis.NewClient(&redis.Options{
-        Addr:     url,
-        Password: password, // no password set
-        DB:       db,  // use default DB
-    })
+func (cache *DefatultAppCache) Init(url string, db int, password string) {
+	cache.client = redis.NewClient(&redis.Options{
+		Addr:     url,
+		Password: password, // no password set
+		DB:       db,       // use default DB
+	})
 }
 
-func (cache *DefatultAppCache)GetAppDB(appID string)(string,error){
+func (cache *DefatultAppCache) GetAppDB(appID string) (string, error) {
 	return cache.client.Get(cache.client.Context(), "appid:"+appID).Result()
 }

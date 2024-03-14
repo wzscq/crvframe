@@ -9,110 +9,109 @@ import (
 
 type DataRepository interface {
 	Begin() (*sql.Tx, error)
-	Query(sql string)([]map[string]interface{},error)
-	ExecWithTx(sql string,tx *sql.Tx)(int64,int64, error)
+	Query(sql string) ([]map[string]interface{}, error)
+	ExecWithTx(sql string, tx *sql.Tx) (int64, int64, error)
 }
 
 type DefatultDataRepository struct {
 	DB *sql.DB
 }
 
-func (repo *DefatultDataRepository)Begin()(*sql.Tx, error){
+func (repo *DefatultDataRepository) Begin() (*sql.Tx, error) {
 	return repo.DB.Begin()
 }
 
-func (repo *DefatultDataRepository)ExecWithTx(sql string,tx *sql.Tx)(int64,int64, error){
+func (repo *DefatultDataRepository) ExecWithTx(sql string, tx *sql.Tx) (int64, int64, error) {
 	slog.Info(sql)
-	res,err:=tx.Exec(sql)
-	if err!=nil {
+	res, err := tx.Exec(sql)
+	if err != nil {
 		slog.Error(err.Error())
-		return 0,0,err
+		return 0, 0, err
 	}
 
-	rowCount,err:=res.RowsAffected()
-	if err!=nil {
+	rowCount, err := res.RowsAffected()
+	if err != nil {
 		slog.Error(err.Error())
-		return 0,0,err 
+		return 0, 0, err
 	}
 
-	//获取最后插入数据的ID	
-	id,err:=res.LastInsertId()
-	if err!=nil {
+	//获取最后插入数据的ID
+	id, err := res.LastInsertId()
+	if err != nil {
 		slog.Error(err.Error())
-		return 0,0,err 
+		return 0, 0, err
 	}
-		
-	return id,rowCount,nil
+
+	return id, rowCount, nil
 }
 
-func (repo *DefatultDataRepository)rowsToMap(rows *sql.Rows)([]map[string]interface{},error){
-	cols,_:=rows.Columns()
-	columns:=make([]interface{},len(cols))
-	colPointers:=make([]interface{},len(cols))
-	for i,_:=range columns {
+func (repo *DefatultDataRepository) rowsToMap(rows *sql.Rows) ([]map[string]interface{}, error) {
+	cols, _ := rows.Columns()
+	columns := make([]interface{}, len(cols))
+	colPointers := make([]interface{}, len(cols))
+	for i, _ := range columns {
 		colPointers[i] = &columns[i]
 	}
 
 	var list []map[string]interface{}
 	for rows.Next() {
-		err:= rows.Scan(colPointers...)
+		err := rows.Scan(colPointers...)
 		if err != nil {
 			slog.Error(err.Error())
-			return nil,err
+			return nil, err
 		}
-		row:=make(map[string]interface{})
-		for i,colName :=range cols {
-			val:=colPointers[i].(*interface{})
+		row := make(map[string]interface{})
+		for i, colName := range cols {
+			val := colPointers[i].(*interface{})
 			switch (*val).(type) {
 			case []byte:
-				row[colName]=string((*val).([]byte))
+				row[colName] = string((*val).([]byte))
 			default:
-				row[colName]=*val
-			} 
+				row[colName] = *val
+			}
 		}
-		list=append(list,row)
+		list = append(list, row)
 	}
-	return list,nil
+	return list, nil
 }
 
-func (repo *DefatultDataRepository)Query(sql string)([]map[string]interface{},error){
+func (repo *DefatultDataRepository) Query(sql string) ([]map[string]interface{}, error) {
 	slog.Info(sql)
 	rows, err := repo.DB.Query(sql)
 	if err != nil {
 		slog.Error(err.Error())
-		return nil,err
+		return nil, err
 	}
 	defer rows.Close()
 	//结果转换为map
 	return repo.rowsToMap(rows)
 }
 
-func (repo *DefatultDataRepository)Connect(
-	server,user,password,dbName string,
-	connMaxLifetime,maxOpenConns,maxIdleConns int){
+func (repo *DefatultDataRepository) Connect(
+	server, user, password, dbName string,
+	connMaxLifetime, maxOpenConns, maxIdleConns int) {
 	// Capture connection properties.
-    cfg := mysql.Config{
-        User:   user,
-        Passwd: password,
-        Net:    "tcp",
-        Addr:   server,
-        DBName: dbName,
-				AllowNativePasswords:true,
-    }
-    // Get a database handle.
-    var err error
-    repo.DB, err = sql.Open("mysql", cfg.FormatDSN())
-    if err != nil {
-			slog.Error(err.Error())
-    }
+	cfg := mysql.Config{
+		User:                 user,
+		Passwd:               password,
+		Net:                  "tcp",
+		Addr:                 server,
+		DBName:               dbName,
+		AllowNativePasswords: true,
+	}
+	// Get a database handle.
+	var err error
+	repo.DB, err = sql.Open("mysql", cfg.FormatDSN())
+	if err != nil {
+		slog.Error(err.Error())
+	}
 
-    pingErr := repo.DB.Ping()
-    if pingErr != nil {
-				slog.Error(pingErr.Error())
-    }
-		repo.DB.SetConnMaxLifetime(time.Minute * time.Duration(connMaxLifetime))
-		repo.DB.SetMaxOpenConns(maxOpenConns)
-		repo.DB.SetMaxIdleConns(maxIdleConns)
-    slog.Info("connect to mysql server "+server)
+	pingErr := repo.DB.Ping()
+	if pingErr != nil {
+		slog.Error(pingErr.Error())
+	}
+	repo.DB.SetConnMaxLifetime(time.Minute * time.Duration(connMaxLifetime))
+	repo.DB.SetMaxOpenConns(maxOpenConns)
+	repo.DB.SetMaxIdleConns(maxIdleConns)
+	slog.Info("connect to mysql server " + server)
 }
-

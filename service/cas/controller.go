@@ -2,33 +2,32 @@ package cas
 
 import (
 	"github.com/gin-gonic/gin"
+	"gopkg.in/cas.v2"
 	"log"
 	"net/http"
-	"gopkg.in/cas.v2"
 )
 
 type CasController struct {
 	CasUrl string
 }
 
-func (controller *CasController)login(c *gin.Context) {
+func (controller *CasController) login(c *gin.Context) {
 	log.Println("CasController login")
-	appDB:= c.MustGet("appDB").(string)
-
+	appDB := c.MustGet("appDB").(string)
 
 	if !cas.IsAuthenticated(c.Request) {
 		//重定向web到给定的回调地址
-		url:=controller.CasUrl
-		log.Println("CasController login redirect to "+url)
+		url := controller.CasUrl
+		log.Println("CasController login redirect to " + url)
 		c.Redirect(http.StatusMovedPermanently, url)
 		return
 	}
 
 	username := cas.Username(c.Request)
-	
+
 	//重定向web到给定的回调地址
-	url:="http://locahost:3000/#/login/"+appDB+"/"+username
-	log.Println("CasController login redirect to "+url)
+	url := "http://locahost:3000/#/login/" + appDB + "/" + username
+	log.Println("CasController login redirect to " + url)
 	c.Redirect(http.StatusMovedPermanently, url)
 }
 

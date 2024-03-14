@@ -7,46 +7,46 @@ import (
 )
 
 type SaveManyToMany struct {
-	AppDB string `json:"appDB"`
+	AppDB  string `json:"appDB"`
 	UserID string `json:"userID"`
 }
 
-func (save *SaveManyToMany)save(pID string,dataRepository DataRepository,tx *sql.Tx,modelID string,fieldValue map[string]interface{})(int){
+func (save *SaveManyToMany) save(pID string, dataRepository DataRepository, tx *sql.Tx, modelID string, fieldValue map[string]interface{}) int {
 	slog.Debug("start SaveManyToMany save ... ")
-	relatedModel,ok:=fieldValue["modelID"]
+	relatedModel, ok := fieldValue["modelID"]
 	if !ok {
 		return common.ResultNoRelatedModel
 	}
-	relatedModelID:=relatedModel.(string)
-	mapList,ok:=fieldValue["list"]
+	relatedModelID := relatedModel.(string)
+	mapList, ok := fieldValue["list"]
 	if !ok {
 		slog.Debug("saveManyToManyField end ")
 		return common.ResultSuccess
 	}
 
-	list,ok:=mapList.([]interface{})
-	if !ok || len(list)<=0 {
+	list, ok := mapList.([]interface{})
+	if !ok || len(list) <= 0 {
 		slog.Debug("saveManyToManyField end ")
 		return common.ResultSuccess
 	}
 
 	//指定了关联中间表的名称
 	var associationModelID *string
-	associationModel,ok:=fieldValue["associationModelID"]
+	associationModel, ok := fieldValue["associationModelID"]
 	if ok {
-		associationModel:=associationModel.(string)
-		associationModelID=&associationModel
+		associationModel := associationModel.(string)
+		associationModelID = &associationModel
 	} else {
-		associationModelID=nil
+		associationModelID = nil
 	}
 
-	for _,row:=range list {
-		mapRow,ok:=row.(map[string]interface{})
-		if(!ok){
+	for _, row := range list {
+		mapRow, ok := row.(map[string]interface{})
+		if !ok {
 			continue
 		}
-		errorCode:=save.saveManyToManyRow(dataRepository,tx,modelID,pID,relatedModelID,associationModelID,mapRow)
-		if errorCode!=common.ResultSuccess {
+		errorCode := save.saveManyToManyRow(dataRepository, tx, modelID, pID, relatedModelID, associationModelID, mapRow)
+		if errorCode != common.ResultSuccess {
 			return errorCode
 		}
 	}
@@ -55,51 +55,51 @@ func (save *SaveManyToMany)save(pID string,dataRepository DataRepository,tx *sql
 	return common.ResultSuccess
 }
 
-func (save *SaveManyToMany)saveManyToManyRow(
+func (save *SaveManyToMany) saveManyToManyRow(
 	dataRepository DataRepository,
 	tx *sql.Tx,
-	modelID,pID,relatedModelID string,
+	modelID, pID, relatedModelID string,
 	associationModelID *string,
-	row map[string]interface{})(int){
+	row map[string]interface{}) int {
 
-	rowID:=row[CC_ID]
-	if rowID==nil {
+	rowID := row[CC_ID]
+	if rowID == nil {
 		return common.ResultNoIDWhenUpdate
 	}
 
 	releatedID, ok := rowID.(string)
-	if !ok || len(releatedID)<=0 {
+	if !ok || len(releatedID) <= 0 {
 		return common.ResultNoIDWhenUpdate
 	}
 
-	saveType:=row[SAVE_TYPE_COLUMN]
+	saveType := row[SAVE_TYPE_COLUMN]
 	switch saveType {
-		case SAVE_CREATE:
-			return save.createManyToManyRow(dataRepository,tx,modelID,pID,relatedModelID,releatedID,associationModelID)
-		case SAVE_DELETE:
-			return save.deleteManyToManyRow(dataRepository,tx,modelID,pID,relatedModelID,releatedID,associationModelID)
-		default:
-			return common.ResultNotSupportedSaveType
+	case SAVE_CREATE:
+		return save.createManyToManyRow(dataRepository, tx, modelID, pID, relatedModelID, releatedID, associationModelID)
+	case SAVE_DELETE:
+		return save.deleteManyToManyRow(dataRepository, tx, modelID, pID, relatedModelID, releatedID, associationModelID)
+	default:
+		return common.ResultNotSupportedSaveType
 	}
 }
 
-func (save *SaveManyToMany)createManyToManyRow(
+func (save *SaveManyToMany) createManyToManyRow(
 	dataRepository DataRepository,
 	tx *sql.Tx,
-	modelID,pID,relatedModelID,releatedID string,
-	associationModelID *string)(int){
-	
+	modelID, pID, relatedModelID, releatedID string,
+	associationModelID *string) int {
+
 	slog.Debug("createManyToManyRow ... ")
-	
-	midModelID:=getRelatedModelID(modelID,relatedModelID,associationModelID)
-	columns:=modelID+"_id,"+relatedModelID+"_id,"
-	values:="'"+pID+"','"+releatedID+"',"
-	commonFields,commonFieldsValue:=GetCreateCommonFieldsValues(save.UserID)
-	columns=columns+commonFields
-	values=values+commonFieldsValue
-	sql:="insert into "+save.AppDB+"."+midModelID+" ("+columns+") values ("+values+")"
+
+	midModelID := getRelatedModelID(modelID, relatedModelID, associationModelID)
+	columns := modelID + "_id," + relatedModelID + "_id,"
+	values := "'" + pID + "','" + releatedID + "',"
+	commonFields, commonFieldsValue := GetCreateCommonFieldsValues(save.UserID)
+	columns = columns + commonFields
+	values = values + commonFieldsValue
+	sql := "insert into " + save.AppDB + "." + midModelID + " (" + columns + ") values (" + values + ")"
 	//执行sql
-	_,_,err:=dataRepository.ExecWithTx(sql,tx)
+	_, _, err := dataRepository.ExecWithTx(sql, tx)
 	if err != nil {
 		return common.ResultSQLError
 	}
@@ -107,21 +107,20 @@ func (save *SaveManyToMany)createManyToManyRow(
 	return common.ResultSuccess
 }
 
-func (save *SaveManyToMany)deleteManyToManyRow(
+func (save *SaveManyToMany) deleteManyToManyRow(
 	dataRepository DataRepository,
 	tx *sql.Tx,
-	modelID,pID,relatedModelID,releatedID string,
-	associationModelID *string)(int){
-	
-	midModelID:=getRelatedModelID(modelID,relatedModelID,associationModelID)
-	where:=modelID+"_id='"+pID+"' and "+relatedModelID+"_id='"+releatedID+"'"
-	sql:="delete from "+save.AppDB+"."+midModelID+" where "+where
+	modelID, pID, relatedModelID, releatedID string,
+	associationModelID *string) int {
+
+	midModelID := getRelatedModelID(modelID, relatedModelID, associationModelID)
+	where := modelID + "_id='" + pID + "' and " + relatedModelID + "_id='" + releatedID + "'"
+	sql := "delete from " + save.AppDB + "." + midModelID + " where " + where
 	//执行sql
-	_,_,err:=dataRepository.ExecWithTx(sql,tx)
+	_, _, err := dataRepository.ExecWithTx(sql, tx)
 	if err != nil {
 		slog.Error(err.Error())
 		return common.ResultSQLError
 	}
 	return common.ResultSuccess
 }
-

@@ -1,13 +1,13 @@
-package data 
+package data
 
 import (
 	"crv/frame/common"
 	"encoding/json"
+	"fmt"
 	"log/slog"
+	"reflect"
 	"regexp"
 	"strings"
-	"fmt"
-	"reflect"
 )
 
 /*
@@ -21,20 +21,20 @@ func processFilter(
 	userID string,
 	userRoles string,
 	appDB string,
-	dataRepository DataRepository)(int){
+	dataRepository DataRepository) int {
 	slog.Debug("processFilter start")
 	var filterDataRes *map[string]interface{}
 	var errorCode int
 
-	if filterData!=nil && len(*filterData)>0 {
-		filterDataRes,errorCode=getFilterData(filterData,globalFilterData,userID,userRoles,appDB,dataRepository)	
-		if errorCode!=common.ResultSuccess {
+	if filterData != nil && len(*filterData) > 0 {
+		filterDataRes, errorCode = getFilterData(filterData, globalFilterData, userID, userRoles, appDB, dataRepository)
+		if errorCode != common.ResultSuccess {
 			slog.Debug("processFilter end with error")
 			return errorCode
-		}		
+		}
 	}
 
-	replaceFilterVar(filter,filterDataRes,globalFilterData,userID,userRoles)
+	replaceFilterVar(filter, filterDataRes, globalFilterData, userID, userRoles)
 
 	slog.Debug("processFilter end")
 	return common.ResultSuccess
@@ -44,7 +44,7 @@ func replaceFilterVar(
 	filter *map[string]interface{},
 	filterData *map[string]interface{},
 	globalFilterData *map[string]interface{},
-	userID ,userRoles string){
+	userID, userRoles string) {
 	//先将条件转换成json，然后再反序列化回对象
 	jsonStr, err := json.Marshal(filter)
 	if err != nil {
@@ -52,9 +52,9 @@ func replaceFilterVar(
 		slog.Error(err.Error())
 	}
 
-	filterStr,replaced:=replaceFilterString(string(jsonStr),filterData,globalFilterData,userID,userRoles)
-	
-	if replaced==true {
+	filterStr, replaced := replaceFilterString(string(jsonStr), filterData, globalFilterData, userID, userRoles)
+
+	if replaced == true {
 		if err := json.Unmarshal([]byte(filterStr), filter); err != nil {
 			slog.Debug("replaceFilterVar Unmarshal filter error")
 			slog.Error(err.Error())
@@ -62,68 +62,68 @@ func replaceFilterVar(
 	}
 }
 
-func replaceFilterString(filter string,filterData,globalFilterData *map[string]interface{},userID ,userRoles string)(string,bool){
+func replaceFilterString(filter string, filterData, globalFilterData *map[string]interface{}, userID, userRoles string) (string, bool) {
 	//识别出过滤参数中的
-	slog.Debug("replaceFilterString start","filter",filter)
+	slog.Debug("replaceFilterString start", "filter", filter)
 
 	re := regexp.MustCompile(`%{([A-Z|a-z|_|0-9|.]*)}`)
-	replaceItems:=re.FindAllStringSubmatch(filter,-1)
-	replaced:=false
-	if replaceItems!=nil {
-		for _,replaceItem:=range replaceItems {
-			slog.Debug("replaceFilterString replaceItem","item0",replaceItem[0],"item1",replaceItem[1])
-			repalceStr:=getReplaceString(replaceItem[1],filterData,globalFilterData,userID ,userRoles)
-			filter=strings.Replace(filter,replaceItem[0],repalceStr,-1)
+	replaceItems := re.FindAllStringSubmatch(filter, -1)
+	replaced := false
+	if replaceItems != nil {
+		for _, replaceItem := range replaceItems {
+			slog.Debug("replaceFilterString replaceItem", "item0", replaceItem[0], "item1", replaceItem[1])
+			repalceStr := getReplaceString(replaceItem[1], filterData, globalFilterData, userID, userRoles)
+			filter = strings.Replace(filter, replaceItem[0], repalceStr, -1)
 		}
-		replaced=true
+		replaced = true
 	}
-	slog.Debug("replaceFilterString end","filter",filter)
-	return filter,replaced
+	slog.Debug("replaceFilterString end", "filter", filter)
+	return filter, replaced
 }
 
-func getReplaceString(filterItem string,filterData,globalFilterData *map[string]interface{},userID ,userRoles string)(string){
-	filterRoles:=userRoles;
-	filterRoles=strings.Replace(filterRoles,",","\",\"",-1)
-	slog.Debug("getReplaceString","filterRoles",filterRoles)
+func getReplaceString(filterItem string, filterData, globalFilterData *map[string]interface{}, userID, userRoles string) string {
+	filterRoles := userRoles
+	filterRoles = strings.Replace(filterRoles, ",", "\",\"", -1)
+	slog.Debug("getReplaceString", "filterRoles", filterRoles)
 
-	if filterItem=="userID" {
+	if filterItem == "userID" {
 		return userID
 	}
 
-	if filterItem=="userRoles" {
+	if filterItem == "userRoles" {
 		return filterRoles
 	}
 
-	if globalFilterData!=nil {
-		pathNodes:=strings.Split(filterItem, ".")
-		if len(pathNodes)>=2 {
-			if pathNodes[0]=="globalFilterData" {
-				return getGlobalfilterDataString(filterItem,globalFilterData)
+	if globalFilterData != nil {
+		pathNodes := strings.Split(filterItem, ".")
+		if len(pathNodes) >= 2 {
+			if pathNodes[0] == "globalFilterData" {
+				return getGlobalfilterDataString(filterItem, globalFilterData)
 			}
 		}
 	}
 
-	if filterData!=nil {
-		return getfilterDataString(filterItem,filterData)
+	if filterData != nil {
+		return getfilterDataString(filterItem, filterData)
 	}
-	
+
 	return filterItem
 }
 
-func getGlobalfilterDataString(path string,data *map[string]interface{})(string){
-	values:=[]string{}
-	pathNodes:=strings.Split(path, ".")
-	getGlobalPathData(pathNodes,1,data,&values)
+func getGlobalfilterDataString(path string, data *map[string]interface{}) string {
+	values := []string{}
+	pathNodes := strings.Split(path, ".")
+	getGlobalPathData(pathNodes, 1, data, &values)
 	//将value转为豆号分割的字符串
-	if len(values)>0 {
-		valueStr:=strings.Join(values, "\",\"")
-		slog.Debug("将value转为豆号分割的字符串","valueStr",valueStr)
+	if len(values) > 0 {
+		valueStr := strings.Join(values, "\",\"")
+		slog.Debug("将value转为豆号分割的字符串", "valueStr", valueStr)
 		return valueStr
 	}
 	return path
 }
 
-func getfilterDataString(path string,data *map[string]interface{})(string){
+func getfilterDataString(path string, data *map[string]interface{}) string {
 	/*
 		data中按模型保存的查询结果数据，数据结构如下
 		{
@@ -138,7 +138,7 @@ func getfilterDataString(path string,data *map[string]interface{})(string){
 							modelID
 							value
 							total
-							list:[...] 
+							list:[...]
 						},
 						...
 					},
@@ -157,110 +157,110 @@ func getfilterDataString(path string,data *map[string]interface{})(string){
 		   替换后的字符将改为：{Op.in:["role1","role2","role3"]}
 	*/
 	//首先对path按照点好拆分
-	values:=[]string{}
-	pathNodes:=strings.Split(path, ".")
-	getPathData(pathNodes,0,data,&values)
+	values := []string{}
+	pathNodes := strings.Split(path, ".")
+	getPathData(pathNodes, 0, data, &values)
 	//将value转为豆号分割的字符串
-	if len(values)>0 {
-		valueStr:=strings.Join(values, "\",\"")
-		slog.Debug("将value转为豆号分割的字符串","valueStr",valueStr)
+	if len(values) > 0 {
+		valueStr := strings.Join(values, "\",\"")
+		slog.Debug("将value转为豆号分割的字符串", "valueStr", valueStr)
 		return valueStr
 	}
 	return path
 }
 
-func getPathData(path []string,level int,data *map[string]interface{},values *[]string){
-	pathNode:=path[level]
+func getPathData(path []string, level int, data *map[string]interface{}, values *[]string) {
+	pathNode := path[level]
 
 	dataStr, _ := json.Marshal(data)
-	slog.Debug("getPathData","pathNode",pathNode,"level",level,"data",string(dataStr))
+	slog.Debug("getPathData", "pathNode", pathNode, "level", level, "data", string(dataStr))
 
-	dataNode,ok:=(*data)[pathNode]
+	dataNode, ok := (*data)[pathNode]
 	if !ok {
-		slog.Debug("getPathData no pathNode ","pathNode",pathNode)
+		slog.Debug("getPathData no pathNode ", "pathNode", pathNode)
 		return
 	}
 
 	//如果当前层级为左后一层
-	if len(path)==(level+1) {
+	if len(path) == (level + 1) {
 		switch dataNode.(type) {
-			case string:
-				sVal, _ := dataNode.(string)   
-				*values=append(*values,sVal) 
-			case int64:
-				iVal,_:=dataNode.(int64)
-				sVal:=fmt.Sprintf("%d",iVal)
-				*values=append(*values,sVal) 
-			default:
-				slog.Debug("getPathData not supported value type","dataNode type", reflect.TypeOf(dataNode))
+		case string:
+			sVal, _ := dataNode.(string)
+			*values = append(*values, sVal)
+		case int64:
+			iVal, _ := dataNode.(int64)
+			sVal := fmt.Sprintf("%d", iVal)
+			*values = append(*values, sVal)
+		default:
+			slog.Debug("getPathData not supported value type", "dataNode type", reflect.TypeOf(dataNode))
 		}
 	} else {
 		//如果不是最后一级，则数据中应该存在list属性
-		slog.Debug("getPathData","dataNode type is", reflect.TypeOf(dataNode))
-		result,ok:=dataNode.(*QueryResult)
+		slog.Debug("getPathData", "dataNode type is", reflect.TypeOf(dataNode))
+		result, ok := dataNode.(*QueryResult)
 		if !ok {
 			slog.Debug("getPathData dataNode is not a QueryResult ")
 			return
 		}
 
-		for _,row:=range result.List {
-				getPathData(path,level+1,&row,values)
+		for _, row := range result.List {
+			getPathData(path, level+1, &row, values)
 		}
 		return
 	}
 }
 
-func getGlobalPathData(path []string,level int,data *map[string]interface{},values *[]string){
-	pathNode:=path[level]
+func getGlobalPathData(path []string, level int, data *map[string]interface{}, values *[]string) {
+	pathNode := path[level]
 
 	dataStr, _ := json.Marshal(data)
-	slog.Debug("getPathData","pathNode",pathNode,"level",level,"data",string(dataStr))
+	slog.Debug("getPathData", "pathNode", pathNode, "level", level, "data", string(dataStr))
 
-	dataNode,ok:=(*data)[pathNode]
+	dataNode, ok := (*data)[pathNode]
 	if !ok {
-		slog.Debug("getPathData no pathNode ","pathNode",pathNode)
+		slog.Debug("getPathData no pathNode ", "pathNode", pathNode)
 		return
 	}
 
 	//如果当前层级为左后一层
-	if len(path)==(level+1) {
+	if len(path) == (level + 1) {
 		switch dataNode.(type) {
-			case string:
-				sVal, _ := dataNode.(string)   
-				*values=append(*values,sVal) 
-			case int64:
-				iVal,_:=dataNode.(int64)
-				sVal:=fmt.Sprintf("%d",iVal)
-				*values=append(*values,sVal) 
-			default:
-				slog.Debug("getPathData not supported value type","dataNode type", reflect.TypeOf(dataNode))
+		case string:
+			sVal, _ := dataNode.(string)
+			*values = append(*values, sVal)
+		case int64:
+			iVal, _ := dataNode.(int64)
+			sVal := fmt.Sprintf("%d", iVal)
+			*values = append(*values, sVal)
+		default:
+			slog.Debug("getPathData not supported value type", "dataNode type", reflect.TypeOf(dataNode))
 		}
 	} else {
 		//如果不是最后一级，则数据中应该存在list属性
-		slog.Debug("getPathData","dataNode type is", reflect.TypeOf(dataNode))
-		result,ok:=dataNode.(map[string]interface{})
+		slog.Debug("getPathData", "dataNode type is", reflect.TypeOf(dataNode))
+		result, ok := dataNode.(map[string]interface{})
 		if !ok {
 			slog.Debug("getPathData dataNode is not a map[string]interface{} ")
 			return
 		}
 
-		listItem,ok:=result["list"]
+		listItem, ok := result["list"]
 		if !ok {
-			slog.Debug("getPathData no list with data node ","pathNode",pathNode)
+			slog.Debug("getPathData no list with data node ", "pathNode", pathNode)
 			return
 		}
-		resultList,ok:=listItem.([]interface{})
+		resultList, ok := listItem.([]interface{})
 		if !ok {
-			slog.Debug("getPathData list is not a []interface{}","pathNode",pathNode)
+			slog.Debug("getPathData list is not a []interface{}", "pathNode", pathNode)
 			return
 		}
 
-		for _,row:=range resultList {
-			rowData,ok:=row.(map[string]interface{})
+		for _, row := range resultList {
+			rowData, ok := row.(map[string]interface{})
 			if ok {
-				getGlobalPathData(path,level+1,&rowData,values)
+				getGlobalPathData(path, level+1, &rowData, values)
 			} else {
-				slog.Debug("getPathData the row of resultList is not a map[string]interface{}","pathNode",pathNode)
+				slog.Debug("getPathData the row of resultList is not a map[string]interface{}", "pathNode", pathNode)
 			}
 		}
 		return
@@ -270,60 +270,60 @@ func getGlobalPathData(path []string,level int,data *map[string]interface{},valu
 func getFilterData(
 	filterData *[]FilterDataItem,
 	globalFilterData *map[string]interface{},
-	userID ,userRoles,appDB string,
-	dataRepository DataRepository)(*map[string]interface{},int){
+	userID, userRoles, appDB string,
+	dataRepository DataRepository) (*map[string]interface{}, int) {
 
 	slog.Debug("getFilterData start")
-	
-	res:=map[string]interface{}{}
-	
+
+	res := map[string]interface{}{}
+
 	//循环查询每个filterData的数据
-	for _,item:=range(*filterData){
-		if item.Filter!= nil {
-			replaceFilterVar(item.Filter,nil,globalFilterData,userID,userRoles)
+	for _, item := range *filterData {
+		if item.Filter != nil {
+			replaceFilterVar(item.Filter, nil, globalFilterData, userID, userRoles)
 		}
 		//创建query查询数据
-		query:=&Query{
-			ModelID:item.ModelID,
-			Filter:item.Filter,
-			Fields:item.Fields,
-			AppDB:appDB,
-			UserRoles:userRoles,
+		query := &Query{
+			ModelID:   item.ModelID,
+			Filter:    item.Filter,
+			Fields:    item.Fields,
+			AppDB:     appDB,
+			UserRoles: userRoles,
 		}
-		result,errorCode:=query.Execute(dataRepository,false)	
-		if errorCode!=common.ResultSuccess {
-			return nil,errorCode
+		result, errorCode := query.Execute(dataRepository, false)
+		if errorCode != common.ResultSuccess {
+			return nil, errorCode
 		}
-		res[item.ModelID]=result
+		res[item.ModelID] = result
 	}
 
 	slog.Debug("getFilterData end")
-	return &res,common.ResultSuccess
+	return &res, common.ResultSuccess
 }
 
-//替换查询条件中字段值为数组的情况，将数组转为Op.in查询条件
-func ReplaceArrayValue(filter *map[string]interface{},fields *[]Field){
+// 替换查询条件中字段值为数组的情况，将数组转为Op.in查询条件
+func ReplaceArrayValue(filter *map[string]interface{}, fields *[]Field) {
 	slog.Debug("ReplaceFilterArray start")
 	//遍历filter中的每个字段
-	for field,value:=range(*filter){
+	for field, value := range *filter {
 		//如果字段值为数组，则将数组转为Op.in查询条件
 		switch value.(type) {
-			case []interface{}:
-				//在Fields中查找对应字段
-				for _,fieldItem:=range(*fields){
-					if fieldItem.Field==field {
-						(*filter)[field]=arrayToOpin(value.([]interface{}))
-						break
-					}
+		case []interface{}:
+			//在Fields中查找对应字段
+			for _, fieldItem := range *fields {
+				if fieldItem.Field == field {
+					(*filter)[field] = arrayToOpin(value.([]interface{}))
+					break
 				}
-			default:
-		}			
+			}
+		default:
+		}
 	}
 	slog.Debug("ReplaceFilterArray end")
 }
 
-func arrayToOpin(value []interface{})(map[string]interface{}){
+func arrayToOpin(value []interface{}) map[string]interface{} {
 	return map[string]interface{}{
-		Op_in:value,
+		Op_in: value,
 	}
 }

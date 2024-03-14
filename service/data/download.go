@@ -9,29 +9,29 @@ type DownloadHandler struct {
 	DownloadCache DownloadCache
 }
 
-func (download *DownloadHandler) GetDownloadKey(fileName string,orgName string)(string,error) {
-	key:=GetBatchID()
-	err:=download.DownloadCache.SaveDownloadKey(key,fileName,orgName)
-	if err!=nil {
+func (download *DownloadHandler) GetDownloadKey(fileName string, orgName string) (string, error) {
+	key := GetBatchID()
+	err := download.DownloadCache.SaveDownloadKey(key, fileName, orgName)
+	if err != nil {
 		slog.Error(err.Error())
-		return "",err
+		return "", err
 	}
-	return key,nil
+	return key, nil
 }
 
-func (download *DownloadHandler) GetDownloadFileName(key string)(string,string,error) {
-	fileName,err:=download.DownloadCache.GetDownloadFileName(key)
-	if err!=nil {
+func (download *DownloadHandler) GetDownloadFileName(key string) (string, string, error) {
+	fileName, err := download.DownloadCache.GetDownloadFileName(key)
+	if err != nil {
 		slog.Error(err.Error())
-		return "","",err
+		return "", "", err
 	}
 
-	orgName,err:=download.DownloadCache.GetOrgFileName(key)
-	if err!=nil {
+	orgName, err := download.DownloadCache.GetOrgFileName(key)
+	if err != nil {
 		slog.Error(err.Error())
-		return "","",err
+		return "", "", err
 	}
 
 	download.DownloadCache.RemoveDownloadKey(key)
-	return fileName,orgName,nil
+	return fileName, orgName, nil
 }

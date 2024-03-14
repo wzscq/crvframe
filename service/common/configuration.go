@@ -2,91 +2,117 @@ package common
 
 import (
 	"log/slog"
-	"os"
-	"encoding/json"
+	//"os"
+	//"encoding/json"
+	"github.com/spf13/viper"
 )
 
 type runtimeConf struct {
-	GoMaxProcs int `json:"goMaxProcs"`
+	GoMaxProcs int `json:"goMaxProcs" mapstructure:"goMaxProcs"`
 }
 
 type redisConf struct {
-	Server string `json:"server"`
-	TokenExpired string `json:"tokenExpired"`
-	TokenDB int `json:"tokenDB"`
-	OauthTokenExpired string `json:"oauthTokenExpired"`
-	OauthTokenDB int `json:"oauthTokenDB"`
-	FlowInstanceDB int `json:"flowInstanceDB"`
-	FlowInstanceExpired string `json:"flowInstanceExpired"`
-	AppCacheDB int `json:"appCacheDB"`
-	UploadCacheDB int `json:"uploadCacheDB"`
-	UploadCacheExpired string `json:"uploadCacheExpired"`
-	Password string `json:"password"`
-	DownloadCacheDB int `json:"downloadCacheDB"`
-	DownloadCacheExpired string `json:"downloadCacheExpired"`
+	Server               string `json:"server" mapstructure:"server"`
+	TokenExpired         string `json:"tokenExpired" mapstructure:"tokenExpired"`
+	TokenDB              int    `json:"tokenDB" mapstructure:"tokenDB"`
+	OauthTokenExpired    string `json:"oauthTokenExpired" mapstructure:"oauthTokenExpired"`
+	OauthTokenDB         int    `json:"oauthTokenDB" mapstructure:"oauthTokenDB"`
+	FlowInstanceDB       int    `json:"flowInstanceDB" mapstructure:"flowInstanceDB"`
+	FlowInstanceExpired  string `json:"flowInstanceExpired" mapstructure:"flowInstanceExpired"`
+	AppCacheDB           int    `json:"appCacheDB" mapstructure:"appCacheDB"`
+	UploadCacheDB        int    `json:"uploadCacheDB" mapstructure:"uploadCacheDB"`
+	UploadCacheExpired   string `json:"uploadCacheExpired" mapstructure:"uploadCacheExpired"`
+	Password             string `json:"password" mapstructure:"password"`
+	DownloadCacheDB      int    `json:"downloadCacheDB" mapstructure:"downloadCacheDB"`
+	DownloadCacheExpired string `json:"downloadCacheExpired" mapstructure:"downloadCacheExpired"`
 }
 
 type mysqlConf struct {
-	Server string `json:"server"`
-	Password string `json:"password"`
-	User string `json:"user"`
-	DBName string `json:"dbName"`
-	ConnMaxLifetime int `json:"connMaxLifetime"` 
-  MaxOpenConns int `json:"maxOpenConns"`
-  MaxIdleConns int `json:"maxIdleConns"`
+	Server          string `json:"server" mapstructure:"server"`
+	Password        string `json:"password" mapstructure:"password"`
+	User            string `json:"user" mapstructure:"user"`
+	DBName          string `json:"dbName" mapstructure:"dbName"`
+	ConnMaxLifetime int    `json:"connMaxLifetime" mapstructure:"connMaxLifetime"`
+	MaxOpenConns    int    `json:"maxOpenConns" mapstructure:"maxOpenConns"`
+	MaxIdleConns    int    `json:"maxIdleConns" mapstructure:"maxIdleConns"`
 }
 
 type serviceConf struct {
-	Port string `json:"port"`
+	Port string `json:"port" mapstructure:"port"`
 }
 
 type fileConf struct {
-	Root string `json:"root"`
+	Root string `json:"root" mapstructure:"root"`
 }
 
 type casConf struct {
-	Url string  `json:"url"`
+	Url string `json:"url" mapstructure:"url"`
 }
 
 type LoginLog struct {
-	Apps map[string]bool `json:"apps"`
+	Apps map[string]bool `json:"apps" mapstructure:"apps"`
 }
 
 type OperationLogConf struct {
-	Apps map[string]bool `json:"apps"`
-	FileOptions FileOptionConf `json:"fileOptions"`
+	Apps        map[string]bool `json:"apps" mapstructure:"apps"`
+	FileOptions FileOptionConf  `json:"fileOptions" mapstructure:"fileOptions"`
 }
 
 type FileOptionConf struct {
-	MaxSize int `json:"maxSize"`
-	MaxBackups int `json:"maxBackups"`
-	MaxAge int `json:"maxAge"`
-	Compress bool `json:"compress"`
-	LocalTime bool `json:"localTime"`
-	Filename string `json:"filename"`
+	MaxSize    int    `json:"maxSize" mapstructure:"maxSize"`
+	MaxBackups int    `json:"maxBackups" mapstructure:"maxBackups"`
+	MaxAge     int    `json:"maxAge" mapstructure:"maxAge"`
+	Compress   bool   `json:"compress" mapstructure:"compress"`
+	LocalTime  bool   `json:"localTime" mapstructure:"localTime"`
+	Filename   string `json:"filename" mapstructure:"filename"`
 }
 
 type LogConf struct {
-	Level string `json:"level"`
-	WriteFile bool `json:"writeFile"`
-	FileOptions FileOptionConf `json:"fileOptions"`
+	Level       string         `json:"level" mapstructure:"level"`
+	WriteFile   bool           `json:"writeFile" mapstructure:"writeFile"`
+	FileOptions FileOptionConf `json:"fileOptions"  mapstructure:"fileOptions"`
 }
 
 type Config struct {
-	Redis  redisConf  `json:"redis"`
-	Mysql  mysqlConf  `json:"mysql"`
-	Service serviceConf `json:"service"`
-	File fileConf `json:"file"`
-	Cas casConf `json:"cas"`
-	OperationLog OperationLogConf `json:"operationLog"`
-	Log LogConf `json:"log"`
-	LoginLog LoginLog `json:"loginLog"`
-	Runtime runtimeConf `json:"runtime"`
+	Redis        redisConf        `json:"redis" mapstructure:"redis"`
+	Mysql        mysqlConf        `json:"mysql" mapstructure:"mysql"`
+	Service      serviceConf      `json:"service" mapstructure:"service"`
+	File         fileConf         `json:"file" mapstructure:"file"`
+	Cas          casConf          `json:"cas" mapstructure:"cas"`
+	OperationLog OperationLogConf `json:"operationLog" mapstructure:"operationLog"`
+	Log          LogConf          `json:"log" mapstructure:"log"`
+	LoginLog     LoginLog         `json:"loginLog" mapstructure:"loginLog"`
+	Runtime      runtimeConf      `json:"runtime" mapstructure:"runtime"`
 }
 
 var gConfig Config
 
-func InitConfig(confFile string)(*Config){
+func InitConfig(confFile string) *Config {
+	slog.Debug("init configuation start ...")
+
+	viper.BindEnv("redis.server", "CRV_REDIS_SERVER")
+	viper.BindEnv("redis.password", "CRV_REDIS_PASSWORD")
+	viper.BindEnv("mysql.server", "CRV_MYSQL_SERVER")
+	viper.BindEnv("mysql.password", "CRV_MYSQL_PASSWORD")
+	viper.BindEnv("mysql.user", "CRV_MYSQL_USER")
+	viper.SetConfigFile(confFile)
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		slog.Error("ReadInConfig failed [Err:" + err.Error() + "]")
+		return nil
+	}
+
+	err = viper.Unmarshal(&gConfig)
+	if err != nil {
+		slog.Error("Unmarshal failed [Err:" + err.Error() + "]")
+		return nil
+	}
+	slog.Debug("init configuation end")
+	return &gConfig
+}
+
+/*func InitConfig(confFile string)(*Config){
 	slog.Debug("init configuation start ...")
 	//获取用户账号
 	//获取用户角色信息
@@ -113,11 +139,11 @@ func InitConfig(confFile string)(*Config){
 
 	slog.Debug("init configuation end")
 
-	
+
 
 	return &gConfig
-}
+}*/
 
-func GetConfig()(*Config){
+func GetConfig() *Config {
 	return &gConfig
 }

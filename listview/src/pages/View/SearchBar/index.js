@@ -33,7 +33,8 @@ export default function SearchBar(){
         if(quickSearchFields.length>0){
             const fieldsFilter=quickSearchFields.map(element => {
                 const tempFieldFilter={};
-                tempFieldFilter[element]='%'+value+'%';
+                //tempFieldFilter[element]='%'+value+'%';
+                tempFieldFilter[element]=value;
                 return tempFieldFilter;
             });
             const op='Op.or';

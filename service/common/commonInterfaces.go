@@ -5,15 +5,14 @@ import (
 )
 
 type LoginCache interface {
-	SetCache(userID string,token string,dbName string,userRoles string)(error)
-	GetUserID(token string)(string,error)
-	GetAppDB(token string)(string,error)
-	RemoveUser(dbName string,userID string)
-	GetUserRoles(token string)(string,error)
-	GetTokenTTL(token string)(time.Duration,error)
+	SetCache(userID string, token string, dbName string, userRoles string) error
+	GetUserID(token string) (string, error)
+	GetAppDB(token string) (string, error)
+	RemoveUser(dbName string, userID string)
+	GetUserRoles(token string) (string, error)
+	GetTokenTTL(token string) (time.Duration, error)
 }
 
 type AppCache interface {
-	GetAppDB(appID string)(string,error)
+	GetAppDB(appID string) (string, error)
 }
-

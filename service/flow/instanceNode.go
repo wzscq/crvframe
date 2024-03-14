@@ -1,23 +1,22 @@
 package flow
 
 import (
-    "time"
+	"time"
 )
 
 type instanceNode struct {
-	ID string `json:"id"`
-	Completed bool `json:"completed"`
-	StartTime string `json:"startTime"`
-	EndTime *string `json:"endTime,omitempty"`
-	Data map[string]interface{} `json:"data,omitempty"`
-	UserID string `json:"userID,omitempty"`
+	ID        string                 `json:"id"`
+	Completed bool                   `json:"completed"`
+	StartTime string                 `json:"startTime"`
+	EndTime   *string                `json:"endTime,omitempty"`
+	Data      map[string]interface{} `json:"data,omitempty"`
+	UserID    string                 `json:"userID,omitempty"`
 }
 
-func createInstanceNode(id string)(*instanceNode){
+func createInstanceNode(id string) *instanceNode {
 	return &instanceNode{
-		ID:id,
-		Completed:false,
-		StartTime:time.Now().Format("2006-01-02 15:04:05"),
+		ID:        id,
+		Completed: false,
+		StartTime: time.Now().Format("2006-01-02 15:04:05"),
 	}
 }
-

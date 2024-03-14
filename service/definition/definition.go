@@ -1,33 +1,33 @@
 package definition
 
 import (
-	"log/slog"
-	"encoding/json"
-	"os"
 	"crv/frame/common"
+	"encoding/json"
+	"log/slog"
+	"os"
 	"strings"
 )
 
 type ModelConf struct {
-	ModelID string `json:"modelID"`
-	Fields []fieldConf `json:"fields"`
+	ModelID string      `json:"modelID"`
+	Fields  []fieldConf `json:"fields"`
 }
 
 type Dataset struct {
-	ID string `json:"id"`
-	Filter *map[string]interface{} `json:"filter"`
-	Fields string `json:"fields"`
-	QueryRoles *interface{} `json:"queryRoles"`
-	MutationRoles *interface{} `json:"mutationRoles"`
+	ID            string                  `json:"id"`
+	Filter        *map[string]interface{} `json:"filter"`
+	Fields        string                  `json:"fields"`
+	QueryRoles    *interface{}            `json:"queryRoles"`
+	MutationRoles *interface{}            `json:"mutationRoles"`
 }
 
 type ModelDataSet struct {
-	ModelID string `json:"modelID"`
+	ModelID  string    `json:"modelID"`
 	Datasets []Dataset `json:"datasets"`
 }
 
 const (
-	DATA_OP_TYPE_QUERY = "query"
+	DATA_OP_TYPE_QUERY    = "query"
 	DATA_OP_TYPE_MUTATION = "mutation"
 )
 
@@ -35,157 +35,157 @@ const (
 	Op_or = "Op.or"
 )
 
-func MergeDatasets(datasets []Dataset)(*Dataset){
+func MergeDatasets(datasets []Dataset) *Dataset {
 	//一组dataset中的字段和过滤条件合并到一个dataset中
-	filter:=&[]interface{}{}
-	fields:=""
-	for dsIndex:=range datasets {
-		dataset:=datasets[dsIndex]
+	filter := &[]interface{}{}
+	fields := ""
+	for dsIndex := range datasets {
+		dataset := datasets[dsIndex]
 		//所有数据集中如果存在不附带查询条件的，则其他数据集携带的条件可以忽略
-		if filter!=nil {
-			if dataset.Filter != nil && len(*(dataset.Filter))>0 {
-				(*filter)=append((*filter),*(dataset.Filter))
+		if filter != nil {
+			if dataset.Filter != nil && len(*(dataset.Filter)) > 0 {
+				(*filter) = append((*filter), *(dataset.Filter))
 			} else {
-				filter=nil
+				filter = nil
 			}
 		}
 
 		//所有数据集中如果存在不规定查询字段的，则其他数据集的查询字段限制可以忽略
-		if fields != "*" && len(dataset.Fields)>0 {
+		if fields != "*" && len(dataset.Fields) > 0 {
 			if dataset.Fields == "*" {
 				fields = "*"
 			} else {
-				fields = fields +","+dataset.Fields
+				fields = fields + "," + dataset.Fields
 			}
 		}
 	}
 
-	dataset:=Dataset{
-		Filter:nil,
-		Fields:fields,
+	dataset := Dataset{
+		Filter: nil,
+		Fields: fields,
 	}
 
 	if filter != nil {
-		dataset.Filter=&map[string]interface{}{
-			Op_or:*filter,
+		dataset.Filter = &map[string]interface{}{
+			Op_or: *filter,
 		}
 	}
 
 	return &dataset
 }
 
-func GetUserDataset(appDB string,modelID string,userRoles string,opType string)(*Dataset,int){
-	slog.Debug("start GetUserDataset with parameters:","appDB",appDB,"modelID",modelID,"userRoles",userRoles,"opType",opType)
+func GetUserDataset(appDB string, modelID string, userRoles string, opType string) (*Dataset, int) {
+	slog.Debug("start GetUserDataset with parameters:", "appDB", appDB, "modelID", modelID, "userRoles", userRoles, "opType", opType)
 
-	modelFile := "apps/"+appDB+"/models/"+modelID+".json"
+	modelFile := "apps/" + appDB + "/models/" + modelID + ".json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
-		slog.Warn("Open file failed","error",err)
+		slog.Warn("Open file failed", "error", err)
 		if os.IsNotExist(err) {
-			modelFile = "apps/"+appDB+"/models/"+modelID+"/datasets.json"
+			modelFile = "apps/" + appDB + "/models/" + modelID + "/datasets.json"
 			filePtr, err = os.Open(modelFile)
 			if err != nil {
-				slog.Error("Open file failed","error",err)
-				return nil,common.ResultOpenFileError
+				slog.Error("Open file failed", "error", err)
+				return nil, common.ResultOpenFileError
 			}
 		} else {
-			return nil,common.ResultOpenFileError
+			return nil, common.ResultOpenFileError
 		}
 	}
 	defer filePtr.Close()
 	// 创建json解码器
 	decoder := json.NewDecoder(filePtr)
-	modelDataset:=ModelDataSet{}
+	modelDataset := ModelDataSet{}
 	err = decoder.Decode(&modelDataset)
 	if err != nil {
-		slog.Error("json file decode failed","error", err)
-		return nil,common.ResultJsonDecodeError
+		slog.Error("json file decode failed", "error", err)
+		return nil, common.ResultJsonDecodeError
 	}
 
 	// 获取有权限的数据集
-	dsCount:=0
-	for dsIndex:=range modelDataset.Datasets {
-		if HasRight(modelDataset.Datasets[dsIndex].MutationRoles,userRoles) || 
-		   (opType == DATA_OP_TYPE_QUERY && 
-		   HasRight(modelDataset.Datasets[dsIndex].QueryRoles,userRoles)) {
-			modelDataset.Datasets[dsCount]=modelDataset.Datasets[dsIndex]
+	dsCount := 0
+	for dsIndex := range modelDataset.Datasets {
+		if HasRight(modelDataset.Datasets[dsIndex].MutationRoles, userRoles) ||
+			(opType == DATA_OP_TYPE_QUERY &&
+				HasRight(modelDataset.Datasets[dsIndex].QueryRoles, userRoles)) {
+			modelDataset.Datasets[dsCount] = modelDataset.Datasets[dsIndex]
 			dsCount++
 		}
 	}
 
 	if dsCount == 0 {
-		slog.Error("end GetUserDataset no permission with parameters","appDB",appDB,"modelID",modelID,"userRoles",userRoles,"opType",opType)
-		return nil,common.ResultNoPermission
+		slog.Error("end GetUserDataset no permission with parameters", "appDB", appDB, "modelID", modelID, "userRoles", userRoles, "opType", opType)
+		return nil, common.ResultNoPermission
 	}
 
-	modelDataset.Datasets=modelDataset.Datasets[:dsCount]
+	modelDataset.Datasets = modelDataset.Datasets[:dsCount]
 
 	//合并为一个数据集对象
-	dataset:=MergeDatasets(modelDataset.Datasets)
+	dataset := MergeDatasets(modelDataset.Datasets)
 
 	if dataset.Filter != nil {
-		slog.Debug("dataset.Filter","filter",dataset.Filter)	
+		slog.Debug("dataset.Filter", "filter", dataset.Filter)
 	}
-	slog.Debug("end GetUserDataset with result","result",dataset)
+	slog.Debug("end GetUserDataset with result", "result", dataset)
 
-	return dataset,common.ResultSuccess 
+	return dataset, common.ResultSuccess
 }
 
-func GetModelConf(appDB string,modelID string)(*ModelConf,int){
-	modelFile := "apps/"+appDB+"/models/"+modelID+".json"
+func GetModelConf(appDB string, modelID string) (*ModelConf, int) {
+	modelFile := "apps/" + appDB + "/models/" + modelID + ".json"
 	filePtr, err := os.Open(modelFile)
 	if err != nil {
-		slog.Error("Open file failed","error",err)
+		slog.Error("Open file failed", "error", err)
 		if os.IsNotExist(err) {
-			modelFile = "apps/"+appDB+"/models/"+modelID+"/model.json"
+			modelFile = "apps/" + appDB + "/models/" + modelID + "/model.json"
 			filePtr, err = os.Open(modelFile)
 			if err != nil {
-				return nil,common.ResultOpenFileError
+				return nil, common.ResultOpenFileError
 			}
 		} else {
-			return nil,common.ResultOpenFileError
+			return nil, common.ResultOpenFileError
 		}
 	}
 	defer filePtr.Close()
 	// 创建json解码器
 	decoder := json.NewDecoder(filePtr)
-	modelConf:=&ModelConf{}
+	modelConf := &ModelConf{}
 	err = decoder.Decode(modelConf)
 	if err != nil {
-		slog.Error("json file decode failed","error",err)
-		return nil,common.ResultJsonDecodeError
+		slog.Error("json file decode failed", "error", err)
+		return nil, common.ResultJsonDecodeError
 	}
-	
-	return modelConf,common.ResultSuccess
+
+	return modelConf, common.ResultSuccess
 }
 
-func HasRight(roles *interface{},userRoles string)(bool){
-	slog.Debug("start HasRight with parameters","roles",roles,"userRoles",userRoles)
-	
+func HasRight(roles *interface{}, userRoles string) bool {
+	slog.Debug("start HasRight with parameters", "roles", roles, "userRoles", userRoles)
+
 	if roles == nil {
 		slog.Debug("end HasRight with nil roles")
 		return false
 	}
 
-	userRoles=","+userRoles+","
-	rolesStr,ok:=(*roles).(string)
+	userRoles = "," + userRoles + ","
+	rolesStr, ok := (*roles).(string)
 	if ok {
 		if rolesStr == "*" {
 			return true
 		}
 
-		if strings.Contains(userRoles,","+rolesStr+",") {
+		if strings.Contains(userRoles, ","+rolesStr+",") {
 			return true
 		}
 		return false
 	}
 
-	rolesArr,ok:=(*roles).([]interface{})
+	rolesArr, ok := (*roles).([]interface{})
 	if ok {
-		for idx:=range rolesArr {
-			rolesStr,ok:=(rolesArr[idx]).(string)
+		for idx := range rolesArr {
+			rolesStr, ok := (rolesArr[idx]).(string)
 			if ok {
-				if strings.Contains(userRoles,","+rolesStr+",") {
+				if strings.Contains(userRoles, ","+rolesStr+",") {
 					return true
 				}
 			}

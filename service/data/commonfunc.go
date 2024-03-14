@@ -5,9 +5,9 @@ import (
 	//"log"
 )
 
-func replaceApostrophe(str string)string{
+func replaceApostrophe(str string) string {
 	//log.Println(str)
-	replacedStr:=strings.ReplaceAll(str,"'","''")
+	replacedStr := strings.ReplaceAll(str, "'", "''")
 	//log.Println(replacedStr)
 	return replacedStr
 }

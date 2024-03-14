@@ -2,38 +2,38 @@ package data
 
 import (
 	"crv/frame/common"
-	"log/slog"
-	"io/ioutil"
 	"encoding/base64"
+	"io/ioutil"
+	"log/slog"
 	"net/http"
 )
 
 type ImageFile struct {
-	ModelID string `json:"modelID"`
-	List *[]map[string]interface{} `json:"list"`
-	AppDB string `json:"appDB"`
-	UserID string `json:"userID"`
+	ModelID string                    `json:"modelID"`
+	List    *[]map[string]interface{} `json:"list"`
+	AppDB   string                    `json:"appDB"`
+	UserID  string                    `json:"userID"`
 }
 
-func (imgFile *ImageFile)toBase64(b []byte) string {
+func (imgFile *ImageFile) toBase64(b []byte) string {
 	return base64.StdEncoding.EncodeToString(b)
 }
 
-func (imgFile *ImageFile) getBase64String(item map[string]interface{})(string,int) {
-	name:=item["name"].(string)
-	path:=item["path"].(string)
-	fieldID:=item["field_id"].(string)
-	rowID:=item["row_id"].(string)
-	strID:=item["id"].(string)
+func (imgFile *ImageFile) getBase64String(item map[string]interface{}) (string, int) {
+	name := item["name"].(string)
+	path := item["path"].(string)
+	fieldID := item["field_id"].(string)
+	rowID := item["row_id"].(string)
+	strID := item["id"].(string)
 
-	fileName:=fieldID+"_row"+rowID+"_id"+strID+"_"+name
+	fileName := fieldID + "_row" + rowID + "_id" + strID + "_" + name
 
-	bytes, err := ioutil.ReadFile(path+fileName)
+	bytes, err := ioutil.ReadFile(path + fileName)
 	if err != nil {
 		slog.Error(err.Error())
-		return "",common.ResultOpenAppFileError
+		return "", common.ResultOpenAppFileError
 	}
-	
+
 	mimeType := http.DetectContentType(bytes)
 
 	var base64Encoding string
@@ -46,26 +46,26 @@ func (imgFile *ImageFile) getBase64String(item map[string]interface{})(string,in
 
 	base64Encoding += imgFile.toBase64(bytes)
 
-	return base64Encoding,common.ResultSuccess
+	return base64Encoding, common.ResultSuccess
 }
 
-func (imgFile *ImageFile) getImages()(*QueryResult,int){
+func (imgFile *ImageFile) getImages() (*QueryResult, int) {
 	var errorCode int
-	result:=&QueryResult{
-		ModelID:imgFile.ModelID,
-		Total:0,
-		List:[]map[string]interface{}{},
+	result := &QueryResult{
+		ModelID: imgFile.ModelID,
+		Total:   0,
+		List:    []map[string]interface{}{},
 	}
 
 	var base64str string
-	for _, item := range *(imgFile.List) { 
-		base64str,errorCode=imgFile.getBase64String(item)
-		if errorCode!=common.ResultSuccess {
+	for _, item := range *(imgFile.List) {
+		base64str, errorCode = imgFile.getBase64String(item)
+		if errorCode != common.ResultSuccess {
 			break
 		}
-		item["url"]=base64str
-		result.List=append(result.List,item)
-		result.Total+=1
-	}	
-	return result,errorCode
+		item["url"] = base64str
+		result.List = append(result.List, item)
+		result.Total += 1
+	}
+	return result, errorCode
 }

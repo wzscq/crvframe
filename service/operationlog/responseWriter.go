@@ -1,8 +1,8 @@
 package operationlog
 
 import (
-	"github.com/gin-gonic/gin"
 	"bytes"
+	"github.com/gin-gonic/gin"
 )
 
 type responseWriter struct {

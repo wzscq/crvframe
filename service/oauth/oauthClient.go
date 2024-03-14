@@ -4,11 +4,11 @@ import (
 	"crv/frame/common"
 	"crv/frame/definition"
 	"crv/frame/user"
-	"net/http"
+	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log/slog"
-	"encoding/json"
-	"database/sql"
+	"net/http"
 )
 
 type OauthToken struct {
@@ -19,137 +19,137 @@ type OauthUser struct {
 	LoginName string `json:"loginName"`
 }
 
-func getAccessToken(appDB,oauthCode string)(string,*common.CommonError){
+func getAccessToken(appDB, oauthCode string) (string, *common.CommonError) {
 	//获取用户access_token
-	accessTokenUrl,errorCode:=definition.GetApiUrl(appDB,API_OAUTH2_ACCESSTOKEN)
-	if(errorCode != common.ResultSuccess){
-		slog.Error("OAuthClient getAccessToken get api url error","errorCode",errorCode)
-		return "",common.CreateError(errorCode,nil)
+	accessTokenUrl, errorCode := definition.GetApiUrl(appDB, API_OAUTH2_ACCESSTOKEN)
+	if errorCode != common.ResultSuccess {
+		slog.Error("OAuthClient getAccessToken get api url error", "errorCode", errorCode)
+		return "", common.CreateError(errorCode, nil)
 	}
 
-	accessTokenUrl=fmt.Sprintf(accessTokenUrl,oauthCode)
-	slog.Info("getAccessToken","accessTokenUrl",accessTokenUrl)
+	accessTokenUrl = fmt.Sprintf(accessTokenUrl, oauthCode)
+	slog.Info("getAccessToken", "accessTokenUrl", accessTokenUrl)
 	req, err := http.NewRequest(http.MethodPost, accessTokenUrl, nil)
 	if err != nil {
-		slog.Error("OAuthClient getAccessToken new request error","error",err)
-		return "",common.CreateError(common.ResultPostExternalApiError,nil)
+		slog.Error("OAuthClient getAccessToken new request error", "error", err)
+		return "", common.CreateError(common.ResultPostExternalApiError, nil)
 	}
 
-	req.Header.Set("Accept","application/json")
+	req.Header.Set("Accept", "application/json")
 	rsp, err := (&http.Client{}).Do(req)
 	if err != nil {
-		slog.Error("OAuthClient getAccessToken do request error","error",err)
-		return "",common.CreateError(common.ResultPostExternalApiError,nil)
+		slog.Error("OAuthClient getAccessToken do request error", "error", err)
+		return "", common.CreateError(common.ResultPostExternalApiError, nil)
 	}
 	defer rsp.Body.Close()
 
-	if rsp.StatusCode != 200 { 
-		slog.Error("OAuthClient getAccessToken bad status","StatusCode",rsp.StatusCode)
-		return "",common.CreateError(common.ResultPostExternalApiError,nil)
+	if rsp.StatusCode != 200 {
+		slog.Error("OAuthClient getAccessToken bad status", "StatusCode", rsp.StatusCode)
+		return "", common.CreateError(common.ResultPostExternalApiError, nil)
 	}
-	
+
 	decoder := json.NewDecoder(rsp.Body)
 	var oauthToken OauthToken
 	err = decoder.Decode(&oauthToken)
 	if err != nil {
-		slog.Error("OAuthClient getAccessToken result decode failed","error", err.Error())
-		return "",common.CreateError(common.ResultPostExternalApiError,nil)
+		slog.Error("OAuthClient getAccessToken result decode failed", "error", err.Error())
+		return "", common.CreateError(common.ResultPostExternalApiError, nil)
 	}
 
-	return oauthToken.AccessToken,nil
+	return oauthToken.AccessToken, nil
 }
 
-func getUserID(appDB,oauthToken string)(string,*common.CommonError){
+func getUserID(appDB, oauthToken string) (string, *common.CommonError) {
 	//获取用户ID
-	getUserInfoUrl,errorCode:=definition.GetApiUrl(appDB,API_OAUTH2_USERINFO)
-	if(errorCode != common.ResultSuccess){
-		slog.Error("OAuthClient getUserInfo get api url error","errorCode",errorCode)
-		return "",common.CreateError(errorCode,nil)
+	getUserInfoUrl, errorCode := definition.GetApiUrl(appDB, API_OAUTH2_USERINFO)
+	if errorCode != common.ResultSuccess {
+		slog.Error("OAuthClient getUserInfo get api url error", "errorCode", errorCode)
+		return "", common.CreateError(errorCode, nil)
 	}
 
-	getUserInfoUrl=fmt.Sprintf(getUserInfoUrl,oauthToken)
+	getUserInfoUrl = fmt.Sprintf(getUserInfoUrl, oauthToken)
 	req, err := http.NewRequest(http.MethodGet, getUserInfoUrl, nil)
 	if err != nil {
-		slog.Error("OAuthClient getUserInfo new request error","error",err)
-		return "",common.CreateError(common.ResultPostExternalApiError,nil)
+		slog.Error("OAuthClient getUserInfo new request error", "error", err)
+		return "", common.CreateError(common.ResultPostExternalApiError, nil)
 	}
 
-	req.Header.Set("Accept","application/json")
-	req.Header.Set("Authorization","token "+oauthToken)
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Authorization", "token "+oauthToken)
 
 	rsp, err := (&http.Client{}).Do(req)
 	if err != nil {
-		slog.Error("OAuthClient getUserInfo do request error","error",err)
-		return "",common.CreateError(common.ResultPostExternalApiError,nil)
+		slog.Error("OAuthClient getUserInfo do request error", "error", err)
+		return "", common.CreateError(common.ResultPostExternalApiError, nil)
 	}
 	defer rsp.Body.Close()
 
-	if rsp.StatusCode != 200 { 
-		slog.Error("OAuthClient getUserInfo bad status","rsp",rsp)
-		return "",common.CreateError(common.ResultPostExternalApiError,nil)
+	if rsp.StatusCode != 200 {
+		slog.Error("OAuthClient getUserInfo bad status", "rsp", rsp)
+		return "", common.CreateError(common.ResultPostExternalApiError, nil)
 	}
 
 	decoder := json.NewDecoder(rsp.Body)
 	var user OauthUser
 	err = decoder.Decode(&user)
 	if err != nil {
-		slog.Error("OAuthClient getUserInfo result decode failed","error",err)
-		return "",common.CreateError(common.ResultPostExternalApiError,nil)
+		slog.Error("OAuthClient getUserInfo result decode failed", "error", err)
+		return "", common.CreateError(common.ResultPostExternalApiError, nil)
 	}
 
-	return user.LoginName,nil
+	return user.LoginName, nil
 }
 
 func localLogin(
 	userRepository user.UserRepository,
 	loginCache common.LoginCache,
-	AppID,appDB,userID,ip string,loginLogApps map[string]bool)(*user.LoginResult,*common.CommonError){
+	AppID, appDB, userID, ip string, loginLogApps map[string]bool) (*user.LoginResult, *common.CommonError) {
 	//查询用户信息
-	userInfo,err:=userRepository.GetUser(userID,appDB)
+	userInfo, err := userRepository.GetUser(userID, appDB)
 	if err != nil {
-		user.WriteLoginLog(appDB,ip,userID,"fail",userRepository,loginLogApps)
+		user.WriteLoginLog(appDB, ip, userID, "fail", userRepository, loginLogApps)
 		if err == sql.ErrNoRows {
-			return nil,common.CreateError(common.ResultWrongUserPassword,nil)
+			return nil, common.CreateError(common.ResultWrongUserPassword, nil)
 		}
-		return nil,common.CreateError(common.ResultAccessDBError,nil)
+		return nil, common.CreateError(common.ResultAccessDBError, nil)
 	}
 
 	//查询用户角色信息
-	userRoles,err:=userRepository.GetUserRoles(userID,appDB)
+	userRoles, err := userRepository.GetUserRoles(userID, appDB)
 	if err != nil {
-		user.WriteLoginLog(appDB,ip,userID,"fail",userRepository,loginLogApps)
+		user.WriteLoginLog(appDB, ip, userID, "fail", userRepository, loginLogApps)
 		if err == sql.ErrNoRows {
-			return nil,common.CreateError(common.ResultNoUserRole,nil)
+			return nil, common.CreateError(common.ResultNoUserRole, nil)
 		}
-		return nil,common.CreateError(common.ResultAccessDBError,nil)
+		return nil, common.CreateError(common.ResultAccessDBError, nil)
 	}
 
 	//获取本地token
-	token:=user.GetLoginToken()
-	loginCache.RemoveUser(appDB,userID)
-	err=loginCache.SetCache(userID,token,appDB,userRoles)
+	token := user.GetLoginToken()
+	loginCache.RemoveUser(appDB, userID)
+	err = loginCache.SetCache(userID, token, appDB, userRoles)
 	if err != nil {
 		slog.Error(err.Error())
-		user.WriteLoginLog(appDB,ip,userID,"fail",userRepository,loginLogApps)
-		return nil,common.CreateError(common.ResultCreateTokenError,nil)
+		user.WriteLoginLog(appDB, ip, userID, "fail", userRepository, loginLogApps)
+		return nil, common.CreateError(common.ResultCreateTokenError, nil)
 	}
-	
-	//获取当前用户的初始操作
-	initOperations:=definition.GetOperations(appDB,userRoles)
-	//获取应用配置信息
-	appConf,_:=definition.GetAPPConf(appDB)
-	//获取用户菜单组
-	menuGroups,_:=definition.GetUserMenuGroups(appDB,userRoles)
 
-	result:=&user.LoginResult{
-		UserID:userInfo.UserID,
-		UserName:userInfo.UserNameZh,
-		Token:common.EncodeToken(token),
-		AppID:AppID,
-		InitOperations:initOperations,
-		AppConf:appConf,
-		MenuGroups:menuGroups,
+	//获取当前用户的初始操作
+	initOperations := definition.GetOperations(appDB, userRoles)
+	//获取应用配置信息
+	appConf, _ := definition.GetAPPConf(appDB)
+	//获取用户菜单组
+	menuGroups, _ := definition.GetUserMenuGroups(appDB, userRoles)
+
+	result := &user.LoginResult{
+		UserID:         userInfo.UserID,
+		UserName:       userInfo.UserNameZh,
+		Token:          common.EncodeToken(token),
+		AppID:          AppID,
+		InitOperations: initOperations,
+		AppConf:        appConf,
+		MenuGroups:     menuGroups,
 	}
-	user.WriteLoginLog(appDB,ip,userID,"success",userRepository,loginLogApps)
-	return result,nil
+	user.WriteLoginLog(appDB, ip, userID, "success", userRepository, loginLogApps)
+	return result, nil
 }

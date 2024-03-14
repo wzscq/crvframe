@@ -1,20 +1,20 @@
 package operationlog
 
 import (
-  "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 	"gopkg.in/natefinch/lumberjack.v2"
 	//"fmt"
-	"crv/frame/common"
 	"bytes"
-	"log/slog"
+	"crv/frame/common"
 	"io/ioutil"
-	"time"
+	"log/slog"
 	"strings"
+	"time"
 )
 
-func Init(router *gin.Engine,fileOptions *common.FileOptionConf,appMap map[string]bool) {
-	if appMap!=nil {
-		opLog:=OperationLogMiddleware(fileOptions,appMap)
+func Init(router *gin.Engine, fileOptions *common.FileOptionConf, appMap map[string]bool) {
+	if appMap != nil {
+		opLog := OperationLogMiddleware(fileOptions, appMap)
 		//router.Group("/data/*",opLog)
 		//dataGroup.Use(opLog)
 		/*apiGroup:=router.Group("/redirect")
@@ -25,52 +25,52 @@ func Init(router *gin.Engine,fileOptions *common.FileOptionConf,appMap map[strin
 	}
 }
 
-func OperationLogMiddleware(fileOptions *common.FileOptionConf,appMap map[string]bool) gin.HandlerFunc {
-	opLog:=OperationLog{
-		FileOptions:fileOptions,
-		AppLogs:make(map[string]*lumberjack.Logger),
+func OperationLogMiddleware(fileOptions *common.FileOptionConf, appMap map[string]bool) gin.HandlerFunc {
+	opLog := OperationLog{
+		FileOptions: fileOptions,
+		AppLogs:     make(map[string]*lumberjack.Logger),
 	}
 
-	opItem:=OplogItem{}
+	opItem := OplogItem{}
 
-	return func(c *gin.Context) {	
-		if strings.HasPrefix(c.Request.URL.Path,"/data/") == false &&
-			 strings.HasPrefix(c.Request.URL.Path,"/user/") == false &&
-		   strings.HasPrefix(c.Request.URL.Path,"/redirect") == false {
-				c.Next()
-				return 
-		}
-
-		appDB,exist:=c.Get("appDB")
-		if exist==false {
+	return func(c *gin.Context) {
+		if strings.HasPrefix(c.Request.URL.Path, "/data/") == false &&
+			strings.HasPrefix(c.Request.URL.Path, "/user/") == false &&
+			strings.HasPrefix(c.Request.URL.Path, "/redirect") == false {
 			c.Next()
 			return
 		}
 
-		writeLog,exist:=appMap[appDB.(string)]
-
-		if exist==false || writeLog==false {
+		appDB, exist := c.Get("appDB")
+		if exist == false {
 			c.Next()
 			return
 		}
 
-		userID,exist:= c.Get("userID")
-		if exist==false {
+		writeLog, exist := appMap[appDB.(string)]
+
+		if exist == false || writeLog == false {
 			c.Next()
 			return
 		}
 
-		opItem.AppDB=appDB.(string)
-		opItem.UserID=userID.(string)
-		opItem.RequestTime=time.Now().Format("2006-01-02 15:04:05")
-		opItem.Url=c.Request.URL.String()
+		userID, exist := c.Get("userID")
+		if exist == false {
+			c.Next()
+			return
+		}
+
+		opItem.AppDB = appDB.(string)
+		opItem.UserID = userID.(string)
+		opItem.RequestTime = time.Now().Format("2006-01-02 15:04:05")
+		opItem.Url = c.Request.URL.String()
 		opItem.RequestContentType = c.Request.Header.Get("Content-Type")
 
-		if opItem.RequestContentType=="application/json" {
+		if opItem.RequestContentType == "application/json" {
 			// 请求数据
 			bodyBytes, err := ioutil.ReadAll(c.Request.Body)
 			if err != nil {
-				slog.Error("Error reading body: %!s","error",err)
+				slog.Error("Error reading body: %!s", "error", err)
 				c.Next()
 				return
 			}
@@ -79,24 +79,24 @@ func OperationLogMiddleware(fileOptions *common.FileOptionConf,appMap map[string
 			c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 			// 输出请求数据和请求地址
 			//fmt.Println("[Request]", appDB,userID,c.Request.URL,bodyBytes)
-			opItem.RequestBody=string(bodyBytes)
+			opItem.RequestBody = string(bodyBytes)
 		}
-		
+
 		writer := &responseWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = writer
-		
+
 		c.Next()
-		
+
 		c.Writer = writer.ResponseWriter
 
 		status := c.Writer.Status()
-		opItem.ResponseStatus=status
-		opItem.ResponseTime=time.Now().Format("2006-01-02 15:04:05")
+		opItem.ResponseStatus = status
+		opItem.ResponseTime = time.Now().Format("2006-01-02 15:04:05")
 
 		opItem.ResponseContentType = c.Writer.Header().Get("Content-Type")
-		
-		if strings.HasPrefix(opItem.ResponseContentType,"application/json") {
-			opItem.ResponseBody=writer.body.String()
+
+		if strings.HasPrefix(opItem.ResponseContentType, "application/json") {
+			opItem.ResponseBody = writer.body.String()
 		}
 
 		opLog.WriteLog(&opItem)
