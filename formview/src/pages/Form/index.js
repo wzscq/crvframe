@@ -101,7 +101,7 @@ export default function Form(){
                     };
                     const queryParams={
                         modelID:item.input.modelID,
-                        filter:{id:dataID},
+                        filter:{id:{'Op.eq':dataID}},
                         fields:getFormFields(forms[0],fields),
                         pagination:{current:1,pageSize:1}
                     };
