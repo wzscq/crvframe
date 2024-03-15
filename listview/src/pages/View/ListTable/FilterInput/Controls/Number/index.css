@@ -1,0 +1,9 @@
+.filter-input-number {
+    width: 100%;
+    padding-bottom: 10px;
+}
+
+.filter-input-number .ant-input-number {
+    width: 100%;
+}
+

@@ -12,12 +12,27 @@ export default function DatePickerFilter({field,filterValue,onFilterChange}){
     const upateFilter=(filter)=>{
         let label='';
         if(filter['Op.gte']){
-            label=label+getLocaleLabel({key:'page.crvlistview.from',default:'从:'})+filter['Op.gte'];
+            let gte=filter['Op.gte'];
+            if(field.showTime!==true&&gte.length>10){
+                gte=gte.substring(0,10);
+            }
+            label=label+getLocaleLabel({key:'page.crvlistview.from',default:'从:'})+gte;
+            if(field.showTime!==true){
+                gte=gte+' 00:00:00';
+                filter['Op.gte']=gte;
+            }
         }
 
         if(filter['Op.lte']){
-            label=label+','+getLocaleLabel({key:'page.crvlistview.to',default:'到:'})+filter['Op.lte'];
-            filter['Op.lte']=filter['Op.lte']+' 23:59:59';
+            let lte=filter['Op.lte'];
+            if(field.showTime!==true&&lte.length>10){
+                lte=lte.substring(0,10);
+            }
+            label=label+','+getLocaleLabel({key:'page.crvlistview.to',default:'到:'})+lte;
+            if(field.showTime!==true){
+                lte=lte+' 23:59:59';
+                filter['Op.lte']=lte;
+            }
         }
         
         onFilterChange(filter,label);
@@ -30,9 +45,7 @@ export default function DatePickerFilter({field,filterValue,onFilterChange}){
         } else {
             delete newFilterValue['Op.gte'];
         }
-        if(Object.keys(newFilterValue).length>0){
-            upateFilter(newFilterValue);
-        }
+        upateFilter(newFilterValue);
     }
 
     const onChangeTo=(date,dateString)=>{
@@ -43,19 +56,20 @@ export default function DatePickerFilter({field,filterValue,onFilterChange}){
             delete newFilterValue['Op.lte'];
         }
 
-        if(Object.keys(newFilterValue).length>0){
+        //if(Object.keys(newFilterValue).length>0){
             upateFilter(newFilterValue);
-        }
+        //}
     }
 
     //这里过滤条件的值形式为
     //{op.gte:valueFrom,op.lte:valueTo}
     let valueFrom=filterValue?filterValue['Op.gte']:undefined;
+    let valueTo=filterValue?filterValue['Op.lte']:undefined;
+    
     if(valueFrom&&valueFrom.length>0){
         valueFrom=dayjs(valueFrom);
     }
-    
-    let valueTo=filterValue?filterValue['Op.lte']:undefined;
+
     if(valueTo&&valueTo.length>0){
         valueTo=dayjs(valueTo);
     }
