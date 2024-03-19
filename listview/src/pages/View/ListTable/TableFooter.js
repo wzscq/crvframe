@@ -2,6 +2,7 @@ import {Pagination} from 'antd';
 import { useDispatch,useSelector } from 'react-redux';
 
 import {setPagination} from '../../../redux/dataSlice';
+import Summarizes from './Summarizes';
 
 import './TableFooter.css';
 
@@ -23,6 +24,9 @@ export default function TableFooter(){
 
     return (
         <div className="list-table-footer">
+            <div className="list-table-summarizes">
+                <Summarizes/>
+            </div>
             <div className="list-table-pagination">
                 <Pagination onChange={onPaginationChange} size="small" itemRender={itemRender} {...pagination} total={total} showSizeChanger />
             </div>

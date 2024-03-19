@@ -121,7 +121,7 @@ func (query *Query) getQueryLimit() (string, int) {
 		return "0,1000", common.ResultSuccess
 	}
 
-	if query.Pagination.PageSize <= 0 || query.Pagination.Current <= 0 {
+	if query.Pagination.PageSize < 0 || query.Pagination.Current <= 0 {
 		slog.Debug("getQueryLimit", "Pagination", query.Pagination)
 		return "0,0", common.ResultQueryWrongPagination
 	}
@@ -269,7 +269,7 @@ func (query *Query) query(dataRepository DataRepository, withPermission bool) (*
 		return result, errorCode
 	}
 
-	if result.Total > 0 {
+	if result.Total > 0 && query.Pagination.PageSize > 0 {
 		result.List, errorCode = query.getData(sqlParam, dataRepository)
 		return result, errorCode
 	}

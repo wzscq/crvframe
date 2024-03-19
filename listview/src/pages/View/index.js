@@ -20,6 +20,7 @@ import {initDataView} from '../../redux/dataSlice';
 import NoView from './NoView';
 import ColumnSettingDialog from './ColumnSettingDialog';
 import useI18n from '../../hooks/useI18n';
+import FrameContext from '../../components/FrameContext';
 
 import './index.css';
 
@@ -54,21 +55,23 @@ export default function View(){
     if(loaded&&initialized){
         if(views?.length>0){            
             return (
-                <ConfigProvider locale={locales[locale]}>
-                    <div className='list_view_main'>
-                        <Row>
-                            <Col span={6}><ModelViewList/></Col>
-                            <Col span={18}><ListOperationBar sendMessageToParent={sendMessageToParent}/></Col>
-                        </Row>
-                        <Row>
-                            <Col span={18}><StatusBar/></Col>
-                            <Col span={6}><SearchBar/></Col>
-                        </Row>
-                        <Row>
-                            <Col span={24}><ListTable sendMessageToParent={sendMessageToParent} /></Col>                   
-                        </Row>
-                    </div>
-                    {showColumnSettingDialog===true?<ColumnSettingDialog/>:null}
+                <ConfigProvider locale={locales[locale]} >
+                    <FrameContext.Provider value={{sendMessageToParent}}>
+                        <div className='list_view_main'>
+                            <Row>
+                                <Col span={6}><ModelViewList/></Col>
+                                <Col span={18}><ListOperationBar sendMessageToParent={sendMessageToParent}/></Col>
+                            </Row>
+                            <Row>
+                                <Col span={18}><StatusBar/></Col>
+                                <Col span={6}><SearchBar/></Col>
+                            </Row>
+                            <Row>
+                                <Col span={24}><ListTable sendMessageToParent={sendMessageToParent} /></Col>                   
+                            </Row>
+                        </div>
+                        {showColumnSettingDialog===true?<ColumnSettingDialog/>:null}
+                    </FrameContext.Provider>
                 </ConfigProvider>
             );
         } else {

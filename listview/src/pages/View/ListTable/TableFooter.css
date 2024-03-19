@@ -7,3 +7,9 @@
     float: right;
     width: fit-content;
 }
+
+.list-table-footer .list-table-summarizes {
+    float: left;
+    width: fit-content;
+    margin-right: 10px;
+}
