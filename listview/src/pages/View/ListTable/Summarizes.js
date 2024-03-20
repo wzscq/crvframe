@@ -20,11 +20,13 @@ export default function Summarizes(){
   },[currentView,views]);
 
   const searchFields=useMemo(()=>{
-    if(viewConf?.footer?.summarizes?.length>0){
-      return viewConf.footer.summarizes.map(item=>({field:item.field,summarize:item.summarize}));
+    if(viewConf?.footer?.summarizes?.fields.length>0){
+      return viewConf.footer.summarizes.fields.map(item=>({field:item.field,summarize:item.summarize}));
     }
     return [];
   },[viewConf]);
+
+  const debounceDelay=viewConf?.footer?.summarizes?.options?.debounceDelay||1000;
 
   useEffect(()=>{
     if(searchFields.length>0){
@@ -99,7 +101,7 @@ export default function Summarizes(){
 
       const getSummarizes=setTimeout(()=>{
         querySummaizesData();
-      },1000);
+      },debounceDelay);
 
       return ()=>{
         clearTimeout(getSummarizes);
@@ -110,7 +112,7 @@ export default function Summarizes(){
 
   if(searchFields.length>0){
     return (
-      <div>{viewConf?.footer?.summarizes.map(item=>{
+      <div>{viewConf?.footer?.summarizes?.fields.map(item=>{
         return (<>
           <I18nLabel label={item.label} />
           <span style={{fontWeight:600}}>{formatStringNumber(summariesData?.[item.field])}</span>
