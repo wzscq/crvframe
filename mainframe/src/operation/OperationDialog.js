@@ -28,6 +28,7 @@ import OpertaionItem from './OpertaionItem';
 import {info as logInfo} from '../redux/logSlice';
 import {parseUrl} from '../utils/urlParser';
 import {userInfoStorage} from '../utils/sessionStorage';
+import RunSpin from './RunSpin';
 
 import {
     OP_TYPE,
@@ -387,6 +388,8 @@ export default function OperationDialog(){
         }   
     },[queen,needConfirm,current,dispatch]);
 
+    let spin=current?.showSpin===true?<RunSpin/>:null;
+
     return (
         needConfirm?(<Modal 
             title={getLocaleLabel({key:'dialog.operation.doOperations',default:'执行操作'})} 
@@ -395,6 +398,6 @@ export default function OperationDialog(){
             closable={false}
             footer={footer}>
             {operationList}
-        </Modal>):null
+        </Modal>):spin
     );
 }

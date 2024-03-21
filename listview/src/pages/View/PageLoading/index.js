@@ -3,7 +3,7 @@ import './index.css';
 export default function PageLoading(){
     return (
         <div className="page-loading-main">
-            <Spin size="large"></Spin>
+            <Spin></Spin>
         </div>
     )    
 }

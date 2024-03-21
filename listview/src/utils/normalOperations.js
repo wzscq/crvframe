@@ -61,6 +61,8 @@ export function createQueryDataMessage(frameParams,queryParams,queenable){
     opQueryData.input=queryParams;
     opQueryData.successOperation=opUpdateData;
     opQueryData.queenable=queenable;
+    //opQueryData.showSpin=true;
+    //opUpdateData.showSpin=true;
     return {
         type:FRAME_MESSAGE_TYPE.DO_OPERATION,
         data:{

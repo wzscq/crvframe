@@ -269,7 +269,7 @@ func (query *Query) query(dataRepository DataRepository, withPermission bool) (*
 		return result, errorCode
 	}
 
-	if result.Total > 0 && query.Pagination.PageSize > 0 {
+	if result.Total > 0 && (query.Pagination==nil || query.Pagination.PageSize > 0) {
 		result.List, errorCode = query.getData(sqlParam, dataRepository)
 		return result, errorCode
 	}
