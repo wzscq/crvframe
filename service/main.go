@@ -59,11 +59,11 @@ func main() {
 	}))
 
 	appCache := &common.DefatultAppCache{}
-	appCache.Init(conf.Redis.Server, conf.Redis.AppCacheDB, conf.Redis.Password)
+	appCache.Init(conf.Redis.Server, conf.Redis.AppCacheDB, conf.Redis.Password, conf.Redis.TLS)
 
 	duration, _ := time.ParseDuration(conf.Redis.TokenExpired)
 	loginCache := &user.DefatultLoginCache{}
-	loginCache.Init(conf.Redis.Server, conf.Redis.TokenDB, duration, conf.Redis.Password)
+	loginCache.Init(conf.Redis.Server, conf.Redis.TokenDB, duration, conf.Redis.Password, conf.Redis.TLS)
 
 	router.Use(common.AuthMiddleware(loginCache, appCache))
 
@@ -78,7 +78,8 @@ func main() {
 		conf.Mysql.DBName,
 		conf.Mysql.ConnMaxLifetime,
 		conf.Mysql.MaxOpenConns,
-		conf.Mysql.MaxIdleConns)
+		conf.Mysql.MaxIdleConns,
+		conf.Mysql.TLS)
 
 	userController := &user.UserController{
 		UserRepository: userRepo,
@@ -99,12 +100,13 @@ func main() {
 		conf.Mysql.DBName,
 		conf.Mysql.ConnMaxLifetime,
 		conf.Mysql.MaxOpenConns,
-		conf.Mysql.MaxIdleConns)
+		conf.Mysql.MaxIdleConns,
+		conf.Mysql.TLS)
 
 	//增加大文件一步下载支持
 	downloadCacheExpired, _ := time.ParseDuration(conf.Redis.DownloadCacheExpired)
 	downloadCache := &data.DefatultDownloadCache{}
-	downloadCache.Init(conf.Redis.Server, conf.Redis.DownloadCacheDB, downloadCacheExpired, conf.Redis.Password)
+	downloadCache.Init(conf.Redis.Server, conf.Redis.DownloadCacheDB, downloadCacheExpired, conf.Redis.Password, conf.Redis.TLS)
 	downloadHandler := &data.DownloadHandler{
 		DownloadCache: downloadCache,
 	}
@@ -112,7 +114,7 @@ func main() {
 	//增加上传文件支持
 	uploadCacheExpired, _ := time.ParseDuration(conf.Redis.UploadCacheExpired)
 	uploadCache := &data.DefatultUploadCache{}
-	uploadCache.Init(conf.Redis.Server, conf.Redis.UploadCacheDB, uploadCacheExpired, conf.Redis.Password)
+	uploadCache.Init(conf.Redis.Server, conf.Redis.UploadCacheDB, uploadCacheExpired, conf.Redis.Password, conf.Redis.TLS)
 
 	uploadHandler := &data.UploadHandler{
 		UploadCache: uploadCache,
@@ -130,7 +132,7 @@ func main() {
 
 	flowExpired, _ := time.ParseDuration(conf.Redis.FlowInstanceExpired)
 	flowInstanceRepository := &flow.DefaultFlowInstanceRepository{}
-	flowInstanceRepository.Init(conf.Redis.Server, conf.Redis.FlowInstanceDB, flowExpired, conf.Redis.Password)
+	flowInstanceRepository.Init(conf.Redis.Server, conf.Redis.FlowInstanceDB, flowExpired, conf.Redis.Password, conf.Redis.TLS)
 	flowController := &flow.FlowController{
 		InstanceRepository: flowInstanceRepository,
 		DataRepository:     dataRepo,
@@ -140,7 +142,7 @@ func main() {
 	//oauth
 	oauthTokenExpired, _ := time.ParseDuration(conf.Redis.OauthTokenExpired)
 	oauthCache := &oauth.OAuthCache{}
-	oauthCache.Init(conf.Redis.Server, conf.Redis.OauthTokenDB, oauthTokenExpired, conf.Redis.Password)
+	oauthCache.Init(conf.Redis.Server, conf.Redis.OauthTokenDB, oauthTokenExpired, conf.Redis.Password, conf.Redis.TLS)
 	oauthController := &oauth.OAuthController{
 		AppCache:       appCache,
 		UserRepository: userRepo,

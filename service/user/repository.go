@@ -2,9 +2,10 @@ package user
 
 import (
 	"database/sql"
-	"github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"log/slog"
 	"time"
+	"fmt"
 )
 
 type User struct {
@@ -85,19 +86,21 @@ func (repo *DefatultUserRepository) CreateOperationLog(appDB string, operationLo
 
 func (repo *DefatultUserRepository) Connect(
 	server, user, password, dbName string,
-	connMaxLifetime, maxOpenConns, maxIdleConns int) {
+	connMaxLifetime, maxOpenConns, maxIdleConns int,tls string) {
 	// Capture connection properties.
-	cfg := mysql.Config{
+	/*cfg := mysql.Config{
 		User:                 user,
 		Passwd:               password,
 		Net:                  "tcp",
 		Addr:                 server,
 		DBName:               dbName,
 		AllowNativePasswords: true,
-	}
+	}*/
 	// Get a database handle.
+	dsn:=fmt.Sprintf("%s:%s@tcp(%s)/%s?allowNativePasswords=true&tls=%s",user,password,server,dbName,tls)
+	slog.Info("connect to mysql server","dsn",dsn)
 	var err error
-	repo.DB, err = sql.Open("mysql", cfg.FormatDSN())
+	repo.DB, err = sql.Open("mysql", dsn)
 	if err != nil {
 		slog.Error(err.Error())
 	}

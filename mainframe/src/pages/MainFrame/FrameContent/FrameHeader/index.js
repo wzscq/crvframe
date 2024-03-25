@@ -26,7 +26,7 @@ export default function FrameHeader({hideHeader,filterFormConf,systemMenu}){
                 <FunctionMenu/>
             </div>
             <div className="system-operation-bar">
-                <Button type="text" loading={current?true:false} icon={<SyncOutlined/>}/>
+                <Button type="text" loading={current?true:false} icon={current?<SyncOutlined/>:null}/>
             </div>
             <div className='locale-selector'>
                 <SelectLanguage appID={appID}/>

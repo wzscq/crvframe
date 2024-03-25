@@ -25,6 +25,7 @@ type redisConf struct {
 	Password             string `json:"password" mapstructure:"password"`
 	DownloadCacheDB      int    `json:"downloadCacheDB" mapstructure:"downloadCacheDB"`
 	DownloadCacheExpired string `json:"downloadCacheExpired" mapstructure:"downloadCacheExpired"`
+	TLS			         string   `json:"tls" mapstructure:"tls"`
 }
 
 type mysqlConf struct {
@@ -35,6 +36,7 @@ type mysqlConf struct {
 	ConnMaxLifetime int    `json:"connMaxLifetime" mapstructure:"connMaxLifetime"`
 	MaxOpenConns    int    `json:"maxOpenConns" mapstructure:"maxOpenConns"`
 	MaxIdleConns    int    `json:"maxIdleConns" mapstructure:"maxIdleConns"`
+	TLS			    string   `json:"tls" mapstructure:"tls"` //skip-verify
 }
 
 type serviceConf struct {
@@ -90,11 +92,16 @@ var gConfig Config
 func InitConfig(confFile string) *Config {
 	slog.Debug("init configuation start ...")
 
+	viper.SetDefault("mysql.tls", "false")
+	viper.SetDefault("redis.tls", "false")
+
 	viper.BindEnv("redis.server", "CRV_REDIS_SERVER")
 	viper.BindEnv("redis.password", "CRV_REDIS_PASSWORD")
+	viper.BindEnv("redis.tls", "CRV_REDIS_TLS")
 	viper.BindEnv("mysql.server", "CRV_MYSQL_SERVER")
 	viper.BindEnv("mysql.password", "CRV_MYSQL_PASSWORD")
 	viper.BindEnv("mysql.user", "CRV_MYSQL_USER")
+	viper.BindEnv("mysql.tls", "CRV_MYSQL_TLS")
 	viper.SetConfigFile(confFile)
 
 	err := viper.ReadInConfig()

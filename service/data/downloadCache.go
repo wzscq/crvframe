@@ -3,6 +3,7 @@ package data
 import (
 	"github.com/go-redis/redis/v8"
 	"time"
+	"crypto/tls"
 )
 
 type DownloadCache interface {
@@ -17,11 +18,20 @@ type DefatultDownloadCache struct {
 	expire time.Duration
 }
 
-func (cache *DefatultDownloadCache) Init(url string, db int, expire time.Duration, password string) {
+func (cache *DefatultDownloadCache) Init(url string, db int, expire time.Duration, password string, useTLS string) {
+
+	var tlsConf *tls.Config
+	if useTLS=="true" {
+		tlsConf=&tls.Config{
+			MinVersion: tls.VersionTLS12,
+		}
+	}
+
 	cache.client = redis.NewClient(&redis.Options{
 		Addr:     url,
 		Password: password, // no password set
 		DB:       db,       // use default DB
+		TLSConfig: tlsConf,
 	})
 	cache.expire = expire
 }
