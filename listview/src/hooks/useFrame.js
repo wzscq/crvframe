@@ -29,7 +29,7 @@ export default function useFrame(){
     //这里在主框架窗口中挂载事件监听函数，负责和子窗口之间的操作交互
     const receiveMessageFromMainFrame=useCallback((event)=>{
         console.log("receiveMessageFromMainFrame:",event);
-        const {type,dataType,data}=event.data;
+        const {type,dataType,data,userName,appID}=event.data;
         if(type===FRAME_MESSAGE_TYPE.INIT){
             dispatch(setParam({origin:event.origin,item:data}));
             if(event.data.i18n){
@@ -37,7 +37,7 @@ export default function useFrame(){
             }
         } else if (type===FRAME_MESSAGE_TYPE.UPDATE_DATA){
             if(dataType===DATA_TYPE.MODEL_CONF){
-                dispatch(setDefinition(data));
+                dispatch(setDefinition({data,userName,appID}));
             } else if (dataType===DATA_TYPE.QUERY_RESULT){
                 dispatch(setData(data));
             } else if (dataType===DATA_TYPE.FRAME_PARAMS){

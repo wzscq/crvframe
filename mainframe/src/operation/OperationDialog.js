@@ -252,7 +252,8 @@ export default function OperationDialog(){
         const frameControl=document.getElementById(frameType+"_"+frameID);
         if(frameControl){
             const origin=parseUrl(frameControl.getAttribute("src")).origin;
-            frameControl.contentWindow.postMessage({type:FRAME_MESSAGE_TYPE.UPDATE_DATA,dataType:dataType,data:current.input},origin);
+            const {appID,userName}=userInfoStorage.get();
+            frameControl.contentWindow.postMessage({type:FRAME_MESSAGE_TYPE.UPDATE_DATA,dataType:dataType,data:current.input,userName,appID},origin);
         }
         dispatch(operationDone({result:OP_RESULT.SUCCESS}));
     }

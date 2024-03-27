@@ -1,7 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+const saveLocalDefintion=(appID,userID,modelID,viewID,fields)=>{
+    const key=`${appID}_${userID}_${modelID}_${viewID}`;
+    localStorage.setItem(key,JSON.stringify(fields));
+}
+
+const mergeLocalDefintion=(appID,userID,modelID,views)=>{
+    return views.map(view=>{
+        const key=`${appID}_${userID}_${modelID}_${view.viewID}`;
+        const fields=JSON.parse(localStorage.getItem(key));
+        if(fields){
+            return {...view,fields:fields};
+        } else {
+            return view;
+        }
+    });
+}
+
 // Define the initial state using that type
 const initialState = {
+    appID:"",
+    userName:"",
     loaded:false,
     modelID:"",
     fields:[],
@@ -15,16 +34,19 @@ export const definitionSlice = createSlice({
     initialState,
     reducers: {
         setDefinition: (state,action) => {
-           state.modelID=action.payload.modelID;
-           state.fields=action.payload.fields;
-           state.operations=action.payload.operations;
-           state.views=action.payload.views;
+           state.modelID=action.payload.data.modelID;
+           state.fields=action.payload.data.fields;
+           state.operations=action.payload.data.operations;
+           state.views=mergeLocalDefintion(action.payload.appID,action.payload.userName,action.payload.data.modelID,action.payload.data.views);
+           state.appID=action.payload.appID;
+           state.userName=action.payload.userName;
            state.loaded=true;
         },
         setViewFields: (state,action) => {
             console.log('setViewFields:',action.payload);
             state.views=state.views.map(item=>{
                 if(item.viewID===action.payload.viewID){
+                    saveLocalDefintion(state.appID,state.userName,state.modelID,item.viewID,action.payload.fields);
                     return {...item,fields:action.payload.fields};
                 }
                 return item;
@@ -34,12 +56,14 @@ export const definitionSlice = createSlice({
             console.log('setViewFieldWidth:',action.payload);
             state.views=state.views.map(item=>{
                 if(item.viewID===action.payload.viewID){
-                    return {...item,fields:item.fields.map(f=>{
+                    const fields=item.fields.map(f=>{
                         if(f.field===action.payload.field){
                             return {...f,width:action.payload.width};
                         }
                         return f;
-                    })};
+                    });
+                    saveLocalDefintion(state.appID,state.userName,state.modelID,item.viewID,fields);
+                    return {...item,fields:fields};
                 }
                 return item;
             });
