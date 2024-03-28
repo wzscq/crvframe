@@ -64,6 +64,7 @@ const (
 	ResultReadExternalApiResultError = 10000046
 	ResultGetUploadKeyError          = 10000047
 	ResultOpenAppFileError           = 10000048
+	ResultBadExternalApiUrl		     = 10000049
 
 	ResultStartFlowWithoutID     = 20000001
 	ResultCacheFlowInstanceError = 20000002
@@ -273,6 +274,11 @@ var errMsg = map[int]CommonRsp{
 	ResultNoExternalApiId: CommonRsp{
 		ErrorCode: ResultNoExternalApiId,
 		Message:   "调用外部API时未提供API标识，请与管理员联系处理",
+		Error:     true,
+	},
+	ResultBadExternalApiUrl: CommonRsp{
+		ErrorCode: ResultBadExternalApiUrl,
+		Message:   "调用外部API时提供的API配置不正确，请与管理员联系处理",
 		Error:     true,
 	},
 	ResultNoExternalApiUrl: CommonRsp{

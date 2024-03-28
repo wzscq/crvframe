@@ -8,7 +8,7 @@ import './index.css';
 export default function OAuthBack(){
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const token=useSelector(state=>state.login.token);
+    const {token,menuGroups}=useSelector(state=>state.login);
     const {appID}=useParams();
     const [search,] = useSearchParams();
     const oauthCode=search.get('code');
@@ -26,7 +26,17 @@ export default function OAuthBack(){
     //这里走实际的auth登录，根据code获取token和用户信息
     useEffect(()=>{
         if(token.length>0){
-            navigate("/mainframe");
+            if(menuGroups?.length>1){
+                navigate("/menugroup");
+                return;
+            }
+            
+            if(menuGroups?.length===1){
+                navigate("/mainframe/"+menuGroups[0].id);
+                return;
+            }
+            
+            navigate("/mainframe/menus");
         } else {
             console.log('oauth:',appID,oauthCode);
             dispatch(oauthBackApi({appID:appID,oauthCode:oauthCode}));

@@ -25,6 +25,11 @@ type oauthLoginReq struct {
 	ClientID    string `json:"clientID"`
 }
 
+type oauthRedirectReq struct {
+	Code         string `form:"code"`
+	AppID		string `form:"appID"`
+}
+
 type oauthBackReq struct {
 	OAuthCode string `json:"oauthCode"`
 	AppID     string `json:"appID"`
@@ -158,6 +163,8 @@ func (controller *OAuthController) back(c *gin.Context) {
 		return
 	}
 
+	slog.Info("get token", "token", token)
+
 	//获取oauth user id
 	userID, err := getUserID(appDB, token)
 	if err != nil {
@@ -233,11 +240,26 @@ func (controller *OAuthController) userInfo(c *gin.Context) {
 	slog.Debug("end OAuthController userInfo")
 }
 
+func (controller *OAuthController) redirectToback(c *gin.Context) {
+	var req oauthRedirectReq
+	if err := c.ShouldBind(&req); err != nil {
+		c.IndentedJSON(http.StatusBadRequest, nil)
+		slog.Error("end OAuthController redirectToback with error", "error", err)
+		return
+	}
+
+	url :=  "http://localhost:3000/#/OAuthBack/" + req.AppID + "?code=" + req.Code
+	slog.Debug("OAuthController redirectToback", "url", url)
+	c.Redirect(http.StatusMovedPermanently, url)
+	slog.Debug("end OAuthController login")
+}
+
 func (controller *OAuthController) Bind(router *gin.Engine) {
 	slog.Info("Bind OAuthController")
 	router.POST("/oauth/getLoginPage", controller.getLoginPage)
 	router.POST("/oauth/login", controller.login)
 	router.POST("/oauth/back", controller.back)
+	router.GET("/oauth/redirectToback", controller.redirectToback)
 	router.POST("/oauth/accessToken", controller.accessToken)
 	router.GET("/oauth/userInfo", controller.userInfo)
 }
