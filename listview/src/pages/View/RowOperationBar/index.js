@@ -24,7 +24,7 @@ export default function RowOperationBar({sendMessageToParent,record,showCount,bu
 
         //对operation做预处理，一般是基于数据行为operaiton增加过滤条件
         if(operation&&opItem.preprocessing){
-            //console.log('preprocessing',opItem.preprocessing);
+            console.log('preprocessing',opItem.preprocessing,operation);
             operation=getOperationPreporcessFunc(opItem.preprocessing)(operation,record,dayjs);
             //console.log('preprocessing',operation);
         }
