@@ -1,78 +1,18 @@
 .frame-header {
-    width: 100%;
+    width: auto;
     height: 45px;
+    line-height: 45px;
     background-color: white;
-}
-
-.frame-header .ant-divider-vertical {
-    float: left;
-    margin: 5px;
-    top: auto;
-    height: 35px;
-}
-
-.frame-header .function-menu {
-    width: calc(100% - 423px);
-    height: 45px;
-    float: left;
-    line-height: 45px;
-    display: none;
-}
-
-.frame-header .system-menu {
-    width: 150px;
-    height: 45px;
-    float: right;
-    line-height: 42px;
-    text-align: center;
-}
-
-.frame-header .locale-selector {
-    width: 30px;
-    float: right;
-    line-height: 45px;
-    text-align: center;
-}
-
-.frame-header .system-operation-bar {
-    width: 45px;
-    height: 45px;
-    float: right;
-    line-height: 45px;
-    text-align: center;
-    color:#1890ff;
-}
-
-.frame-header .menu-group {
-    width: 30px;
-    height: 45px;
-    float: right;
-    line-height: 45px;
-    text-align: center;
-    color:#1890ff;
-}
-
-.frame-header .menu-group .ant-btn-text {
-    color:#1890ff;
-}
-
-.frame-header .system-operation-bar .ant-btn-text {
-    color:#1890ff;
-}
-
-.frame-header .ant-dropdown-trigger {
-    display: inline-block;
-}
-
-.frame-header .ant-menu-horizontal {
-    border: 0;
+    display: grid;
+    grid-template-columns: 45px 1fr fit-content(50%) 45px 45px;
 }
 
 .frame-header .filter-form {
     width: auto;
     height: 45px;
-    float: right;
     line-height: 33px;
     text-align: center;
+    display: flex;
+    justify-content: flex-end;
 }
 

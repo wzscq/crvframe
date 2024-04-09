@@ -11,8 +11,6 @@ export default function FilterForm({filterFormConf}){
   };
 
   return (
-    <div>
-      <EditForm locale={locale}  formConf={filterFormConf} sendMessageToParent={sendMessageToParent} formType={FORM_TYPE.CREATE} />
-    </div>
+    <EditForm locale={locale}  formConf={filterFormConf} sendMessageToParent={sendMessageToParent} formType={FORM_TYPE.CREATE} />
   );
 }

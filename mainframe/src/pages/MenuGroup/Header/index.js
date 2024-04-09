@@ -14,12 +14,14 @@ export default function Header({systemMenu}){
     return (
         <div className="menugroup-frame-header">
             <Image  preview={false} height={"45px"} src={getMenuGroupHeaderImage()} />  
-            <div className='locale-selector'>
-                <SelectLanguage appID={appID}/>
-            </div>
-            <div className="system-menu">
+            <div></div>
+            <div>
                 <SystemMenu systemMenu={systemMenu}/>
             </div>
+            <div>
+                <SelectLanguage appID={appID}/>
+            </div>
+            <div></div>
         </div>
     );
 }

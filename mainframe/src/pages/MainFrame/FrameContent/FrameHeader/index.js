@@ -3,7 +3,6 @@ import { SyncOutlined,UpSquareOutlined} from '@ant-design/icons';
 import { Button,Tooltip} from 'antd';
 import { useNavigate } from "react-router-dom";
 
-import FunctionMenu from './FunctionMenu';
 import SystemMenu from './SystemMenu';
 import FilterForm from './FilterForm';
 
@@ -21,29 +20,25 @@ export default function FrameHeader({hideHeader,filterFormConf,systemMenu}){
     const navigate = useNavigate();
 
     return (
-        <div className="frame-header" style={hideHeader===true?{height:0,overflow:'hidden'}:{}}>
-            <div className="function-menu">
-                <FunctionMenu/>
-            </div>
-            <div className="system-operation-bar">
-                <Button type="text" loading={current?true:false} icon={current?<SyncOutlined/>:null}/>
-            </div>
-            <div className='locale-selector'>
-                <SelectLanguage appID={appID}/>
-            </div>
-            {
-                menuGroups && menuGroups.length>1?
-                <div className="menu-group">
+        <div className="frame-header" style={hideHeader===true?{height:0,overflow:'hidden'}:{}}>  
+            <div>
+                {menuGroups && menuGroups.length>1?
                     <Tooltip title={getLocaleLabel({key:'page.main.exitMenuGroup',default:'退出当前菜单组'})}>
-                        <Button type="text" onClick={()=>navigate("/menugroup")} icon={<UpSquareOutlined/>}/>
-                    </Tooltip>
-                </div>:null
-            }
-            <div className="system-menu">
-                <SystemMenu systemMenu={systemMenu}/>
+                        <Button type="link" onClick={()=>navigate("/menugroup")} icon={<UpSquareOutlined/>}/>
+                    </Tooltip>:null
+                }
             </div>
             <div className="filter-form">
                 <FilterForm filterFormConf={filterFormConf}/>
+            </div>
+            <div>
+                <SystemMenu systemMenu={systemMenu}/>
+            </div>
+            <div>
+                <SelectLanguage appID={appID}/>
+            </div>
+            <div>
+                <Button type="link" loading={current?true:false} icon={current?<SyncOutlined/>:null}/>
             </div>
         </div>
     );

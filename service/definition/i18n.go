@@ -38,6 +38,7 @@ func (i18n *i18n) getLang(i18nDef *i18nDefinition) (string, int) {
 
 	//指定的语言在列表中是否存在
 	for _, localeItem := range *(i18nDef.Locales) {
+		slog.Info("getLang","key",localeItem.Key,"locale",i18n.Locale)
 		if localeItem.Key == i18n.Locale {
 			return i18n.Locale, common.ResultSuccess
 		}
