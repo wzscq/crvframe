@@ -36,7 +36,7 @@ export default function MenuBar({collapsed,menuGroup}){
     const onClick=({item})=>{
         //console.log(item.props.operation);
         if(item.props.operation){
-            setOperation(item.props.operation);
+            setOperation({...item.props.operation,queenable:true});
         }
     }
 

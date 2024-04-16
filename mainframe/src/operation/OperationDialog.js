@@ -383,8 +383,8 @@ export default function OperationDialog(){
     //这里处理队列中的操作
     useEffect(()=>{
         //如果当前没有正在执行的操作
-        //console.log("wzstest",queen,needConfirm,current);
-        if(queen.length>0&&needConfirm===false&&current===null){
+        console.log("wzstest",queen,needConfirm,current);
+        if(queen.length>0&&needConfirm===false&&(current===null||  typeof current === 'undefined')){
             dispatch(doNextOperation());
         }   
     },[queen,needConfirm,current,dispatch]);
