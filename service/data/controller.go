@@ -148,11 +148,55 @@ func (controller *DataController) delete(c *gin.Context) {
 		UserID:          userID,
 		SelectedRowKeys: rep.SelectedRowKeys,
 		UserRoles:       userRoles,
+		Filter:          rep.Filter,
+		SelectAll:       rep.SelectAll,
 	}
 	result, errorCode = delete.Execute(controller.DataRepository)
 	rsp := common.CreateResponse(common.CreateError(errorCode, nil), result)
 	c.IndentedJSON(http.StatusOK, rsp)
 	slog.Debug("end data delete")
+}
+
+func (controller *DataController) batchDelete(c *gin.Context) {
+	slog.Debug("start data batchDelete")
+	//获取用户账号
+	userID := c.MustGet("userID").(string)
+	userRoles := c.MustGet("userRoles").(string)
+	appDB := c.MustGet("appDB").(string)
+	var rep CommonReq
+	var errorCode int
+	var result *map[string]interface{} = nil
+	if err := c.BindJSON(&rep); err != nil {
+		slog.Error(err.Error())
+		errorCode = common.ResultWrongRequest
+		rsp := common.CreateResponse(common.CreateError(errorCode, nil), result)
+		c.IndentedJSON(http.StatusOK, rsp)
+		slog.Debug("end data batchDelete with error")
+		return
+	}
+
+	if rep.SelectedRowKeys == nil {
+		errorCode = common.ResultWrongRequest
+		rsp := common.CreateResponse(common.CreateError(errorCode, nil), result)
+		c.IndentedJSON(http.StatusOK, rsp)
+		slog.Debug("end data batchDelete with error")
+		return
+	}
+
+	delete := &BatchDelete{
+		ModelID:         rep.ModelID,
+		AppDB:           appDB,
+		UserID:          userID,
+		SelectedRowKeys: rep.SelectedRowKeys,
+		UserRoles:       userRoles,
+		Filter:          rep.Filter,
+		SelectAll:       rep.SelectAll,
+		Fields: 		 rep.Fields,
+	}
+	result, errorCode = delete.Execute(controller.DataRepository)
+	rsp := common.CreateResponse(common.CreateError(errorCode, nil), result)
+	c.IndentedJSON(http.StatusOK, rsp)
+	slog.Debug("end data batchDelete")
 }
 
 func (controller *DataController) update(c *gin.Context) {
@@ -417,6 +461,7 @@ func (controller *DataController) Bind(router *gin.Engine) {
 	router.POST("/data/query", controller.query)
 	router.POST("/data/save", controller.save)
 	router.POST("/data/delete", controller.delete)
+	router.POST("/data/batchDelete", controller.batchDelete)
 	router.POST("/data/update", controller.update)
 	router.POST("/data/download", controller.download)
 	router.POST("/data/getImage", controller.getImage)

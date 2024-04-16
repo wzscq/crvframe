@@ -13,34 +13,52 @@ type Delete struct {
 	AppDB           string    `json:"appDB"`
 	UserID          string    `json:"userID"`
 	UserRoles       string    `json:"userRoles"`
+	Filter     *map[string]interface{} `json:"filter"`
+	SelectAll        bool     `json:"selectedAll"`
 }
 
-func (delete *Delete) getPermissionIds(dataRepository DataRepository, idList *[]string) (string, int) {
+func (delete *Delete) getPermissionIds(dataRepository DataRepository) (*[]string, int) {
 	slog.Debug("start getPermissionIds")
 	//根据用户权限，获取允许删除数据的id列表
 	permissionDataset, errorCode := definition.GetUserDataset(delete.AppDB, delete.ModelID, delete.UserRoles, definition.DATA_OP_TYPE_MUTATION)
 	if errorCode != common.ResultSuccess {
-		return "", errorCode
+		return nil, errorCode
 	}
 
-	if permissionDataset.Filter == nil {
+	if permissionDataset.Filter == nil && delete.SelectAll == false {
 		slog.Debug("end getPermissionIds with nil filter")
-		return delete.idListToString(idList)
+		return delete.SelectedRowKeys,common.ResultSuccess
+	}
+
+	var filter *map[string]interface{}
+	if delete.SelectAll == true {
+		if permissionDataset.Filter == nil {
+			filter=delete.Filter
+		} else {
+			filter=&map[string]interface{}{
+				Op_and: []interface{}{
+					*(delete.Filter),
+					*(permissionDataset.Filter),
+				},
+			}
+		}
+	} else {
+		filter=&map[string]interface{}{
+			Op_and: []interface{}{
+				map[string]interface{}{
+					"id": map[string]interface{}{
+						Op_in: delete.SelectedRowKeys,
+					},
+				},
+				*(permissionDataset.Filter),
+			},
+		}
 	}
 
 	//查询符合条件的数据ID
 	query := &Query{
 		ModelID: delete.ModelID,
-		Filter: &map[string]interface{}{
-			Op_and: []interface{}{
-				map[string]interface{}{
-					"id": map[string]interface{}{
-						Op_in: *idList,
-					},
-				},
-				*(permissionDataset.Filter),
-			},
-		},
+		Filter: filter,
 		Fields: &[]Field{
 			Field{
 				Field: "id",
@@ -49,21 +67,23 @@ func (delete *Delete) getPermissionIds(dataRepository DataRepository, idList *[]
 		AppDB:     delete.AppDB,
 		UserRoles: delete.UserRoles,
 	}
+
 	result, errorCode := query.Execute(dataRepository, false)
+	if errorCode != common.ResultSuccess {
+		return nil, errorCode
+	}
 
 	if len(result.List) == 0 {
 		slog.Debug("end getPermissionIds with no permission")
-		return "", common.ResultNoPermission
+		return nil, common.ResultNoPermission
 	}
-	//循环结果的每行数据
-	strIDs := ""
-	for _, row := range result.List {
-		strIDs = strIDs + "'" + replaceApostrophe(row["id"].(string)) + "',"
+
+	idList:=make([]string,len(result.List))
+	for index, row := range result.List {
+		idList[index]=replaceApostrophe(row["id"].(string))
 	}
-	//去掉末尾的逗号
-	strIDs = strIDs[0 : len(strIDs)-1]
-	slog.Debug("end getPermissionIds with id", "list", strIDs)
-	return strIDs, common.ResultSuccess
+	
+	return &idList,common.ResultSuccess
 }
 
 func (delete *Delete) idListToString(idList *[]string) (string, int) {
@@ -81,14 +101,19 @@ func (delete *Delete) idListToString(idList *[]string) (string, int) {
 	return strIDs, common.ResultSuccess
 }
 
-func (delete *Delete) delete(dataRepository DataRepository, tx *sql.Tx, modelID string, idList *[]string) (*map[string]interface{}, int) {
+func (delete *Delete) delete(dataRepository DataRepository, tx *sql.Tx) (*map[string]interface{}, int) {
 	//获取所有待删数据ID列表字符串，类似：'id1','id2'
-	strIDs, errorCode := delete.getPermissionIds(dataRepository, idList)
+	idList, errorCode := delete.getPermissionIds(dataRepository)
 	if errorCode != common.ResultSuccess {
 		return nil, errorCode
 	}
 
-	sql := "delete from " + delete.AppDB + "." + modelID + " where id in (" + strIDs + ")"
+	strIDs,errorCode:=delete.idListToString(idList)
+	if errorCode != common.ResultSuccess {
+		return nil, errorCode
+	}
+
+	sql := "delete from " + delete.AppDB + "." + delete.ModelID + " where id in (" + strIDs + ")"
 
 	_, rowCount, err := dataRepository.ExecWithTx(sql, tx)
 	if err != nil {
@@ -96,11 +121,11 @@ func (delete *Delete) delete(dataRepository DataRepository, tx *sql.Tx, modelID 
 	}
 	result := map[string]interface{}{}
 	result["count"] = rowCount
-	result["modelID"] = modelID
+	result["modelID"] = delete.ModelID
 
 	//还要删掉和当前模型相关联的中间表的数据
 	dr := DeleteReleated{
-		ModelID: modelID,
+		ModelID: delete.ModelID,
 		AppDB:   delete.AppDB,
 		UserID:  delete.UserID,
 		IdList:  idList,
@@ -118,7 +143,7 @@ func (delete *Delete) Execute(dataRepository DataRepository) (*map[string]interf
 		return nil, common.ResultSQLError
 	}
 	//执行删除动作
-	result, errorCode := delete.delete(dataRepository, tx, delete.ModelID, delete.SelectedRowKeys)
+	result, errorCode := delete.delete(dataRepository, tx)
 	if errorCode == common.ResultSuccess {
 		//提交事务
 		if err := tx.Commit(); err != nil {

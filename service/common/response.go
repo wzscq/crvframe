@@ -66,13 +66,13 @@ const (
 	ResultOpenAppFileError           = 10000048
 	ResultBadExternalApiUrl		     = 10000049
 
-	ResultStartFlowWithoutID     = 20000001
-	ResultCacheFlowInstanceError = 20000002
-	ResultNoExecutorForNodeType  = 20000003
-	ResultNoNodeOfGivenID        = 20000004
-	ResultPushFlowWithoutID      = 20000005
-	ResultLoadFlowInstanceError  = 20000006
-	ResultLoadNodeConfError      = 20000007
+	ResultStartFlowWithoutID     = 10100001
+	ResultCacheFlowInstanceError = 10100002
+	ResultNoExecutorForNodeType  = 10100003
+	ResultNoNodeOfGivenID        = 10100004
+	ResultPushFlowWithoutID      = 10100005
+	ResultLoadFlowInstanceError  = 10100006
+	ResultLoadNodeConfError      = 10100007
 )
 
 var errMsg = map[int]CommonRsp{

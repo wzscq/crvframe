@@ -61,6 +61,7 @@ type buttonConf struct {
 	Disabled      *string      `json:"disabled,omitempty"`
 	Preprocessing *string      `json:"preprocessing,omitempty"`
 	AutoRun       *interface{} `json:"autoRun,omitempty"`
+	Children      *[]buttonConf `json:"children,omitempty"`
 }
 
 type toolbarConf struct {

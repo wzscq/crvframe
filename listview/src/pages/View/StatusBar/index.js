@@ -61,11 +61,12 @@ export default function StatusBar(){
         return filterTags;
     },[filterValueLabel,fields,deleteFilter,getLocaleLabel]);
 
+    const selectCount=selectAll===true?total:selectedRowKeys.length;
     const sumLabel=getLocaleLabel({key:'page.crvlistview.total',default:'共 '})+
                     total+
                     getLocaleLabel({key:'page.crvlistview.item',default:' 条'})+'，'+
                     getLocaleLabel({key:'page.crvlistview.selected',default:'选中 '})+
-                    selectedRowKeys.length+
+                    (selectCount)+
                     getLocaleLabel({key:'page.crvlistview.item',default:' 条'});
 
     let selectAllControl=null;

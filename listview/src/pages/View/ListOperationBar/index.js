@@ -1,8 +1,9 @@
 import {useCallback} from 'react';
-import { Space,message } from "antd";
+import { Space,message,Dropdown,Button } from "antd";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import dayjs from 'dayjs';
+import { MoreOutlined } from '@ant-design/icons';
 
 import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 import OperationButton from '../../../components/OperationButton';
@@ -118,26 +119,86 @@ export default function ListOperationBar({sendMessageToParent}){
         }
     },[operations,currentView,modelID,getLocaleLabel,viewFilter,selectAll,selectedRowKeys,filter,filterData,pagination,sorter,searchFields,sendMessageToParent]);
 
+
+    const getDropDownItems=(items,operations)=>{
+        return items.map(item=>{
+            if(item.children){
+                const childItems=getDropDownItems(item.children,operations);
+                if(childItems.length>0){
+                    return {
+                        key: item.operationID,
+                        label: <Button type='link'>{getLocaleLabel(item.name)}</Button>,
+                        children:getDropDownItems(item.children,operations)
+                    }
+                }
+            } else {
+                const operation=operations.find(element=>element.id===item.operationID);
+                if(operation){
+                    return {
+                        key: item.operationID,
+                        label: <OperationButton key={item.operationID} type='link' doOperation={doOperation} operation={{name:operation.name,...item}}/>
+                    }
+                }
+            }
+            return null;
+        }).filter(item=>item!==null);
+    }
+
     const buttonControls=useMemo(()=>{
         let buttonControls=[];
+        let hideItems=[];
         const viewConf=views.find(item=>item.viewID===currentView);
         if(viewConf){
             const listToolbar=viewConf.toolbar?.listToolbar;
             if(listToolbar){
                 const {showCount,buttons}=listToolbar;
                 if(buttons){
-                    for(let i=0;i<buttons.length&&i<showCount;++i){
+                    let buttonCount=0;
+                    for(let i=0;i<buttons.length;++i){
                         const item=buttons[i];
-                        const operation=operations.find(element=>element.id===item.operationID);
-                        if(operation){
-                            buttonControls.push(
-                                <OperationButton key={item.operationID} type='primary' doOperation={doOperation} operation={{name:operation.name,...item}}/>
-                            );
+                        if(item.children){
+                            if(buttonCount<showCount){
+                                const items=getDropDownItems(item.children,operations);
+                                if(items.length>0){
+                                    buttonCount++;
+                                    buttonControls.push(
+                                        <Dropdown menu={{items:items}}>
+                                            <Button type='primary'>{getLocaleLabel(item.name)}<MoreOutlined/></Button>
+                                        </Dropdown>
+                                    );
+                                }
+                            } else {
+                                hideItems.push(item)
+                            }
+                        } else {
+                            const operation=operations.find(element=>element.id===item.operationID);
+                            if(operation){
+                                if(buttonCount<showCount){
+                                    buttonCount++;
+                                    buttonControls.push(
+                                        <OperationButton key={item.operationID} type='primary' doOperation={doOperation} operation={{name:operation.name,...item}}/>
+                                    );
+                                } else {
+                                    hideItems.push(item)
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+
+        if(hideItems.length>0){
+            const dropdownItems=getDropDownItems(hideItems,operations);
+            if(dropdownItems.length>0){
+                buttonControls.push(
+                    <Dropdown menu={{items:dropdownItems}}>
+                        <Button type='primary'>{getLocaleLabel({key:'page.crvlistview.moreOperation',default:'更多操作'})}<MoreOutlined/></Button>
+                    </Dropdown>
+                )
+            }
+        }
+
         return buttonControls;
     },[currentView,operations,doOperation]);
 
