@@ -361,7 +361,8 @@ export default function OperationDialog(){
                 dispatch(logInfo('do_operation:'+JSON.stringify(data.operationItem)));
                 dispatch(setOperation(data.operationItem));
             } else if (type===FRAME_MESSAGE_TYPE.QUERY_REQUEST) {
-                queryData({...data,globalFilterData},errorCallback);
+                const {frameParams,queryParams}=data;
+                queryData({frameParams,queryParams:{...queryParams,globalFilterData}},errorCallback);
             } else if (type===FRAME_MESSAGE_TYPE.REPORT_QUERY){
                 queryReportData(data,errorCallback);
             } else if (type===FRAME_MESSAGE_TYPE.GET_IMAGE) {
