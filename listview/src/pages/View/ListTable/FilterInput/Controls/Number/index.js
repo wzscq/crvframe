@@ -10,11 +10,11 @@ export default function NumberFilter({field,filterValue,onFilterChange}){
 
     const upateFilter=(filter)=>{
         let label='';
-        if(filter['Op.gte']){
+        if(filter['Op.gte'] !==undefined ){
             label=label+getLocaleLabel({key:'page.crvlistview.gte',default:'大于等于:'})+filter['Op.gte'];
         }
 
-        if(filter['Op.lte']){
+        if(filter['Op.lte'] !==undefined){
             label=label+','+getLocaleLabel({key:'page.crvlistview.lte',default:'小于等于:'})+filter['Op.lte'];
         }
         
@@ -23,7 +23,7 @@ export default function NumberFilter({field,filterValue,onFilterChange}){
     
     const onChangeFrom=(value)=>{
         const newFilterValue={...filterValue};
-        if(value){
+        if(value!==undefined&&value!==null){
             newFilterValue['Op.gte']=value;
         } else {
             delete newFilterValue['Op.gte'];
@@ -35,7 +35,7 @@ export default function NumberFilter({field,filterValue,onFilterChange}){
 
     const onChangeTo=(value)=>{
         const newFilterValue={...filterValue};
-        if(value){
+        if(value!==undefined&&value!==null){
             newFilterValue['Op.lte']=value;
         } else {
             delete newFilterValue['Op.lte'];
