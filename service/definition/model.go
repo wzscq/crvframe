@@ -38,6 +38,7 @@ type fieldConf struct {
 	RelatedField       *string `json:"relatedField,omitempty"`
 	AssociationModelID *string `json:"associationModelID,omitempty"`
 	CascadeDelete      *bool   `json:"cascadeDelete,omitempty"`
+	DecimalPlaces      *int  `json:"decimalPlaces,omitempty"`
 }
 
 type OperationConf struct {

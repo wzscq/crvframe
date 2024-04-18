@@ -34,7 +34,8 @@ export default function DefaultColumnControl({text,field, record, index}){
             value=getLocaleLabel(option.label);
         }
     } else if(text&&(field.dataType==='decimal'||field.dataType==='int')){
-        value=formatStringNumber(text); //.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        const minimumFractionDigits=field.decimalPlaces??0;
+        value=formatStringNumber(text,'en-US',minimumFractionDigits); //.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         className='listtable-column-number';
     } else if(text&&field.dataType==='datetime'&&field.format){
         value=dayjs(text).format(field.format);
