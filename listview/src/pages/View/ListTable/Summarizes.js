@@ -116,7 +116,7 @@ export default function Summarizes(){
         return (<>
           <I18nLabel label={item.label} />
           <span style={{fontWeight:600}}>{formatStringNumber(summariesData?.[item.field],'en-US',2)}</span>
-          <span>,&nbsp;&nbsp;</span>
+          <span>&nbsp;&nbsp;&nbsp;</span>
         </>)
       })}</div>
     );
