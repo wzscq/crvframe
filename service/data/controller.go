@@ -163,10 +163,10 @@ func (controller *DataController) batchDelete(c *gin.Context) {
 	userID := c.MustGet("userID").(string)
 	userRoles := c.MustGet("userRoles").(string)
 	appDB := c.MustGet("appDB").(string)
-	var rep CommonReq
+	var req CommonReq
 	var errorCode int
 	var result *map[string]interface{} = nil
-	if err := c.BindJSON(&rep); err != nil {
+	if err := c.BindJSON(&req); err != nil {
 		slog.Error(err.Error())
 		errorCode = common.ResultWrongRequest
 		rsp := common.CreateResponse(common.CreateError(errorCode, nil), result)
@@ -175,7 +175,7 @@ func (controller *DataController) batchDelete(c *gin.Context) {
 		return
 	}
 
-	if rep.SelectedRowKeys == nil {
+	if req.SelectedRowKeys == nil {
 		errorCode = common.ResultWrongRequest
 		rsp := common.CreateResponse(common.CreateError(errorCode, nil), result)
 		c.IndentedJSON(http.StatusOK, rsp)
@@ -183,17 +183,20 @@ func (controller *DataController) batchDelete(c *gin.Context) {
 		return
 	}
 
-	delete := &BatchDelete{
-		ModelID:         rep.ModelID,
-		AppDB:           appDB,
-		UserID:          userID,
-		SelectedRowKeys: rep.SelectedRowKeys,
-		UserRoles:       userRoles,
-		Filter:          rep.Filter,
-		SelectAll:       rep.SelectAll,
-		Fields: 		 rep.Fields,
+	errorCode = processFilter(req.Filter, req.FilterData, req.GlobalFilterData, userID, userRoles, appDB, controller.DataRepository)
+	if errorCode == common.ResultSuccess {
+		delete := &BatchDelete{
+			ModelID:         req.ModelID,
+			AppDB:           appDB,
+			UserID:          userID,
+			SelectedRowKeys: req.SelectedRowKeys,
+			UserRoles:       userRoles,
+			Filter:          req.Filter,
+			SelectAll:       req.SelectAll,
+			Fields: 		 req.Fields,
+		}
+		result, errorCode = delete.Execute(controller.DataRepository)
 	}
-	result, errorCode = delete.Execute(controller.DataRepository)
 	rsp := common.CreateResponse(common.CreateError(errorCode, nil), result)
 	c.IndentedJSON(http.StatusOK, rsp)
 	slog.Debug("end data batchDelete")

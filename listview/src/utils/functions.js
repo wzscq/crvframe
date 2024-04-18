@@ -11,8 +11,8 @@ export const getManyToOneValueFunc=(optionLabel)=>{
     return Function(funStr)();
 };
 
-export function formatStringNumber(numStr,locale='en-US'){
-    return numStr?.length>0?parseFloat(numStr).toLocaleString(locale, {minimumFractionDigits: 0,maximumFractionDigits: 20}):'';
+export function formatStringNumber(numStr,locale='en-US',minimumFractionDigits=0){
+    return numStr?.length>0?parseFloat(numStr).toLocaleString(locale, {minimumFractionDigits: minimumFractionDigits,maximumFractionDigits: 20}):'';
 }
 
 export const getOperationPreporcessFunc=(preporcess)=>{
