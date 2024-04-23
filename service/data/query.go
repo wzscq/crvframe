@@ -59,6 +59,8 @@ type Query struct {
 	AppDB      string                  `json:"appDB"`
 	Sorter     *[]Sorter               `json:"sorter"`
 	UserRoles  string                  `json:"userRoles"`
+	Distinct   bool                    `json:"distinct"`
+	NoCount    bool                    `json:"noCount"`
 }
 
 func (query *Query) getQueryFields(permissionFields string) (string, int) {
@@ -93,6 +95,11 @@ func (query *Query) getQueryFields(permissionFields string) (string, int) {
 	}
 
 	fields = fields[0 : len(fields)-1]
+	
+	if query.Distinct == true {
+		fields="distinct "+fields
+	}
+	
 	return fields, common.ResultSuccess
 }
 
@@ -264,17 +271,22 @@ func (query *Query) query(dataRepository DataRepository, withPermission bool) (*
 		return result, errorCode
 	}
 
-	result.Total, result.Summaries, errorCode = query.getCountAndSummaries(sqlParam, dataRepository)
-	if errorCode != common.ResultSuccess {
-		return result, errorCode
-	}
+    if query.NoCount == false {
+		result.Total, result.Summaries, errorCode = query.getCountAndSummaries(sqlParam, dataRepository)
+		if errorCode != common.ResultSuccess {
+			return result, errorCode
+		}
 
-	if result.Total > 0 && (query.Pagination==nil || query.Pagination.PageSize > 0) {
-		result.List, errorCode = query.getData(sqlParam, dataRepository)
-		return result, errorCode
-	}
+		if result.Total > 0 && (query.Pagination==nil || query.Pagination.PageSize > 0) {
+			result.List, errorCode = query.getData(sqlParam, dataRepository)
+			return result, errorCode
+		}
 
-	return result, common.ResultSuccess
+		return result, common.ResultSuccess
+	}
+		
+	result.List, errorCode = query.getData(sqlParam, dataRepository)
+	return result, errorCode
 }
 
 func (query *Query) queryRelatedModels(dataRepository DataRepository, parentList *QueryResult) int {

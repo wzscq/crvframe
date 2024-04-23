@@ -289,6 +289,8 @@ func getFilterData(
 			Fields:    item.Fields,
 			AppDB:     appDB,
 			UserRoles: userRoles,
+			Distinct:  true,
+			NoCount:   true,
 		}
 		result, errorCode := query.Execute(dataRepository, false)
 		if errorCode != common.ResultSuccess {
