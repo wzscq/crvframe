@@ -33,7 +33,11 @@ export default function DefaultColumnControl({text,field, record, index}){
         if(option){
             value=getLocaleLabel(option.label);
         }
-    } else if(text&&(field.dataType==='decimal'||field.dataType==='int')){
+    } else if(text&&field.dataType==='decimal'){
+        const minimumFractionDigits=field.decimalPlaces??2;
+        value=formatStringNumber(text,'en-US',minimumFractionDigits); //.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        className='listtable-column-number';
+    } else if(text&&field.dataType==='int'){
         const minimumFractionDigits=field.decimalPlaces??0;
         value=formatStringNumber(text,'en-US',minimumFractionDigits); //.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         className='listtable-column-number';

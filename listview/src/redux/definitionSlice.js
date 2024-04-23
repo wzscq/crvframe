@@ -10,7 +10,25 @@ const mergeLocalDefintion=(appID,userID,modelID,views)=>{
         const key=`${appID}_${userID}_${modelID}_${view.viewID}`;
         const fields=JSON.parse(localStorage.getItem(key));
         if(fields){
-            return {...view,fields:fields};
+            const localFields=fields.map(field=>{
+                const localField=view.fields.find(f=>f.field===field.field)
+                if(localField){
+                    return {...localField,width:field.width,visible:field.visible}
+                } else {
+                    return null
+                }
+            }).filter(f=>f!==null);
+
+            const newFields=view.fields.map(field=>{
+                const localField=fields.find(f=>f.field===field.field)
+                if(localField){
+                    return null
+                } else {
+                    return field;
+                }
+            }).filter(f=>f!==null);
+            
+            return {...view,fields:[...localFields,...newFields]};
         } else {
             return view;
         }

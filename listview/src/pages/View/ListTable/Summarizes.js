@@ -115,7 +115,7 @@ export default function Summarizes(){
       <div>{viewConf?.footer?.summarizes?.fields.map(item=>{
         return (<>
           <I18nLabel label={item.label} />
-          <span style={{fontWeight:600}}>{formatStringNumber(summariesData?.[item.field],'en-US',2)}</span>
+          <span style={{fontWeight:600}}>{formatStringNumber(summariesData?.[item.field],'en-US',item.decimalPlaces??2)}</span>
           <span>&nbsp;&nbsp;&nbsp;</span>
         </>)
       })}</div>

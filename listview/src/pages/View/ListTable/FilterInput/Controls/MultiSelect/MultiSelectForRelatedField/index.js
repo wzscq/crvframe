@@ -39,6 +39,7 @@ export default function MultiSelectForRelatedField({field,filterValue,onFilterCh
     const getQueryParams=(field,value)=>{
         /**
          */
+        console.log('TransferControl send query message 1',JSON.stringify(field.filterData));
         return {
             modelID:field.relatedModelID,
             fields:field.fields,
@@ -66,7 +67,7 @@ export default function MultiSelectForRelatedField({field,filterValue,onFilterCh
                     queryParams:queryParams
                 }
             }
-            console.log('TransferControl send query message',message);
+            console.log('TransferControl send query message',JSON.stringify(message));
             sendMessageToParent(message);
         }
     };
