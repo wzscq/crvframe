@@ -16,10 +16,10 @@ export default function useI18n(){
 
         let message = item.message;
         if(message[locale]){
-            return message[locale]
+            return message[locale];
         }
 
-        return message+' '+item.errorCode;
+        return message; //+' '+item.errorCode;
     },[resources,locale]);
 
     const getLocaleLabel=useCallback((title)=>{
