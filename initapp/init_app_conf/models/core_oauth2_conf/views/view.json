@@ -20,6 +20,10 @@
         "width": 200
     }, 
     {
+        "field": "oauth2_back_url", 
+        "width": 200
+    },
+    {
         "field": "client_id", 
         "width": 200
     }, 

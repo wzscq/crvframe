@@ -25,6 +25,12 @@
         "quickSearch":true
       }, 
       {
+        "field": "oauth2_back_url", 
+        "name": "认证返回地址", 
+        "dataType": "varchar",
+        "quickSearch":true
+      },
+      {
           "field": "client_id", 
           "name": "Client ID", 
           "dataType": "varchar"

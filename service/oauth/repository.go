@@ -12,6 +12,7 @@ type OAuthConf struct {
 	AuthorizeUrl string  `json:"oauth2_authorize_url"`
 	AccessTokenUrl string  `json:"oauth2_accessToken_url"`
 	UserInfoUrl string  `json:"oauth2_userInfo_url"`
+	BackUrl string  `json:"oauth2_back_url"`
 	ClientID     string `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
 	GrantType     string `json:"grant_type"`
@@ -28,8 +29,8 @@ type DefatultOAuthConfRepository struct {
 
 func (repo *DefatultOAuthConfRepository) GetOAuthConf(dbName string) (*OAuthConf, error) {
 	var oauthConf OAuthConf
-	row := repo.DB.QueryRow("select oauth2_authorize_url,oauth2_accessToken_url,oauth2_userInfo_url,client_id,client_secret,grant_type,key_of_user_id from "+dbName+".core_oauth2_conf limit 0,1")
-	if err := row.Scan(&oauthConf.AuthorizeUrl, &oauthConf.AccessTokenUrl, &oauthConf.UserInfoUrl, &oauthConf.ClientID, &oauthConf.ClientSecret, &oauthConf.GrantType, &oauthConf.KeyOfUserID); err != nil {
+	row := repo.DB.QueryRow("select oauth2_authorize_url,oauth2_accessToken_url,oauth2_userInfo_url,oauth2_back_url,client_id,client_secret,grant_type,key_of_user_id from "+dbName+".core_oauth2_conf limit 0,1")
+	if err := row.Scan(&oauthConf.AuthorizeUrl, &oauthConf.AccessTokenUrl, &oauthConf.UserInfoUrl,&oauthConf.BackUrl, &oauthConf.ClientID, &oauthConf.ClientSecret, &oauthConf.GrantType, &oauthConf.KeyOfUserID); err != nil {
 		slog.Error("get oauth config error", "error", err)
 		return &oauthConf, err
 	}

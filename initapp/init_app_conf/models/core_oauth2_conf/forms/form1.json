@@ -50,8 +50,16 @@
           "rowSpan": 1
       },
       {
+        "controlType": "Text",
+        "row": 4,
+        "col": 1,
+        "field": "oauth2_back_url", 
+        "colSpan": 4,
+        "rowSpan": 1
+     },
+      {
           "controlType": "Text",
-          "row": 4,
+          "row": 5,
           "col": 1,
           "field": "client_id", 
           "colSpan": 4,
@@ -59,7 +67,7 @@
       },
       {
         "controlType": "Text",
-        "row": 5,
+        "row": 6,
         "col": 1,
         "field": "client_secret", 
         "colSpan": 4,
@@ -67,7 +75,7 @@
         },
         {
             "controlType": "Text",
-            "row": 6,
+            "row": 7,
             "col": 1,
             "field": "grant_type", 
             "colSpan": 4,
@@ -75,7 +83,7 @@
         },
         {
             "controlType": "Text",
-            "row": 7,
+            "row": 8,
             "col": 1,
             "field": "key_of_user_id", 
             "colSpan": 4,

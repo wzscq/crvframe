@@ -256,7 +256,24 @@ func (controller *OAuthController) redirectToback(c *gin.Context) {
 		return
 	}
 
-	url :=  "http://localhost:3000/#/OAuthBack/" + req.AppID + "?code=" + req.Code
+	slog.Debug("request content", "req", req)
+	appDB, errorCode := getAppDB(controller.AppCache, req.AppID)
+	if errorCode != common.ResultSuccess {
+		rsp := common.CreateResponse(common.CreateError(errorCode, nil), nil)
+		c.IndentedJSON(http.StatusOK, rsp)
+		slog.Error("end OAuthController back with error", "errorCode", errorCode)
+		return
+	}
+
+	oauthConf, err := controller.OAuthConfRepository.GetOAuthConf(appDB)
+	if err != nil {
+		rsp := common.CreateResponse(common.CreateError(common.ResultGetOAuthConfError, nil), nil)
+		c.IndentedJSON(http.StatusOK, rsp)
+		slog.Error("end OAuthController back with error", "error", err)
+		return
+	}
+
+	url :=  oauthConf.BackUrl + req.AppID + "?code=" + req.Code
 	slog.Debug("OAuthController redirectToback", "url", url)
 	c.Redirect(http.StatusMovedPermanently, url)
 	slog.Debug("end OAuthController login")

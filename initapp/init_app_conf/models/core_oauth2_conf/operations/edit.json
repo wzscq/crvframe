@@ -8,7 +8,7 @@
           "title":"编辑OAuth2配置",
           "key":"/model/core_oauth2_conf/form1/edit",
           "width":800,
-          "height":580
+          "height":620
   },
   "input":{},
   "description":"打开编辑OAuth2配置对话框"
