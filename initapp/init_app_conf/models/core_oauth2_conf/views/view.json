@@ -1,0 +1,90 @@
+{
+  "viewID": "view", 
+  "name": "OAuth2协议配置", 
+  "description": "OAuth2协议配置", 
+  "fields": [
+    {
+        "field": "id", 
+        "width": 100
+    }, 
+    {
+        "field": "oauth2_authorize_url", 
+        "width": 200
+    }, 
+    {
+        "field": "oauth2_accessToken_url", 
+        "width": 200
+    }, 
+    {
+        "field": "oauth2_userInfo_url", 
+        "width": 200
+    }, 
+    {
+        "field": "client_id", 
+        "width": 200
+    }, 
+    {
+        "field": "client_secret", 
+        "width": 200
+    }, 
+    {
+        "field": "grant_type", 
+        "width": 200
+    }, 
+    {
+        "field": "grant_type", 
+        "width": 200
+    }, 
+    {
+        "field": "key_of_user_id", 
+        "width": 200
+    }, 
+    {
+        "field": "create_time", 
+        "width": 150
+    }, 
+    {
+        "field": "create_user", 
+        "width": 150
+    }, 
+    {
+        "field": "update_time", 
+        "width": 150
+    }, 
+    {
+        "field": "update_user", 
+        "width": 150
+    }, 
+    {
+        "field": "version", 
+        "width": 100
+    }
+  ], 
+  "filter": { }, 
+  "toolbar": {
+      "listToolbar": {
+          "showCount": 3, 
+          "buttons": [
+              {
+                  "operationID": "create",
+                  "name":"创建"
+              }
+          ]
+      }, 
+      "rowToolbar": {
+          "showCount": 2,
+          "width":90, 
+          "buttons": [
+                {
+                    "operationID": "edit",
+                    "name":"编辑"
+                },
+                {
+                    "operationID": "delete",
+                    "name":"删除",
+                    "prompt":"确定要删除这个配置信息吗？"
+                }
+            ]
+        }
+    }
+}

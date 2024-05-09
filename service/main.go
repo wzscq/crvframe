@@ -140,6 +140,17 @@ func main() {
 	flowController.Bind(router)
 
 	//oauth
+	defatultOAuthConfRepository := &oauth.DefatultOAuthConfRepository{}
+	defatultOAuthConfRepository.Connect(
+		conf.Mysql.Server,
+		conf.Mysql.User,
+		conf.Mysql.Password,
+		conf.Mysql.DBName,
+		conf.Mysql.ConnMaxLifetime,
+		conf.Mysql.MaxOpenConns,
+		conf.Mysql.MaxIdleConns,
+		conf.Mysql.TLS)
+
 	oauthTokenExpired, _ := time.ParseDuration(conf.Redis.OauthTokenExpired)
 	oauthCache := &oauth.OAuthCache{}
 	oauthCache.Init(conf.Redis.Server, conf.Redis.OauthTokenDB, oauthTokenExpired, conf.Redis.Password, conf.Redis.TLS)
@@ -149,6 +160,7 @@ func main() {
 		OAuthCache:     oauthCache,
 		LoginCache:     loginCache,
 		LoginLogApps:   conf.LoginLog.Apps,
+		OAuthConfRepository : defatultOAuthConfRepository,
 	}
 	oauthController.Bind(router)
 

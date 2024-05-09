@@ -1,0 +1,78 @@
+{
+  "modelID": "core_oauth2_conf", 
+  "fields": [
+      {
+          "field": "id", 
+          "name": "ID", 
+          "dataType": "varchar"
+      }, 
+      {
+          "field": "oauth2_authorize_url", 
+          "name": "登录地址", 
+          "dataType": "varchar",
+          "quickSearch":true
+      }, 
+      {
+          "field": "oauth2_accessToken_url", 
+          "name": "获取Token地址", 
+          "dataType": "varchar",
+          "quickSearch":true
+      }, 
+      {
+        "field": "oauth2_userInfo_url", 
+        "name": "获取用户信息地址", 
+        "dataType": "varchar",
+        "quickSearch":true
+      }, 
+      {
+          "field": "client_id", 
+          "name": "Client ID", 
+          "dataType": "varchar"
+      }, 
+      {
+        "field": "client_secret", 
+        "name": "Client Secret", 
+        "dataType": "varchar"
+      }, 
+      {
+        "field": "grant_type", 
+        "name": "Grant Type", 
+        "dataType": "varchar"
+      }, 
+      {
+        "field": "grant_type", 
+        "name": "Grant Type", 
+        "dataType": "varchar"
+      }, 
+      {
+        "field": "key_of_user_id", 
+        "name": "User ID Key", 
+        "dataType": "varchar"
+      }, 
+      {
+          "field": "create_time", 
+          "name": "创建时间", 
+          "dataType": "datetime"
+      }, 
+      {
+          "field": "create_user", 
+          "name": "创建人", 
+          "dataType": "varchar"
+      }, 
+      {
+          "field": "update_time", 
+          "name": "更新时间", 
+          "dataType": "datetime"
+      }, 
+      {
+          "field": "update_user", 
+          "name": "更新人", 
+          "dataType": "varchar"
+      }, 
+      {
+          "field": "version", 
+          "name": "数据版本", 
+          "dataType": "int"
+      }
+  ]
+}

@@ -175,7 +175,7 @@ func (controller *DataController) batchDelete(c *gin.Context) {
 		return
 	}
 
-	if req.SelectedRowKeys == nil {
+	if req.SelectedRowKeys == nil && req.SelectAll==false {
 		errorCode = common.ResultWrongRequest
 		rsp := common.CreateResponse(common.CreateError(errorCode, nil), result)
 		c.IndentedJSON(http.StatusOK, rsp)

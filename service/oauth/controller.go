@@ -2,7 +2,6 @@ package oauth
 
 import (
 	"crv/frame/common"
-	"crv/frame/definition"
 	"crv/frame/user"
 	"github.com/gin-gonic/gin"
 	"log/slog"
@@ -51,6 +50,7 @@ type OAuthController struct {
 	OAuthCache     *OAuthCache
 	LoginCache     common.LoginCache
 	LoginLogApps   map[string]bool
+	OAuthConfRepository OAuthConfRepository
 }
 
 const (
@@ -80,16 +80,16 @@ func (controller *OAuthController) getLoginPage(c *gin.Context) {
 		return
 	}
 
-	url, errorCode := definition.GetApiUrl(appDB, API_OAUTH2_AUTHORIZE)
-	if errorCode != common.ResultSuccess {
-		rsp := common.CreateResponse(common.CreateError(errorCode, nil), nil)
+	oauthConf, err := controller.OAuthConfRepository.GetOAuthConf(appDB)
+	if err != nil {
+		rsp := common.CreateResponse(common.CreateError(common.ResultGetOAuthConfError, nil), nil)
 		c.IndentedJSON(http.StatusOK, rsp)
-		slog.Error("end OAuthController getLoginPage with error", "errorCode", errorCode)
+		slog.Error("end OAuthController getLoginPage with error", "error", err)
 		return
 	}
 
 	result := &getLoginPageRsp{
-		Url: url,
+		Url: oauthConf.AuthorizeUrl,
 	}
 
 	rsp := common.CreateResponse(nil, result)
@@ -154,10 +154,18 @@ func (controller *OAuthController) back(c *gin.Context) {
 		return
 	}
 
-	//获取oauth access token
-	token, err := getAccessToken(appDB, req.OAuthCode)
+	oauthConf, err := controller.OAuthConfRepository.GetOAuthConf(appDB)
 	if err != nil {
-		rsp := common.CreateResponse(err, nil)
+		rsp := common.CreateResponse(common.CreateError(common.ResultGetOAuthConfError, nil), nil)
+		c.IndentedJSON(http.StatusOK, rsp)
+		slog.Error("end OAuthController back with error", "error", err)
+		return
+	}
+
+	//获取oauth access token
+	token, commonErr := getAccessToken(req.OAuthCode,oauthConf)
+	if commonErr != nil {
+		rsp := common.CreateResponse(commonErr, nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		slog.Error("end OAuthController back with error", "error", err)
 		return
@@ -166,9 +174,9 @@ func (controller *OAuthController) back(c *gin.Context) {
 	slog.Info("get token", "token", token)
 
 	//获取oauth user id
-	userID, err := getUserID(appDB, token)
-	if err != nil {
-		rsp := common.CreateResponse(err, nil)
+	userID, commonErr := getUserID(token,oauthConf)
+	if commonErr != nil {
+		rsp := common.CreateResponse(commonErr, nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		slog.Error("end OAuthController back with error", "error", err)
 		return
@@ -176,9 +184,9 @@ func (controller *OAuthController) back(c *gin.Context) {
 	slog.Info("get userid", "userid", userID)
 	ip := user.GetIP(c)
 	//获取本地用户信息，生成本地token，
-	result, err := localLogin(controller.UserRepository, controller.LoginCache, req.AppID, appDB, userID, ip, controller.LoginLogApps)
-	if err != nil {
-		rsp := common.CreateResponse(err, nil)
+	result, commonErr := localLogin(controller.UserRepository, controller.LoginCache, req.AppID, appDB, userID, ip, controller.LoginLogApps)
+	if commonErr != nil {
+		rsp := common.CreateResponse(commonErr, nil)
 		c.IndentedJSON(http.StatusOK, rsp)
 		slog.Error("end OAuthController back with error", "error", err)
 		return

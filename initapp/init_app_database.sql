@@ -162,4 +162,26 @@ CREATE TABLE `core_user`  (
 -- ----------------------------
 INSERT INTO `core_user` VALUES ('admin', 'Admin', '管理员', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '2022-02-10 15:50:46', 'test', '2023-01-28 15:06:34', 'admin', 19, '管理员');
 
+
+-- ----------------------------
+-- Table structure for core_oauth2_conf
+-- ----------------------------
+DROP TABLE IF EXISTS `core_oauth2_conf`;
+CREATE TABLE `core_oauth2_conf`  (
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+  `create_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
+  `update_user` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `version` int(11) NOT NULL DEFAULT 0,
+  `oauth2_authorize_url` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `oauth2_accessToken_url` varchar(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `client_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `client_secret` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `grant_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `oauth2_userInfo_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `key_of_user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
 SET FOREIGN_KEY_CHECKS = 1;

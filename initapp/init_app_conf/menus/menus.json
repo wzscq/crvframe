@@ -94,6 +94,24 @@
                     "description":"打开文件管理窗口"
                 },
                 "roles":"admin"
+            },
+            {
+                "id":"6",
+                "name":"OAuth2配置",
+                "description":"OAuth2配置",
+                "icon":"FileTextOutlined",
+                "operation":{
+                    "type":"open",
+                    "params":{
+                        "url":"/listview/#/core_oauth2_conf",
+                        "location":"tab",
+                        "title":"OAuth2配置",
+                        "key":"/model/core_oauth2_conf"
+                    },
+                    "input":{},
+                    "description":"打开OAuth2配置窗口"
+                },
+                "roles":"admin"
             }
         ]
     }

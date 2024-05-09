@@ -65,6 +65,7 @@ const (
 	ResultGetUploadKeyError          = 10000047
 	ResultOpenAppFileError           = 10000048
 	ResultBadExternalApiUrl		     = 10000049
+	ResultGetOAuthConfError		     = 10000050
 
 	ResultStartFlowWithoutID     = 10100001
 	ResultCacheFlowInstanceError = 10100002
@@ -359,6 +360,11 @@ var errMsg = map[int]CommonRsp{
 	ResultGetUploadKeyError: CommonRsp{
 		ErrorCode: ResultGetUploadKeyError,
 		Message:   "获取上传文件Key失败，请与管理员联系处理",
+		Error:     true,
+	},
+	ResultGetOAuthConfError: CommonRsp{
+		ErrorCode: ResultGetOAuthConfError,
+		Message:   "获取OAuth配置失败，请与管理员联系处理",
 		Error:     true,
 	},
 }

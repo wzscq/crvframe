@@ -24,36 +24,15 @@ type OauthToken struct {
 	LoginName string `json:"loginName"`
 }*/
 
-func getAccessToken(appDB, oauthCode string) (string, *common.CommonError) {
+func getAccessToken(oauthCode string,oauthConf *OAuthConf) (string, *common.CommonError) {
 	//获取用户access_token
-	oauthAccessTokenAPI, errorCode := definition.GetApiConfig(appDB, API_OAUTH2_ACCESSTOKEN)
-	if errorCode != common.ResultSuccess {
-		slog.Error("OAuthClient getAccessToken get api url error", "errorCode", errorCode)
-		return "", common.CreateError(errorCode, nil)
-	}
-
-	accessTokenUrl,ok := oauthAccessTokenAPI["url"]
-	if !ok {
-		slog.Error("OAuthClient getAccessToken get api url error")
-		params:=map[string]interface{}{"error":"no url in api config"}
-		return "", common.CreateError(common.ResultBadExternalApiUrl, params)
-	}
-	accessTokenUrlStr,Ok:=accessTokenUrl.(string)
-	if !Ok {
-		slog.Error("OAuthClient getAccessToken get api url error")
-		params:=map[string]interface{}{"error":"no url in api config"}
-		return "", common.CreateError(common.ResultBadExternalApiUrl, params)
-	}
-
-	slog.Info("getAccessToken", "accessTokenUrl",accessTokenUrlStr )
-	delete (oauthAccessTokenAPI,"url")
-
 	data := url.Values{}
 	data.Set("code", oauthCode)
-	for key, value := range oauthAccessTokenAPI {
-		data.Set(key, value.(string))
-	}
-	rsp, err := http.PostForm(accessTokenUrlStr,data)
+	data.Set("client_id", oauthConf.ClientID)
+	data.Set("client_secret", oauthConf.ClientSecret)
+	data.Set("grant_type", oauthConf.GrantType)
+
+	rsp, err := http.PostForm(oauthConf.AccessTokenUrl,data)
 
 	if err != nil {
 		slog.Error("OAuthClient getAccessToken do request error", "error", err)
@@ -79,43 +58,10 @@ func getAccessToken(appDB, oauthCode string) (string, *common.CommonError) {
 	return oauthToken.AccessToken, nil
 }
 
-func getUserID(appDB, oauthToken string) (string, *common.CommonError) {
-	//获取用户ID
-	getUserInfoUrlAPI, errorCode := definition.GetApiConfig(appDB, API_OAUTH2_USERINFO)
-	if errorCode != common.ResultSuccess {
-		slog.Error("OAuthClient getUserID get api url error", "errorCode", errorCode)
-		return "", common.CreateError(errorCode, nil)
-	}
-
-	url,ok := getUserInfoUrlAPI["url"]
-	if !ok {
-		slog.Error("OAuthClient getUserID get api url error")
-		params:=map[string]interface{}{"error":"no url in api config"}
-		return "", common.CreateError(common.ResultBadExternalApiUrl, params)
-	}
-	getUserInfoUrl,Ok:=url.(string)
-	if !Ok {
-		slog.Error("OAuthClient getUserID get api url error")
-		params:=map[string]interface{}{"error":"no url in api config"}
-		return "", common.CreateError(common.ResultBadExternalApiUrl, params)
-	}
-
-	keyOfUserID,ok:=getUserInfoUrlAPI["keyOfUserID"]
-	if !ok {
-		slog.Error("OAuthClient getUserID get api url error")
-		params:=map[string]interface{}{"error":"no keyOfUserID in api config"}
-		return "", common.CreateError(common.ResultBadExternalApiUrl, params)
-	}
-
-	keyOfUserIDStr,Ok:=keyOfUserID.(string)
-	if !Ok {
-		slog.Error("OAuthClient getUserID get api url error")
-		params:=map[string]interface{}{"error":"no keyOfUserID in api config"}
-		return "", common.CreateError(common.ResultBadExternalApiUrl, params)
-	}
+func getUserID(oauthToken string,oauthConf *OAuthConf) (string, *common.CommonError) {
 
 	//getUserInfoUrl = fmt.Sprintf(getUserInfoUrl, oauthToken)
-	req, err := http.NewRequest(http.MethodGet, getUserInfoUrl, nil)
+	req, err := http.NewRequest(http.MethodGet, oauthConf.UserInfoUrl, nil)
 	if err != nil {
 		slog.Error("OAuthClient getUserInfo new request error", "error", err)
 		return "", common.CreateError(common.ResultPostExternalApiError, nil)
@@ -148,7 +94,7 @@ func getUserID(appDB, oauthToken string) (string, *common.CommonError) {
 		return "", common.CreateError(common.ResultPostExternalApiError, nil)
 	}
 
-	userID:=getMapDataString(keyOfUserIDStr, &user)
+	userID:=getMapDataString(oauthConf.KeyOfUserID, &user)
 
 	slog.Info("OAuthClient getUserInfo", "userID", userID)
 

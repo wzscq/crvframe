@@ -1,0 +1,15 @@
+{
+  "id": "edit", 
+  "name": "编辑",
+  "type":"open",
+  "params":{
+          "url":"/formview/#/core_oauth2_conf/form1/edit",
+          "location":"modal",
+          "title":"编辑OAuth2配置",
+          "key":"/model/core_oauth2_conf/form1/edit",
+          "width":800,
+          "height":580
+  },
+  "input":{},
+  "description":"打开编辑OAuth2配置对话框"
+}
