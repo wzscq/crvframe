@@ -101,6 +101,7 @@ export default function DatePickerControl({dataPath,control,field}){
             onChange={onChange}
             ref={inputRef}
             showTime={control.showTime}
+            picker={control.picker??'date'}
             status={valueError?'error':null}
             />
     );

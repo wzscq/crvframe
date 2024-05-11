@@ -100,6 +100,19 @@ export default function ListTable({sendMessageToParent}){
             })
         }
     };
+
+    const getHideFixColumn=()=>{
+        return {
+            title: '', 
+            dataIndex: '__hide',
+            width: 0,
+            fixed:'left',
+            onHeaderCell: (column) => ({
+                width: column.width,
+                resizable:false,
+            })
+        }
+    }
     
     const columns=useMemo(()=>{
         let columns=[];
@@ -107,6 +120,8 @@ export default function ListTable({sendMessageToParent}){
             const rowToolbar=viewConf.toolbar?.rowToolbar;
             if(rowToolbar?.buttons?.length>0){
                 columns.push(getOperationColumn(rowToolbar,sendMessageToParent));
+            } else {
+                columns.push(getHideFixColumn());
             }
             if(viewConf.fields){
                 viewConf.fields.forEach((fieldItem,index) => {
