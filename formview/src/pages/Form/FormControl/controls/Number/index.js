@@ -66,7 +66,11 @@ export default function Number({dataPath,control,field}){
     //获取文本输入框的标签，如果form控件配置了label属性则直接使用，
     //如果控件没有配置label属性，则取字段配置的字段name
     const label=control.label?control.label:(field?field.name:"");
-    const valueStr = updatedValue!==undefined&&updatedValue!==null?formatStringNumber(updatedValue+'','en-US'):'';
+
+    //
+    const minimumFractionDigits=control.decimalPlaces??0;
+
+    const valueStr = updatedValue!==undefined&&updatedValue!==null?formatStringNumber(updatedValue+'','en-US',minimumFractionDigits):'';
     let inputControl=control.disabled===true?(
         <DisabledControl inline={control.inline} value={valueStr} style={{textAlign:'right'}}  />
     ):(
