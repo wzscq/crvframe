@@ -165,7 +165,7 @@ export const requestAction = createAsyncThunk(
 
       let fileName=response.headers['content-disposition'];
       if(fileName){
-        fileName=fileName.substring("attachment; filename=".length);
+        fileName=fileName.substring("attachment; filename=".length-1);
         fileName=decodeURI(fileName);
         return {data:response.data,download:true,fileName:fileName}
       }
