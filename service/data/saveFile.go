@@ -111,9 +111,16 @@ func (save *SaveFile) getUploadedFileName(orgFileName, fileKey string) string {
 }
 
 func (save *SaveFile) saveFileWithUploadKey(destPath, destName, orgFileName, fileKey string) int {
+	//判断并创建文件路径
+	err := os.MkdirAll(destPath, 0750)
+	if err != nil && !os.IsExist(err) {
+		slog.Error("create dir error:", "error", err)
+		return common.ResultCreateDirError
+	}
+
 	uploadedFileName := save.getUploadedFileName(orgFileName, fileKey)
 	destFileName := destPath + destName
-	err := os.Rename(uploadedFileName, destFileName)
+	err = os.Rename(uploadedFileName, destFileName)
 	if err != nil {
 		slog.Error("move file error", "error", err)
 		return common.ResultCreateFileError

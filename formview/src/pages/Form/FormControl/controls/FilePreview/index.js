@@ -65,10 +65,12 @@ export default function FilePreview({dataPath,control,field,sendMessageToParent}
     const onChange=(value)=>{
         updatedValue?.list?.forEach(element => {
             if(element.id===value){
-                setCurrentItem(element);
+                setCurrentItem({...element});
             }
         });
     }
+
+    console.log('element:',JSON.stringify(currentItem));
 
     useEffect(()=>{
         const queryResponse=(event)=>{
@@ -85,7 +87,7 @@ export default function FilePreview({dataPath,control,field,sendMessageToParent}
         return ()=>{
             window.removeEventListener("message",queryResponse);
         }
-    },[setCurrentItem]);
+    },[currentItem,setCurrentItem]);
 
     useEffect(()=>{
         if(currentItem!==null&&currentItem.contentBase64===undefined){
@@ -112,7 +114,7 @@ export default function FilePreview({dataPath,control,field,sendMessageToParent}
     //如果控件没有配置label属性，则取字段配置的字段name
     const label=control.label?control.label:(field?field.name:"");
 
-    const fileControl=(
+    const fileControl=useMemo(()=>(
             <div style={{width:'100%'}}>
                 <Select  
                     value={currentItem?.id} 
@@ -120,9 +122,9 @@ export default function FilePreview({dataPath,control,field,sendMessageToParent}
                     >
                     {listOptions}
                 </Select>
-                <Preview item={currentItem} height={control.maxHeight}/>
+                {currentItem?<Preview item={currentItem} height={control.maxHeight}/>:null}
             </div>
-        );
+        ),[currentItem]);
 
     return (
         <div style={{width:'100%'}}>

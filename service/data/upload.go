@@ -32,7 +32,7 @@ func (handler *UploadHandler) GetSaveFileName(key, name string) (string, error) 
 		return "", err
 	}
 
-	handler.UploadCache.RemoveUploadKey(key)
+	//handler.UploadCache.RemoveUploadKey(key)
 
 	return common.GetConfig().File.Root + "/upload/" + appDB + "_" + userID + "_" + key + "_" + name, nil
 }
