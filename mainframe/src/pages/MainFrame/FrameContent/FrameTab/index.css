@@ -1,7 +1,5 @@
 .frame-tab-main {
     width:100%;
-    border-top: 1px solid gainsboro;
-    height: calc(100% - 1px);
 }
 
 .frame-tab-main .ant-tabs-top .ant-tabs-nav {
@@ -45,4 +43,18 @@
 
 .frame-tab-main .ant-tabs-content {
     height: 100%;
+}
+
+.frame_tab_hide_nav .ant-tabs-nav {
+    height: 0;
+   
+}
+
+.frame_tab_hide_nav {
+    height: calc(100% - 0px);
+}
+
+.frame_tab_border {
+    border-top: 1px solid gainsboro;
+    height: calc(100% - 1px);
 }

@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import {useEffect, useMemo } from 'react';
 import {useSelector} from 'react-redux';
+import { ConfigProvider } from 'antd';
 
 import useFrame from "../../hook/useFrame";
 import useI18n from '../../hook/useI18n';
@@ -45,21 +46,36 @@ export default function Report(){
         return (<PageLoading/>);
     }
 
-    const {colCount,rowHeight}=reportConf;
+    const {colCount,rowHeight,theme}=reportConf;
     const controls=reportConf.controls.map(item=>{
         console.log('control:',item);
-        return getControl(item,frameParams,reportID,sendMessageToParent,locale);
+        return getControl(item,frameParams,reportID,sendMessageToParent,locale,theme);
         /*if(item.controlType==='EChart'){
             return (<Chart key={item.id} frameParams={frameParams} controlConf={item} reportID={reportID} sendMessageToParent={sendMessageToParent} />);
         }*/
     });
 
+    const wrapperStyle=theme?.wrapper?.style??{};
+
+    if(theme?.antd){
+        return (
+            <ConfigProvider theme={theme.antd}>
+                <div style={{width:'100vw',height:'100vh',...wrapperStyle}}>
+                    <Header locale={locale} getLocaleLabel={getLocaleLabel}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
+                    <div className='layout-grid' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
+                        {controls}
+                    </div>
+                </div>
+            </ConfigProvider>
+        );
+    }
+
     return (
-        <>
+        <div style={{width:'100vw',height:'100vh',...wrapperStyle}}>
             <Header locale={locale} getLocaleLabel={getLocaleLabel}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
             <div className='layout-grid' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
                 {controls}
             </div>
-        </>
+        </div>
     );
 }

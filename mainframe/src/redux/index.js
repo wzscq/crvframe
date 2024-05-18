@@ -11,6 +11,7 @@ import oauthReducer from './oauthSlice';
 import menuReducer from './menuSlice';
 import dataReducer from './dataSlice';
 import frameReducer from './frameSlice';
+import layoutSlice from './layoutSlice';
 
 const store = configureStore({
   reducer: {
@@ -24,7 +25,8 @@ const store = configureStore({
     oauth:oauthReducer,
     menu:menuReducer,
     data:dataReducer,
-    frame:frameReducer
+    frame:frameReducer,
+    layout:layoutSlice,
   }
 });
 

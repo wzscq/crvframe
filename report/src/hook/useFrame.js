@@ -2,7 +2,7 @@ import { useEffect,useCallback } from 'react';
 import {useSelector,useDispatch} from 'react-redux';
 
 import {setParam} from '../redux/frameSlice';
-import { setDefinition } from '../redux/definitionSlice';
+import { setDefinition,setAppConf } from '../redux/definitionSlice';
 import {setData,refreshData} from '../redux/reportSlice';
 import {setLocale} from '../redux/i18nSlice';
 
@@ -37,10 +37,12 @@ export default function useFrame(){
         console.log("crv_report receiveMessageFromMainFrame:",event);
         const {type,dataType,data}=event.data;
         if(type===FRAME_MESSAGE_TYPE.INIT){
+            const {userName,appID,appConf}=event.data;
             dispatch(setParam({origin:event.origin,item:event.data.data}));
             if(event.data.i18n){
                 dispatch(setLocale(event.data.i18n));
             }
+            dispatch(setAppConf({userName,appID,appConf}));
         } else if (type===FRAME_MESSAGE_TYPE.UPDATE_DATA){
             console.log("UPDATE_DATA",event.data)
             if(dataType===DATA_TYPE.MODEL_CONF){

@@ -15,6 +15,7 @@ export default function FrameTab({inResize}){
     const {current,items}=useSelector(state=>state.tab);
     const filterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
     const {getLocaleLabel,locale,resources}=useI18n();
+    const {tabHeaderVisible}=useSelector(state=>state.layout);
     const { TabPane } = Tabs;
 
     const onChangeTab=(key)=>{
@@ -69,10 +70,10 @@ export default function FrameTab({inResize}){
             );
         });
     },[items,getLocaleLabel,locale,resources,filterData,inResize]);
-    
+
     //这里注意初始时由于locale是undefined，在刷新页面时会导致tab页多次刷新会造成多次触发子页面INIT的情况，这里暂时用locale是否未空做个临时处理
     return (
-        <div className="frame-tab-main">
+        <div className={tabHeaderVisible===false?"frame-tab-main frame_tab_hide_nav":"frame-tab-main frame_tab_border"}>
             <Tabs onChange={onChangeTab} onEdit={onEditTab} type="editable-card" hideAdd={true} activeKey={current}>
                 {tabItems}
             </Tabs>

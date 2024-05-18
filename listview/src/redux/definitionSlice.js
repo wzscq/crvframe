@@ -45,6 +45,7 @@ const initialState = {
     operations:[],
     views:[],
     showColumnSettingDialog:false,
+    appConf:undefined,
 }
 
 export const definitionSlice = createSlice({
@@ -52,13 +53,16 @@ export const definitionSlice = createSlice({
     initialState,
     reducers: {
         setDefinition: (state,action) => {
-           state.modelID=action.payload.data.modelID;
-           state.fields=action.payload.data.fields;
-           state.operations=action.payload.data.operations;
-           state.views=mergeLocalDefintion(action.payload.appID,action.payload.userName,action.payload.data.modelID,action.payload.data.views);
-           state.appID=action.payload.appID;
-           state.userName=action.payload.userName;
+           state.modelID=action.payload.modelID;
+           state.fields=action.payload.fields;
+           state.operations=action.payload.operations;
+           state.views=mergeLocalDefintion(state.appID,state.userName,action.payload.modelID,action.payload.views);
            state.loaded=true;
+        },
+        setAppConf: (state,action) => {
+            state.appConf=action.payload.appConf;
+            state.appID=action.payload.appID;
+            state.userName=action.payload.userName;
         },
         setViewFields: (state,action) => {
             console.log('setViewFields:',action.payload);
@@ -97,7 +101,8 @@ export const {
     setDefinition,
     setViewFields,
     setShowColumnSettingDialog,
-    setViewFieldWidth
+    setViewFieldWidth,
+    setAppConf
 } = definitionSlice.actions
 
 export default definitionSlice.reducer

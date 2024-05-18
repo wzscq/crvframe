@@ -2,7 +2,7 @@ import { useEffect,useCallback } from "react";
 import {useSelector,useDispatch} from 'react-redux';
 
 import {setParam} from '../redux/frameSlice';
-import { setDefinition } from '../redux/definitionSlice';
+import { setDefinition,setAppConf } from '../redux/definitionSlice';
 import {setData,refreshData,setViewFilter} from '../redux/dataSlice';
 import {setLocale} from '../redux/i18nSlice';
 
@@ -29,15 +29,16 @@ export default function useFrame(){
     //这里在主框架窗口中挂载事件监听函数，负责和子窗口之间的操作交互
     const receiveMessageFromMainFrame=useCallback((event)=>{
         console.log("receiveMessageFromMainFrame:",event);
-        const {type,dataType,data,userName,appID}=event.data;
+        const {type,dataType,data,userName,appID,appConf,i18n}=event.data;
         if(type===FRAME_MESSAGE_TYPE.INIT){
             dispatch(setParam({origin:event.origin,item:data}));
-            if(event.data.i18n){
+            if(i18n){
                 dispatch(setLocale(event.data.i18n));
             }
+            dispatch(setAppConf({userName,appID,appConf}));
         } else if (type===FRAME_MESSAGE_TYPE.UPDATE_DATA){
             if(dataType===DATA_TYPE.MODEL_CONF){
-                dispatch(setDefinition({data,userName,appID}));
+                dispatch(setDefinition(data));
             } else if (dataType===DATA_TYPE.QUERY_RESULT){
                 dispatch(setData(data));
             } else if (dataType===DATA_TYPE.FRAME_PARAMS){

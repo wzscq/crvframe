@@ -12,7 +12,7 @@ const locales={
     en_US:'EN'
 }
 
-export default function Chart({controlConf,reportID,sendMessageToParent,frameParams,locale}){
+export default function Chart({controlConf,reportID,sendMessageToParent,frameParams,locale,theme}){
     const refChart=useRef();
     const { width,ref,height } = useResizeDetector();
     const {id,option,minHeight,row,col,colSpan,rowSpan,sqlParameters}=controlConf;
@@ -81,7 +81,7 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
             if(chart){
                 chart.dispose();
             }
-            chart=echarts.init(refChart.current,'light', {locale:locales[locale]});
+            chart=echarts.init(refChart.current,theme?.chart?.theme??'light', {locale:locales[locale]});
             chart.setOption(chartOption);
         }
     },

@@ -3,7 +3,6 @@
     max-height:calc(100vh - 55px);
     display:grid;
     gap: 10px;
-    background-color: #f0f2f5;
     padding: 10px;
     overflow-y: auto;
 }

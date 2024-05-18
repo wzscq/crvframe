@@ -35,10 +35,9 @@ const locales={
 export default function View(){
     const dispatch= useDispatch();
     const {locale}=useI18n();
-    const {loaded,views} = useSelector(state=>state.definition);
+    const {loaded,views,showColumnSettingDialog,appConf} = useSelector(state=>state.definition);
     const {initialized} = useSelector(state=>state.data);
     const {origin,item}=useSelector(state=>state.frame);
-    const {showColumnSettingDialog}=useSelector(state=>state.definition);
     const sendMessageToParent=useFrame();
     const {modelID}=useParams();
 
@@ -50,7 +49,8 @@ export default function View(){
                 sendMessageToParent(createGetModelConfMessage({frameType:item.frameType,frameID:item.params.key,origin:origin},modelID,item.params.views));
             } else if (initialized===false) {
                 console.log("loaded views :",views);
-                dispatch(initDataView({views,currentView:item.params.view,filter:item.params.filter}));
+                console.log("appConf:",appConf);
+                dispatch(initDataView({views,currentView:item.params.view,filter:item.params.filter,appConf}));
             }
         }
     },[loaded,origin,item,modelID,initialized,dispatch,sendMessageToParent,views]);

@@ -26,6 +26,7 @@ type ReportConf struct {
 	RowHeight  int                     `json:"rowHeight"`
 	Controls   []ReportControl         `json:"controls"`
 	FilterForm *map[string]interface{} `json:"filterForm"`
+	Theme      *map[string]interface{} `json:"theme"`
 }
 
 type ReportControlQuery struct {

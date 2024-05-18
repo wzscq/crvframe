@@ -16,6 +16,7 @@ export default function FrameContent({menuGroup}){
     const [inResize,setInResize]=useState(false);
     const {locale,loaded}=useSelector(state=>state.i18n);
     const {initOperations,appConf}=useSelector(state=>state.login);
+    const {headerVisible}=useSelector(state=>state.layout);
     const dispatch=useDispatch();
 
     useEffect(()=>{
@@ -74,9 +75,9 @@ export default function FrameContent({menuGroup}){
     const systemMenu=appConf?.systemMenu;
 
     let frameContent=(
-        <div style={{height:'100%'}}>
+        <div style={{height:'100%',position:'relative'}}>
             <FrameHeader filterFormConf={appConf?.filterForm} systemMenu={systemMenu}/>
-            <div style={{width:'100%',height:'calc(100% - 45px)',position:'relative'}}>
+            <div style={{width:'100%',height:headerVisible===false?'calc(100%)':'calc(100% - 45px)',position:'relative'}}>
                 <FrameTab inResize={inResize} />
             </div>
         </div>

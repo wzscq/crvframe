@@ -7,7 +7,7 @@ import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 
 import './index.css';
 
-export default function Table({controlConf,reportID,sendMessageToParent,frameParams}){
+export default function Table({controlConf,reportID,sendMessageToParent,frameParams,theme}){
   const {id,option,minHeight,row,col,colSpan,rowSpan}=controlConf;
   const {footer,title,columns,pagination}=option;
   const filterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
@@ -39,7 +39,7 @@ export default function Table({controlConf,reportID,sendMessageToParent,framePar
     gridColumnEnd:col+colSpan,
     gridRowStart:row,
     gridRowEnd:row+rowSpan,
-    backgroundColor:"#FFFFFF",
+    backgroundColor:theme?.wrapper?.style?.backgroundColor??'white',
     minHeight:minHeight,
     overflow:'hidden',
     height:'100%'

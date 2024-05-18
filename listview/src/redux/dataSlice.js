@@ -77,14 +77,16 @@ const initialState = {
     },
 }
 
-const initViewItem=(viewConf)=>{
+const initViewItem=(viewConf,appConf)=>{
+    console.log('initViewItem',appConf);
+    const pageSize=appConf?.listview?.defaultPageSize??20;
     return {
         data:{
             viewID:viewConf.viewID,
             total:26,      //总记录数
             pagination:{
                 current:1,      //当前页编号 
-                pageSize:10     //每页记录数
+                pageSize:pageSize     //每页记录数
             },
             filter:{        //过滤条件，待细化
             },
@@ -167,12 +169,12 @@ export const dataSlice = createSlice({
             }
         },
         initDataView:(state,action) => {
-            const {views,currentView,filter}=action.payload;
+            const {views,currentView,filter,appConf}=action.payload;
             views.forEach((viewItem,index)=>{
                 /*if(index===0){
                     state.currentView=viewItem.viewID;
                 }*/
-                state.views[viewItem.viewID]=initViewItem(viewItem);
+                state.views[viewItem.viewID]=initViewItem(viewItem,appConf);
             });
             if(currentView){
                 state.currentView=currentView;
