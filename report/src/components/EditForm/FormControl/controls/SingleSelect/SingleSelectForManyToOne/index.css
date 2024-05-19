@@ -6,3 +6,11 @@
 .control-select-error .ant-select-single {
     width: 100%;
 }
+
+.control-select-normal .ant-space-item:nth-child(2) {
+    flex: auto;
+}
+
+.control-select-error .ant-space-item:nth-child(2) {
+    flex: auto;
+}

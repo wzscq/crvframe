@@ -31,7 +31,7 @@ export default function FrameHeader({hideHeader,filterFormConf,systemMenu}){
                     </Tooltip>:null
                 }
                 {
-                    appConf.showHideHeaderButton===true?(<Button type="link" onClick={()=>{dispatch(setHeaderVisible(!headerVisible));dispatch(setTabHeaderVisible(!headerVisible));}} icon={headerVisible===true?<UpOutlined/>:<DownOutlined/>}/>):null
+                    appConf?.showHideHeaderButton===true?(<Button type="link" onClick={()=>{dispatch(setHeaderVisible(!headerVisible));dispatch(setTabHeaderVisible(!headerVisible));}} icon={headerVisible===true?<UpOutlined/>:<DownOutlined/>}/>):null
                 }
             </div>
             <div className="frame-header-filter-form">

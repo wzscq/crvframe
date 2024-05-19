@@ -4,6 +4,7 @@ import {useSelector,useDispatch} from 'react-redux';
 import {setParam} from '../redux/frameSlice';
 import { setDefinition,setAppConf } from '../redux/definitionSlice';
 import {setData,refreshData} from '../redux/reportSlice';
+import {createRow} from '../redux/dataSlice';
 import {setLocale} from '../redux/i18nSlice';
 
 import {
@@ -46,6 +47,13 @@ export default function useFrame(){
         } else if (type===FRAME_MESSAGE_TYPE.UPDATE_DATA){
             console.log("UPDATE_DATA",event.data)
             if(dataType===DATA_TYPE.MODEL_CONF){
+                //这里需要提前初始化默认数据，否则控件间的联动过滤会出现问题
+                const {reportConf}=data;
+                console.log("initData:",data?.filterForm?.initData);
+                if(data?.filterForm?.initData){
+                    dispatch(createRow({dataPath:[],initData:data.filterForm.initData}));
+                }
+
                 dispatch(setDefinition(data));
             } else if (dataType===DATA_TYPE.QUERY_RESULT){
                 //console.log("QUERY_RESULT",data)

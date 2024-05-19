@@ -1,12 +1,11 @@
-import { useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useMemo,useEffect } from "react";
+import { useSelector,useDispatch } from "react-redux";
 import {ConfigProvider} from 'antd';
 import zh_CN from 'antd/lib/locale/zh_CN';
 import en_US from 'antd/lib/locale/en_US';
 
 import { FORM_TYPE } from "../../utils/constant";
 import FormControl from './FormControl';
-
 import './index.css';
 
 const locales={

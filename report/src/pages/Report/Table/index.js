@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Table as AntdTable } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
+import dayjs from 'dayjs';
 
 import {setDataLoaded} from '../../../redux/reportSlice';
 import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
@@ -8,7 +9,7 @@ import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 import './index.css';
 
 export default function Table({controlConf,reportID,sendMessageToParent,frameParams,theme}){
-  const {id,option,minHeight,row,col,colSpan,rowSpan}=controlConf;
+  const {id,option,minHeight,row,col,colSpan,rowSpan,sqlParameters}=controlConf;
   const {footer,title,columns,pagination}=option;
   const filterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
   const data=useSelector(state=>state.report.chart[id]);
@@ -17,6 +18,23 @@ export default function Table({controlConf,reportID,sendMessageToParent,framePar
   useEffect(()=>{
     if(data===undefined){
       dispatch(setDataLoaded({controlID:id,loaded:false}));
+
+      const parsedSQLParameters={};
+      if(sqlParameters){
+          Object.keys(sqlParameters).forEach(key=>{
+              const funStr='"use strict";'+
+                  'return (function(moment,filterData){ '+
+                      'try {'+
+                          sqlParameters[key]+
+                      '} catch(e) {'+
+                      '   console.error(e);'+
+                      '   return undefined;'+
+                      '}'+
+                  '})';
+              parsedSQLParameters[key]=Function(funStr)()(dayjs,filterData);
+          });
+      }
+
       //查询数据请求
       const keyFrameParams={
           ...frameParams,
@@ -27,7 +45,7 @@ export default function Table({controlConf,reportID,sendMessageToParent,framePar
           type:FRAME_MESSAGE_TYPE.REPORT_QUERY,
           data:{
               frameParams:keyFrameParams,
-              queryParams:{reportID,controlID:id,filterData}
+              queryParams:{reportID,controlID:id,filterData,sqlParameters:parsedSQLParameters}
           }
       }
       sendMessageToParent(message);

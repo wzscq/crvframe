@@ -122,6 +122,8 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
     const [options,setOptions]=useState([]);
     const [lastCascadeParentValue,setLastCascadeParentValue]=useState(cascadeParentValue);
     
+    console.log('SingleSelectForManyToOne',field,dataPath,updatedValue,cascadeParentValue);
+
     const onChange=(value)=>{
         if(value===undefined){
             value=null;
