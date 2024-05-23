@@ -52,6 +52,7 @@ type OperationConf struct {
 	SuccessOperation *OperationConf         `json:"successOperation,omitempty"`
 	ErrorOperation   *OperationConf         `json:"errorOperation,omitempty"`
 	Roles            *interface{}           `json:"roles"`
+	ShowSpin         bool                   `json:"showSpin"`
 }
 
 type buttonConf struct {
@@ -290,6 +291,7 @@ func (m *model) getModelOperations(modelID string, operations []permissionOperat
 	operationConfs := []OperationConf{}
 	for _, operationItem := range operations {
 		operation, err := m.getModelOperation(modelID, operationItem.ID)
+		slog.Debug("getModelOperations", "operation", operation, "err", err, "operationItem", operationItem.ID, "modelID", modelID)
 		if err == common.ResultSuccess {
 			operationConfs = append(operationConfs, *operation)
 		}

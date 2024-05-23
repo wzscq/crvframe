@@ -1,5 +1,6 @@
 .report-table {
   padding: 5px;
+  padding-bottom: 0px;
 }
 
 .report-table .ant-table.ant-table-bordered > .ant-table-title {

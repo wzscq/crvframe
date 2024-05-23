@@ -169,7 +169,7 @@ export const dataSlice = createSlice({
             }
         },
         initDataView:(state,action) => {
-            const {views,currentView,filter,appConf}=action.payload;
+            const {views,currentView,filter,appConf,filterValueLabel}=action.payload;
             views.forEach((viewItem,index)=>{
                 /*if(index===0){
                     state.currentView=viewItem.viewID;
@@ -185,11 +185,17 @@ export const dataSlice = createSlice({
                 state.views[state.currentView].data.filter=filter;
                 const pagination=state.views[state.currentView].data.pagination;
                 state.views[state.currentView].data.pagination={...pagination,current:1}
+
+                if(filterValueLabel){
+                    state.views[state.currentView].data.filterValueLabel={...filterValueLabel};
+                } else {
+                    state.views[state.currentView].data.filterValueLabel={};
+                }
             }
             state.initialized=true;
         },
         setViewFilter:(state,action) => {
-            const {view,filter}=action.payload;
+            const {view,filter,filterValueLabel}=action.payload;
             if(view){
                 state.currentView=view;
             }
@@ -198,6 +204,12 @@ export const dataSlice = createSlice({
                 state.views[state.currentView].data.filter=filter;
                 const pagination=state.views[state.currentView].data.pagination;
                 state.views[state.currentView].data.pagination={...pagination,current:1}
+
+                if(filterValueLabel){
+                    state.views[state.currentView].data.filterValueLabel={...filterValueLabel};
+                } else {
+                    state.views[state.currentView].data.filterValueLabel={};
+                }
             }
         },
     }

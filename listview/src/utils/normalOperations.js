@@ -48,6 +48,7 @@ const opQueryData={
         url:DATA_QUERY_URL,
         method:"post"
     },
+    showSpin:true,
     input:{},
     description:{key:'page.crvlistview.queryModelData',default:'查询模型数据'}
 }

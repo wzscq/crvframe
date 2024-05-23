@@ -3,6 +3,8 @@
 #run crvframe in docker
 docker run -d --name crvframe -p80:80 -v /root/crvframe/logs:/services/crvframe/logs -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf  wangzhsh/crvframe:0.1.1
 
+docker run -d --name crvframe -p8010:80 -v d:/dockerrun/crvframe/logs:/services/crvframe/logs -v d:/dockerrun/crvframe/appfile:/services/crvframe/appfile -v d:/dockerrun/crvframe/apps:/services/crvframe/apps -v d:/dockerrun/crvframe/conf:/services/crvframe/conf  wangzhsh/crvframe:0.1.1
+
 install docker
 yum install -y yum-utils
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
@@ -25,6 +27,7 @@ mkdir /root/mysql/log
 上传mysql配置文件mysql.cnf到服务器目录/root/mysql/conf下
 docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -v /root/mysql/data:/var/lib/mysql -v /root/mysql/log:/var/log/mysql -p 4306:3306 -v /root/mysql/conf:/etc/mysql/conf.d -d  mysql:8.0.18
 
+
 install redis
 mkdir /root/redis
 mkdir /root/redis/data
@@ -32,6 +35,8 @@ mkdir /root/redis/conf
 touch /root/redis/conf/redis.conf
 
 docker run --name redis -p 6479:6379 -v /root/redis/data:/data -v /root/redis/conf/redis.conf:/etc/redis/redis.conf --privileged=true --restart=always -d redis
+
+docker run --name redis -p 6479:6379 -v d:/dockerrun/redis/data:/data -v d:/dockerrun/redis/conf/redis.conf:/etc/redis/redis.conf --privileged=true --restart=always -d redis
 
 install mosquitto
 mkdir /root/mosquitto
