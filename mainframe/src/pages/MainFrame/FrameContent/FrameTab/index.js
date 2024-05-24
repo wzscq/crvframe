@@ -7,6 +7,7 @@ import {setActive} from '../../../../redux/logSlice';
 import LogTab from '../../../../tabs/LogTab';
 import ChildFrame from './ChildFrame';
 import useI18n from '../../../../hook/useI18n';
+import {setSelectedKey} from '../../../../redux/menuSlice';
 
 import "./index.css";
 
@@ -42,6 +43,17 @@ export default function FrameTab({inResize}){
             dispatch(setActive(false));
         }
     },[logTab,dispatch]);
+
+    useEffect(()=>{
+        if(current&&items.length>0){
+            const currentItem=items.find((item)=>item.params.key===current);
+            if(currentItem&&currentItem.params?._menuKey){
+                dispatch(setSelectedKey(currentItem.params._menuKey));
+            }
+        } else {
+            dispatch(setSelectedKey(null));
+        }
+    },[current,items,dispatch]);
 
     const tabItems=useMemo(()=>{
         const getTitleLable=(title)=>{

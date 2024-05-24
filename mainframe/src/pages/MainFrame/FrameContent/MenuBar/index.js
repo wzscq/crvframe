@@ -10,12 +10,15 @@ import {
     ERROR_CODE,
     createLogoutOperation,
     setOperation} from '../../../../operation';
+import {setSelectedKey} from '../../../../redux/menuSlice';
 
 import './index.css';
 
 export default function MenuBar({collapsed,menuGroup}){
-    const {menus,loaded,errorCode}=useSelector(state=>state.menu);
+    const {menus,loaded,errorCode,selectedKey}=useSelector(state=>state.menu);
     const {getLocaleLabel}=useI18n();
+
+    console.log('MenuBar selectedKey:',selectedKey);
 
     const dispatch=useDispatch();
 
@@ -33,10 +36,11 @@ export default function MenuBar({collapsed,menuGroup}){
     },
     [errorCode]);
 
-    const onClick=({item})=>{
-        //console.log(item.props.operation);
+    const onClick=({item,key})=>{
+        console.log(item.props.operation);
         if(item.props.operation){
             setOperation({...item.props.operation,queenable:true});
+            dispatch(setSelectedKey(key));
         }
     }
 
@@ -51,7 +55,7 @@ export default function MenuBar({collapsed,menuGroup}){
                 icon:<IconItem/>,
                 children:item.children?getMenus(item.children,key):undefined,
                 label:getLocaleLabel(item.name),
-                operation:item.operation
+                operation:{...item.operation,params:{...item.operation?.params,_menuKey:key}}
             });
         }
         return menuItems;
@@ -64,6 +68,7 @@ export default function MenuBar({collapsed,menuGroup}){
             <Logo collapsed={collapsed}/>
         </div>
         <Menu
+            selectedKeys={[selectedKey]}
             mode="inline"
             theme="dark"
             inlineCollapsed={collapsed}

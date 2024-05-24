@@ -9,7 +9,8 @@ const initialState = {
     loaded:false,
     pending:false,
     inlineCollapsed:false,
-    errorCode:0
+    errorCode:0,
+    selectedKey:null
 }
 
 export const menuSlice = createSlice({
@@ -25,6 +26,9 @@ export const menuSlice = createSlice({
       state.pending=initialState.pending;
       state.inlineCollapsed=initialState.inlineCollapsed;
       state.errorCode=initialState.errorCode;
+    },
+    setSelectedKey:(state,action)=>{
+      state.selectedKey=action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -40,6 +44,7 @@ export const menuSlice = createSlice({
             state.errorCode=action.payload.errorCode;
         } else {
             state.menus=action.payload.result;
+            state.selectedKey=null;
             state.errorCode=0;
         }
     });
@@ -56,7 +61,8 @@ export const menuSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
   setInlineCollapsed,
-  resetMenu
+  resetMenu,
+  setSelectedKey
 } = menuSlice.actions;
 
 export default menuSlice.reducer;
