@@ -12,15 +12,13 @@ const locales={
     en_US:'EN'
 }
 
-export default function Chart({controlConf,reportID,sendMessageToParent,frameParams,locale,theme}){
+export default function Chart({parentID,controlConf,reportID,sendMessageToParent,frameParams,locale,theme}){
     const refChart=useRef();
     const { width,ref,height } = useResizeDetector();
     const {id,option,minHeight,row,col,colSpan,rowSpan,sqlParameters}=controlConf;
     const filterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
     const data=useSelector(state=>state.report.chart[id]);
     const dispatch=useDispatch();
-
-    console.log('Chart refresh',filterData);
 
     useEffect(()=>{
         if(data===undefined){
@@ -52,7 +50,7 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
                 type:FRAME_MESSAGE_TYPE.REPORT_QUERY,
                 data:{
                     frameParams:keyFrameParams,
-                    queryParams:{reportID,controlID:id,sqlParameters:parsedSQLParameters}
+                    queryParams:{reportID,parentID:parentID,controlID:id,sqlParameters:parsedSQLParameters}
                 }
             }
             sendMessageToParent(message);
@@ -76,12 +74,12 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
     
     useEffect(()=>{
         if(refChart&&refChart.current&&chartOption!==null){
-            console.log('Chart render',locale);
+            console.log('Chart refresh 2',parentID,locale);
             let chart=echarts.getInstanceByDom(refChart.current);        
             if(chart){
                 chart.dispose();
             }
-            chart=echarts.init(refChart.current,theme?.chart?.theme??'light', {locale:locales[locale]});
+            chart=echarts.init(refChart.current,theme?.chart?.theme??'light', {locale:locales[locale],width:width,height:height});
             chart.setOption(chartOption);
         }
     },
@@ -89,15 +87,17 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
 
     useEffect(()=>{
         if(refChart&&refChart.current){
+            console.log('Chart refresh',parentID,filterData,height);
             let chart=echarts.getInstanceByDom(refChart.current);        
             if(chart){
+                console.log('Chart refresh 1',parentID,filterData,height,width);
                 chart.resize({width:width,height:height});
             }
         }
     },
     [refChart,width,height]);
 
-    const wrapperStyle={
+    let wrapperStyle={
         gridColumnStart:col,
         gridColumnEnd:col+colSpan,
         gridRowStart:row,
@@ -108,10 +108,19 @@ export default function Chart({controlConf,reportID,sendMessageToParent,framePar
         height:'100%'
     }
 
+    if(parentID){
+        wrapperStyle={
+            minHeight:minHeight,
+            overflow:'hidden',
+            height:'100%',
+            width:'100%'
+        }
+    }
+    
+
     return (
-        <div style={wrapperStyle}>
+        <div ref={ref} style={wrapperStyle}>
             <div ref={refChart} style={{width:'100%',height:'100%'}} />
-            <div ref={ref} style={{width:'100%',height:'100%'}}>{}</div>
         </div>
     );
 }

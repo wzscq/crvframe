@@ -8,7 +8,7 @@ import {FRAME_MESSAGE_TYPE} from '../../../utils/constant';
 
 import './index.css';
 
-export default function Table({controlConf,reportID,sendMessageToParent,frameParams,theme}){
+export default function Table({parentID,controlConf,reportID,sendMessageToParent,frameParams,theme}){
   const {id,option,minHeight,row,col,colSpan,rowSpan,sqlParameters}=controlConf;
   const {footer,title,columns,pagination}=option;
   const filterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
@@ -45,7 +45,7 @@ export default function Table({controlConf,reportID,sendMessageToParent,framePar
           type:FRAME_MESSAGE_TYPE.REPORT_QUERY,
           data:{
               frameParams:keyFrameParams,
-              queryParams:{reportID,controlID:id,filterData,sqlParameters:parsedSQLParameters}
+              queryParams:{reportID,parentID:parentID,controlID:id,filterData,sqlParameters:parsedSQLParameters}
           }
       }
       sendMessageToParent(message);

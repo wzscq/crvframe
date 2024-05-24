@@ -10,6 +10,8 @@ export default function SingleSelectForOptions({field,filterValue,onFilterChange
         onFilterChange(value,option.children);
     }
 
+    console.log('SingleSelectForOptions filterValue',filterValue);
+
     const options=field.options.map((item,index)=>
     (<Option key={index} value={item.value}>
         {getLocaleLabel(item.label)}

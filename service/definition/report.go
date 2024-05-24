@@ -27,11 +27,17 @@ type ReportConf struct {
 	Controls   []ReportControl         `json:"controls"`
 	FilterForm *map[string]interface{} `json:"filterForm"`
 	Theme      *map[string]interface{} `json:"theme"`
+	HeaderButtons []map[string]interface{} `json:"headerButtons"`
+}
+
+type ReportControlQueryOption struct {
+	Controls []ReportControlQuery `json:"controls"`
 }
 
 type ReportControlQuery struct {
 	Query interface{} `json:"query"`
 	ID    string      `json:"id"`
+	Option     *ReportControlQueryOption `json:"option"`
 }
 
 type ReportQueryConf struct {
@@ -59,7 +65,7 @@ func getReportConf(appDB, reportID string) (*ReportConf, int) {
 	return &reportConf, common.ResultSuccess
 }
 
-func GetReportQuery(appDB, reportID, controlID string) (interface{}, *common.CommonError) {
+func GetReportQuery(appDB, reportID, controlID,parentID string) (interface{}, *common.CommonError) {
 	var reportConf ReportQueryConf
 	confFile := "apps/" + appDB + "/reports/" + reportID + ".json"
 	filePtr, err := os.Open(confFile)
@@ -86,10 +92,33 @@ func GetReportQuery(appDB, reportID, controlID string) (interface{}, *common.Com
 		if control.ID == controlID {
 			return control.Query, nil
 		}
+
+		if control.ID == parentID {
+			return GetChildQuery(control, controlID, parentID)
+		}
 	}
 
 	params := map[string]interface{}{
 		"controlID:": controlID,
+		"parentID:": parentID,
 	}
 	return "", common.CreateError(common.ResultNoReportControl, params)
 }
+
+func GetChildQuery(control ReportControlQuery, controlID,parentID string) (interface{}, *common.CommonError) {
+	if(control.Option != nil && control.Option.Controls != nil){
+		for _, childControl := range control.Option.Controls {
+			if childControl.ID == controlID {
+				return childControl.Query, nil
+			}
+		}
+	}
+	
+	params := map[string]interface{}{
+		"controlID:": controlID,
+		"parentID:": parentID,
+	}
+	return "", common.CreateError(common.ResultNoReportControl, params)
+}
+
+

@@ -61,7 +61,7 @@ export default function Report(){
         return (
             <ConfigProvider theme={theme.antd}>
                 <div style={{width:'100vw',height:'100vh',...wrapperStyle}}>
-                    <Header locale={locale} getLocaleLabel={getLocaleLabel}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
+                    <Header locale={locale} getLocaleLabel={getLocaleLabel} headerButtons={reportConf.headerButtons}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
                     <div className='layout-grid' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
                         {controls}
                     </div>
@@ -72,7 +72,7 @@ export default function Report(){
 
     return (
         <div style={{width:'100vw',height:'100vh',...wrapperStyle}}>
-            <Header locale={locale} getLocaleLabel={getLocaleLabel}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
+            <Header locale={locale} getLocaleLabel={getLocaleLabel} headerButtons={reportConf.headerButtons}  filterFormConf={reportConf.filterForm} sendMessageToParent={sendMessageToParent}/>
             <div className='layout-grid' style={{gridTemplateColumns: "repeat("+colCount+", 1fr)",gridAutoRows:"minmax("+rowHeight+"px, auto)"}}>
                 {controls}
             </div>

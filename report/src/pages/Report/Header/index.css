@@ -1,16 +1,18 @@
 .header {
   width:100%;
   height: 35px;
+  display: flex;
 }
 
-.header .refresh-button {
-  width: 55px;
+.header .operation-bar {
+  width: auto;
   float: right;
   padding-top: 5px;
   padding-right: 5px;
+  flex-shrink: 0;
 } 
 
 .header .filter-form {
-  width: calc(100% - 60px);
   float: left;
+  flex-grow: 1; /*自动沾满剩余空间*/
 }

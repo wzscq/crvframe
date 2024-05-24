@@ -1,4 +1,5 @@
 import { Carousel } from 'antd';
+import { getControl } from '../controls';
 
 export default function CarouselControl({controlConf,reportID,sendMessageToParent,frameParams,locale,theme}){
     const {id,option,minHeight,row,col,colSpan,rowSpan}=controlConf;
@@ -13,14 +14,14 @@ export default function CarouselControl({controlConf,reportID,sendMessageToParen
         height:'100%'
     }
 
-    const images=option.images.map(item=>{
-        return (<img src={item} alt={""} style={{width:'100%',height:'100%'}}/>)  
+    const items=option?.controls?.map(item=>{
+        return (getControl(item,frameParams,reportID,sendMessageToParent,locale,theme,id))  
     }); 
 
     return (
         <div style={wrapperStyle} >
             <Carousel autoplay>
-                {images}
+                {items}
             </Carousel>
         </div>
     )

@@ -12,6 +12,7 @@ import (
 type ReportReq struct {
 	ReportID      string                 `json:"reportID"`
 	ControlID     string                 `json:"controlID"`
+	ParentID	  string                 `json:"parentID"`
 	SQLParameters map[string]interface{} `json:"sqlParameters"`
 }
 
@@ -40,7 +41,7 @@ func (controller *ReportController) query(c *gin.Context) {
 	userID := c.MustGet("userID").(string)
 	appDB := c.MustGet("appDB").(string)
 	//获取报表控件对应的查询语句
-	query, err := definition.GetReportQuery(appDB, req.ReportID, req.ControlID)
+	query, err := definition.GetReportQuery(appDB, req.ReportID, req.ControlID,req.ParentID)
 	if err != nil {
 		rsp := common.CreateResponse(err, nil)
 		c.IndentedJSON(http.StatusOK, rsp)

@@ -1,13 +1,14 @@
-import { Button } from 'antd';
+import { Space } from 'antd';
 import { useDispatch} from 'react-redux';
 
 import EditForm from '../../../components/EditForm';
 import { refreshData } from '../../../redux/reportSlice';
 import { FORM_TYPE } from '../../../utils/constant';
+import OperationButton from './OperationButton';
 
 import './index.css';
 
-export default function Header({getLocaleLabel,filterFormConf,sendMessageToParent,locale}){
+export default function Header({getLocaleLabel,filterFormConf,headerButtons,sendMessageToParent,locale}){
   const dispatch=useDispatch();
 
   const onRefresh=()=>{
@@ -19,9 +20,13 @@ export default function Header({getLocaleLabel,filterFormConf,sendMessageToParen
       <div className='filter-form'>
         <EditForm locale={locale}  formConf={filterFormConf} sendMessageToParent={sendMessageToParent} formType={FORM_TYPE.CREATE} />
       </div>
-      <div className='refresh-button'>
-        <Button size='small' type='primary' onClick={onRefresh}>{getLocaleLabel({key:'page.report.refresh',default:'Refresh'})}</Button>
-      </div>
+      {headerButtons?.length>0?(<div className='operation-bar'>
+        <Space>
+          {
+            headerButtons.map((operation,index)=><OperationButton key={index} getLocaleLabel={getLocaleLabel} operation={operation} sendMessageToParent={sendMessageToParent}/>)
+          }
+        </Space>
+      </div>):null}
     </div>
   );
 }
