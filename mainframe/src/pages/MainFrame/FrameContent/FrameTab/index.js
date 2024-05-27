@@ -47,8 +47,11 @@ export default function FrameTab({inResize}){
     useEffect(()=>{
         if(current&&items.length>0){
             const currentItem=items.find((item)=>item.params.key===current);
-            if(currentItem&&currentItem.params?._menuKey){
+            /*if(currentItem&&currentItem.params?._menuKey){
                 dispatch(setSelectedKey(currentItem.params._menuKey));
+            }*/
+            if(currentItem&&currentItem.params?.key){
+                dispatch(setSelectedKey(currentItem.params.key));
             }
         } else {
             dispatch(setSelectedKey(null));

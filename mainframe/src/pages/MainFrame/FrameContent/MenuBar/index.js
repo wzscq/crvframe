@@ -48,14 +48,18 @@ export default function MenuBar({collapsed,menuGroup}){
         const menuItems=[];
         for(let i=0;i<menuConfs.length;i++){
             const item=menuConfs[i];
-            const key=parentKey+','+item.id;
+            let key=parentKey+','+item.id;
+            if(item?.operation?.params?.key){
+                key=item.operation.params.key;
+            }
             const IconItem=IconList[item.icon?item.icon:"PictureFilled"];
             menuItems.push({
                 key:key,
                 icon:<IconItem/>,
                 children:item.children?getMenus(item.children,key):undefined,
                 label:getLocaleLabel(item.name),
-                operation:{...item.operation,params:{...item.operation?.params,_menuKey:key}}
+                //operation:{...item.operation,params:{...item.operation?.params,_menuKey:key}}
+                operation:item.operation
             });
         }
         return menuItems;
