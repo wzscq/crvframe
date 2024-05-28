@@ -66,6 +66,7 @@ const (
 	ResultOpenAppFileError           = 10000048
 	ResultBadExternalApiUrl		     = 10000049
 	ResultGetOAuthConfError		     = 10000050
+	//这里注意10000051分配给前端接口断开错误
 
 	ResultStartFlowWithoutID     = 10100001
 	ResultCacheFlowInstanceError = 10100002

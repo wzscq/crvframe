@@ -1,0 +1,16 @@
+.heatmap-control {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.point-item {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    display: block;
+    overflow: hidden;
+    transform: translate(-10px, -10px);
+}

@@ -3,6 +3,7 @@ import DateLine from './DateLine';
 import Table from './Table';
 import Carousel from './Carousel';
 import Image from './Image';
+import Heatmap from './Heatmap';
 
 /**
  * 以下为控件类型枚举常量定义
@@ -13,6 +14,7 @@ import Image from './Image';
   TABLE:"Table",   //表格
   CAROUSEL:"Carousel",   //轮播图
   IMAGE:"Image",   //图片
+  HEATMAP:"Heatmap",   //热力图
 }
 
 const controls={
@@ -21,6 +23,7 @@ const controls={
   [CONTROL_TYPE.TABLE]:Table,
   [CONTROL_TYPE.CAROUSEL]:Carousel,
   [CONTROL_TYPE.IMAGE]:Image,
+  [CONTROL_TYPE.HEATMAP]:Heatmap,
 }
 
 export const getControl=(control,frameParams,reportID,sendMessageToParent,locale,theme,parentID=undefined)=>{

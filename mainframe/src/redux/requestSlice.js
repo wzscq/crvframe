@@ -73,7 +73,7 @@ export const requestSlice = createSlice({
             console.log("requst return error:",action);
             state.pending=false;
             state.error=true;
-            state.errorCode='10000050';
+            state.errorCode='10000051';
             state.message="请求服务接口失败";
             if(action.error&&action.error.message){
                 state.params={error:action.error.message};
@@ -98,7 +98,7 @@ export const requestSlice = createSlice({
             console.log("requst return error:",action);
             state.pending=false;
             state.error=true;
-            state.errorCode='10000050';
+            state.errorCode='10000051';
             state.message="请求服务接口失败";
             if(action.error&&action.error.message){
                 state.params={error:action.error.message};
@@ -131,7 +131,7 @@ export const requestSlice = createSlice({
             console.log("requst return error:",action);
             state.pending=false;
             state.error=true;
-            state.errorCode='10000050';
+            state.errorCode='10000051';
             state.message="请求服务接口失败";
             if(action.error&&action.error.message){
                 state.params={error:action.error.message};

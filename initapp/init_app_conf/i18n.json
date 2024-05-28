@@ -118,7 +118,8 @@
             "error.10000047":"获取上传文件Key失败，请与管理员联系处理",
             "error.10000048":"读取文件失败，请与管理员联系处理",
             "error.10000049":"调用外部API时提供的API配置不正确，请与管理员联系处理",
-            "error.10000050":"获取OAuth配置失败，请与管理员联系处理"
+            "error.10000050":"获取OAuth配置失败，请与管理员联系处理",
+            "error.10000051":"请求接口时发生错误，请与管理员联系处理"
         },
         "en_US":{
             "page.login.login":"Login",
@@ -233,7 +234,8 @@
             "error.10000047":"Failed to obtain the upload file Key, please contact the administrator for help.",
             "error.10000048":"Failed to read the file，please contact the administrator for help.",
             "error.10000049":"The API configuration is incorrect, please contact the administrator for handling.",
-            "error.10000050":"Failed to get the OAuth configuration, please contact the administrator for handling."
+            "error.10000050":"Failed to get the OAuth configuration, please contact the administrator for handling.",
+            "error.10000051":"Failed to request the interface, please contact the administrator for handling."
         }
     }
 }
