@@ -69,7 +69,9 @@ export default function Form(){
                                 relatedModelID:modelField.relatedModelID,
                                 relatedField:modelField.relatedField,
                                 associationModelID:modelField.associationModelID,
-                                fields:getControlFields(element)
+                                fields:getControlFields(element),
+                                sorter:element.sorter,
+                                filter:element.filter
                             });
                         } else {
                             fields.push({field:element.field});

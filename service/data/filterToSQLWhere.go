@@ -136,7 +136,9 @@ func convertArrayFilter(logicOp string, value []interface{}, fields *[]Field, mo
 	for _, v := range value {
 		//每个行应该是一个对象
 		mVal, _ := v.(map[string]interface{})
+		slog.Debug("convertArrayFilter", "mVal", mVal)
 		str, err = convertObjectFilter(&mVal, fields, modelID)
+		slog.Debug("convertArrayFilter", "str", str)
 		if err != common.ResultSuccess {
 			return "", err
 		}

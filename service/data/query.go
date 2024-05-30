@@ -41,6 +41,7 @@ type QueryResult struct {
 type Sorter struct {
 	Field string `json:"field"`
 	Order string `json:"order"`
+	Values *[]string `json:"values"`
 }
 
 type sqlParam struct {
@@ -147,7 +148,11 @@ func (query *Query) getQuerySorter() (string, int) {
 
 	var sorter string
 	for _, v := range *(query.Sorter) {
-		sorter = sorter + v.Field + " " + v.Order + ","
+		if v.Values != nil && len(*v.Values) > 0 {
+			sorter = sorter + "FIELD(" + v.Field + ",'" + strings.Join(*v.Values, "','") + "') " + v.Order + ","
+		} else {
+			sorter = sorter + v.Field + " " + v.Order + ","
+		}
 	}
 
 	sorter = sorter[0 : len(sorter)-1]

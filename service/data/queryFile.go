@@ -55,10 +55,11 @@ func (queryFile *QueryFile) getFilter(parentList *QueryResult, fileField *Field)
 	modelCon["model_id"] = queryFile.ModelID
 
 	filter := map[string]interface{}{}
+
 	if fileField.Filter == nil {
 		filter[Op_and] = []interface{}{inClause, fieldCon, modelCon}
 	} else {
-		filter[Op_and] = []interface{}{inClause, fieldCon, modelCon, fileField.Filter}
+		filter[Op_and] = []interface{}{inClause, fieldCon, modelCon, *fileField.Filter}
 	}
 
 	return &filter
@@ -109,6 +110,7 @@ func (queryFile *QueryFile) getQueryFields() *[]Field {
 func (queryFile *QueryFile) query(dataRepository DataRepository, parentList *QueryResult, refField *Field) int {
 	filter := queryFile.getFilter(parentList, refField)
 	files := queryFile.getQueryFields()
+
 	//执行查询，构造一个新的Query对象进行子表的查询，这样可以实现多层级数据表的递归查询操作
 	fileQuery := &Query{
 		ModelID:    "core_file",
