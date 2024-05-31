@@ -50,7 +50,7 @@ export default function View(){
             } else if (initialized===false) {
                 console.log("loaded views :",views);
                 console.log("appConf:",appConf);
-                dispatch(initDataView({views,currentView:item.params.view,filter:item.params.filter,appConf}));
+                dispatch(initDataView({views,currentView:item.params.view,filter:item.params.filter,filterValueLabel:item.params.filterValueLabel, appConf}));
             }
         }
     },[loaded,origin,item,modelID,initialized,dispatch,sendMessageToParent,views]);
