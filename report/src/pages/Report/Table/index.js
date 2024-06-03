@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect,useCallback } from "react";
 import { Table as AntdTable } from 'antd';
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from 'dayjs';
@@ -10,7 +10,7 @@ import './index.css';
 
 export default function Table({parentID,controlConf,reportID,sendMessageToParent,frameParams,theme}){
   const {id,option,minHeight,row,col,colSpan,rowSpan,sqlParameters}=controlConf;
-  const {footer,title,columns,pagination}=option;
+  const {footer,title,columns,pagination,rowStyle}=option;
   const filterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
   const data=useSelector(state=>state.report.chart[id]);
   const dispatch=useDispatch();
@@ -63,6 +63,32 @@ export default function Table({parentID,controlConf,reportID,sendMessageToParent
     height:'100%'
   }
 
+  const getCellStyleFunc=(cellStyle)=>{
+    const funStr='"use strict";'+
+        'return (function(record, rowIndex){ '+
+            'try {'+
+                cellStyle+
+            '} catch(e) {'+
+            '   console.error(e);'+
+            '   return undefined;'+
+            '}'+
+        '})';
+    return Function(funStr)();
+  };
+
+  const tableColumns=columns.map(col=>{
+    if(col.cellStyle){
+      return {
+        ...col,
+        onCell:(record,rowIndex)=>{
+          const cellStyle=getCellStyleFunc(col.cellStyle)(record,rowIndex);
+          return {style:cellStyle};    
+        }
+      }
+    }
+    return col;
+  });
+
   const titleFunc=()=>{
     const funStr='"use strict";'+
                  'return (function(currentPageData){ '+
@@ -89,15 +115,44 @@ export default function Table({parentID,controlConf,reportID,sendMessageToParent
     return Function(funStr)();
   };
 
+  //可以通过公式控制row的背景色
+  const onRow=useCallback((record, rowIndex)=>{
+    if(rowStyle){
+        const getRowStyleFunc=()=>{
+            const funStr='"use strict";'+
+                        'return (function(record, rowIndex){ '+
+                            'try {'+
+                                rowStyle+
+                            '} catch(e) {'+
+                            '   console.error(e);'+
+                            '   return undefined;'+
+                            '}'+
+                        '})';
+            return Function(funStr)();
+        };
+
+        const rst=getRowStyleFunc()(record, rowIndex);
+        
+        const rowStyle={
+            style:{backgroundColor:'white',...rst}
+        };
+        return rowStyle
+    }
+    return ({
+        style:{backgroundColor:'white'}
+    });
+  },[rowStyle]);
+
   return (
     <div style={wrapperStyle} className="report-table">
       <AntdTable 
         title={titleFunc()}
         size='small' 
-        columns={columns} 
+        columns={tableColumns} 
         dataSource={data?.list} 
         bordered
         pagination={pagination}
+        onRow={onRow}
         footer={footerFunc()}
       />
     </div>
