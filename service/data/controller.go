@@ -277,7 +277,7 @@ func (controller *DataController) download(c *gin.Context) {
 
 	c.Header("Content-Type", "application/octet-stream")
 	fileName := url.QueryEscape(name)
-	c.Header("Content-Disposition", "attachment; filename="+fileName)
+	c.Header("Content-Disposition", "attachment;filename="+fileName)
 	c.Header("Content-Transfer-Encoding", "binary")
 
 	fileName = fieldID + "_row" + rowID + "_id" + strID + "_" + name
@@ -436,7 +436,7 @@ func (controller *DataController) downloadByKey(c *gin.Context) {
 		return
 	}
 
-	c.Header("Content-Disposition", "attachment; filename="+orgName)
+	c.Header("Content-Disposition", "attachment;filename="+orgName)
 	c.File(fileName)
 }
 
