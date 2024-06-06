@@ -10,6 +10,7 @@ import SelectLanguage from '../../../../component/SelectLanguage';
 import {userInfoStorage} from '../../../../utils/sessionStorage';
 import useI18n from '../../../../hook/useI18n';
 import { setHeaderVisible,setTabHeaderVisible } from '../../../../redux/layoutSlice';
+import Notification from "./Notification";
 
 import './index.css';
 
@@ -39,6 +40,9 @@ export default function FrameHeader({hideHeader,filterFormConf,systemMenu}){
             </div>
             <div>
                 <SystemMenu systemMenu={systemMenu}/>
+            </div>
+            <div>
+                <Notification/>
             </div>
             <div>
                 <SelectLanguage appID={appID}/>

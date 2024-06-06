@@ -283,6 +283,17 @@ export const queryData = ({frameParams,queryParams},errorCallback)=>{
   });
 }
 
+export const getQueryDataPromise = ({queryParams})=>{
+  const {token}=userInfoStorage.get();
+  const config={
+    url:host+DATA_QUERY_URL,
+    method:'post',
+    data:{...queryParams},
+    headers:{token:encodeToken(token,queryParams)}
+  }
+  return axios(config)
+}
+
 //获取文件上传的key
 const GET_UPLOAD_KEY_URL="/data/getUploadKey";
 export const getUploadKey = ({frameParams,params},errorCallback)=>{

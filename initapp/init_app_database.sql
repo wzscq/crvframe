@@ -85,6 +85,9 @@ DROP TABLE IF EXISTS `core_task`;
 CREATE TABLE `core_task`  (
   `id` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `step_count` int(11) NOT NULL DEFAULT 0,
+  `step_executed` int(11) NOT NULL DEFAULT 0,
+  `step_not_executed` int(11) NOT NULL DEFAULT 0,
   `execution_status` int(11) NOT NULL DEFAULT 0,
   `execution_progress` int(11) NOT NULL DEFAULT 0,
   `result_status` int(11) NOT NULL DEFAULT 0,

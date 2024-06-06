@@ -3,6 +3,9 @@
   "fields": [
     {"field":"id","name":"编号","dataType":"varchar"},
     {"field":"name","name":"任务名称","dataType":"varchar","quickSearch":true},
+    {"field":"step_count","name":"步骤总数","dataType":"int"},
+    {"field":"step_executed","name":"已执行数","dataType":"int"},
+    {"field":"step_not_executed","name":"待执行数","dataType":"int"},
     {"field":"execution_status","name":"任务执行状态","dataType":"int"},
     {"field":"execution_progress","name":"执行进度","dataType":"int"},
     {"field":"result_status","name":"结果状态","dataType":"int"},

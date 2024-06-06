@@ -84,7 +84,7 @@
         "rowSpan": 1
       },
       {
-        "field": "update_time", 
+        "field": "update_time",
         "controlType": "Text",
         "row": 2,
         "col": 7,
@@ -148,9 +148,9 @@
             "label":"执行状态",
             "controlType": "SingleSelect",
             "options":[
-              {"value":"0","label":"未执行"},
-              {"value":"1","label":"执行成功"},
-              {"value":"2","label":"执行错误"}
+              {"value":"0","label":"待执行"},
+              {"value":"1","label":"执行中"},
+              {"value":"2","label":"执行完成"}
             ],
             "width":100
           },

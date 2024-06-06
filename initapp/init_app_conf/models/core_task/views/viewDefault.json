@@ -26,6 +26,9 @@
       ],
       "width":150
     },
+    {"field":"step_count","width":150},
+    {"field":"step_executed","width":150},
+    {"field":"step_not_executed","width":150},
     {"field":"error_code","width":150},
     {"field":"message","width":150},
     {"field":"create_time","width":150},
