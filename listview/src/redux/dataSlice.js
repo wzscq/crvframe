@@ -156,7 +156,7 @@ export const dataSlice = createSlice({
             state.views[state.currentView].data.total=action.payload.total;
             state.views[state.currentView].data.list=action.payload.list;
             state.views[state.currentView].data.selectedRowKeys=[];
-            state.views[state.currentView].selectedAll=false;
+            state.views[state.currentView].data.selectAll=false;
             state.views[state.currentView].data.summaries=action.payload.summaries;
             if(state.queryQueenable===true){
                 state.queryQueenable=false;
