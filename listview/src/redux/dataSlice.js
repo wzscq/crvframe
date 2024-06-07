@@ -80,13 +80,15 @@ const initialState = {
 const initViewItem=(viewConf,appConf)=>{
     console.log('initViewItem',appConf);
     const pageSize=appConf?.listview?.defaultPageSize??20;
+    const pageSizeOptions=appConf?.listview?.pageSizeOptions??[10,20,50,100,200,500];
     return {
         data:{
             viewID:viewConf.viewID,
             total:26,      //总记录数
             pagination:{
                 current:1,      //当前页编号 
-                pageSize:pageSize     //每页记录数
+                pageSize:pageSize,     //每页记录数
+                pageSizeOptions
             },
             filter:{        //过滤条件，待细化
             },
