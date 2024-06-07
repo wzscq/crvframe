@@ -42,7 +42,7 @@ export default function FrameHeader({hideHeader,filterFormConf,systemMenu}){
                 <SystemMenu systemMenu={systemMenu}/>
             </div>
             <div>
-                <Notification/>
+                <Notification getLocaleLabel={getLocaleLabel}/>
             </div>
             <div>
                 <SelectLanguage appID={appID}/>

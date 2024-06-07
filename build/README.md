@@ -33,7 +33,7 @@ mkdir /root/redis/data
 mkdir /root/redis/conf
 touch /root/redis/conf/redis.conf
 
-docker run --name redis -p 6479:6379 -v /root/redis/data:/data -v /root/redis/conf/redis.conf:/etc/redis/redis.conf --privileged=true --restart=always -d redis
+docker run --name redis -p 6479:6379 -v /root/redis/data:/data -v /root/redis/conf/redis.conf:/etc/redis/redis.conf --privileged=true --restart=always -d redis redis-server /etc/redis/redis.conf
 
 install mosquitto
 mkdir /root/mosquitto

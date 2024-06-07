@@ -40,6 +40,7 @@ import {
     ERROR_CODE
 } from "./constant";
 import useI18n from "../hook/useI18n";
+import { act } from "react";
 
 export default function OperationDialog(){
     const {getLocaleLabel,getLocaleErrorMessage}=useI18n();
@@ -50,9 +51,6 @@ export default function OperationDialog(){
     const {pending,error,result:requestResult,message:resultMessage,params:resultParams,errorCode}=useSelector(state=>state.request);
     const {current:currentTab,items:tabItems}=useSelector(state=>state.tab);
     const globalFilterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
-
-
-    console.log('OperationDialog111:',doneList,current,needConfirm,queen);
 
     //已完成操作列表
     const operationList=doneList.map((item,index)=>{
@@ -275,6 +273,19 @@ export default function OperationDialog(){
         dispatch(operationDone({result:OP_RESULT.SUCCESS}));
     }
 
+    const activateNotification=()=>{
+        const {key}=current.params;
+        let activateNotificationEvent = new CustomEvent('activateNotification', {
+            detail: {
+                key:key,
+            },
+            bubbles: true,
+            cancelable: true
+        });
+        window.dispatchEvent(activateNotificationEvent);
+        dispatch(operationDone({result:OP_RESULT.SUCCESS}));
+    }
+
     //这里负责实际执行操作动作
     useEffect(()=>{
         if(current){
@@ -306,6 +317,8 @@ export default function OperationDialog(){
                 showMessage();
             } else if (current.type===OP_TYPE.DOWNLOAD_FILE){
                 downloadFile();
+            } else if (current.type===OP_TYPE.ACTIVATE_NOTIFICATION){
+                activateNotification();
             } else {
                 dispatch(logInfo("目前不支持的操作:"+JSON.stringify(current)));
             }
