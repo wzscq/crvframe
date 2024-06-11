@@ -11,6 +11,7 @@ export const OP_TYPE={
     MESSAGE:'message',//"OP_TYPE_MESSAGE",  //弹出提示消息
     DOWNLOAD_FILE:'downloadFile', //"OP_TYPE_DOWNLOAD_FILE", //下载文件
     ACTIVATE_NOTIFICATION:'activateNotification',//"OP_TYPE_ACTIVATE_NOTIFICATION", //激活通知
+    SHOW_NOTIFICATION:'showNotification',//"OP_TYPE_SHOW_NOTIFICATION", //显示通知
 }
 
 /**

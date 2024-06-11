@@ -1,7 +1,8 @@
-import { Button, Tooltip } from "antd";
+import { Button, Tooltip,Progress } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import * as IconList from '@ant-design/icons';
 import {setOperation} from '../../../../../operation';
+import { useCallback } from "react";
 
 export default function NotificationItem({getLocaleLabel,item,removeNotificationItem}){
     const getContentFunc=(content)=>{
@@ -17,6 +18,48 @@ export default function NotificationItem({getLocaleLabel,item,removeNotification
         return Function(funStr)();
     };
 
+    const getProgressPercent=(percent)=>{
+        const funStr='"use strict";'+
+                    'return (function(record){ '+
+                        'try {'+
+                        percent+
+                        '} catch(e) {'+
+                        '   console.error(e);'+
+                        '   return undefined;'+
+                        '}'+
+                    '})';
+        return Function(funStr)();
+    }
+
+    const getProgressStatus=(status)=>{
+        const funStr='"use strict";'+
+        'return (function(record){ '+
+            'try {'+
+            status+
+            '} catch(e) {'+
+            '   console.error(e);'+
+            '   return undefined;'+
+            '}'+
+        '})';
+        return Function(funStr)();
+    }
+
+    const doOperation=useCallback((operation)=>{
+        let row={...item.data};
+        if(operation?.input?.list?.length>0){
+            const initRowData=operation.input.list[0];
+            row={...row,...initRowData};
+        }
+        setOperation({...operation,input:{...operation.input,list:[row]}});
+    },[item]);
+
+    let progress=null;
+    if(item?.item?.progress?.show===true){
+        const percent=getProgressPercent(item.item.progress.percent)(item.data);
+        const status=getProgressStatus(item.item.progress.status)(item.data);
+        progress=<Progress  percent={percent} status={status}/>;
+    }
+
     return (
     <div style={{width:"100%"}}>
         <div style={{width:"100%",display:"flex"}}>
@@ -25,7 +68,7 @@ export default function NotificationItem({getLocaleLabel,item,removeNotification
                     const IconItem=IconList[button.icon?button.icon:"UnorderedListOutlined"];
                     return (
                         <Tooltip zIndex={10000} title={getLocaleLabel(button.tip??'')}>
-                            <Button key={index} onClick={()=>{setOperation(button.operation)}} type="link" icon={<IconItem/>} />
+                            <Button key={index} onClick={()=>{doOperation(button.operation)}} type="link" icon={<IconItem/>} />
                         </Tooltip>)
                 })}
             </div>
@@ -36,5 +79,6 @@ export default function NotificationItem({getLocaleLabel,item,removeNotification
             </div>
         </div>
         <div style={{width:"100%"}} dangerouslySetInnerHTML={{ __html:getContentFunc(item.item.content)(item.data)}}/>
+        {progress}
     </div>)
 }

@@ -27,10 +27,11 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
         setItemList(itemList.filter((dataItem)=>dataItem.item.key!==item.item.key));
     },[itemList]);
     
-    const showNotification = () => {
+    const showNotification = (duration=0) => {
+        console.log("showNotification",notificationConf,duration);
         api.info({
         key:"taskNotification",
-        duration:0,
+        duration:duration,
         message: <I18nLabel label={notificationConf.title??""}/>,
         description: <Context.Consumer>{({ itemList }) => itemList.map(item=><NotificationItem removeNotificationItem={removeNotificationItem} getLocaleLabel={getLocaleLabel} key={item.data.id} item={item}/>)}</Context.Consumer>,
         placement:'topRight'
@@ -59,14 +60,21 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
             const itemKey=event.detail.key;
             const item=notificationConf.items.find(item=>item.key===itemKey);
             const runItem=runItems.find(item=>item.key===itemKey);
-            console.log("activateNotification",itemKey,item,runItem);
             if(item&&!runItem){
                 setRunItems([...runItems,item]);
             }
         }
+
+        const showNotificationListener=(event)=>{
+            const duration=event?.detail?.duration??0;
+            showNotification(duration);
+        }
+
         window.addEventListener('activateNotification', activateNotification);
+        window.addEventListener('showNotification', showNotificationListener);
         return () => {
             window.removeEventListener('activateNotification', activateNotification);
+            window.removeEventListener('showNotification', showNotificationListener);
         };
     },[runItems,notificationConf]);
 
@@ -81,7 +89,7 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
         <Context.Provider value={contextValue}>
             {contextHolder}
             <Badge count={itemList.length} size="small" offset={[-5, 15]}>
-                <Button disabled={itemList.length===0} onClick={showNotification} style={{fontSize:"24px"}} type="link" icon={<BellFilled style={{fontSize:"24px"}}/>}/>
+                <Button disabled={itemList.length===0} onClick={()=>showNotification(notificationConf.duration??0)} style={{fontSize:"24px"}} type="link" icon={<BellFilled style={{fontSize:"24px"}}/>}/>
             </Badge>
             {runItems.map((item)=><RunNotification key={item.key} item={item} removeRunItem={(key)=>setRunItems(runItems.filter(item=>item.key!==key))} udpateItemList={udpateItemList}/>)}
         </Context.Provider>

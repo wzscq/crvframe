@@ -286,6 +286,18 @@ export default function OperationDialog(){
         dispatch(operationDone({result:OP_RESULT.SUCCESS}));
     }
 
+    const showNotification=()=>{
+        let showNotificationEvent = new CustomEvent('showNotification', {
+            detail: {
+                duration:current?.params?.duration??0,
+            },
+            bubbles: true,
+            cancelable: true
+        });
+        window.dispatchEvent(showNotificationEvent);
+        dispatch(operationDone({result:OP_RESULT.SUCCESS}));
+    }
+
     //这里负责实际执行操作动作
     useEffect(()=>{
         if(current){
@@ -319,7 +331,10 @@ export default function OperationDialog(){
                 downloadFile();
             } else if (current.type===OP_TYPE.ACTIVATE_NOTIFICATION){
                 activateNotification();
-            } else {
+            } else if (current.type===OP_TYPE.SHOW_NOTIFICATION){
+                showNotification();
+            }
+            else {
                 dispatch(logInfo("目前不支持的操作:"+JSON.stringify(current)));
             }
         }
