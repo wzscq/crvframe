@@ -16,6 +16,7 @@ import ColorPicker from './ColorPicker';
 import UploadControl from './UploadControl';
 import FilePreview from './FilePreview';
 import RSAEncryptText from './RSAEncryptText';
+import Html from './Html';
 /**
  * 以下为控件类型枚举常量定义
  */
@@ -37,7 +38,8 @@ import RSAEncryptText from './RSAEncryptText';
     ValueLabel:"ValueLabel",  //用于显示不能修改的值
     ColorPicker:"ColorPicker",  //颜色选择器
     FilePreview:"FilePreview",  //文件预览
-    RSAEncryptText:"RSAEncryptText"
+    RSAEncryptText:"RSAEncryptText",
+    Html:"Html"
 }
 
 /**
@@ -61,7 +63,8 @@ export const controlRegister={
     [CONTROL_TYPE.ValueLabel]:ValueLabel,
     [CONTROL_TYPE.ColorPicker]:ColorPicker,
     [CONTROL_TYPE.FilePreview]:FilePreview,
-    [CONTROL_TYPE.RSAEncryptText]:RSAEncryptText
+    [CONTROL_TYPE.RSAEncryptText]:RSAEncryptText,
+    [CONTROL_TYPE.Html]:Html
 }
 
 export const getControl=(control,field,sendMessageToParent,dataPath)=>{
