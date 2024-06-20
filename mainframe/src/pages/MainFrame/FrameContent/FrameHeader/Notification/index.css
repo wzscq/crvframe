@@ -1,7 +1,7 @@
-:where(.css-dev-only-do-not-override-1qhpsh8).ant-notification-topRight.ant-notification-stack>.ant-notification-notice-wrapper {
-    top:22px;
+.ant-notification-notice-wrapper {
+    top:22px !important;
 }
 
-:where(.css-dev-only-do-not-override-1qhpsh8).ant-notification .ant-notification-notice-wrapper .ant-notification-notice-with-icon .ant-notification-notice-description {
-    margin-left: 0px;
+.ant-notification-notice-description {
+    margin-left: 0px !important;
 }
