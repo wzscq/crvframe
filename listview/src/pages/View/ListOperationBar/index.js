@@ -34,7 +34,8 @@ export default function ListOperationBar({sendMessageToParent}){
                         relatedModelID:fieldConf.relatedModelID,
                         relatedField:fieldConf.relatedField,
                         associationModelID:fieldConf.associationModelID,
-                        fields:fieldItem.fields
+                        fields:fieldItem.fields,
+                        pagination:fieldItem.pagination,
                     }
                     searchFields.push(searchField);
                 }

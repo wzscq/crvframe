@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useMemo,useState } from 'react';
 import { Button,Badge,notification } from 'antd';
 import {BellFilled  } from '@ant-design/icons';
-import NotificationItem from './NotificationItem';
+import NotificationContent from './NotificationContent';
 import RunNotification from './RunNotification';
 import I18nLabel from '../../../../../component/I18nLabel';
+import {setOperation} from '../../../../../operation';
+
+import './index.css';
 
 const Context = React.createContext({
     itemList: [],
@@ -21,29 +24,58 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
     const [itemList, setItemList] = useState([]);
     const [runItems,setRunItems]=useState([]);
 
-    console.log("NotificationButton",runItems)
+    //console.log("NotificationButton",runItems)
 
     const removeNotificationItem=useCallback((item)=>{
-        setItemList(itemList.filter((dataItem)=>dataItem.item.key!==item.item.key));
+        console.log("removeNotificationItem",itemList,item);
+        const newItemList=itemList.filter((dataItem)=>dataItem.data.id!==item.data.id||dataItem.item.key!==item.item.key)
+        console.log("removeNotificationItem",newItemList);
+        setItemList(newItemList);
     },[itemList]);
+
+    const getUpdateConditionFunc=(condition)=>{
+        const funStr='"use strict";'+
+        'return (function(record){ '+
+            'try {'+
+            condition+
+            '} catch(e) {'+
+            '   console.error(e);'+
+            '   return undefined;'+
+            '}'+
+        '})';
+        return Function(funStr)();
+    }
     
-    const showNotification = (duration=0) => {
-        console.log("showNotification",notificationConf,duration);
+    const showNotification = useCallback((duration=0) => {
+        //console.log("showNotification",notificationConf,duration);
         api.info({
-        key:"taskNotification",
-        duration:duration,
-        message: <I18nLabel label={notificationConf.title??""}/>,
-        description: <Context.Consumer>{({ itemList }) => itemList.map(item=><NotificationItem removeNotificationItem={removeNotificationItem} getLocaleLabel={getLocaleLabel} key={item.data.id} item={item}/>)}</Context.Consumer>,
-        placement:'topRight'
+            key:"taskNotification",
+            duration:duration,
+            message: <I18nLabel label={notificationConf.title??""}/>,
+            description: <Context.Consumer>{({ itemList,removeNotificationItem }) =>(<NotificationContent itemList={itemList} getLocaleLabel={getLocaleLabel} removeNotificationItem={removeNotificationItem} />)}</Context.Consumer>,
+            placement:'topRight',
+            className:"mainframe-notification"
         });
-    };
+        
+        //触发自动更新查看状态
+        itemList.forEach(item=>{
+            if(item?.item?.updateStrategy){
+                const {condition,operation}=item.item.updateStrategy;
+                console.log("showNotification",condition,operation,item.data);
+                if(getUpdateConditionFunc(condition)(item.data)===true){
+                    //执行相应的操作
+                    setOperation({...operation,input:{...operation.input,selectedRowKeys:[item.data.id]}})
+                }
+            }
+        })
+    },[itemList]);
 
     const udpateItemList=useCallback((item,list)=>{
         //更新通知项的数据,不自动删除旧的数据，只作新增和更新
         const otherItemList=itemList.filter((dataItem)=>(dataItem.item.key!==item.key||list.find((newItem)=>newItem.id===dataItem.data.id)===undefined));
         let newItemList=list.map((dataItem)=>({data:dataItem,item:item}));
         newItemList=[...newItemList,...otherItemList];
-        newItemList.sort((a,b)=>a.data.update_time>b.data.update_time?-1:1);
+        //newItemList.sort((a,b)=>a.data.update_time>b.data.update_time?-1:1);
         setItemList([...newItemList]);
     },[itemList]);
 
@@ -81,6 +113,7 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
     const contextValue = useMemo(
         () => ({
             itemList: itemList,
+            removeNotificationItem:removeNotificationItem
         }),
         [itemList],
     );

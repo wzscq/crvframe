@@ -61,7 +61,7 @@ export default function NotificationItem({getLocaleLabel,item,removeNotification
     }
 
     return (
-    <div style={{width:"100%"}}>
+    <div style={{width:"calc(100% - 5px)"}}>
         <div style={{width:"100%",display:"flex"}}>
             <div style={{flex:"1"}}>
                 {item.item.buttons?.map((button,index)=>{
