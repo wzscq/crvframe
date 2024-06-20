@@ -5,7 +5,7 @@ import {setFieldFilter,resetFieldFilter} from '../../../../redux/dataSlice';
 import { getControl } from './Controls';
 import I18nLabel from '../../../../components/I18nLabel';
 
-export default function FilterInput({sendMessageToParent,field}){
+export default function FilterInput({sendMessageToParent,field,confirm}){
     const dispatch=useDispatch();
     const filter = useSelector(state=>state.data.views[state.data.currentView].data.filter);
     const filterValueLabel = useSelector(state=>state.data.views[state.data.currentView].data.filterValueLabel);
@@ -20,9 +20,12 @@ export default function FilterInput({sendMessageToParent,field}){
 
     const resetFilter=()=>{
         dispatch(resetFieldFilter(field.field));
+        setFilterValue(null);
+        setFilterLabel(null);
     }
 
     const onSearch=useCallback(()=>{
+        confirm();
         dispatch(setFieldFilter({value:{[field.field]:filterValue},label:{[field.field]:filterLabel}}));
     },[field,filterValue,filterLabel,dispatch]);
 

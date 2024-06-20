@@ -49,13 +49,13 @@ export default function ListTable({sendMessageToParent}){
             return Function(funStr)();
         };
 
-        const filterDropdown=<FilterDropdown sendMessageToParent={sendMessageToParent} field={field} index={index}/>;
+        //const filterDropdown=<FilterDropdown sendMessageToParent={sendMessageToParent} field={field} index={index}/>;
         const filterIcon=<FilterIcon field={field}/>;
 
         return {
             dataIndex:field.field,
             title:()=>(<Tooltip title={<I18nLabel label={field.name}/>}><div className="table-header"><I18nLabel label={field.name}/></div></Tooltip>),
-            filterDropdown:filterDropdown,
+            filterDropdown:({confirm}) => (<FilterDropdown confirm={confirm} sendMessageToParent={sendMessageToParent} field={field} index={index}/>),
             filterIcon: filterIcon,
             width:field.width,
             fixed:(isFixed?'left':''),
@@ -147,7 +147,8 @@ export default function ListTable({sendMessageToParent}){
                     let searchField={
                         field:fieldItem.field,
                         dataType:fieldConf.dataType,
-                        summarize:fieldItem.summarize
+                        summarize:fieldItem.summarize,
+                        pagination:fieldItem.pagination,
                     };
                     if(fieldItem.fields&&fieldItem.fields.length>0){
                         searchField={
@@ -157,7 +158,7 @@ export default function ListTable({sendMessageToParent}){
                             relatedModelID:fieldConf.relatedModelID,
                             relatedField:fieldConf.relatedField,
                             associationModelID:fieldConf.associationModelID,
-                            fields:fieldItem.fields
+                            fields:fieldItem.fields,
                         }
                     }
                     if(fieldConf.fieldType===FIELD_TYPE.FILE){

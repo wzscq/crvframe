@@ -23,7 +23,7 @@ export default function MultiSelectForOptions({field,filterValue,onFilterChange}
         mode="multiple"
         style={{maxWidth:200,minWidth:200,marginBottom:8,display:'block'}}
         value={filterValue?.['Op.in']} 
-        allowClear
+        allowClear={false}
         onChange={onChange}
         >
         {options}

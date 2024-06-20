@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector} from "react-redux";
 import { Modal,Button,message} from 'antd';
 import { useNavigate } from "react-router-dom";
+import dayjs from 'dayjs';
 
 import {
     requestAction,
@@ -40,7 +41,6 @@ import {
     ERROR_CODE
 } from "./constant";
 import useI18n from "../hook/useI18n";
-import { act } from "react";
 
 export default function OperationDialog(){
     const {getLocaleLabel,getLocaleErrorMessage}=useI18n();
@@ -64,6 +64,24 @@ export default function OperationDialog(){
 
     const handleConfirm=()=>{
         dispatch(confirm());
+    }
+
+    const handleExportOperationLog=()=>{
+        //导出操作日志
+        const {appID,userName}=userInfoStorage.get();
+        const exportContent=JSON.stringify({appID,userName,doneList,globalFilterData},null, 2);
+        var data = new Blob([exportContent], {type: 'text/plain'});
+        //用当前时间作为文件名+appID+userName
+        var fileName = dayjs().format('YYYYMMDDHHmmss')+'.json';
+        var a = document.createElement('a');
+        var url = window.URL.createObjectURL(data);
+        a.href = url;
+        a.download = fileName;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
     }
 
     const doLogout=()=>{
@@ -357,6 +375,7 @@ export default function OperationDialog(){
         //所有的操作都执行完成，并且有错误，则需要用户确认
         if(needConfirm){
             footer=[
+                <Button type="primary" onClick={handleExportOperationLog}>{getLocaleLabel({key:'dialog.operation.exportOperationLog',default:'导出日志'})}</Button>,
                 <Button type="primary" onClick={handleConfirm}>{getLocaleLabel({key:'dialog.operation.confirm',default:'确定'})}</Button>,
             ]
         }

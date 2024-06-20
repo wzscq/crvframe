@@ -103,8 +103,7 @@ func (controller *RedirectController) redirect(c *gin.Context) {
 	}
 
 	proxy := httputil.NewSingleHostReverseProxy(remote)
-	//Define the director func
-	//This is a good place to log, for example
+	
 	proxy.Director = func(req *http.Request) {
 		req.Header = c.Request.Header
 		req.Header.Set("userID", userID)
@@ -123,36 +122,6 @@ func (controller *RedirectController) redirect(c *gin.Context) {
 	proxy.ServeHTTP(c.Writer, c.Request)
 
 	return
-	/*rep.UserID=userID
-		rep.AppDB=appDB
-		rep.UserRoles=userRoles
-		rep.UserToken=header.Token
-		rep.To=nil
-		postJson,_:=json.Marshal(rep)
-		postBody:=bytes.NewBuffer(postJson)
-		log.Println("http.Post ",postUrl,string(postJson))
-		resp,err:=http.Post(postUrl,"application/json",postBody)
-
-		if err != nil || resp==nil || resp.StatusCode != 200 {
-			log.Println(resp)
-			rsp:=common.CreateResponse(common.CreateError(common.ResultPostExternalApiError,nil),nil)
-			c.IndentedJSON(http.StatusOK, rsp)
-			return
-		}
-
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		log.Println("resp",string(body))
-		//识别返回的类型，如果是二进制流，则直接转发到前端
-
-		rsp:=&common.CommonRsp{}
-	    if err := json.Unmarshal(body, rsp); err != nil {
-	        log.Println(err)
-	    }
-
-		//rsp:=common.CreateResponse(nil,nil)
-		c.IndentedJSON(http.StatusOK, rsp)
-		log.Println("end redirect success")*/
 }
 
 func (controller *RedirectController) Bind(router *gin.Engine) {

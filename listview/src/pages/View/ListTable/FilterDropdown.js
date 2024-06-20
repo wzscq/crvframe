@@ -8,7 +8,7 @@ import I18nLabel from '../../../components/I18nLabel';
 
 import './FilterDropdown.css';
 
-export default function FilterDropdown({ sendMessageToParent,field,index }){
+export default function FilterDropdown({ sendMessageToParent,field,index,confirm }){
     const dispatch=useDispatch();
     const {sorter,fixedColumn} = useSelector(state=>state.data.views[state.data.currentView].data);
     const ascActive=(sorter.length>0?sorter[0].field===field.field&&sorter[0].order==='asc':false);
@@ -18,7 +18,7 @@ export default function FilterDropdown({ sendMessageToParent,field,index }){
     const filterControl=field.showFilter!==false?(
         <>
             <Divider/>
-            <FilterInput sendMessageToParent={sendMessageToParent} field={field} />
+            <FilterInput sendMessageToParent={sendMessageToParent} field={field} confirm={confirm} />
         </>
     ):null;
     

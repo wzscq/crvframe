@@ -109,7 +109,7 @@ export default function MultiSelectForRelatedField({field,filterValue,onFilterCh
         mode="multiple"
         style={{maxWidth:200,minWidth:200,marginBottom:8,display:'block'}}
         value={filterValue?.['Op.in']} 
-        allowClear
+        allowClear={false}
         showSearch
         onSearch={onSearch}
         onChange={onChange}
