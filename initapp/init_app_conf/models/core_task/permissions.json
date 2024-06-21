@@ -3,12 +3,24 @@
     {
       "id": "detail", 
       "roles":"*"
+    },
+    {
+      "id":"delete",
+      "roles":"admin"
     }
   ],
   "views":[
     {
-        "id": "viewDefault", 
+        "id": "viewMyTask", 
         "roles":"*"
+    },
+    {
+        "id": "viewAllTask", 
+        "roles":"admin"
+    },
+    {
+        "id": "viewCompletedTask", 
+        "roles":"admin"
     }
   ]
 }

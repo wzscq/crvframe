@@ -27,15 +27,15 @@
         "controlType": "Text",
         "row": 1,
         "col": 1,
-        "colSpan": 1,
+        "colSpan": 2,
         "rowSpan": 1
       }, 
       {
         "field": "name", 
         "controlType": "Text",
         "row": 1,
-        "col": 2,
-        "colSpan": 2,
+        "col": 3,
+        "colSpan": 1,
         "rowSpan": 1
       }, 
       {
@@ -111,13 +111,37 @@
         "col": 2,
         "colSpan": 1,
         "rowSpan": 1
-      }, 
+      },
       {
         "field": "message", 
         "controlType": "Text",
         "row": 2,
         "col": 3,
         "colSpan": 3,
+        "rowSpan": 1
+      },
+      {
+        "field": "step_count", 
+        "controlType": "Text",
+        "row": 3,
+        "col": 1,
+        "colSpan": 1,
+        "rowSpan": 1
+      },
+      {
+        "field": "step_executed", 
+        "controlType": "Text",
+        "row": 3,
+        "col": 2,
+        "colSpan": 1,
+        "rowSpan": 1
+      },
+      {
+        "field": "step_not_executed", 
+        "controlType": "Text",
+        "row": 3,
+        "col": 3,
+        "colSpan": 1,
         "rowSpan": 1
       },
       {
@@ -216,7 +240,7 @@
             "width":80
           }
         ],
-        "row": 3,
+        "row": 4,
         "col": 1,
         "colSpan": 8,
         "rowSpan": 1

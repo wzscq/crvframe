@@ -11,6 +11,7 @@
     {"field":"result_status","name":"结果状态","dataType":"int"},
     {"field":"error_code","name":"错误码","dataType":"varchar"},
     {"field":"message","name":"错误信息","dataType":"varchar"},
+    {"field":"viewed_by_owner","name":"任务查看状态","dataType":"varchar"},
     {"field":"create_time","name":"记录创建时间","dataType":"datetime"},
     {"field":"create_user","name":"记录创建人","dataType":"varchar"},
     {"field":"update_time","name":"记录更新时间","dataType":"datetime"},

@@ -1,7 +1,7 @@
 {
-  "viewID": "viewDefault", 
-  "name": "任务信息维护", 
-  "description": "任务信息维护", 
+  "viewID": "viewMyTask", 
+  "name": "我的任务", 
+  "description": "我的任务", 
   "fields": [
     {"field":"id","width":150},
     {"field":"name","width":150},
@@ -31,13 +31,21 @@
     {"field":"step_not_executed","width":150},
     {"field":"error_code","width":150},
     {"field":"message","width":150},
+    {
+      "field":"viewed_by_owner","width":150,
+      "filterControlType": "SingleSelect",
+      "options":[
+        {"value":"0","label":"未查看"},
+        {"value":"1","label":"已查看"}
+      ]
+    },
     {"field":"create_time","width":150},
     {"field":"create_user","width":150},
     {"field":"update_time","width":150},
     {"field":"update_user","width":150},
     {"field":"version","width":150}
   ],
-  "filter": { }, 
+  "filter": {"create_user":{"Op.eq":"%{userID}"}}, 
   "toolbar": {
     "listToolbar": {
       "showCount": 3, 

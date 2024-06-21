@@ -122,7 +122,7 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
         <Context.Provider value={contextValue}>
             {contextHolder}
             <Badge count={itemList.length} size="small" offset={[-5, 15]}>
-                <Button disabled={itemList.length===0} onClick={()=>showNotification(notificationConf.duration??0)} style={{fontSize:"24px"}} type="link" icon={<BellFilled style={{fontSize:"24px"}}/>}/>
+                <Button disabled={itemList.length===0} onClick={()=>showNotification(notificationConf.duration??0)} style={{fontSize:"24px"}} type="link" icon={<BellFilled style={{fontSize:"20px"}}/>}/>
             </Badge>
             {runItems.map((item)=><RunNotification key={item.key} item={item} removeRunItem={(key)=>setRunItems(runItems.filter(item=>item.key!==key))} udpateItemList={udpateItemList}/>)}
         </Context.Provider>

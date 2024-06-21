@@ -88,6 +88,7 @@ CREATE TABLE `core_task`  (
   `step_count` int(11) NOT NULL DEFAULT 0,
   `step_executed` int(11) NOT NULL DEFAULT 0,
   `step_not_executed` int(11) NOT NULL DEFAULT 0,
+  `viewed_by_owner` varchar(1) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT '0',
   `execution_status` int(11) NOT NULL DEFAULT 0,
   `execution_progress` int(11) NOT NULL DEFAULT 0,
   `result_status` int(11) NOT NULL DEFAULT 0,

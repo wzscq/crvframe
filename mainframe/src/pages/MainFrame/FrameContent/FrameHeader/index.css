@@ -4,7 +4,7 @@
     line-height: 45px;
     background-color: white;
     display: grid;
-    grid-template-columns: 90px 1fr fit-content(50%) auto 45px  45px;
+    grid-template-columns: auto 1fr fit-content(50%) auto auto  45px;
 }
 
 .frame-header-hide {
@@ -13,7 +13,7 @@
     line-height: 45px;
     background-color: white;
     display: grid;
-    grid-template-columns: 90px 1fr fit-content(50%) auto 45px  45px;
+    grid-template-columns: auto 1fr fit-content(50%) auto auto  45px;
 }
 
 .frame-header-invisible {
@@ -22,7 +22,7 @@
     line-height: 45px;
     background-color: white;
     display: grid;
-    grid-template-columns: 90px 1fr fit-content(50%) auto 45px 45px;
+    grid-template-columns: auto 1fr fit-content(50%) auto auto 45px;
     position: absolute;
     top: 0;
     left: 0;
