@@ -71,7 +71,8 @@ export default function Form(){
                                 associationModelID:modelField.associationModelID,
                                 fields:getControlFields(element),
                                 sorter:element.sorter,
-                                filter:element.filter
+                                filter:element.filter,
+                                pagination:element.pagination
                             });
                         } else {
                             fields.push({field:element.field});
