@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo,useState } from 'react';
-import { Button,Badge,notification } from 'antd';
-import {BellFilled  } from '@ant-design/icons';
+import { Button,Badge,notification,Tooltip } from 'antd';
+import {BellFilled,DeleteOutlined  } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 import NotificationContent from './NotificationContent';
 import RunNotification from './RunNotification';
 import I18nLabel from '../../../../../component/I18nLabel';
@@ -20,18 +21,49 @@ const Context = React.createContext({
  */
 
 export default function NotificationButton({getLocaleLabel,notificationConf}){
+    const globalFilterData=useSelector(state=>state.data.updated[Object.keys(state.data.updated)[0]]);
     const [api, contextHolder] = notification.useNotification();
     const [itemList, setItemList] = useState([]);
     const [runItems,setRunItems]=useState([]);
 
-    //console.log("NotificationButton",runItems)
+    const removeAllCompletedItem=useCallback(()=>{
+        let newItemList=itemList.map(item=>{
+            //更新通知的查看状态
+            console.log('removeAllCompletedItem',item);
+            if(item?.item?.updateStrategy){
+                const {condition,operation}=item.item.updateStrategy;
+                if(getUpdateConditionFunc(condition)(item.data)===true){
+                    //执行相应的操作
+                    setOperation({...operation,input:{...operation.input,selectedRowKeys:[item.data.id]}})
+                    return null;
+                }
+            }
+            return item
+        });
+        newItemList=newItemList.filter(item=>item!=null)
+        setItemList(newItemList)
+    },[itemList])
+
+    useEffect(()=>{
+        if(itemList.length<=0){
+            //关闭已经打开的通知窗口
+            api.destroy("taskNotification")
+        }
+    },[itemList])
 
     const removeNotificationItem=useCallback((item)=>{
-        console.log("removeNotificationItem",itemList,item);
         const newItemList=itemList.filter((dataItem)=>dataItem.data.id!==item.data.id||dataItem.item.key!==item.item.key)
-        console.log("removeNotificationItem",newItemList);
         setItemList(newItemList);
-    },[itemList]);
+
+        //更新通知的查看状态
+        if(item?.item?.updateStrategy){
+            const {condition,operation}=item.item.updateStrategy;
+            if(getUpdateConditionFunc(condition)(item.data)===true){
+                //执行相应的操作
+                setOperation({...operation,input:{...operation.input,selectedRowKeys:[item.data.id]}})
+            }
+        }
+    },[itemList,removeAllCompletedItem]);
 
     const getUpdateConditionFunc=(condition)=>{
         const funStr='"use strict";'+
@@ -51,14 +83,18 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
         api.info({
             key:"taskNotification",
             duration:duration,
-            message: <I18nLabel label={notificationConf.title??""}/>,
+            message: <Context.Consumer>{({ itemList,removeAllCompletedItem })=>(<div><I18nLabel label={notificationConf.title??""}/>{
+                    <Tooltip zIndex={10000} title={getLocaleLabel({key:"page.main.removeAllCompletedNotificationItem",default:"删除完成的任务"})}>
+                        <Button style={{float:'right'}} onClick={()=>removeAllCompletedItem(itemList)}  type="link" icon={<DeleteOutlined/>} />
+                        </Tooltip>}</div>
+                    )}</Context.Consumer>,
             description: <Context.Consumer>{({ itemList,removeNotificationItem }) =>(<NotificationContent itemList={itemList} getLocaleLabel={getLocaleLabel} removeNotificationItem={removeNotificationItem} />)}</Context.Consumer>,
             placement:'topRight',
             className:"mainframe-notification"
         });
         
         //触发自动更新查看状态
-        itemList.forEach(item=>{
+        /*itemList.forEach(item=>{
             if(item?.item?.updateStrategy){
                 const {condition,operation}=item.item.updateStrategy;
                 console.log("showNotification",condition,operation,item.data);
@@ -67,24 +103,26 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
                     setOperation({...operation,input:{...operation.input,selectedRowKeys:[item.data.id]}})
                 }
             }
-        })
+        })*/
     },[itemList]);
 
     const udpateItemList=useCallback((item,list)=>{
-        //更新通知项的数据,不自动删除旧的数据，只作新增和更新
-        const otherItemList=itemList.filter((dataItem)=>(dataItem.item.key!==item.key||list.find((newItem)=>newItem.id===dataItem.data.id)===undefined));
+        //更新通知项的数据，旧数据不保留
+        const otherItemList=itemList.filter((dataItem)=>(dataItem.item.key!==item.key/*||list.find((newItem)=>newItem.id===dataItem.data.id)===undefined*/));
         let newItemList=list.map((dataItem)=>({data:dataItem,item:item}));
         newItemList=[...newItemList,...otherItemList];
-        //newItemList.sort((a,b)=>a.data.update_time>b.data.update_time?-1:1);
+        newItemList.sort((a,b)=>a.data.update_time>b.data.update_time?-1:1);
         setItemList([...newItemList]);
     },[itemList]);
 
     useEffect(() => {
+        setItemList([]);
+        //初始化通知项列表
         if(notificationConf?.items?.length>0){
             const runItems=notificationConf.items.filter(item =>item.runStrategy?.trigger==='auto');
             setRunItems(runItems);
         }
-    }, [notificationConf]);
+    }, [notificationConf,globalFilterData]);
 
     useEffect(()=>{
         //监听一个消息，当消息到达时，更新通知项的数据
@@ -113,7 +151,8 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
     const contextValue = useMemo(
         () => ({
             itemList: itemList,
-            removeNotificationItem:removeNotificationItem
+            removeNotificationItem:removeNotificationItem,
+            removeAllCompletedItem:removeAllCompletedItem
         }),
         [itemList],
     );
@@ -124,7 +163,7 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
             <Badge count={itemList.length} size="small" offset={[-5, 15]}>
                 <Button disabled={itemList.length===0} onClick={()=>showNotification(notificationConf.duration??0)} style={{fontSize:"24px"}} type="link" icon={<BellFilled style={{fontSize:"20px"}}/>}/>
             </Badge>
-            {runItems.map((item)=><RunNotification key={item.key} item={item} removeRunItem={(key)=>setRunItems(runItems.filter(item=>item.key!==key))} udpateItemList={udpateItemList}/>)}
+            {runItems.map((item)=><RunNotification globalFilterData={globalFilterData} key={item.key+JSON.stringify(globalFilterData)} item={item} removeRunItem={(key)=>setRunItems(runItems.filter(item=>item.key!==key))} udpateItemList={udpateItemList}/>)}
         </Context.Provider>
     )
 }

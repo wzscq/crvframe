@@ -44,6 +44,19 @@ export default function NotificationItem({getLocaleLabel,item,removeNotification
         return Function(funStr)();
     }
 
+    const getUpdateConditionFunc=(condition)=>{
+        const funStr='"use strict";'+
+        'return (function(record){ '+
+            'try {'+
+            condition+
+            '} catch(e) {'+
+            '   console.error(e);'+
+            '   return undefined;'+
+            '}'+
+        '})';
+        return Function(funStr)();
+    }
+
     const doOperation=useCallback((operation)=>{
         let row={...item.data};
         if(operation?.input?.list?.length>0){
@@ -60,6 +73,18 @@ export default function NotificationItem({getLocaleLabel,item,removeNotification
         progress=<Progress  percent={percent} status={status}/>;
     }
 
+    let removeButton=null;
+    if(item?.item?.updateStrategy){
+        const {condition,operation}=item.item.updateStrategy;
+        if(getUpdateConditionFunc(condition)(item.data)===true){
+            removeButton=(
+                <Tooltip zIndex={10000} title={getLocaleLabel({key:"page.main.removeNotificationItem",default:"删除"})}>
+                    <Button onClick={()=>removeNotificationItem(item)}  type="link" icon={<DeleteOutlined/>} />
+                </Tooltip>
+            )
+        }
+    }
+
     return (
     <div style={{width:"calc(100% - 5px)"}}>
         <div style={{width:"100%",display:"flex"}}>
@@ -73,9 +98,7 @@ export default function NotificationItem({getLocaleLabel,item,removeNotification
                 })}
             </div>
             <div style={{flex:"0 0 21px"}}>
-                <Tooltip zIndex={10000} title={getLocaleLabel({key:"page.main.removeNotificationItem",default:"删除"})}>
-                    <Button onClick={()=>removeNotificationItem(item)}  type="link" icon={<DeleteOutlined/>} />
-                </Tooltip>
+                {removeButton}
             </div>
         </div>
         <div style={{width:"100%"}} dangerouslySetInnerHTML={{ __html:getContentFunc(item.item.content)(item.data)}}/>
