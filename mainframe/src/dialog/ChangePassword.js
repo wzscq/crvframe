@@ -9,7 +9,7 @@ import {
     OPEN_LOCATION} from '../operation';
 import useI18n from '../hook/useI18n';
 
-const CHANGE_PASSWORD_URL="/frameservice/user/changePassword"; 
+const CHANGE_PASSWORD_URL=process.env.REACT_APP_SERVICE_API_PREFIX+"/user/changePassword"; 
 
 export default function ChangePassword(){
     const {getLocaleLabel}=useI18n();
