@@ -94,6 +94,7 @@ export default function FormHeader({label,operations,form,sendMessageToParent}){
             errorField=errorField.errorField;
             const errFieldCount=Object.keys(errorField).length;
             if(errFieldCount>0){
+                console.log('MultiSelectForOptions:',errorField)
                 dispatch(setErrorField(errorField));
             }
             return (errFieldCount<=0);

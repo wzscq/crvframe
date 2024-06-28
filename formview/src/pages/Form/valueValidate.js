@@ -3,6 +3,7 @@ import {FIELD_TYPE} from  '../../utils/constant';
 const validateField=(dataPath,control,rowValue,errorField)=>{
     const {required,field,validation}=control;
     if(required){
+        console.log('validateField:',dataPath,field,rowValue[field]);
         if(rowValue[field]){
             if(control.fieldType){
                 if(control.fieldType===FIELD_TYPE.MANY2MANY||
@@ -20,7 +21,6 @@ const validateField=(dataPath,control,rowValue,errorField)=>{
             } else {
                 if(rowValue[field].length<=0){
                     errorField.errorField[dataPath+'.'+field]={message:{key:'page.crvformview.requiredField',default:'必填字段！'}};
-                    
                     return;
                 }
             }

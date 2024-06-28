@@ -17,6 +17,7 @@ import UploadControl from './UploadControl';
 import FilePreview from './FilePreview';
 import RSAEncryptText from './RSAEncryptText';
 import Html from './Html';
+import MultiSelect from './MultiSelect';
 /**
  * 以下为控件类型枚举常量定义
  */
@@ -38,8 +39,9 @@ import Html from './Html';
     ValueLabel:"ValueLabel",  //用于显示不能修改的值
     ColorPicker:"ColorPicker",  //颜色选择器
     FilePreview:"FilePreview",  //文件预览
-    RSAEncryptText:"RSAEncryptText",
-    Html:"Html"
+    RSAEncryptText:"RSAEncryptText", //RSA加密文本
+    Html:"Html",   //Html内容文本
+    MultiSelect:"MultiSelect"  //多选下拉框
 }
 
 /**
@@ -64,7 +66,8 @@ export const controlRegister={
     [CONTROL_TYPE.ColorPicker]:ColorPicker,
     [CONTROL_TYPE.FilePreview]:FilePreview,
     [CONTROL_TYPE.RSAEncryptText]:RSAEncryptText,
-    [CONTROL_TYPE.Html]:Html
+    [CONTROL_TYPE.Html]:Html,
+    [CONTROL_TYPE.MultiSelect]:MultiSelect
 }
 
 export const getControl=(control,field,sendMessageToParent,dataPath)=>{
