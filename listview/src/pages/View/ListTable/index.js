@@ -334,11 +334,12 @@ export default function ListTable({sendMessageToParent}){
                 dataSource={list} 
                 size="small" 
                 bordered 
+                key={currentView}
                 rowSelection={rowSelection}
                 rowKey='id'
                 footer={()=>(<TableFooter/>)}
                 pagination={false}
-                scroll={{ y: scrollY }}
+                scroll={{ y: scrollY}}
                 onRow={onRow}
                 summary={getSummary}
                 components={{ header: { cell: ResizableTitle } }}
