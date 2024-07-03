@@ -122,7 +122,7 @@ func (queryFile *QueryFile) query(dataRepository DataRepository, parentList *Que
 		Sorter:     refField.Sorter,
 		UserRoles:  queryFile.UserRoles,
 	}
-	result, errorCode := fileQuery.Execute(dataRepository, true)
+	result, errorCode := fileQuery.Execute(dataRepository, false)
 	//更新查询结果到父级数据列表中
 	if errorCode == common.ResultSuccess {
 		queryFile.mergeResult(parentList, result, refField)

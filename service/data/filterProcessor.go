@@ -282,6 +282,9 @@ func getFilterData(
 		if item.Filter != nil {
 			replaceFilterVar(item.Filter, nil, globalFilterData, userID, userRoles)
 		}
+
+		slog.Debug("getFilterData111", "item", item)
+
 		//创建query查询数据
 		query := &Query{
 			ModelID:   item.ModelID,
@@ -328,4 +331,22 @@ func arrayToOpin(value []interface{}) map[string]interface{} {
 	return map[string]interface{}{
 		Op_in: value,
 	}
+}
+
+func ConvertToFileterData(filterData *[]interface{})(*[]FilterDataItem,error) {
+	//filterData序列化为json字符串
+	filterDataStr, err := json.Marshal(filterData)
+	if err != nil {
+		slog.Error("ConvertToFileterData Marshal filterData error")
+		slog.Error(err.Error())
+		return nil, err
+	}
+	//json字符串反序列化为FilterDataItem数组
+	var filterDataItems []FilterDataItem
+	if err := json.Unmarshal(filterDataStr, &filterDataItems); err != nil {
+		slog.Error("ConvertToFileterData Unmarshal filterData error")
+		slog.Error(err.Error())
+		return nil, err
+	}
+	return &filterDataItems, nil
 }

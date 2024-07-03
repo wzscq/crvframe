@@ -62,6 +62,7 @@ type Query struct {
 	UserRoles  string                  `json:"userRoles"`
 	Distinct   bool                    `json:"distinct"`
 	NoCount    bool                    `json:"noCount"`
+	UserID     string                  `json:"userID"`
 }
 
 func (query *Query) getQueryFields(permissionFields string) (string, int) {
@@ -221,7 +222,7 @@ func (query *Query) getCountAndSummaries(
 	return count, summaries, common.ResultSuccess
 }
 
-func (query *Query) getSqlParam(withPermission bool) (*sqlParam, int) {
+func (query *Query) getSqlParam(withPermission bool,dataRepository DataRepository) (*sqlParam, int) {
 	var sqlParam sqlParam
 	var errorCode int
 
@@ -234,6 +235,30 @@ func (query *Query) getSqlParam(withPermission bool) (*sqlParam, int) {
 		permissionDataset, errorCode = definition.GetUserDataset(query.AppDB, query.ModelID, query.UserRoles, definition.DATA_OP_TYPE_QUERY)
 		if errorCode != common.ResultSuccess {
 			return nil, errorCode
+		}
+		//这是补充的代码，用于处理数据权限中的过滤条件
+		if permissionDataset.Filter != nil {
+			var filterData *[]FilterDataItem
+			if(permissionDataset.FilterData != nil){
+				var err error
+				filterData,err=ConvertToFileterData(permissionDataset.FilterData)
+				if err != nil {
+					return nil, common.ResultWrongFilterDataInDataset
+				}
+			}
+
+			errorCode = processFilter(
+				permissionDataset.Filter,
+				filterData,
+				nil,
+				query.UserID,
+				query.UserRoles,
+				query.AppDB,
+				dataRepository)
+
+			if errorCode != common.ResultSuccess {
+				return nil, errorCode
+			}
 		}
 	}
 
@@ -271,7 +296,7 @@ func (query *Query) query(dataRepository DataRepository, withPermission bool) (*
 	}
 
 	var sqlParam *sqlParam
-	sqlParam, errorCode = query.getSqlParam(withPermission)
+	sqlParam, errorCode = query.getSqlParam(withPermission, dataRepository)
 	if errorCode != common.ResultSuccess {
 		return result, errorCode
 	}
@@ -316,7 +341,7 @@ func (query *Query) Execute(dataRepository DataRepository, withPermission bool) 
 	result, errorCode := query.query(dataRepository, withPermission)
 
 	//查询关联表数据
-	if errorCode == common.ResultSuccess && result.Total > 0 {
+	if errorCode == common.ResultSuccess && result.List!=nil && len(result.List) > 0 {
 		errorCode = query.queryRelatedModels(dataRepository, result)
 	}
 

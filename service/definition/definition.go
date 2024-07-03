@@ -19,6 +19,7 @@ type Dataset struct {
 	Fields        string                  `json:"fields"`
 	QueryRoles    *interface{}            `json:"queryRoles"`
 	MutationRoles *interface{}            `json:"mutationRoles"`
+	FilterData	  *[]interface{}       	  `json:"filterData"`
 }
 
 type ModelDataSet struct {
@@ -39,6 +40,7 @@ func MergeDatasets(datasets []Dataset) *Dataset {
 	//一组dataset中的字段和过滤条件合并到一个dataset中
 	filter := &[]interface{}{}
 	fields := ""
+	filterData := []interface{}{}
 	for dsIndex := range datasets {
 		dataset := datasets[dsIndex]
 		//所有数据集中如果存在不附带查询条件的，则其他数据集携带的条件可以忽略
@@ -48,6 +50,10 @@ func MergeDatasets(datasets []Dataset) *Dataset {
 			} else {
 				filter = nil
 			}
+		}
+
+		if dataset.FilterData != nil && len(*(dataset.FilterData)) > 0 {
+			filterData = append(filterData, *(dataset.FilterData)...)
 		}
 
 		//所有数据集中如果存在不规定查询字段的，则其他数据集的查询字段限制可以忽略
@@ -63,6 +69,7 @@ func MergeDatasets(datasets []Dataset) *Dataset {
 	dataset := Dataset{
 		Filter: nil,
 		Fields: fields,
+		FilterData: &filterData,
 	}
 
 	if filter != nil {

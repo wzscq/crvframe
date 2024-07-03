@@ -78,7 +78,7 @@ func (queryOneToMany *QueryOneToMany) query(dataRepository DataRepository, paren
 		Sorter:     refField.Sorter,
 		UserRoles:  queryOneToMany.UserRoles,
 	}
-	result, errorCode := refQuery.Execute(dataRepository, true)
+	result, errorCode := refQuery.Execute(dataRepository, false)
 	//更新查询结果到父级数据列表中
 	if errorCode == common.ResultSuccess {
 		queryOneToMany.mergeResult(parentList, result, refField)

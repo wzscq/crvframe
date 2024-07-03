@@ -16,3 +16,4 @@ type LoginCache interface {
 type AppCache interface {
 	GetAppDB(appID string) (string, error)
 }
+

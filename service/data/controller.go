@@ -2,17 +2,12 @@ package data
 
 import (
 	"crv/frame/common"
+	//"crv/frame/definition"
 	"github.com/gin-gonic/gin"
 	"log/slog"
 	"net/http"
 	"net/url"
 )
-
-type FilterDataItem struct {
-	ModelID string                  `json:"modelID"`
-	Filter  *map[string]interface{} `json:"filter"`
-	Fields  *[]Field                `json:"fields"`
-}
 
 type CommonReq struct {
 	ModelID          string                    `json:"modelID"`
@@ -26,6 +21,12 @@ type CommonReq struct {
 	SelectedRowKeys  *[]string                 `json:"selectedRowKeys"`
 	Pagination       *Pagination               `json:"pagination"`
 	SelectAll        bool                      `json:"selectedAll"`
+}
+
+type FilterDataItem struct {
+	ModelID string                  `json:"modelID"`
+	Filter  *map[string]interface{} `json:"filter"`
+	Fields  *[]Field                `json:"fields"`
 }
 
 type DataController struct {
@@ -47,6 +48,39 @@ func (controller *DataController) query(c *gin.Context) {
 		slog.Error(err.Error())
 		errorCode = common.ResultWrongRequest
 	} else {
+		//补充filterData数据，暂时放在最外层做权限控制，内部不再做权限控制
+		/*var permissionDataset *definition.Dataset
+		permissionDataset, errorCode = definition.GetUserDataset(appDB, req.ModelID, userRoles, definition.DATA_OP_TYPE_QUERY)
+		if errorCode != common.ResultSuccess {
+			rsp := common.CreateResponse(common.CreateError(errorCode, nil), result)
+			c.IndentedJSON(http.StatusOK, rsp)
+			slog.Debug("end data query with error")
+			return
+		}
+
+		if permissionDataset.Filter != nil {
+			var filterData *[]FilterDataItem
+			if(permissionDataset.FilterData != nil){
+				filterData,err=ConvertToFileterData(permissionDataset.FilterData)
+			}
+
+			errorCode = processFilter(
+				permissionDataset.Filter,
+				filterData,
+				req.GlobalFilterData,
+				userID,
+				userRoles,
+				appDB,
+				controller.DataRepository)
+
+			if errorCode != common.ResultSuccess {
+				rsp := common.CreateResponse(common.CreateError(errorCode, nil), result)
+				c.IndentedJSON(http.StatusOK, rsp)
+				slog.Debug("end data query with error")
+				return
+			}
+		}*/
+	
 		errorCode = processFilter(
 			req.Filter,
 			req.FilterData,
@@ -57,16 +91,27 @@ func (controller *DataController) query(c *gin.Context) {
 			controller.DataRepository)
 
 		if errorCode == common.ResultSuccess {
+			filter:=req.Filter
+			/*if permissionDataset.Filter != nil {
+				filter = &map[string]interface{}{
+					Op_and: []interface{}{
+						*filter,
+						*permissionDataset.Filter,
+					},
+				}
+			}*/
+
 			//ReplaceArrayValue(rep.Filter,rep.Fields)
 			query := &Query{
 				ModelID:    req.ModelID,
 				ViewID:     req.ViewID,
 				Pagination: req.Pagination,
-				Filter:     req.Filter,
+				Filter:     filter,
 				Fields:     req.Fields,
 				AppDB:      appDB,
 				Sorter:     req.Sorter,
 				UserRoles:  userRoles,
+				UserID:     userID,
 			}
 			result, errorCode = query.Execute(controller.DataRepository, true)
 		}

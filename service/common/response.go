@@ -66,6 +66,8 @@ const (
 	ResultOpenAppFileError           = 10000048
 	ResultBadExternalApiUrl		     = 10000049
 	ResultGetOAuthConfError		     = 10000050
+	//注意这里10000051分配给前端接口断开错误
+	ResultWrongFilterDataInDataset   = 10000052
 	//这里注意10000051分配给前端接口断开错误
 
 	ResultStartFlowWithoutID     = 10100001
@@ -366,6 +368,11 @@ var errMsg = map[int]CommonRsp{
 	ResultGetOAuthConfError: CommonRsp{
 		ErrorCode: ResultGetOAuthConfError,
 		Message:   "获取OAuth配置失败，请与管理员联系处理",
+		Error:     true,
+	},
+	ResultWrongFilterDataInDataset: CommonRsp{
+		ErrorCode: ResultWrongFilterDataInDataset,
+		Message:   "数据集中的数据权限设置错误，请与管理员联系处理",
 		Error:     true,
 	},
 }

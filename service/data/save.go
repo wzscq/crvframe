@@ -429,6 +429,31 @@ func (save *Save) SaveList(dataRepository DataRepository, tx *sql.Tx) (*saveResu
 		return nil, errorCode
 	}
 
+	//这是补充的代码，用于处理数据权限中的过滤条件
+	if permissionDataset.Filter != nil {
+		var filterData *[]FilterDataItem
+		if(permissionDataset.FilterData != nil){
+			var err error
+			filterData,err=ConvertToFileterData(permissionDataset.FilterData)
+			if err != nil {
+				return nil, common.ResultWrongFilterDataInDataset
+			}
+		}
+
+		errorCode = processFilter(
+			permissionDataset.Filter,
+			filterData,
+			nil,
+			save.UserID,
+			save.UserRoles,
+			save.AppDB,
+			dataRepository)
+
+		if errorCode != common.ResultSuccess {
+			return nil, errorCode
+		}
+	}
+
 	var total int = 0
 	var resList []map[string]interface{}
 	for _, row := range *(save.List) {

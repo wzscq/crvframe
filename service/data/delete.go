@@ -25,9 +25,36 @@ func (delete *Delete) getPermissionIds(dataRepository DataRepository) (*[]string
 		return nil, errorCode
 	}
 
-	if permissionDataset.Filter == nil && delete.SelectAll == false {
+	//这里本来是考虑SelectAll为false是，是按照勾选记录ID删除，可以不做权限过滤，
+	//但是在渗透测试中需要考虑手工修改ID的情况，所以还是需要权限过滤
+	if permissionDataset.Filter == nil /*&& delete.SelectAll == false*/ {
 		slog.Debug("end getPermissionIds with nil filter")
 		return delete.SelectedRowKeys,common.ResultSuccess
+	}
+
+	//这是补充的代码，用于处理数据权限中的过滤条件
+	if permissionDataset.Filter != nil {
+		var filterData *[]FilterDataItem
+		if(permissionDataset.FilterData != nil){
+			var err error
+			filterData,err=ConvertToFileterData(permissionDataset.FilterData)
+			if err != nil {
+				return nil, common.ResultWrongFilterDataInDataset
+			}
+		}
+
+		errorCode = processFilter(
+			permissionDataset.Filter,
+			filterData,
+			nil,
+			delete.UserID,
+			delete.UserRoles,
+			delete.AppDB,
+			dataRepository)
+
+		if errorCode != common.ResultSuccess {
+			return nil, errorCode
+		}
 	}
 
 	var filter *map[string]interface{}

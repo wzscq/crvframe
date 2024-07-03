@@ -138,6 +138,32 @@ func (update *Update) update(dataRepository DataRepository, tx *sql.Tx) (*map[st
 	if errorCode != common.ResultSuccess {
 		return nil, errorCode
 	}
+
+	//这是补充的代码，用于处理数据权限中的过滤条件
+	if permissionDataset.Filter != nil {
+		var filterData *[]FilterDataItem
+		if(permissionDataset.FilterData != nil){
+			var err error
+			filterData,err=ConvertToFileterData(permissionDataset.FilterData)
+			if err != nil {
+				return nil, common.ResultWrongFilterDataInDataset
+			}
+		}
+
+		errorCode = processFilter(
+			permissionDataset.Filter,
+			filterData,
+			nil,
+			update.UserID,
+			update.UserRoles,
+			update.AppDB,
+			dataRepository)
+
+		if errorCode != common.ResultSuccess {
+			return nil, errorCode
+		}
+	}
+
 	//获取更新数据的过滤条件
 	updateFilter := update.getUpdateFilter()
 	//获取更新字段
