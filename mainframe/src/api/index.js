@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { message } from 'antd';
 import sha256 from 'crypto-js/sha256';
+import CryptoJs from 'crypto-js';
 
 import {parseUrl} from '../utils/urlParser';
 import {userInfoStorage} from '../utils/sessionStorage';
@@ -9,6 +10,35 @@ import {
   FRAME_MESSAGE_TYPE
 } from "../operation/constant";
 import {getLocaleLabel} from '../utils/localeResources';
+
+const _22 = ()=>{
+  return "1qaz@WSX";
+}
+
+const _11 = ()=>{
+  return "3edc$RFV";
+}
+
+export const encrypt=(str, key)=>{
+  key = CryptoJs.enc.Utf8.parse(key);
+  let iv = CryptoJs.enc.Utf8.parse("1234567812345678");
+  let encrypted = CryptoJs.AES.encrypt(str, key, {
+    iv: iv,
+    padding: CryptoJs.pad.Pkcs7
+  });
+  return encrypted.toString();
+}
+
+export const decrypt=(str, key)=>{
+  console.log('decrypt',str,key)
+  key = CryptoJs.enc.Utf8.parse(key);
+  let iv = CryptoJs.enc.Utf8.parse("1234567812345678");
+  let encrypted = CryptoJs.AES.decrypt(str.toString(), key, {
+    iv: iv,
+    padding: CryptoJs.pad.Pkcs7
+  });
+  return encrypted.toString(CryptoJs.enc.Utf8);
+}
 
 const decodeToken=(token)=>{
   //从token中获取偶数位字符组成新的字符串
@@ -20,12 +50,13 @@ const decodeToken=(token)=>{
     }
     decodedToken += token[i];
   }
-  return decodedToken;
+  //return decodedToken;
+  return decrypt(token,_22()+_22());
 }
 
 const encodeToken=(token,data)=>{
   token=decodeToken(token);
-
+ 
   let dataStr="";
   if(typeof data === "object" ){
     dataStr=JSON.stringify(data)
@@ -40,6 +71,10 @@ const encodeToken=(token,data)=>{
       newToken += sum.charAt(i);
       newToken += token.charAt(i);
   }
+
+  //加密
+  newToken=encrypt(newToken,_11()+_11());
+
   return newToken;
 }
 

@@ -1,7 +1,6 @@
 import { lazy,Suspense } from 'react'; 
 import {HashRouter,Routes,Route} from "react-router-dom"; 
 import { Provider } from 'react-redux';
-
 import store from './redux';
 //import Login from './pages/Login';
 //import OAuthLogin from './pages/OAuthLogin';
@@ -20,6 +19,8 @@ const OAuthLogin = lazy(() => import('./pages/OAuthLogin'));
 const OAuthBack = lazy(() => import('./pages/OAuthBack'));
 const MainFrame = lazy(() => import('./pages/MainFrame'));
 const MenuGroup = lazy(() => import('./pages/MenuGroup'));
+
+
 
 function App() {
   if(getCheckBrower()==='true'){
