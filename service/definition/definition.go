@@ -20,11 +20,14 @@ type Dataset struct {
 	QueryRoles    *interface{}            `json:"queryRoles"`
 	MutationRoles *interface{}            `json:"mutationRoles"`
 	FilterData	  *[]interface{}       	  `json:"filterData"`
+	NeedFilterProcess    bool             `json:"needFilterProcess"`
+	NeedFilterData bool                   `json:"needFilterData"`
 }
 
 type ModelDataSet struct {
 	ModelID  string    `json:"modelID"`
 	Datasets []Dataset `json:"datasets"`
+	FilterData	  *[]interface{}  `json:"filterData"`
 }
 
 const (
@@ -38,22 +41,19 @@ const (
 
 func MergeDatasets(datasets []Dataset) *Dataset {
 	//一组dataset中的字段和过滤条件合并到一个dataset中
-	filter := &[]interface{}{}
+	filter := []map[string]interface{}{}
 	fields := ""
-	filterData := []interface{}{}
+	needFilterData:=false
+	needFilterProcess:=false
 	for dsIndex := range datasets {
 		dataset := datasets[dsIndex]
 		//所有数据集中如果存在不附带查询条件的，则其他数据集携带的条件可以忽略
 		if filter != nil {
 			if dataset.Filter != nil && len(*(dataset.Filter)) > 0 {
-				(*filter) = append((*filter), *(dataset.Filter))
+				filter = append(filter, *(dataset.Filter))
 			} else {
 				filter = nil
 			}
-		}
-
-		if dataset.FilterData != nil && len(*(dataset.FilterData)) > 0 {
-			filterData = append(filterData, *(dataset.FilterData)...)
 		}
 
 		//所有数据集中如果存在不规定查询字段的，则其他数据集的查询字段限制可以忽略
@@ -64,17 +64,30 @@ func MergeDatasets(datasets []Dataset) *Dataset {
 				fields = fields + "," + dataset.Fields
 			}
 		}
+
+		if dataset.NeedFilterData {
+			needFilterData=true
+		}
+
+		if dataset.NeedFilterProcess {
+			needFilterProcess=true
+		
+		}
 	}
 
 	dataset := Dataset{
-		Filter: nil,
 		Fields: fields,
-		FilterData: &filterData,
+		NeedFilterData:needFilterData,
+		NeedFilterProcess:needFilterProcess,
 	}
 
-	if filter != nil {
-		dataset.Filter = &map[string]interface{}{
-			Op_or: *filter,
+	if len(filter) > 0 {
+		if len(filter) > 1 {
+			dataset.Filter = &map[string]interface{}{
+				Op_or: filter,
+			}
+		} else {
+			dataset.Filter = &filter[0]
 		}
 	}
 
@@ -129,6 +142,10 @@ func GetUserDataset(appDB string, modelID string, userRoles string, opType strin
 
 	//合并为一个数据集对象
 	dataset := MergeDatasets(modelDataset.Datasets)
+
+	if dataset.NeedFilterData == true {
+		dataset.FilterData=modelDataset.FilterData
+	}
 
 	if dataset.Filter != nil {
 		slog.Debug("dataset.Filter", "filter", dataset.Filter)

@@ -134,13 +134,13 @@ func (update *Update) getUpdateFields(permissionFields string) (string, int) {
 
 func (update *Update) update(dataRepository DataRepository, tx *sql.Tx) (*map[string]interface{}, int) {
 	//获取数据操作权限
-	permissionDataset, errorCode := definition.GetUserDataset(update.AppDB, update.ModelID, update.UserRoles, definition.DATA_OP_TYPE_QUERY)
+	permissionDataset, errorCode := definition.GetUserDataset(update.AppDB, update.ModelID, update.UserRoles, definition.DATA_OP_TYPE_MUTATION)
 	if errorCode != common.ResultSuccess {
 		return nil, errorCode
 	}
 
 	//这是补充的代码，用于处理数据权限中的过滤条件
-	if permissionDataset.Filter != nil {
+	if permissionDataset.Filter != nil && permissionDataset.NeedFilterProcess == true {
 		var filterData *[]FilterDataItem
 		if(permissionDataset.FilterData != nil){
 			var err error
