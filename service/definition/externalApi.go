@@ -71,8 +71,9 @@ func GetApiUrl(appDB, apiId,userRoles string) (string, int) {
 				return api.Url,common.ResultSuccess
 			}
 		}
+		return "",common.ResultNoPermission
 	}
-
+	
 	slog.Debug("end getApiUrl ", "url", api.Url)
-	return api.Url, common.ResultNoPermission
+	return api.Url, common.ResultSuccess
 }
