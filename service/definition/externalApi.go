@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"log/slog"
 	"os"
+	"strings"
 )
 
 type apiItem struct {
 	Url string `json:"url"`
+	Rolse *[]string `json:"roles"`
 }
 
 func GetApiConfig(appDB, apiId string) (map[string]interface{}, int) {
@@ -38,7 +40,7 @@ func GetApiConfig(appDB, apiId string) (map[string]interface{}, int) {
 	return api.(map[string]interface{}), common.ResultSuccess
 }
 
-func GetApiUrl(appDB, apiId string) (string, int) {
+func GetApiUrl(appDB, apiId,userRoles string) (string, int) {
 	slog.Debug("start getApiUrl ")
 	apiConfigFile := "apps/" + appDB + "/external_api.json"
 	filePtr, err := os.Open(apiConfigFile)
@@ -61,6 +63,16 @@ func GetApiUrl(appDB, apiId string) (string, int) {
 		slog.Error("ResultNoExternalApiUrl")
 		return "", common.ResultNoExternalApiUrl
 	}
+
+	if api.Rolse != nil && len(*api.Rolse) > 0 {
+		userRoles = "," + userRoles + ","
+		for _,role := range *api.Rolse {
+			if strings.Contains(userRoles, ","+role+",") {
+				return api.Url,common.ResultSuccess
+			}
+		}
+	}
+
 	slog.Debug("end getApiUrl ", "url", api.Url)
-	return api.Url, common.ResultSuccess
+	return api.Url, common.ResultNoPermission
 }

@@ -85,7 +85,7 @@ func (controller *RedirectController) redirect(c *gin.Context) {
 	}
 
 	//get url
-	postUrl, errorCode := definition.GetApiUrl(appDB, *rep.To)
+	postUrl, errorCode := definition.GetApiUrl(appDB, *rep.To,userRoles)
 	if errorCode != common.ResultSuccess {
 		rsp := common.CreateResponse(common.CreateError(errorCode, nil), nil)
 		c.IndentedJSON(http.StatusOK, rsp)

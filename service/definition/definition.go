@@ -138,6 +138,8 @@ func GetUserDataset(appDB string, modelID string, userRoles string, opType strin
 		return nil, common.ResultNoPermission
 	}
 
+	slog.Error("end GetUserDataset no permission with parameters", "appDB", appDB, "modelID", modelID, "userRoles", userRoles, "opType", opType,"dsCount",dsCount)
+
 	modelDataset.Datasets = modelDataset.Datasets[:dsCount]
 
 	//合并为一个数据集对象
