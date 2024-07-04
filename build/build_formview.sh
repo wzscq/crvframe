@@ -23,6 +23,10 @@ fi
 rm -rf ../formview/build/tinymce
 rm -rf ../formview/build/asset-manifest.json
 rm -rf ../formview/build/manifest.json
+rm -rf ../formview/build/robots.txt
+rm -rf ../formview/build/favicon.ico
+rm -rf ../formview/build/logo192.png
+rm -rf ../formview/build/logo512.png
 
 mv ../formview/build ./package/web/formview
 

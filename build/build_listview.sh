@@ -19,6 +19,13 @@ if [ -e package/web/listview ]; then
   rm -rf package/web/listview
 fi
 
+rm -rf ../listview/build/asset-manifest.json
+rm -rf ../listview/build/manifest.json
+rm -rf ../listview/build/robots.txt
+rm -rf ../listview/build/favicon.ico
+rm -rf ../listview/build/logo192.png
+rm -rf ../listview/build/logo512.png
+
 mv ../listview/build ./package/web/listview
 
 echo listview package build over.

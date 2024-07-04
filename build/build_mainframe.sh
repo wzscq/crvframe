@@ -20,6 +20,13 @@ if [ -e package/web/mainframe ]; then
   rm -rf package/web/mainframe
 fi
 
+rm -rf ../mainframe/build/asset-manifest.json
+rm -rf ../mainframe/build/manifest.json
+rm -rf ../mainframe/build/robots.txt
+rm -rf ../mainframe/build/favicon.ico
+rm -rf ../mainframe/build/logo192.png
+rm -rf ../mainframe/build/logo512.png
+
 mv ../mainframe/build ./package/web/mainframe
 
 echo mainframe package build over.
