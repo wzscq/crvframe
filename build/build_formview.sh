@@ -20,6 +20,10 @@ if [ -e package/web/formview ]; then
   rm -rf package/web/formview
 fi
 
+rm -rf ../formview/build/tinymce
+rm -rf ../formview/build/asset-manifest.json
+rm -rf ../formview/build/manifest.json
+
 mv ../formview/build ./package/web/formview
 
 echo formview package build over.
