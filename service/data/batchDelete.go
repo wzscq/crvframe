@@ -18,10 +18,35 @@ type BatchDelete struct {
 	Fields     *[]Field       `json:"fields"`
 }
 
-func (delete *BatchDelete) getWhere() (string, int) {
+func (delete *BatchDelete) getWhere(dataRepository DataRepository) (string, int) {
 	permissionDataset, errorCode := definition.GetUserDataset(delete.AppDB, delete.ModelID, delete.UserRoles, definition.DATA_OP_TYPE_MUTATION)
 	if errorCode != common.ResultSuccess {
 		return "", errorCode
+	}
+
+	//这是补充的代码，用于处理数据权限中的过滤条件
+	if permissionDataset.Filter != nil && permissionDataset.NeedFilterProcess == true {
+		var filterData *[]FilterDataItem
+		if(permissionDataset.FilterData != nil){
+			var err error
+			filterData,err=ConvertToFileterData(permissionDataset.FilterData)
+			if err != nil {
+				return "", common.ResultWrongFilterDataInDataset
+			}
+		}
+
+		errorCode = processFilter(
+			permissionDataset.Filter,
+			filterData,
+			nil,
+			delete.UserID,
+			delete.UserRoles,
+			delete.AppDB,
+			dataRepository)
+
+		if errorCode != common.ResultSuccess {
+			return "", errorCode
+		}
 	}
 
 	var filter *map[string]interface{}
@@ -62,7 +87,7 @@ func (delete *BatchDelete) getWhere() (string, int) {
 
 func (delete *BatchDelete) delete(dataRepository DataRepository, tx *sql.Tx) (*map[string]interface{}, int) {
 	//获取所有待删数据查询条件
-	sWhere,errorCode:=delete.getWhere()
+	sWhere,errorCode:=delete.getWhere(dataRepository)
 	if errorCode != common.ResultSuccess {
 		return nil, errorCode
 	}
