@@ -26,7 +26,7 @@ mkdir /root/mysql/log
 镜像s：1qaz@WSX
 
 上传mysql配置文件mysql.cnf到服务器目录/root/mysql/conf下
-docker run --name mysql -e MYSQL_ROOT_PASSWORD=123456 -v /root/mysql/data:/var/lib/mysql -v /root/mysql/log:/var/log/mysql -p 4306:3306 -v /root/mysql/conf:/etc/mysql/conf.d -d  mysql:8.0.18
+docker run --name mysql -e MYSQL_ROOT_PASSWORD=1qaz@WSX -v /root/mysql/data:/var/lib/mysql -v /root/mysql/log:/var/log/mysql -p 4306:3306 -v /root/mysql/conf:/etc/mysql/conf.d -d  mysql:8.0.18
 
 install redis
 mkdir /root/redis

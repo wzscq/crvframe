@@ -32,6 +32,27 @@ export default function Summarizes(){
     if(searchFields.length>0){
       const querySummaizesData=()=>{
         let queryFilter={...filter};
+
+        //这里因为前端文本字段增加了空值的查询，查询空值时，字段的条件中带了Op.or，这里需要把带Op.or的条件展开一下
+        //首先去掉带Op.or的条件
+        const filterFields=Object.keys(queryFilter);
+        if(filterFields.length>0){
+            const opOrFilter=[];
+            filterFields.forEach(key=>{
+                if(queryFilter[key]['Op.or']){
+                    opOrFilter.push({...queryFilter[key]});
+                    delete queryFilter[key];
+                    
+                }
+            });
+
+            if(opOrFilter.length>0){
+                queryFilter['Op.and']=opOrFilter;
+            }
+        }
+        //处理Op.or结束
+
+
         let relatedFilter=[];
         let filterData=viewConf.filterData;
 

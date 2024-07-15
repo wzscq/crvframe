@@ -98,11 +98,14 @@ func convertObjectFilter(filter *map[string]interface{}, fields *[]Field, modelI
 			switch key {
 			case Op_or:
 				mVal, _ := value.([]interface{})
+				slog.Debug("convertObjectFilter", "key",key,"value", value)
 				str, err = convertArrayFilter("or", mVal, fields, modelID)
 			case Op_and:
+				slog.Debug("convertObjectFilter", "key",key,"value", value)
 				mVal, _ := value.([]interface{})
 				str, err = convertArrayFilter("and", mVal, fields, modelID)
 			default:
+				slog.Debug("convertObjectFilter", "key",key,"value", value)
 				//字段
 				str, err = convertFieldFilter(key, value, fields, modelID)
 			}
@@ -125,7 +128,7 @@ func convertObjectFilter(filter *map[string]interface{}, fields *[]Field, modelI
 
 func convertArrayFilter(logicOp string, value []interface{}, fields *[]Field, modelID string) (string, int) {
 
-	slog.Debug("convertArrayFilter", "value", value)
+	slog.Debug("convertArrayFilter", "logicOp",logicOp,"value", value)
 	if len(value) == 0 {
 		return "", common.ResultQueryWrongFilter
 	}

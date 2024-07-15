@@ -70,6 +70,8 @@
             "page.crvformview.downloadFile":"下载文件",
             "page.crvformview.requiredField":"必填字段",
             "page.crvformview.notSurpportedPreviewFileType":"不支持的文件类型",
+            "page.crvlistview.emptyValue":"空值",
+            "page.crvlistview.filterEmptyValue":"筛选空值",
             "page.report.refresh":"刷新",
             "error.10000000":"操作成功",
             "error.10000001":"请求参数错误，请检查参数是否完整，参数格式是否正确",
@@ -122,7 +124,8 @@
             "error.10000048":"读取文件失败，请与管理员联系处理",
             "error.10000049":"调用外部API时提供的API配置不正确，请与管理员联系处理",
             "error.10000050":"获取OAuth配置失败，请与管理员联系处理",
-            "error.10000051":"请求接口时发生错误，请与管理员联系处理"
+            "error.10000051":"请求接口时发生错误，请与管理员联系处理",
+            "error.10000052":"数据集中的数据权限设置错误，请与管理员联系处理"
         },
         "en_US":{
             "page.login.login":"Login",
@@ -189,6 +192,8 @@
             "page.crvformview.downloadFile":"Download file",
             "page.crvformview.requiredField":"Required Field",
             "page.crvformview.notSurpportedPreviewFileType":"not surpported preview file type",
+            "page.crvlistview.emptyValue":"empty",
+            "page.crvlistview.filterEmptyValue":"empty value",
             "page.report.refresh":"Refresh",
             "error.10000000":"success",
             "error.10000001":"parameters of the request is not correct.",
@@ -241,7 +246,8 @@
             "error.10000048":"Failed to read the file，please contact the administrator for help.",
             "error.10000049":"The API configuration is incorrect, please contact the administrator for handling.",
             "error.10000050":"Failed to get the OAuth configuration, please contact the administrator for handling.",
-            "error.10000051":"Failed to request the interface, please contact the administrator for handling."
+            "error.10000051":"Failed to request the interface, please contact the administrator for handling.",
+            "error.10000052":"The data permission setting of the dataset is wrong, please contact the administrator for handling."
         }
     }
 }

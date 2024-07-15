@@ -197,6 +197,24 @@ export default function ListTable({sendMessageToParent}){
             };*/
     
             let queryFilter={...filter};
+            
+            //这里因为前端文本字段增加了空值的查询，查询空值时，字段的条件中带了Op.or，这里需要把带Op.or的条件展开一下
+            //首先去掉带Op.or的条件
+            const filterFields=Object.keys(queryFilter);
+            if(filterFields.length>0){
+                const opOrFilter=[];
+                filterFields.forEach(key=>{
+                    if(queryFilter[key]['Op.or']){
+                        opOrFilter.push({...queryFilter[key]});
+                        delete queryFilter[key];
+                    }
+                });
+
+                if(opOrFilter.length>0){
+                    queryFilter['Op.and']=opOrFilter;
+                }
+            }
+            //处理Op.or结束
             let relatedFilter=[];
             //合并视图本身的过滤条件
             if(viewConf.filter&&Object.keys(viewConf.filter).length>0){
@@ -232,6 +250,9 @@ export default function ListTable({sendMessageToParent}){
                     }
                 }
             }
+
+            console.log('opOrFilter:4',queryFilter);
+
             /*//合并视图本身的过滤条件
             if(viewConf.filter&&Object.keys(viewConf.filter).length>0){
                 if(Object.keys(filter).length>0){

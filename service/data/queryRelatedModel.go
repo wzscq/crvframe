@@ -1,5 +1,9 @@
 package data
 
+import (
+	//"log/slog"
+)
+
 const (
 	FIELDTYPE_MANY2MANY = "many2many"
 	FIELDTYPE_MANY2ONE  = "many2one"
@@ -57,6 +61,7 @@ func GetFieldValues(res *QueryResult, fieldName string) []string {
 	var valList []string
 	for _, row := range res.List {
 		if row[fieldName] != nil {
+			//slog.Info("Field value: ","fieldName",fieldName, "value",row[fieldName])
 			sVal := row[fieldName].(string)
 			valList = append(valList, sVal)
 		}

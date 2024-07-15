@@ -2,6 +2,7 @@ package data
 
 import (
 	"crv/frame/common"
+	//"log/slog"
 )
 
 type QueryManyToOne struct {
@@ -68,6 +69,7 @@ func (queryManyToOne *QueryManyToOne) query(dataRepository DataRepository, paren
 	if refField.RelatedModelID == nil {
 		return common.ResultNoRelatedModel
 	}
+	//slog.Info("queryManyToOne", "query", "queryManyToOne","parentList",parentList,"refField",refField)
 	filter := queryManyToOne.getFilter(parentList, refField)
 
 	if filter == nil {
