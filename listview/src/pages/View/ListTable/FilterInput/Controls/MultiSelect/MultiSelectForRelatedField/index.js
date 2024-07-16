@@ -14,6 +14,11 @@ export default function MultiSelectForRelatedField({field,filterValue,onFilterCh
     const [options,setOptions]=useState([]);
     
     const onChange=(value,option)=>{
+        //这里的值如果不是数组的话，则替换为null
+        if(value===undefined||value===null||value.length===0){
+            onFilterChange(null,null);
+            return;
+        }
         //这里的value是一个数组，对于查询来说需要将这个数组替换为一个Op.in的查询
         const filterVal={
             'Op.in':value

@@ -25,6 +25,10 @@ export default function FilterInput({sendMessageToParent,field,confirm}){
     }
 
     const onSearch=useCallback(()=>{
+        //这里需要判断一下是否有值，如果没有值则不需要设置
+        if(filterValue===null||filterValue===undefined){
+            return;
+        }
         confirm();
         dispatch(setFieldFilter({value:{[field.field]:filterValue},label:{[field.field]:filterLabel}}));
     },[field,filterValue,filterLabel,dispatch]);

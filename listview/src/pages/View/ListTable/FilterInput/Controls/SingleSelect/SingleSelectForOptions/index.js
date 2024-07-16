@@ -7,6 +7,10 @@ export default function SingleSelectForOptions({field,filterValue,onFilterChange
     const {getLocaleLabel}=useI18n();
 
     const onChange=(value,option)=>{
+        if(value===undefined||value===null){
+            onFilterChange(null,null);
+            return;
+        }
         onFilterChange(value,option.children);
     }
 

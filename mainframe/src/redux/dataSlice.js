@@ -153,6 +153,13 @@ export const dataSlice = createSlice({
         refreshData:(state,action) => {
             state.loaded=false;
         },
+        reset:(state,action)=>{
+            state.loaded=false;
+            state.origin={};
+            state.update={[defaultRowKey]:{}};
+            state.updated={[defaultRowKey]:{}};
+            state.errorField={};
+        }
     }
 });
 
@@ -165,6 +172,7 @@ export const {
     setErrorField,
     removeErrorField,
     refreshData,
+    reset
 } = dataSlice.actions
 
 export default dataSlice.reducer

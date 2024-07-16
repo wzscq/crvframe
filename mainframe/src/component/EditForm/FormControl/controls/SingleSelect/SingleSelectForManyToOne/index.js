@@ -406,7 +406,6 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
         style={{width:'100%',minWidth:control.minWidth?control.minWidth:100}}  
         placeholder={control.placeholder?control.placeholder:""} 
         value={updatedValue?updatedValue.value:updatedValue} 
-        allowClear
         showSearch
         disabled={control.disabled} 
         onSearch={onSearch}

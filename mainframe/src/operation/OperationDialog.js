@@ -25,6 +25,7 @@ import {
     confirm} from '../redux/operationSlice';
 import {openTab,closeAllTab,setActiveTab, closeTab} from '../redux/tabSlice';
 import {resetMenu} from '../redux/menuSlice';
+import {reset} from '../redux/dataSlice';
 import OpertaionItem from './OpertaionItem';
 import {info as logInfo} from '../redux/logSlice';
 import {parseUrl} from '../utils/urlParser';
@@ -91,6 +92,8 @@ export default function OperationDialog(){
         dispatch(closeAllTab());
         dispatch(resetMenu());
         dispatch(close());
+        console.log('doLogout',appID);
+        dispatch(reset());
 
         if(oauthLogin===true&&appConf?.oauth?.logoutUrl!==undefined){
             window.location.href = appConf.oauth.logoutUrl;
