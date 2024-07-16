@@ -111,7 +111,7 @@ export default function NotificationButton({getLocaleLabel,notificationConf}){
         const otherItemList=itemList.filter((dataItem)=>(dataItem.item.key!==item.key/*||list.find((newItem)=>newItem.id===dataItem.data.id)===undefined*/));
         let newItemList=list.map((dataItem)=>({data:dataItem,item:item}));
         newItemList=[...newItemList,...otherItemList];
-        //newItemList.sort((a,b)=>a.data.update_time>b.data.update_time?-1:1);
+        newItemList.sort((a,b)=>a.data.create_time>b.data.create_time?-1:1);
         setItemList([...newItemList]);
     },[itemList]);
 
