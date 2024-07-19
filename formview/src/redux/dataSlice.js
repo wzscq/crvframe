@@ -20,7 +20,7 @@ const initialState = {
 }
 
 //对原始数据中的每个行做转换，将数组转换为以ID为key的map，方便后续访问
-const convertListToMap=(row,controls)=>{
+const convertListToMap=(row,controls,index)=>{
     for (let controlIdx in controls){
         let {controls:subControls,field /*,modelID,fieldType,associationModelID*/}=controls[controlIdx];
         if(subControls&&field&&row[field]&&row[field].list){
@@ -29,10 +29,12 @@ const convertListToMap=(row,controls)=>{
                 ...row[field],
                 list:{}};
             for(let i=0;i<list.length;++i){
-                row[field].list[list[i][CC_COLUMNS.CC_ID]]=convertListToMap({...list[i]},subControls);
+                row[field].list[list[i][CC_COLUMNS.CC_ID]]=convertListToMap({...list[i]},subControls,i);
             }
         }
     }
+    //增加一个行号字段，用于标识行的原始顺序
+    row[CC_COLUMNS.CC_SN]=index;
     return row;
 }
 
@@ -95,6 +97,16 @@ const getUpdateNodes=(state,dataPath)=>{
     return {updateNode,updatedNode};
 }
 
+const getMaxSN=(updatedNode)=>{
+    let maxSN=-1;
+    Object.keys(updatedNode).forEach(key => {
+        if(updatedNode[key][CC_COLUMNS.CC_SN]&&updatedNode[key][CC_COLUMNS.CC_SN]>maxSN){
+            maxSN=updatedNode[key][CC_COLUMNS.CC_SN];
+        }
+    });
+    return maxSN++;
+}
+
 export const dataSlice = createSlice({
     name: 'data',
     initialState,
@@ -105,8 +117,8 @@ export const dataSlice = createSlice({
                 //把数组形式的列表转换成以ID为key值的map
                 //对于每一层级字段中的的list都要做转换
                 for(let i=0;i<list.length;++i){
-                    state.origin[list[i]['id']]=convertListToMap({...(list[i])},controls);
-                    state.updated[list[i]['id']]=convertListToMap({...(list[i])},controls);
+                    state.origin[list[i]['id']]=convertListToMap({...(list[i])},controls,i);
+                    state.updated[list[i]['id']]=convertListToMap({...(list[i])},controls,i);
                 }   
             }
             state.loaded=true;
@@ -123,11 +135,15 @@ export const dataSlice = createSlice({
                 const rowKey='__c__'+gRowIdx++;
                 if(dataPath.length>0){
                     const {updateNode,updatedNode}=getUpdateNodes(state,dataPath);
+                    //这里需要考虑新加入的数据行的顺序问题，这里的逻辑是新加入的数据行放在最后
+                    const maxSN=getMaxSN(updatedNode);
+                    
                     updateNode[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
-                    updatedNode[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
+                    updatedNode[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,[CC_COLUMNS.CC_SN]:maxSN,...initData};
                 } else {
+                    const maxSN=getMaxSN(state.updated);
                     state.update[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
-                    state.updated[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,...initData};
+                    state.updated[rowKey]={[CC_COLUMNS.CC_SAVE_TYPE]:SAVE_TYPE.CREATE,[CC_COLUMNS.CC_SN]:maxSN,...initData};
                 }
             }
         },

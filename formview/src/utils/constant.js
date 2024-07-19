@@ -61,7 +61,8 @@ export const CC_COLUMNS={
 	CC_UPDATE_TIME:"update_time",
 	CC_UPDATE_USER:"update_user",
 	CC_VERSION:"version",
-	CC_ID:"id"
+	CC_ID:"id",
+	CC_SN:"_ROW_SN"
 }
 
 //保存数据的类型

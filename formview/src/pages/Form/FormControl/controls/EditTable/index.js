@@ -13,6 +13,8 @@ import I18nLabel from '../../../../../component/I18nLabel';
 import './index.css';
 import { useCallback, useMemo } from 'react';
 
+import {CC_COLUMNS} from '../../../../../utils/constant';
+
 const selectUpdatedValue=(data,dataPath,field)=>{
     let updatedNode=data.updated;
     for(let i=0;i<dataPath.length;++i){
@@ -38,7 +40,11 @@ const makeSelector=()=>{
         selectUpdatedValue,
         selectValueError,
         (updatedValue,valueError)=>{
-            const rowKeys=updatedValue?.list?Object.keys(updatedValue.list):[];
+            let rowKeys=[];
+            if(updatedValue?.list){
+                rowKeys=Object.entries(updatedValue.list).sort((a,b)=>a[1][CC_COLUMNS.CC_SN]-b[1][CC_COLUMNS.CC_SN]).map(item=>item[0]);
+            }
+            //const rowKeys=updatedValue?.list?Object.keys(updatedValue.list):[];
             return {rowKeys,valueError};
         },
         {
