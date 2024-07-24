@@ -20,7 +20,7 @@ export default function Text({field,filterValue,onFilterChange}){
             ]}
             onFilterChange(value,label);
         } else {
-            onFilterChange('','');
+            onFilterChange(null,null);
         }
     }
 
