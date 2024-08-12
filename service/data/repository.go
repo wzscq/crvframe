@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"time"
 	"fmt"
+	"strings"
 )
 
 type DataRepository interface {
@@ -23,6 +24,8 @@ func (repo *DefatultDataRepository) Begin() (*sql.Tx, error) {
 }
 
 func (repo *DefatultDataRepository) ExecWithTx(sql string, tx *sql.Tx) (int64, int64, error) {
+	//替换sql语句中的转义字符
+	sql = strings.Replace(sql, "\\", "\\\\", -1) // -1 表示替换所有匹配项
 	slog.Info(sql)
 	res, err := tx.Exec(sql)
 	if err != nil {
