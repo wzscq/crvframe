@@ -280,7 +280,7 @@ func getFilterData(
 	//循环查询每个filterData的数据
 	for _, item := range *filterData {
 		if item.Filter != nil {
-			replaceFilterVar(item.Filter, nil, globalFilterData, userID, userRoles)
+			replaceFilterVar(item.Filter, &res, globalFilterData, userID, userRoles)
 		}
 
 		slog.Debug("getFilterData111", "item", item)

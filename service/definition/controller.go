@@ -61,7 +61,7 @@ func (controller *DefinitionController) getUserMenus(c *gin.Context) {
 	var rep getUserMenusRep
 	err := c.ShouldBindJSON(&rep)
 
-	if err == nil {
+	if err == nil && rep.MenuGroup != "" {
 		menuGroup = rep.MenuGroup
 	}
 
