@@ -42,7 +42,7 @@ func (delete *Delete) getPermissionIds(dataRepository DataRepository) (*[]string
 			}
 		}
 
-		errorCode = processFilter(
+		errorCode = ProcessFilter(
 			permissionDataset.Filter,
 			filterData,
 			nil,

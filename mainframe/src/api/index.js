@@ -395,6 +395,45 @@ export const queryReportData = ({frameParams,queryParams},errorCallback)=>{
   });
 }
 
+//通用的查询接口，用于报表数据查询
+const REPORT_GETPDF_URL="/report/getPdfKey";
+export const getPDFReport=({frameParams,queryParams},errorCallback)=>{
+  const {token}=userInfoStorage.get();
+  const config={
+    url:host+REPORT_GETPDF_URL,
+    method:'post',
+    data:{...queryParams},
+    headers:{token:encodeToken(token,queryParams)}
+  }
+  axios(config).then(function (response) {
+    console.log(response);
+    if(response.data.error===true){
+      //message.error(response.data.message);
+      errorCallback(response.data);
+    } else {
+      const {frameID,frameType,dataKey}=frameParams;
+      const frameControl=document.getElementById(frameType+"_"+frameID);
+      if(frameControl){
+          let fileName=response.headers['content-disposition'];
+          if(fileName){
+            fileName=fileName.substring("attachment;filename=".length);
+            fileName=decodeURI(fileName);
+          }
+
+          const origin=parseUrl(frameControl.getAttribute("src")).origin;
+          frameControl.contentWindow.postMessage({
+            type:FRAME_MESSAGE_TYPE.QUERY_RESPONSE,
+            dataKey:dataKey,
+            data:response.data.result},origin);
+      }
+    }
+  })
+  .catch(function (error) {
+    console.log(error);
+    message.error(getLocaleLabel({key:'message.main.queryDataError',default:'查询数据时发生错误'}));
+  });
+}
+
 //获取APP支持的语言种类信息，同时返回指定语言资源，
 //如果没有和给定语言对应的资源则返回默认的语言资源
 const DEF_I18N_URL="/appI18n/";

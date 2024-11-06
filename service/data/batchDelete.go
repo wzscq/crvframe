@@ -35,7 +35,7 @@ func (delete *BatchDelete) getWhere(dataRepository DataRepository) (string, int)
 			}
 		}
 
-		errorCode = processFilter(
+		errorCode = ProcessFilter(
 			permissionDataset.Filter,
 			filterData,
 			nil,

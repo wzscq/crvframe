@@ -69,6 +69,9 @@ const (
 	//注意这里10000051分配给前端接口断开错误
 	ResultWrongFilterDataInDataset   = 10000052
 	//这里注意10000051分配给前端接口断开错误
+	ResultCreatePdfReportError	   = 10000053
+	ResultSaveReportKeyError		 = 10000054
+	ResultGetReportDataError		 = 10000055
 
 	ResultStartFlowWithoutID     = 10100001
 	ResultCacheFlowInstanceError = 10100002
@@ -373,6 +376,21 @@ var errMsg = map[int]CommonRsp{
 	ResultWrongFilterDataInDataset: CommonRsp{
 		ErrorCode: ResultWrongFilterDataInDataset,
 		Message:   "数据集中的数据权限设置错误，请与管理员联系处理",
+		Error:     true,
+	},
+	ResultCreatePdfReportError: CommonRsp{
+		ErrorCode: ResultCreatePdfReportError,
+		Message:   "生成PDF报表失败，请与管理员联系处理",
+		Error:     true,
+	},
+	ResultSaveReportKeyError: CommonRsp{
+		ErrorCode: ResultSaveReportKeyError,
+		Message:   "保存报表Key失败，请与管理员联系处理",
+		Error:     true,
+	},
+	ResultGetReportDataError: CommonRsp{
+		ErrorCode: ResultGetReportDataError,
+		Message:   "获取报表数据失败，请与管理员联系处理",
 		Error:     true,
 	},
 }

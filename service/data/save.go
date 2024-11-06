@@ -440,7 +440,7 @@ func (save *Save) SaveList(dataRepository DataRepository, tx *sql.Tx) (*saveResu
 			}
 		}
 
-		errorCode = processFilter(
+		errorCode = ProcessFilter(
 			permissionDataset.Filter,
 			filterData,
 			nil,

@@ -30,7 +30,8 @@ func AuthMiddleware(loginCache LoginCache, appCache AppCache) gin.HandlerFunc {
 			strings.Index(c.Request.URL.Path, "/appI18n/") == 0 ||
 			strings.Index(c.Request.URL.Path, "/data/upload") == 0 ||
 			strings.Index(c.Request.URL.Path, "/data/downloadByKey") == 0 ||
-			strings.Index(c.Request.URL.Path, "/data/previewByKey") == 0 {
+			strings.Index(c.Request.URL.Path, "/data/previewByKey") == 0 ||
+			strings.Index(c.Request.URL.Path, "/report/getPdfByKey") == 0 {
 			params := strings.Split(c.Request.URL.Path, "/")
 			if len(params) > 2 {
 				appID := params[2]

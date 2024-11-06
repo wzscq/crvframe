@@ -18,6 +18,7 @@ import FilePreview from './FilePreview';
 import RSAEncryptText from './RSAEncryptText';
 import Html from './Html';
 import MultiSelect from './MultiSelect';
+import DynamicInput from './DynamicInput';
 /**
  * 以下为控件类型枚举常量定义
  */
@@ -41,7 +42,8 @@ import MultiSelect from './MultiSelect';
     FilePreview:"FilePreview",  //文件预览
     RSAEncryptText:"RSAEncryptText", //RSA加密文本
     Html:"Html",   //Html内容文本
-    MultiSelect:"MultiSelect"  //多选下拉框
+    MultiSelect:"MultiSelect",  //多选下拉框
+    DynamicInput:"DynamicInput"  //动态输入控件
 }
 
 /**
@@ -67,7 +69,8 @@ export const controlRegister={
     [CONTROL_TYPE.FilePreview]:FilePreview,
     [CONTROL_TYPE.RSAEncryptText]:RSAEncryptText,
     [CONTROL_TYPE.Html]:Html,
-    [CONTROL_TYPE.MultiSelect]:MultiSelect
+    [CONTROL_TYPE.MultiSelect]:MultiSelect,
+    [CONTROL_TYPE.DynamicInput]:DynamicInput
 }
 
 export const getControl=(control,field,sendMessageToParent,dataPath)=>{

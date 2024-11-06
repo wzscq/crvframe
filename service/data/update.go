@@ -150,7 +150,7 @@ func (update *Update) update(dataRepository DataRepository, tx *sql.Tx) (*map[st
 			}
 		}
 
-		errorCode = processFilter(
+		errorCode = ProcessFilter(
 			permissionDataset.Filter,
 			filterData,
 			nil,

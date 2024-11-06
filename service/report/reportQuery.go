@@ -127,13 +127,56 @@ func QueryByRequest(
 func QueryData(
 	appDB, userID, userRoles, userToken string,
 	query interface{},
-	filterData map[string]interface{},
+	filterData *map[string]interface{},
+	sqlParameters map[string]interface{},
 	dataRepository data.DataRepository) (interface{}, *common.CommonError) {
 	switch query.(type) {
 	case string:
-		return QueryBySql(query.(string), userID, userRoles, filterData, dataRepository)
+		return QueryBySql(query.(string), userID, userRoles, sqlParameters, dataRepository)
 	case map[string]interface{}:
 		return QueryByRequest(appDB, userID, userRoles, userToken, query.(map[string]interface{}))
 	}
 	return nil, common.CreateError(common.ResultNotSupportedReportQuery, nil)
+}
+
+func QueryCRVData(
+	appDB, userID, userRoles, userToken string,
+	query interface{},
+	filterData *map[string]interface{},
+	sqlParameters map[string]interface{},
+	dataRepository data.DataRepository) (*data.QueryResult, *common.CommonError) {
+
+	//conver query to json string
+	queryJson, err := json.Marshal(query)
+	//decode query json string to queryRequest 
+	var req data.CommonReq
+	err = json.Unmarshal(queryJson, &req)
+	if err != nil {
+		slog.Error("json file decode failed", "error", err)
+		return nil, common.CreateError(common.ResultJsonDecodeError, nil)
+	}
+
+	filter:=req.Filter
+
+	data.ProcessFilter(filter, nil,filterData, userID, userRoles, appDB, dataRepository)
+
+	crvQuery := &data.Query{
+		ModelID:    req.ModelID,
+		ViewID:     req.ViewID,
+		Pagination: req.Pagination,
+		Filter:     filter,
+		Fields:     req.Fields,
+		AppDB:      appDB,
+		Sorter:     req.Sorter,
+		UserRoles:  userRoles,
+		UserID:     userID,
+	}
+
+	result, errorCode:= crvQuery.Execute(dataRepository, true)
+	
+	if errorCode != common.ResultSuccess {
+		return nil, common.CreateError(errorCode, nil)
+	}
+	
+	return result, nil
 }

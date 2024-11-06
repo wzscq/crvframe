@@ -4,6 +4,7 @@ import Table from './Table';
 import Carousel from './Carousel';
 import Image from './Image';
 import Heatmap from './Heatmap';
+import PDF from './PDF';
 
 /**
  * 以下为控件类型枚举常量定义
@@ -15,6 +16,7 @@ import Heatmap from './Heatmap';
   CAROUSEL:"Carousel",   //轮播图
   IMAGE:"Image",   //图片
   HEATMAP:"Heatmap",   //热力图
+  PDF:"PDF"   //PDF
 }
 
 const controls={
@@ -24,6 +26,7 @@ const controls={
   [CONTROL_TYPE.CAROUSEL]:Carousel,
   [CONTROL_TYPE.IMAGE]:Image,
   [CONTROL_TYPE.HEATMAP]:Heatmap,
+  [CONTROL_TYPE.PDF]:PDF
 }
 
 export const getControl=(control,frameParams,reportID,sendMessageToParent,locale,theme,parentID=undefined)=>{

@@ -81,7 +81,7 @@ func (controller *DataController) query(c *gin.Context) {
 			}
 		}*/
 	
-		errorCode = processFilter(
+		errorCode = ProcessFilter(
 			req.Filter,
 			req.FilterData,
 			req.GlobalFilterData,
@@ -228,7 +228,7 @@ func (controller *DataController) batchDelete(c *gin.Context) {
 		return
 	}
 
-	errorCode = processFilter(req.Filter, req.FilterData, req.GlobalFilterData, userID, userRoles, appDB, controller.DataRepository)
+	errorCode = ProcessFilter(req.Filter, req.FilterData, req.GlobalFilterData, userID, userRoles, appDB, controller.DataRepository)
 	if errorCode == common.ResultSuccess {
 		delete := &BatchDelete{
 			ModelID:         req.ModelID,
@@ -273,7 +273,7 @@ func (controller *DataController) update(c *gin.Context) {
 		return
 	}
 
-	errorCode = processFilter(req.Filter, req.FilterData, req.GlobalFilterData, userID, userRoles, appDB, controller.DataRepository)
+	errorCode = ProcessFilter(req.Filter, req.FilterData, req.GlobalFilterData, userID, userRoles, appDB, controller.DataRepository)
 	if errorCode == common.ResultSuccess {
 		update := &Update{
 			ModelID:         req.ModelID,

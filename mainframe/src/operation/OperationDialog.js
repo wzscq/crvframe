@@ -12,6 +12,7 @@ import {
     queryData,
     getUploadKey,
     queryReportData,
+    getPDFReport,
     getImage
 } from '../api';
 
@@ -415,6 +416,8 @@ export default function OperationDialog(){
                 queryData({frameParams,queryParams:{...queryParams,globalFilterData}},errorCallback);
             } else if (type===FRAME_MESSAGE_TYPE.REPORT_QUERY){
                 queryReportData(data,errorCallback);
+            } else if (type===FRAME_MESSAGE_TYPE.REPORT_GETPDF){
+                getPDFReport(data,errorCallback);
             } else if (type===FRAME_MESSAGE_TYPE.GET_IMAGE) {
                 getImage(data,errorCallback);
             } else if (type===FRAME_MESSAGE_TYPE.GET_UPLOAD_KEY){

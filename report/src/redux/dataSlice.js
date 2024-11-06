@@ -110,6 +110,7 @@ export const dataSlice = createSlice({
                     state.updated[list[i]['id']]=convertListToMap({...(list[i])},controls);
                 }   
             }
+            
             state.loaded=true;
         },
         modiData:(state,action) => {

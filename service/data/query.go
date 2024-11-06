@@ -247,7 +247,7 @@ func (query *Query) getSqlParam(withPermission bool,dataRepository DataRepositor
 				}
 			}
 
-			errorCode = processFilter(
+			errorCode = ProcessFilter(
 				permissionDataset.Filter,
 				filterData,
 				nil,

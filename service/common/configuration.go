@@ -25,6 +25,8 @@ type redisConf struct {
 	Password             string `json:"password" mapstructure:"password"`
 	DownloadCacheDB      int    `json:"downloadCacheDB" mapstructure:"downloadCacheDB"`
 	DownloadCacheExpired string `json:"downloadCacheExpired" mapstructure:"downloadCacheExpired"`
+	ReportCacheDB        int    `json:"reportCacheDB" mapstructure:"reportCacheDB"`
+	ReportCacheExpired   string `json:"reportCacheExpired" mapstructure:"reportCacheExpired"`
 	TLS			         string   `json:"tls" mapstructure:"tls"`
 }
 

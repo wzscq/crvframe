@@ -177,8 +177,13 @@ func main() {
 	esiController.Bind(router)
 
 	//report
+	reportCacheExpired, _ := time.ParseDuration(conf.Redis.ReportCacheExpired)
+	defatultReportCache := &report.DefatultReportCache{}
+	defatultReportCache.Init(conf.Redis.Server, conf.Redis.ReportCacheDB, reportCacheExpired, conf.Redis.Password, conf.Redis.TLS)
+
 	reportController := &report.ReportController{
 		DataRepository: dataRepo,
+		ReportCache:    defatultReportCache,
 	}
 	reportController.Bind(router)
 

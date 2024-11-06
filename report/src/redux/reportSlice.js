@@ -10,6 +10,8 @@ export const reportSlice = createSlice({
     reducers: {
         setData:(state,action) => {
             const {list,controlID}=action.payload;
+            console.log("setData",controlID);
+            console.log("setData",list);
             state.chart[controlID]={loaded:true,list};
         },
         setDataLoaded:(state,action)=>{

@@ -14,7 +14,7 @@ import (
 1、对于用户，用户角色直接进行替换
 2、对于和用户或用户角色相关的其它数据信息，需要通过配置filterData先进行关联数据查询，然后用查询结果替换filter中的参数
 */
-func processFilter(
+func ProcessFilter(
 	filter *map[string]interface{},
 	filterData *[]FilterDataItem,
 	globalFilterData *map[string]interface{},
