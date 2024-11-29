@@ -68,16 +68,41 @@ export default function ListOperationBar({sendMessageToParent}){
         
         let operation=operations.find(element=>element.id===opItem.operationID);
         if(operation){
-            let queryFilter=filter;
+            let queryFilter={...filter};
+
+            //这里因为前端文本字段增加了空值的查询，查询空值时，字段的条件中带了Op.or，这里需要把带Op.or的条件展开一下
+            //首先去掉带Op.or的条件
+            const filterFields=Object.keys(queryFilter);
+            if(filterFields.length>0){
+                const opOrFilter=[];
+                filterFields.forEach(key=>{
+                    //console.log('queryFilter key',key,queryFilter[key]);
+                    if(queryFilter[key]['Op.or']!==undefined){
+                        opOrFilter.push({...queryFilter[key]});
+                        delete queryFilter[key];
+                    }
+                });
+
+                //console.log('queryFilter opOrFilter',opOrFilter);
+                //console.log('queryFilter 1',queryFilter);
+
+                if(opOrFilter.length>0){
+                    queryFilter['Op.and']=opOrFilter;
+                }
+            }
+            //处理Op.or结束
+
             if(viewFilter&&Object.keys(viewFilter).length>0){
-                if(Object.keys(filter).length>0){
+                if(Object.keys(queryFilter).length>0){
                     queryFilter={
-                        'Op.and':[filter,viewFilter]
+                        'Op.and':[queryFilter,viewFilter]
                     };
                 } else {
                     queryFilter=viewFilter;
                 }
             }
+
+            //console.log('queryFilter 2',queryFilter);
 
             //由于行的ID可能是一个引用字段，所以这里需要对selectedRowKeys做一个检查和变换
             const selectedRowIDs=selectedRowKeys.map(item=>{

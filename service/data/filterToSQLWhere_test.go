@@ -18,7 +18,7 @@ func TestFilterToSQLWhere(t *testing.T) {
 	//设置log打印文件名和行号
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
 
-	filter:=&map[string]interface{}{
+	/*filter:=&map[string]interface{}{
 		"Op.and": []interface{}{
 			map[string]interface{}{
 				"Op.and": []interface{}{
@@ -48,7 +48,49 @@ func TestFilterToSQLWhere(t *testing.T) {
 				},
 			},
 		},
-	}
+	}*/
+
+	filter:=&map[string]interface{}{
+		"Op.and": []interface{}{
+			map[string]interface{}{
+				//"hzfpxxqrdbh": map[string]interface{}{
+					"Op.or": []interface{}{
+						map[string]interface{}{
+							"hzfpxxqrdbh": map[string]interface{}{
+								"Op.eq": "",
+							},
+						},
+						map[string]interface{}{
+							"hzfpxxqrdbh": map[string]interface{}{
+								"Op.is": nil,
+							},
+						},
+					},
+				//},
+			},
+			map[string]interface{}{
+				"is_del": "0",
+				"is_sales_list": "1",
+				"sales_id": "%{globalFilterData.company_id.id}",
+			},
+	},}
+
+
+	/*filter:=&map[string]interface{}{
+		"Op.or": []interface{}{
+			map[string]interface{}{
+				"hzfpxxqrdbh": map[string]interface{}{
+					"Op.eq": "",
+				},
+			},
+			map[string]interface{}{
+				"hzfpxxqrdbh": map[string]interface{}{
+					"Op.is": nil,
+				},
+			},
+		},
+	}*/
+
 	fields:=&[]Field{
 		{
 			Field: "id",

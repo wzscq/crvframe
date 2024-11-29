@@ -1,7 +1,7 @@
 # crv_frame_build
 
 #run crvframe in docker
-docker run -d --name crvframe -p8010:80 -v /root/crvframe/logs:/services/crvframe/logs -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf  wangzhsh/crvframe:0.1.1
+docker run -d --name crvframe -p8010:80 -v /root/crvframe/logs:/services/crvframe/logs -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf --log-driver json-file --log-opt max-size=10m  wangzhsh/crvframe:0.1.1
 
 install docker
 yum install -y yum-utils
@@ -97,6 +97,12 @@ vim /etc/docker/daemon.json
       "https://hub-mirror.c.163.com"
    ]
 }
+
+# 查看docker文件目录
+docker info | grep -i 'docker root dir'
+
+# 清理容器日志
+cat /dev/null > /var/lib/docker/containers/容器id/容器id-json.log
 
 https://centos.pkgs.org/
 
