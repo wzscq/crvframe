@@ -363,9 +363,9 @@ func convertFieldValueMap(field string, value map[string]interface{}, fields *[]
 		case Op_in:
 			str, err = convertFieldOpIn(" in ", field, value, fields, modelID)
 		case Op_is:
-			str, err = convertFieldOpNormal(" is ", field, value)
+			str, err = convertFieldOpNormal(" is ", field, nil)
 		case Op_not:
-			str, err = convertFieldOpNormal(" is not ", field, value)
+			str, err = convertFieldOpNormal(" is not ", field, nil)
 		case Op_like:
 			str, err = convertFieldOpNormal(" like ", field, value)
 		default:

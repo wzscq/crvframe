@@ -16,7 +16,7 @@ export default function Text({field,filterValue,onFilterChange}){
             const label=getLocaleLabel({key:'page.crvlistview.emptyValue',default:"空值"})
             const value={'Op.or':[
                 {[field.field]:{'Op.eq':''}},
-                {[field.field]:{'Op.is':null}},
+                {[field.field]:{'Op.is':'null'}},
             ]}
             onFilterChange(value,label);
         } else {
