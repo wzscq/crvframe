@@ -10,6 +10,11 @@ export default function DatePickerFilter({field,filterValue,onFilterChange}){
     const {getLocaleLabel}=useI18n();
 
     const upateFilter=(filter)=>{
+        if(filter['Op.gte']===undefined&&filter['Op.lte']===undefined){
+            onFilterChange(null,null);
+            return;
+        }
+
         let label='';
         if(filter['Op.gte']){
             let gte=filter['Op.gte'];
