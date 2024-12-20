@@ -274,6 +274,7 @@ func (controller *DataController) update(c *gin.Context) {
 	}
 
 	errorCode = ProcessFilter(req.Filter, req.FilterData, req.GlobalFilterData, userID, userRoles, appDB, controller.DataRepository)
+	ProcessList(req.List,userID)
 	if errorCode == common.ResultSuccess {
 		update := &Update{
 			ModelID:         req.ModelID,
