@@ -6,6 +6,7 @@ docker run -d --name crvframe -p8010:80 -v /root/crvframe/logs:/services/crvfram
 install docker
 yum install -y yum-utils
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 systemctl start docker
 
@@ -81,6 +82,9 @@ docker save -o crvframe.tar wangzhsh/crvframe:0.1.0
 #导入镜像包命令
 docker load -i crvframe.tar
 
+# 清理镜像vfs，注意会删除所有为使用的容器和镜像
+docker system prune -a --volumes
+
 # 相关资源
 https://quilljs.com/docs/api/
 https://github.com/microsoft/monaco-editor
@@ -112,3 +116,8 @@ mysqldump -u [username] -p[password] [database] > backup.sql
 //前端编译报错需要执行这个
 export NODE_OPTIONS=--openssl-legacy-provider
 
+
+docker run -d registry.cn-hangzhou.aliyuncs.com/wangzhsh/rttkservice_arm64:0.0.1 /bin/sh -c "while true;do echo hello docker;sleep 1;done"
+
+//nginx
+docker run --name nginx -p 80:80 -p 443:443 -v /root/nginx/conf/mime.types:/etc/nginx/mime.types -v /root/nginx/conf/nginx.conf:/etc/nginx/nginx.conf -v /root/nginx/conf/forward.conf:/etc/nginx/forward.conf -v /root/nginx/conf/buoyancyinfo.conf:/etc/nginx/buoyancyinfo.conf -v /root/nginx/conf/youlian.conf:/etc/nginx/youlian.conf -v /root/nginx/conf/server.pem:/etc/nginx/server.pem -v /root/nginx/conf/server.key:/etc/nginx/server.key -v /root/release/web:/usr/share/nginx/web -v /root/nginx/log:/var/log/nginx --privileged=true --restart=always -d nginx:1.17.9

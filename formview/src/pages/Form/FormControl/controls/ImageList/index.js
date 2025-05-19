@@ -14,6 +14,8 @@ import {createDownloadFileMessage} from '../../../../../utils/normalOperations';
 import Preview from './Preview';
 import I18nLabel from '../../../../../component/I18nLabel';
 
+import "./index.css";
+
 const selectOriginValue=(data,dataPath,field)=>{
     let originNode=data.origin;
     for(let i=0;i<dataPath.length;++i){
