@@ -1,15 +1,35 @@
 # crv_frame_build
 
 #run crvframe in docker
-docker run -d --name crvframe -p8010:80 -v /root/crvframe/logs:/services/crvframe/logs -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf --log-driver json-file --log-opt max-size=10m  wangzhsh/crvframe:0.1.1
+docker run -d --name crvframe -p8010:80 -v /root/crvframe/logs:/services/crvframe/logs -v /root/crvframe/appfile:/services/crvframe/appfile -v /root/crvframe/apps:/services/crvframe/apps -v /root/crvframe/conf:/services/crvframe/conf --log-driver json-file --log-opt max-size=10m  registry.cn-hangzhou.aliyuncs.com/wangzhsh/crvframe:0.1.1
 
 install docker
+centos：
 yum install -y yum-utils
 yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 yum-config-manager --add-repo https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
 yum install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 systemctl start docker
+systemctl enable /usr/lib/systemd/system/docker.service
 
+ubuntu 22.04 :
+Set up Docker's apt repository.
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+Install the Docker packages.
+apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 install mongo
 mkdir /root/mongo
@@ -36,6 +56,8 @@ mkdir /root/redis/conf
 touch /root/redis/conf/redis.conf
 
 docker run --name redis -p 6479:6379 -v /root/redis/data:/data -v /root/redis/conf/redis.conf:/etc/redis/redis.conf --privileged=true --restart=always -d redis redis-server /etc/redis/redis.conf
+
+docker run --name redis -p 6379:6379 -v /home/release/redis/data:/data -v /home/release/redis/conf/redis.conf:/etc/redis/redis.conf --privileged=true --restart=always -d redis redis-server /etc/redis/redis.conf
 
 install mosquitto
 mkdir /root/mosquitto

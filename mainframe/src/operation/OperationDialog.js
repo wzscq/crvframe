@@ -374,6 +374,8 @@ export default function OperationDialog(){
                 item={current} 
                 state={1}/>
         );
+
+        console.log('current',current)
         runing=true;    
     } else {
         //所有的操作都执行完成，并且有错误，则需要用户确认

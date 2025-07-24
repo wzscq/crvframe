@@ -184,23 +184,27 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
     };
 
     const getCascadeItemFilter=(cascade,cascadeParentValue,field)=>{
+        console.log('getCascadeItemFilter',cascade,cascadeParentValue,field)
         let res={};
         if(cascade.type===CASCADE_TYPE.MANY2ONE){
-            if(cascade.relatedField&&cascadeParentValue[cascade.relatedField]){
-                res= {filterbyParent:{[cascade.relatedField]:cascadeParentValue[cascade.relatedField]}};        
+            if(cascade.parentField&&cascadeParentValue[cascade.parentField]){
+                const relatedField=cascade.relatedField?cascade.relatedField:cascade.parentField;
+                res= {filterbyParent:{[relatedField]:cascadeParentValue[cascade.parentField]}};        
             }
         } else if(cascade.type===CASCADE_TYPE.MANY2MANY){
-            if(cascade.relatedField&&cascadeParentValue[cascade.relatedField]){
+            if(cascade.parentField&&cascadeParentValue[cascade.parentField]){
                 //根据中间表先筛选出对应本表关联表的ID
+                const relatedField=cascade.relatedField?cascade.relatedField:field.field;
+                const parentRelatedField=cascade.parentRelatedField?cascade.parentRelatedField:cascade.parentField;
                 const filterDataItem={
                     modelID:cascade.middleModelID,
-                    filter:{[cascade.relatedField]:cascadeParentValue[cascade.relatedField]},
+                    filter:{[parentRelatedField]:cascadeParentValue[cascade.parentField]},
                     fields:[
-                        {field:field.field}
+                        {field:relatedField}
                     ]
                 }
                 //需要拿到父字段的关联表
-                const filterbyParent={id:{'Op.in':['%{'+cascade.middleModelID+'.'+field.field+'}']}};
+                const filterbyParent={id:{'Op.in':['%{'+cascade.middleModelID+'.'+relatedField+'}']}};
                 res={filterbyParent,filterDataItem};
             }
         } else {
@@ -237,7 +241,7 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
          * 对于这种情况需要将查询c表的操作转换为查询d表的操作，在查询d表时按照p_id=cascadeParentValue过滤d表数据
          * 同时以c_id字段查询过滤c表数据。这种情况需要前端再做一次数据过滤。目前程序暂时不实现这个逻辑。
          */
-        console.log('getQueryParams',control);
+        console.log('getQueryParams',control,field);
         const filter=getFilter(control,value);
         if(control.cascade){
             const filterCascade=[filter];
@@ -254,6 +258,7 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
                 });
             } else {
                 const {filterbyParent,filterDataItem}=getCascadeItemFilter(control.cascade,cascadeParentValue,field);
+                console.log('getCascadeItemFilter',filterbyParent,filterDataItem)
                 if(filterbyParent){
                     filterCascade.push(filterbyParent);
                 }
@@ -264,6 +269,9 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
                     
             const op='Op.and';
             const mergedFilter={[op]:filterCascade};
+
+            console.log('mergedFilter',mergedFilter);
+
             return {
                 modelID:field.relatedModelID,
                 fields:control.fields,
@@ -272,6 +280,8 @@ export default function SingleSelectForManyToOne({dataPath,control,field,sendMes
                 pagination:{current:1,pageSize:500}
             }
         }
+
+        console.log('filter',filter);
         
         return {
             modelID:field.relatedModelID,
