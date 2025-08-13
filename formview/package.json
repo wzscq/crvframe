@@ -2,7 +2,7 @@
   "name": "crv_form_view",
   "version": "0.1.0",
   "private": true,
-  "homepage": "./",
+  "homepage": "/formview/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.6",
     "@testing-library/jest-dom": "^6.1.3",
