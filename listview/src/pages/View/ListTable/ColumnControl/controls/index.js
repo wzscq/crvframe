@@ -1,6 +1,7 @@
 import DefaultColumnControl from "./DefaultColumnControl";
 import Progress from "./Progress";
 import FileControl from "./FileControl";
+import ImageList from "./ImageList";
 
 /**
  * 以下为控件类型枚举常量定义
@@ -9,6 +10,7 @@ import FileControl from "./FileControl";
   Progress:'Progress',  //单选下拉框
   File:'File',  //文件显示
   DefaultColumnControl:'DefaultColumnControl',  //多选下拉框
+  ImageList:'ImageList'
 }
 
 /**
@@ -17,14 +19,15 @@ import FileControl from "./FileControl";
 export const controlRegister={
   [CONTROL_TYPE.Progress]:Progress,
   [CONTROL_TYPE.DefaultColumnControl]:DefaultColumnControl,
-  [CONTROL_TYPE.File]:FileControl
+  [CONTROL_TYPE.File]:FileControl,
+  [CONTROL_TYPE.ImageList]:ImageList
 }
 
-export function getControl(text,field, record, index){
+export function getControl(text,field, record, index,sendMessageToParent){
   const controlType=field.columnControl?field.columnControl:CONTROL_TYPE.DefaultColumnControl;
   const Component=controlRegister[controlType];
   if(Component){
-    return <Component text={text} field={field} record={record} index={index}/>;
+    return <Component text={text} field={field} record={record} index={index} sendMessageToParent={sendMessageToParent}/>;
   }
   return (<div>{"unkown control:"+controlType}</div>);
 }

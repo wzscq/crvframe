@@ -33,7 +33,8 @@ export const FRAME_MESSAGE_TYPE={
     RELOAD_DATA:'reloadData',//"RELOAD_DATA",
     QUERY_REQUEST:'queryRequest',//"QUERY_REQUEST",
     QUERY_RESPONSE:'queryResponse',//"QUERY_RESPONSE",
-    UPDATE_LOCALE:'updateLocale',//"UPDATE_LOCALE"
+    UPDATE_LOCALE:'updateLocale',//"UPDATE_LOCALE",
+    GET_IMAGE:'getImage',//"GET_IMAGE",
 }
 
 export const DATA_TYPE={

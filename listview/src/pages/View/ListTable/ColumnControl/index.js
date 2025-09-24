@@ -7,7 +7,7 @@ import {getControl} from './controls';
 import CellPopMenu from './CellPopMenu';
 
 export default function ColumnControl({sendMessageToParent,text,field, record, index}){
-    const colCtl=getControl(text,field, record, index);
+    const colCtl=getControl(text,field, record, index,sendMessageToParent);
    
     if(field.cellPopMenu){
         const content=<CellPopMenu sendMessageToParent={sendMessageToParent} cellPopMenu={field.cellPopMenu} record={record} index={index}/>;

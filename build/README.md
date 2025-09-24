@@ -69,6 +69,7 @@ mkdir /root/mosquitto/log
 docker run -it --name mosquitto -p 1983:1883 -p 9101:9001 -v /root/mosquitto/config:/mosquitto/config -v /root/mosquitto/data:/mosquitto/data -v /root/mosquitto/log:/mosquitto/log -d eclipse-mosquitto
 
 install node
+alpine:https://unofficial-builds.nodejs.org/download/release/v22.0.0/node-v22.0.0-linux-x64-musl.tar.gz
 wget https://nodejs.org/dist/v21.7.3/node-v21.7.3-linux-x64.tar.gz
 tar -xvf node-v21.7.3-linux-x64.tar.gz
 mv node-v21.7.3-linux-x64 node
