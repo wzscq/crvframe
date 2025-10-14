@@ -167,6 +167,13 @@ export const dataSlice = createSlice({
         refreshData:(state,action) => {
             const pagination=state.views[state.currentView].data.pagination;
             state.views[state.currentView].data.pagination={...pagination}
+            //把页面数据也清除掉
+            if(action.payload?.resetData===true){
+                state.views[state.currentView].data.list=[];
+                state.views[state.currentView].data.selectedRowKeys=[];
+                state.views[state.currentView].data.selectAll=false;
+            }
+            
             if(action.payload?.queryQueenable===true){
                 state.queryQueenable=true;
             }

@@ -1,8 +1,8 @@
 import {useEffect, useCallback,useMemo, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
-import { Space,Upload,Tooltip } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Space,Upload,Tooltip,Image } from 'antd';
+import { PlusOutlined,EditOutlined } from '@ant-design/icons';
 
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
 import {
@@ -11,7 +11,8 @@ import {
     SAVE_TYPE
 } from '../../../../../utils/constant';
 import {createDownloadFileMessage} from '../../../../../utils/normalOperations';
-import Preview from './Preview';
+//import Preview from './Preview';
+import Editor from './Editor';
 import I18nLabel from '../../../../../component/I18nLabel';
 
 import "./index.css";
@@ -65,6 +66,8 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
     },[originValue]);
     
     const [fileList,setFileList]=useState(initFileList);
+    const [previewOpen, setPreviewOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState(null);
 
     const getOriginImage=useCallback((files)=>{
         const frameParams={
@@ -117,7 +120,7 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
     },[originValue,getOriginImage]);
 
 
-    const className=valueError?'control-singlefile control-singlefile-error':'control-singlefile control-singlefile-normal';
+    const className=valueError?'control-imagelist control-imagelist-error':'control-imagelist control-imagelist-normal';
     
     //获取文本输入框的标签，如果form控件配置了label属性则直接使用，
     //如果控件没有配置label属性，则取字段配置的字段name
@@ -126,12 +129,22 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
     useEffect(()=>{
         const data=fileList;
         const saveType={};
-        saveType[CC_COLUMNS.CC_SAVE_TYPE]=SAVE_TYPE.CREATE;
+        
         const addList=data.map(selectedFile=>{
             const originItem=originValue?originValue.list.find(item=>item.id===selectedFile.uid):null;
             if(originItem){
+                //判断其是否修改
+                if(selectedFile.changed===true){
+                    saveType[CC_COLUMNS.CC_SAVE_TYPE]=SAVE_TYPE.UPDATE;
+                    return {
+                        ...originItem,
+                        contentBase64:selectedFile.contentBase64,
+                        ...saveType
+                    }
+                }
                 return {id:originItem.id};
             } else {
+                saveType[CC_COLUMNS.CC_SAVE_TYPE]=SAVE_TYPE.CREATE;
                 return {
                     id:selectedFile.uid,
                     name:selectedFile.name,
@@ -167,21 +180,31 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
         }
     },[fileList,dispatch,field,dataPath,originValue]);
 
+    console.log("ImageList control.allowEditImage",control.allowEditImage)
+
     const props = {
         listType:"picture-card",
         accept:control.accept,
         showUploadList:{
             showDownloadIcon:true,
             showRemoveIcon:control.disabled!==true,
-            showPreviewIcon:false
+            showPreviewIcon:true,
+            previewIcon:control.allowEditImage===true?<EditOutlined />:null,
         },
-        itemRender:(originNode, file)=>{
+        /*itemRender:(originNode, file)=>{
             return (<Preview 
                         maxPreviewWidth={control.maxPreviewWidth} 
                         maxPreviewHeight={control.maxPreviewHeight}  
                         file={file}>
                         {originNode}
                     </Preview>);
+        },*/
+        onPreview:file => {
+            console.log("ImageList onPreview",file)
+            if(file.url){
+                setPreviewImage(file);
+                setPreviewOpen(true);
+            }
         },
         onDownload:file =>{
             if(file.id){
@@ -227,8 +250,35 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
         <Tooltip title={<I18nLabel label={valueError.message}/>}>
             {fileControl}
         </Tooltip>):fileControl;
+
+    console.log('ImageList previewImage',previewImage,previewOpen)
+
+    const onEditorOk=useCallback((getDataUrl)=>{
+        const newDataUrl=getDataUrl();
+        const fileTmp={...previewImage,contentBase64:newDataUrl,url:newDataUrl,changed:true};
+        //从fileList中找到对应文件的索引位置
+        const newFileList=fileList.map(fileItem=>{
+            if(fileItem.uid===fileTmp.uid){
+                return fileTmp;
+            }
+            return fileItem;
+        })
+
+        setFileList(newFileList);
+
+        setPreviewImage(null)
+        setPreviewOpen(false)
+    },[fileList,previewImage])
+
+    const onEditorCancel=()=>{
+        setPreviewImage(null)
+        setPreviewOpen(false)
+    }
+
+    console.log('ImageList',control)
     
     return (
+        <>
         <div className={className}>
             <Space size={2} direction="vertical" style={{}}>
                 <div style={{width:'100%',textAlign:'left'}}>
@@ -238,5 +288,19 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
                 {fileControl} 
             </Space>
         </div>
+        {previewImage && (
+            control.allowEditImage===true?
+            <Editor width={control.maxPreviewWidth??'calc(100% - 10px)'}  height={control.maxPreviewHeight??'300px'} src={previewImage.url} title={previewImage.name} open={previewOpen} onEditorOk={onEditorOk} onEditorCancel={onEditorCancel}/>:
+            <Image
+                wrapperStyle={{ display: 'none' }}
+                preview={{
+                    visible: previewOpen,
+                    onVisibleChange: visible => setPreviewOpen(visible),
+                    afterOpenChange: visible => !visible && setPreviewImage(''),
+                }}
+                src={previewImage.url}
+            />
+        )}
+        </>
     )
 }

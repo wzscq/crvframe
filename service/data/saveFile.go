@@ -58,6 +58,8 @@ func (save *SaveFile) saveFileRow(dataRepository DataRepository, tx *sql.Tx, mod
 		return save.createFileRow(dataRepository, tx, modelID, pID, row)
 	case SAVE_DELETE:
 		return save.deleteFileRow(dataRepository, tx, row)
+	case SAVE_UPDATE:
+		return save.updateFileRow(dataRepository, tx, row)
 	default:
 		return common.ResultNotSupportedSaveType
 	}
@@ -245,4 +247,62 @@ func (save *SaveFile) deleteFileRow(dataRepository DataRepository, tx *sql.Tx, r
 		return common.ResultSQLError
 	}
 	return common.ResultSuccess
+}
+
+func (save *SaveFile) updateFileRow(dataRepository DataRepository, tx *sql.Tx, row map[string]interface{}) int {
+	idCol := row[CC_ID]
+	if idCol == nil {
+		return common.ResultNoIDWhenUpdate
+	}
+
+	strID, ok := idCol.(string)
+	if !ok || len(strID) <= 0 {
+		return common.ResultNoIDWhenUpdate
+	}
+
+	nameCol := row[CC_FILENAME]
+	if nameCol == nil {
+		return common.ResultNoFileNameWhenCreate
+	}
+
+	name, ok := nameCol.(string)
+	if !ok || len(name) <= 0 {
+		return common.ResultNoFileNameWhenCreate
+	}
+
+	pathCol := row["path"]
+	if nameCol == nil {
+		return common.ResultNoFileNameWhenCreate
+	}
+
+	path, ok := pathCol.(string)
+	if !ok || len(path) <= 0 {
+		return common.ResultNoFileNameWhenCreate
+	}
+
+	contentCol := row[CC_FILECONTENT]
+	fileKey := row[CC_FILEKEY]
+	if contentCol == nil && fileKey == nil {
+		return common.ResultNoFileContentWhenCreate
+	}
+
+	var fileContent string
+	var isBase64 bool
+	if contentCol != nil {
+		isBase64 = true
+		fileContent, ok = contentCol.(string)
+	} else {
+		fileContent, ok = fileKey.(string)
+	}
+
+	if !ok || len(fileContent) <= 0 {
+		return common.ResultNoFileContentWhenCreate
+	}
+
+	fieldID, _ := row["field_id"].(string)
+	rowID, _ := row["row_id"].(string)
+	fileName := fieldID + "_row" + rowID + "_id" + strID + "_" + name
+	save.deleteFile(path, fileName)
+
+	return save.saveFile(path, fileName, name, fileContent, isBase64)
 }

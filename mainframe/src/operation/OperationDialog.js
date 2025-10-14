@@ -280,7 +280,7 @@ export default function OperationDialog(){
 
     const reloadFrameData=()=>{
         dispatch(logInfo("通知iframe从新加载数据:"+JSON.stringify(current)));
-        const {key,location}=current.params;
+        const {key,location,resetData}=current.params;
         let frameType="tabframe";
         if(location===OPEN_LOCATION.MODAL){
             frameType="frameDialog";
@@ -290,7 +290,7 @@ export default function OperationDialog(){
         if(frameControl){
             console.log("send message to subframe");
             const origin=parseUrl(frameControl.getAttribute("src")).origin;
-            frameControl.contentWindow.postMessage({type:FRAME_MESSAGE_TYPE.RELOAD_DATA,data:current.input},origin);
+            frameControl.contentWindow.postMessage({type:FRAME_MESSAGE_TYPE.RELOAD_DATA,data:current.input,resetData},origin);
         }
         dispatch(operationDone({result:OP_RESULT.SUCCESS}));
     }

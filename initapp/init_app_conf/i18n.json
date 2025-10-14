@@ -73,6 +73,8 @@
             "page.crvlistview.emptyValue":"空值",
             "page.crvlistview.filterEmptyValue":"筛选空值",
             "page.report.refresh":"刷新",
+            "page.formview.imageList.fontSizeLabel":"字体大小",
+            "page.formview.imageList.strokeWidthLabel":"线条宽度",
             "error.10000000":"操作成功",
             "error.10000001":"请求参数错误，请检查参数是否完整，参数格式是否正确",
             "error.10000002":"账号或密码错误",
