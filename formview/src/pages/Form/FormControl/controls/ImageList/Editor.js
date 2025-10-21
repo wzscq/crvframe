@@ -1,7 +1,6 @@
 import { Modal } from "antd"
-import ImageEditor from './ImageEditor'
+import ImageEditor from "@wangzhsh19771225/reactimageeditor"
 import getToolbar from "./ImageEditorToolbar"
-import { useCallback, useState } from "react"
 
 var g_getDataUrl=null
 
