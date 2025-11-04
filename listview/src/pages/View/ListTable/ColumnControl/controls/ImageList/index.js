@@ -7,12 +7,14 @@ export default function ImageList({text,field, record, index,sendMessageToParent
     const {origin,item}=useSelector(state=>state.frame);
     const [images,setImages]=useState([]);
 
+    const getImageDataKey=field.field+'_'+index;
+
     const getOriginImage=useCallback((files)=>{
         console.log("imagelist getOriginImage changed")
             const frameParams={
                 frameType:item.frameType,
                 frameID:item.params.key,
-                dataKey:field.field,
+                dataKey:getImageDataKey,
                 origin:origin
             };
             const message={
@@ -34,7 +36,7 @@ export default function ImageList({text,field, record, index,sendMessageToParent
             const {type,dataKey,data}=event.data;
             console.log("ImageList queryResponse",type,dataKey,data);
             if(type===FRAME_MESSAGE_TYPE.QUERY_RESPONSE&&
-                dataKey===field.field&&
+                dataKey===getImageDataKey&&
                 data.list&&data.list.length>0){
                 //const file=data.list[0];
                 const images=text.list.map(item=>{
@@ -45,7 +47,9 @@ export default function ImageList({text,field, record, index,sendMessageToParent
                     return item;
                 });
                 console.log("get images",images);
-                setImages(images);
+                if(images.length>0){
+                    setImages(images);
+                }
             }
         }
         window.addEventListener("message",queryResponse);
