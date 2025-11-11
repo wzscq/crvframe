@@ -62,7 +62,7 @@ export default function ImageList({text,field, record, index,sendMessageToParent
     useEffect(()=>{
         //判断id是否有变化
         let needLoad=false;
-        if(text.list&&text.list.length>0){
+        if(text&&text.list&&text.list.length>0){
             if(text.list.length!=images.length){
                 needLoad=true;
             } else {
@@ -80,7 +80,7 @@ export default function ImageList({text,field, record, index,sendMessageToParent
             }
         }
 
-        console.log("imagelist textupdated",text.list,images,needLoad);
+        console.log("imagelist textupdated",text?.list,images,needLoad);
 
         if(needLoad===true){
             //获取图片文件内容
