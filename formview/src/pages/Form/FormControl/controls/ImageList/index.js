@@ -290,7 +290,7 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
         </div>
         {previewImage && (
             control.allowEditImage===true?
-            <Editor width={control.maxPreviewWidth??'calc(100% - 10px)'}  height={control.maxPreviewHeight??'300px'} src={previewImage.url} title={previewImage.name} open={previewOpen} onEditorOk={onEditorOk} onEditorCancel={onEditorCancel}/>:
+            <Editor fonts={control.imageTextFonts} width={control.maxPreviewWidth??'calc(100% - 10px)'}  height={control.maxPreviewHeight??'300px'} src={previewImage.url} title={previewImage.name} open={previewOpen} onEditorOk={onEditorOk} onEditorCancel={onEditorCancel}/>:
             <Image
                 wrapperStyle={{ display: 'none' }}
                 preview={{

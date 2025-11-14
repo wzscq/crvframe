@@ -9,7 +9,7 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.5.1",
     "@tinymce/tinymce-react": "^4.3.2",
-    "@wangzhsh19771225/reactimageeditor": "^1.0.23",
+    "@wangzhsh19771225/reactimageeditor": "^1.0.24",
     "antd": "^5.9.3",
     "axios": "^1.5.1",
     "crypto-js": "^4.1.1",

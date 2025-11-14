@@ -4,7 +4,7 @@ import getToolbar from "./ImageEditorToolbar"
 
 var g_getDataUrl=null
 
-export default function Editor({open,onEditorOk,onEditorCancel,src,title,width,height}){
+export default function Editor({open,onEditorOk,onEditorCancel,src,title,width,height,fonts}){
     //const [getDataUrl,setGetDataUrl]=useState(null)    
 
     const onOk=()=>{
@@ -15,7 +15,7 @@ export default function Editor({open,onEditorOk,onEditorCancel,src,title,width,h
         const {getDataUrl}=params
         g_getDataUrl=getDataUrl
         //setGetDataUrl(getDataUrl)
-        return getToolbar(params)
+        return getToolbar(fonts)(params)
     }
 
     return (
