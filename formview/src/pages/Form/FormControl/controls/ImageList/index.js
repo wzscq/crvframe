@@ -1,7 +1,7 @@
 import {useEffect, useCallback,useMemo, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
-import { Space,Upload,Tooltip,Image } from 'antd';
+import { Space,Upload,Tooltip,Image,message } from 'antd';
 import { PlusOutlined,EditOutlined } from '@ant-design/icons';
 
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
@@ -46,6 +46,7 @@ const makeSelector=()=>{
 export default function ImageList({dataPath,control,field,sendMessageToParent}){
     const {origin,item:frameItem}=useSelector(state=>state.frame);
     const dispatch=useDispatch();
+    const [messageApi, contextHolder] = message.useMessage();
     
     const selectValue=useMemo(makeSelector,[dataPath,control,field]);
     const {originValue,valueError}=useSelector(state=>selectValue(state.data,dataPath,field.field));
@@ -218,6 +219,15 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
             setFileList(newFileList);
         },
         beforeUpload: file => {
+            console.log("imageList size:",file.size)
+            if(control.maxFileSize&&file.size>control.maxFileSize){
+                messageApi.open({
+                    type: 'warning',
+                    content: control.maxFileSizeWarning,
+                });
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload=(e)=>{
                 const fileTmp={uid:file.uid,name:file.name,contentBase64:e.target.result,status: 'done',url:e.target.result};
@@ -279,6 +289,7 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
     
     return (
         <>
+        {contextHolder}
         <div className={className}>
             <Space size={2} direction="vertical" style={{}}>
                 <div style={{width:'100%',textAlign:'left'}}>
