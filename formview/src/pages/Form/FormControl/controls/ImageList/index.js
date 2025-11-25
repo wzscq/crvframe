@@ -1,7 +1,7 @@
 import {useEffect, useCallback,useMemo, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from '@reduxjs/toolkit';
-import { Space,Upload,Tooltip,Image,message } from 'antd';
+import { Space,Upload,Tooltip,Image,message,Button} from 'antd';
 import { PlusOutlined,EditOutlined } from '@ant-design/icons';
 
 import { modiData,removeErrorField } from '../../../../../redux/dataSlice';
@@ -14,6 +14,7 @@ import {createDownloadFileMessage} from '../../../../../utils/normalOperations';
 //import Preview from './Preview';
 import Editor from './Editor';
 import I18nLabel from '../../../../../component/I18nLabel';
+import useI18n from '../../../../../hook/useI18n';
 
 import "./index.css";
 
@@ -46,6 +47,7 @@ const makeSelector=()=>{
 export default function ImageList({dataPath,control,field,sendMessageToParent}){
     const {origin,item:frameItem}=useSelector(state=>state.frame);
     const dispatch=useDispatch();
+    const {getLocaleLabel}=useI18n();
     const [messageApi, contextHolder] = message.useMessage();
     
     const selectValue=useMemo(makeSelector,[dataPath,control,field]);
@@ -190,7 +192,7 @@ export default function ImageList({dataPath,control,field,sendMessageToParent}){
             showDownloadIcon:true,
             showRemoveIcon:control.disabled!==true,
             showPreviewIcon:true,
-            previewIcon:control.allowEditImage===true?<EditOutlined />:null,
+            previewIcon:control.allowEditImage===true?<Button className='imagelist-image-edit-icon' style={{padding:0}} title={getLocaleLabel({key:"page.formview.imageList.edit",default:"编辑图片"})} type="link" variant="text" size='small'><EditOutlined /></Button>:null,
         },
         /*itemRender:(originNode, file)=>{
             return (<Preview 

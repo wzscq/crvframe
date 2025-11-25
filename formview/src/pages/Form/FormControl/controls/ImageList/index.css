@@ -12,8 +12,16 @@
     color: rgba(255, 255, 255, 0.65);
 }
 
-:where(.css-dev-only-do-not-override-fvahxg).ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-actions .anticon-edit:hover {
-    color: rgba(255, 255, 255, 1);
+.imagelist-image-edit-icon span {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.imagelist-image-edit-icon span:hover {
+    color: rgba(255, 255, 255, 1) !important;
+}
+
+.imagelist-image-edit-icon .anticon-edit:hover {
+    color: rgba(255, 255, 255, 0.8);
 }
 
 
