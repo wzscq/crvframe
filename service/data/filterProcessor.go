@@ -273,7 +273,7 @@ func getFilterData(
 	userID, userRoles, appDB string,
 	dataRepository DataRepository) (*map[string]interface{}, int) {
 
-	slog.Debug("getFilterData start")
+	slog.Debug("getFilterData start","filterData",filterData)
 
 	res := map[string]interface{}{}
 
@@ -296,6 +296,9 @@ func getFilterData(
 			NoCount:   true,
 		}
 		result, errorCode := query.Execute(dataRepository, false)
+		
+		slog.Debug("getFilterData query","errorCode",errorCode,"modelid",item.ModelID,"filter",item.Filter)
+		
 		if errorCode != common.ResultSuccess {
 			return nil, errorCode
 		}

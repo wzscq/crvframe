@@ -304,6 +304,8 @@ func convertMany2manyValue(modelID string, field *Field, value interface{}) (str
 }
 
 func convertFieldOpIn(op string, field string, value interface{}, fields *[]Field, modelID string) (string, int) {
+	slog.Debug("convertFieldOpIn ", "field", field, "val type", reflect.TypeOf(value),"value",value,"modelID",modelID)
+
 	//查看当前字段是否是many2many字段
 	if fields != nil {
 		for _, fieldItem := range *fields {
@@ -324,6 +326,8 @@ func convertFieldOpIn(op string, field string, value interface{}, fields *[]Fiel
 			}
 		}
 	}
+
+	slog.Debug("convertFieldOpIn ", "field", field, "val type", reflect.TypeOf(value),"value",value,"modelID",modelID)
 
 	switch value.(type) {
 	case string:
@@ -346,6 +350,8 @@ func convertFieldValueMap(field string, value map[string]interface{}, fields *[]
 	var str string
 	var err int
 	var index int = 0
+
+
 	for key, value := range value {
 		switch key {
 		case Op_eq:

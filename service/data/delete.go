@@ -73,7 +73,7 @@ func (delete *Delete) getPermissionIds(dataRepository DataRepository) (*[]string
 			Op_and: []interface{}{
 				map[string]interface{}{
 					"id": map[string]interface{}{
-						Op_in: delete.SelectedRowKeys,
+						Op_in: *(delete.SelectedRowKeys),
 					},
 				},
 				*(permissionDataset.Filter),
@@ -130,6 +130,9 @@ func (delete *Delete) idListToString(idList *[]string) (string, int) {
 func (delete *Delete) delete(dataRepository DataRepository, tx *sql.Tx) (*map[string]interface{}, int) {
 	//获取所有待删数据ID列表字符串，类似：'id1','id2'
 	idList, errorCode := delete.getPermissionIds(dataRepository)
+	
+	slog.Debug("delete.delete","getPermissionIds errorCode",errorCode)
+	
 	if errorCode != common.ResultSuccess {
 		return nil, errorCode
 	}
