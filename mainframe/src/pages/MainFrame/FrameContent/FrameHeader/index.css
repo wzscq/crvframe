@@ -40,7 +40,7 @@
     width: auto;
     height: 45px;
     line-height: 33px;
-    text-align: center;
+    text-align: left;
     display: flex;
     justify-content: flex-end;
 }

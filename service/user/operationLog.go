@@ -3,6 +3,7 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"time"
+	"log/slog"
 )
 
 func WriteLoginLog(appDB, ip, userID, result string, repo UserRepository, appMap map[string]bool) {
@@ -26,6 +27,7 @@ func WriteLoginLog(appDB, ip, userID, result string, repo UserRepository, appMap
 }
 
 func WriteLogoutLog(appDB, ip, userID, result string, repo UserRepository, appMap map[string]bool) {
+	slog.Debug("WriteLogoutLog", "appDB", appDB,"exist",appMap[appDB],"appMap",appMap)
 	writeLog, exist := appMap[appDB]
 	if exist == false || writeLog == false {
 		return
