@@ -19,6 +19,7 @@ import RSAEncryptText from './RSAEncryptText';
 import Html from './Html';
 import MultiSelect from './MultiSelect';
 import DynamicInput from './DynamicInput';
+import TreeList from './TreeList';
 
 /**
  * 以下为控件类型枚举常量定义
@@ -44,7 +45,8 @@ import DynamicInput from './DynamicInput';
     RSAEncryptText:"RSAEncryptText", //RSA加密文本
     Html:"Html",   //Html内容文本
     MultiSelect:"MultiSelect",  //多选下拉框
-    DynamicInput:"DynamicInput"  //动态输入控件
+    DynamicInput:"DynamicInput",  //动态输入控件
+    TreeList:"TreeList"
 }
 
 /**
@@ -71,7 +73,8 @@ export const controlRegister={
     [CONTROL_TYPE.RSAEncryptText]:RSAEncryptText,
     [CONTROL_TYPE.Html]:Html,
     [CONTROL_TYPE.MultiSelect]:MultiSelect,
-    [CONTROL_TYPE.DynamicInput]:DynamicInput
+    [CONTROL_TYPE.DynamicInput]:DynamicInput,
+    [CONTROL_TYPE.TreeList]:TreeList
 }
 
 export const getControl=(control,field,sendMessageToParent,dataPath)=>{

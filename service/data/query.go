@@ -84,6 +84,7 @@ func (query *Query) getQueryFields(permissionFields string) (string, int) {
 			} else {
 				if *(field.FieldType) != FIELDTYPE_MANY2MANY &&
 					*(field.FieldType) != FIELDTYPE_ONE2MANY &&
+					*(field.FieldType) != FIELDTYPE_TREEPARENT &&
 					*(field.FieldType) != FIELDTYPE_FILE {
 					fields = fields + field.Field + ","
 				}
@@ -327,6 +328,17 @@ func (query *Query) queryRelatedModels(dataRepository DataRepository, parentList
 		if field.FieldType != nil {
 			fieldType := *(field.FieldType)
 			querier := GetRelatedModelQuerier(fieldType, query.AppDB, query.ModelID, query.UserRoles)
+			//对于树结构的子引用字段，可以不指定其关联模型和字段，直接用父级的模型和字段
+			if fieldType == FIELDTYPE_TREEPARENT {
+				if field.Fields==nil {
+					field.Fields=query.Fields
+				}
+
+				if field.RelatedModelID==nil {
+					field.RelatedModelID=&query.ModelID
+				}
+			}
+
 			errorCode := querier.query(dataRepository, parentList, &field)
 			if errorCode != common.ResultSuccess {
 				return errorCode

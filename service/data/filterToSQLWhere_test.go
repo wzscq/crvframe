@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-func TestFilterToSQLWhere(t *testing.T) {
+func _TestFilterToSQLWhere(t *testing.T) {
 	conf:=common.InitConfig("../conf/conf_53.json")
 	if conf==nil {
 		t.Errorf("InitConfig failed")

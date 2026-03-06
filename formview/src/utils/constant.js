@@ -85,3 +85,8 @@ export const CASCADE_TYPE={
 	MANY2MANY:'many2many',//"MANY_TO_MANY",
 	MANY2ONE:'many2one',//"MANY_TO_ONE",
 }
+
+export const FORM_LABEL_POS={
+    LEFT:'left',
+    TOP:'top'
+}

@@ -62,7 +62,6 @@ export default function EditTable({dataPath,control,field,sendMessageToParent}){
     const {rowKeys,valueError}=useSelector(state=>selectValue(state.data,dataPath,field.field));
     
     const onAddNewRow=useCallback(()=>{
-
         dispatch(createRow({dataPath:[...dataPath,field.field,'list'],initData:{}}));
         if(valueError){
             const errFieldPath=dataPath.join('.')+'.'+field.field;

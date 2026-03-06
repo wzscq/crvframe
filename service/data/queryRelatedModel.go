@@ -8,6 +8,7 @@ const (
 	FIELDTYPE_MANY2MANY = "many2many"
 	FIELDTYPE_MANY2ONE  = "many2one"
 	FIELDTYPE_ONE2MANY  = "one2many"
+	FIELDTYPE_TREEPARENT= "treeparent"
 	FIELDTYPE_FILE      = "file"
 )
 
@@ -37,7 +38,7 @@ func GetRelatedModelQuerier(fieldType string, appDB string, modelID string, user
 			ModelID:   modelID,
 			UserRoles: userRoles,
 		}
-	} else if fieldType == FIELDTYPE_ONE2MANY {
+	} else if fieldType == FIELDTYPE_ONE2MANY || fieldType == FIELDTYPE_TREEPARENT {
 		return &QueryOneToMany{
 			AppDB:     appDB,
 			UserRoles: userRoles,

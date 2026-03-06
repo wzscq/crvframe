@@ -135,7 +135,8 @@ func (save *Save) getRowUpdateColumnValues(row map[string]interface{}, permissio
 			slog.Debug("getRowUpdateColumnValues", "fieldType", fieldType)
 			if fieldType != FIELDTYPE_MANY2MANY &&
 				fieldType != FIELDTYPE_ONE2MANY &&
-				fieldType != FIELDTYPE_FILE {
+				fieldType != FIELDTYPE_FILE &&
+				fieldType != FIELDTYPE_TREEPARENT {
 				return "", "", version, common.ResultNotSupportedValueType
 			}
 		case nil:
@@ -189,7 +190,8 @@ func (save *Save) getRowCreateColumnValues(row map[string]interface{}) (string, 
 			slog.Debug("getRowCreateColumnValues", "fieldType", fieldType)
 			if fieldType != FIELDTYPE_MANY2MANY &&
 				fieldType != FIELDTYPE_ONE2MANY &&
-				fieldType != FIELDTYPE_FILE {
+				fieldType != FIELDTYPE_FILE &&
+				fieldType != FIELDTYPE_TREEPARENT {
 				return "", "", "", common.ResultNotSupportedValueType
 			}
 		default:
@@ -214,7 +216,6 @@ func (save *Save) saveRelatedField(pID string, dataRepository DataRepository, tx
 
 			fieldType := releatedField["fieldType"].(string)
 			saver := GetRelatedModelSaver(fieldType, save.AppDB, save.UserID, key, save.UserRoles)
-
 			if saver == nil {
 				return common.ResultNotSupportedFieldType
 			}
@@ -369,6 +370,10 @@ func (save *Save) updateRow(
 	//执行sql
 	_, rowCount, err := dataRepository.ExecWithTx(sql, tx)
 	if err != nil {
+		//判断，如果是Error 1062，则未主键冲突
+		if strings.Contains(err.Error(), "Error 1062") {
+			return nil, common.ResultDuplicatePrimaryKey
+		}
 		return nil, common.ResultSQLError
 	}
 

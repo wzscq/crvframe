@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import frameReducer from './frameSlice';
 import definitionReducer from './definitionSlice';
 import dataReducer from './dataSlice';
+import tmpDataReducer from './tmpDataSlice';
 import i18nReducer from './i18nSlice';
 
 export default configureStore({
@@ -10,6 +11,7 @@ export default configureStore({
     frame:frameReducer,
     definition:definitionReducer,
     data:dataReducer,
-    i18n:i18nReducer
+    i18n:i18nReducer,
+    tmpdata:tmpDataReducer
   }
 });

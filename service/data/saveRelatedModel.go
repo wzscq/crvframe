@@ -26,6 +26,12 @@ func GetRelatedModelSaver(fieldType string, appDB string, userID string, fieldNa
 			UserID:    userID,
 			UserRoles: userRoles,
 		}
+	} else if fieldType == FIELDTYPE_TREEPARENT {
+		return &SaveOneToMany{
+			AppDB:     appDB,
+			UserID:    userID,
+			UserRoles: userRoles,
+		}
 	}
 
 	return nil
