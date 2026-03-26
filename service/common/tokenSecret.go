@@ -14,6 +14,7 @@ import (
 	"log/slog"
 	"time"
 	"encoding/base64"
+	"errors"
 )
 
 //加密token
@@ -57,6 +58,11 @@ func AesDecrypt(crypted, key []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	if len(crypted)%block.BlockSize() != 0 {
+		return nil, errors.New("crypted length is not multiple of block size")
+	}
+
 	iv := []byte("1234567812345678")
 	blockMode := cipher.NewCBCDecrypter(block, iv)
 	origData := make([]byte, len(crypted))
@@ -90,15 +96,19 @@ func EncodeToken(token string) string {
 	return e
 }
 
-func DecodeToken(token string) (string, string) {
+func DecodeToken(token string) (string, string,error) {
 	//解密token
 	key:= []byte("3edc$RFV3edc$RFV")
-	r, _ := base64.StdEncoding.DecodeString(token) // use CryptoJs encrypted
+	r, err := base64.StdEncoding.DecodeString(token) // use CryptoJs encrypted
+	if err != nil {
+		slog.Error("解密失败","error",err.Error())
+		return "","",err
+	}
 	//r := result  // decrypt go encrypted
 	origData, err := AesDecrypt(r, key)
 	if err != nil {
 		slog.Error("解密失败","error",err.Error())
-		return "",""
+		return "","",err
 	}
 	slog.Debug("解密成功","origData",string(origData))
 	token=string(origData)
@@ -115,7 +125,7 @@ func DecodeToken(token string) (string, string) {
 		}
 	}
 
-	return decodedToken, paramSum
+	return decodedToken, paramSum,nil
 }
 
 func CheckBody(c *gin.Context, checkSum string) int {

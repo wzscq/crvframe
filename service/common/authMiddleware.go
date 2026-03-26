@@ -48,10 +48,14 @@ func AuthMiddleware(loginCache LoginCache, appCache AppCache) gin.HandlerFunc {
 				userID, err := loginCache.GetUserID(header.Token)
 				if err != nil {
 					slog.Error(err.Error())
-					token, paramSum := DecodeToken(header.Token)
-					errorCode = CheckBody(c, paramSum)
-					header.Token = token
-					userID, err = loginCache.GetUserID(header.Token)
+					var token,paramSum string
+					token, paramSum,err = DecodeToken(header.Token)
+					slog.Debug("DecodeToken result","token",token,"paramSum",paramSum,"error",err)
+					if err == nil {
+						errorCode = CheckBody(c, paramSum)
+						header.Token = token
+						userID, err = loginCache.GetUserID(token)
+					}
 				}
 
 				if err != nil {
