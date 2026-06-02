@@ -3,6 +3,7 @@ import SingleSelect from './SingleSelect';
 import MultiSelect from './MultiSelect';
 import DatePicker from './DatePicker';
 import Number from './Number';
+import TextArea from './TextArea';
 /**
  * 以下为控件类型枚举常量定义
  */
@@ -12,6 +13,7 @@ export const CONTROL_TYPE={
     SingleSelect:'SingleSelect',  //单选下拉框
     MultiSelect:'MultiSelect',  //多选下拉框
     Number:'Number',  //数字输入框
+    TextArea:"TextArea"  
 }
 /**
  * 以下为控件注册表
@@ -22,6 +24,7 @@ export const controlRegister={
     [CONTROL_TYPE.MultiSelect]:MultiSelect,
     [CONTROL_TYPE.DatePicker]:DatePicker,
     [CONTROL_TYPE.Number]:Number,
+    [CONTROL_TYPE.TextArea]:TextArea,
 }
 
 export const getControl=(field,sendMessageToParent,filterValue,onFilterChange)=>{
