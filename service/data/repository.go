@@ -80,6 +80,7 @@ func (repo *DefatultDataRepository) rowsToMap(rows *sql.Rows) ([]map[string]inte
 }
 
 func (repo *DefatultDataRepository) Query(sql string) ([]map[string]interface{}, error) {
+	sql = strings.Replace(sql, "\\", "\\\\", -1) // -1 表示替换所有匹配项
 	slog.Info(sql)
 	rows, err := repo.DB.Query(sql)
 	if err != nil {
